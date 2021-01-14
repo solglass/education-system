@@ -26,8 +26,8 @@ namespace EducationSystem.Controllers
 
         [HttpGet]
         public dynamic Get()
-        {
-            var repo = new CourseRepository();
+        { 
+            var repo = new AttachmentRepository();
             return repo.GetCourses();
         }
     }
