@@ -21,7 +21,7 @@ namespace EducationSystem.Data
 
             SqlCommand sqlCommand = new SqlCommand 
             {
-                CommandText = "dbo.Course_SelectAll", 
+                CommandText = "dbo.Attachment_SelectAll", 
                 Connection = sqlConnection,
                 CommandType = System.Data.CommandType.StoredProcedure
             };
@@ -37,10 +37,9 @@ namespace EducationSystem.Data
                     result.Add(new CourseDto 
                     {
                         Id = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        Description = reader.GetString(2),
-                        Duration = reader.GetInt32(3),
-                        IsDeleted = reader.GetBoolean(4)
+                        Path = reader.GetString(1),              
+                        AttachmentTypeID = reader.GetInt32(2),
+                        Name = reader.GetString(3)
                     });
                 }
             }
