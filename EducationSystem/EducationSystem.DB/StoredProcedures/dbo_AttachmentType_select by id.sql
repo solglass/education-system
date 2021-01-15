@@ -6,4 +6,4 @@ begin
 	Name 
 	from [dbo].[AttachmentType]
 	where Id = @id
-end
+end 

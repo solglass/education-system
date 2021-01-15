@@ -6,4 +6,4 @@ begin
 
 	insert into [dbo].[Comment_Attachment] (CommentID, AttachmentID) 
 	values (@commentID, @attachmentID)
-end
+end 

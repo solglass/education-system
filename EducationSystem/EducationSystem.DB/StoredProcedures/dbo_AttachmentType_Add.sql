@@ -5,3 +5,4 @@ begin
 	insert into [dbo].[AttachmentType] (name) 
 	values (@name)
 end
+ 

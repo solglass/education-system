@@ -4,4 +4,4 @@ create proc dbo.Attachment_Add (
 begin
 	insert into [dbo].[Attachment] (Path) 
 	values (@path)
-end
+end 

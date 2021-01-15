@@ -12,4 +12,4 @@ from [dbo].[Attachment] a
 	inner join [dbo].[AttachmentType] at 
 	on a.AttachmentTypeID = at.Id
 	where a.Id = @id
-end
+end 

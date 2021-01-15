@@ -3,5 +3,5 @@ create  proc [dbo].[Attachment_Delete] (
 ) as
 begin
 	delete from [dbo].[Attachment] 
-	where Id = @id
-end
+	where Id = @id 
+end   

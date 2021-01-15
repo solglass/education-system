@@ -4,4 +4,4 @@ create proc [dbo].[Comment_Attachment_Delete] (
 begin
 	delete from [dbo].[Comment_Attachment] 
 	where Id = @id
-end
+end 
