@@ -4,11 +4,9 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class AttachmentDto
+    public class AttachmentTypeDto
     {
         public int Id { get; set; }
-        public string Path { get; set; }
-        public int AttachmentTypeID { get; set; }
         public string Name { get; set; }
 
     }

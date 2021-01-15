@@ -5,15 +5,15 @@ using System.Data.SqlClient;
 
 namespace EducationSystem.Data
 {
-    public class CourseRepository
+    public class AttachmentRepository
     {
         private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
-        public CourseRepository()
+        public AttachmentRepository()
         {
 
         }
 
-        public List<CourseDto> GetCourses()
+        public List<AttachmentDto> GetAttachments()
         {
             SqlConnection sqlConnection = new SqlConnection(_connectionString);
             
@@ -28,13 +28,13 @@ namespace EducationSystem.Data
 
             var reader = sqlCommand.ExecuteReader();
 
-            List<CourseDto> result = new List<CourseDto>();
+            List<AttachmentDto> result = new List<AttachmentDto>();
 
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    result.Add(new CourseDto 
+                    result.Add(new AttachmentDto 
                     {
                         Id = reader.GetInt32(0),
                         Path = reader.GetString(1),              
