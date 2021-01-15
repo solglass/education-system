@@ -1,54 +1,31 @@
-﻿using EducationSystem.Data.Models;
+﻿using Dapper;
+using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace EducationSystem.Data
 {
     public class CourseRepository
     {
+
+        private SqlConnection _connection;
+
         private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
         public CourseRepository()
         {
-
+            _connection = new SqlConnection(_connectionString);
         }
 
         public List<CourseDto> GetCourses()
         {
-            SqlConnection sqlConnection = new SqlConnection(_connectionString);
-            
-            sqlConnection.Open();
+            var courses = _connection
+                .Query<CourseDto>("dbo.Course_SelectAll", commandType:System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return courses;
 
-            SqlCommand sqlCommand = new SqlCommand 
-            {
-                CommandText = "dbo.Course_SelectAll", 
-                Connection = sqlConnection,
-                CommandType = System.Data.CommandType.StoredProcedure
-            };
-
-            var reader = sqlCommand.ExecuteReader();
-
-            List<CourseDto> result = new List<CourseDto>();
-
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    result.Add(new CourseDto 
-                    {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        Description = reader.GetString(2),
-                        Duration = reader.GetInt32(3),
-                        IsDeleted = reader.GetBoolean(4)
-                    });
-                }
-            }
-            reader.Close();
-
-            sqlConnection.Close();
-            
-            return result;
+          
         }
     }
 }
