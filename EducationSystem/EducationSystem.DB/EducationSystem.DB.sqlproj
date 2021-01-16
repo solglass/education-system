@@ -103,4 +103,35 @@
     <Build Include="Tables\dbo.HomeworkAttemptStatus.sql" />
     <Build Include="Tables\dbo.Homework.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="StoredProcedures\dbo.Attachment_update.sql" />
+    <Build Include="StoredProcedures\dbo_Attachment_add.sql" />
+    <Build Include="StoredProcedures\dbo_Attachment_delete .sql" />
+    <Build Include="StoredProcedures\dbo_Attachment_select_all.sql" />
+    <Build Include="StoredProcedures\dbo_Attachment_select by id.sql" />
+    <Build Include="StoredProcedures\dbo_AttachmentType_Add.sql" />
+    <Build Include="StoredProcedures\dbo_AttachmentType_Delete.sql" />
+    <Build Include="StoredProcedures\dbo_AttachmentType_Select all.sql" />
+    <Build Include="StoredProcedures\dbo_AttachmentType_Select by id.sql" />
+    <Build Include="StoredProcedures\dbo_AttachmentType_Update.sql" />
+    <Build Include="StoredProcedures\dbo_CommentAttachment_Add.sql" />
+    <Build Include="StoredProcedures\dbo_CommentAttachment_Delete.sql" />
+    <Build Include="StoredProcedures\dbo_CommentAttachment_Select all.sql" />
+    <Build Include="StoredProcedures\dbo_CommentAttachment_Select by id.sql" />
+    <Build Include="StoredProcedures\dbo_Homework_Add.sql" />
+    <Build Include="StoredProcedures\dbo_Homework_Delete.sql" />
+    <Build Include="StoredProcedures\dbo_Homework_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo_Homework_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo_Homework_Update.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttempt_Add.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttempt_Delete.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttempt_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttempt_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttempt_Update.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_Add.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_Delete.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_Update.sql" />
+  </ItemGroup>
 </Project>
