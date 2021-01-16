@@ -64,5 +64,18 @@
     <Build Include="Tables\dbo.Comment.sql" />
     <Build Include="StoredProcedures\Comment_SelectById.sql" />
     <Build Include="StoredProcedures\Comment_Add.sql" />
+    <Build Include="StoredProcedures\dbo.Comment_Add.sql" />
+    <Build Include="StoredProcedures\dbo.Comment_Delete.sql" />
+    <Build Include="StoredProcedures\dbo.Comment_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo.Comment_Update.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Add.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Delete.sql" />
+    <Build Include="StoredProcedures\dbo.Course_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo.Course_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Theme_Add.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Theme_Delete.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Theme_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Theme_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Update.sql" />
   </ItemGroup>
 </Project>
