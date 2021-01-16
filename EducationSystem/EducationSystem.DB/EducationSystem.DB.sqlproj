@@ -76,5 +76,9 @@
     <Build Include="StoredProcedures\dbo.Theme\Theme_SelectAll.sql" />
     <Build Include="StoredProcedures\dbo.Theme\Theme_SelectById.sql" />
     <Build Include="StoredProcedures\dbo.Theme\Theme_Update.sql" />
+    <Build Include="Tables\Homework_Theme.sql" />
+    <Build Include="Tables\Theme.sql" />
+    <Build Include="Tables\Curse_Theme_Material.sql" />
+    <Build Include="Tables\Homework_Attempt.sql" />
   </ItemGroup>
 </Project>
