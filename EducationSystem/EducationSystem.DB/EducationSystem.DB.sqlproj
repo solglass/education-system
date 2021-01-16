@@ -58,8 +58,28 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
+    <Folder Include="StoredProcedures\dbo.Course_Theme_Material" />
+    <Folder Include="StoredProcedures\dbo.Homework_Theme" />
+    <Folder Include="StoredProcedures\dbo.Theme" />
   </ItemGroup>
   <ItemGroup>
+    <Build Include="StoredProcedures\dbo.Course_Theme_Material\Course_Theme_Material_Add.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Theme_Material\Course_Theme_Material_Delete.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Theme_Material\Course_Theme_Material_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo.Course_Theme_Material\Course_Theme_Material_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo.Homework_Theme\Homework_Theme_Delete.sql" />
+    <Build Include="StoredProcedures\dbo.Homework_Theme\Homework_Theme_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo.Homework_Theme\Homework_Theme_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo.Homework_Theme\Homework_Theme_Update.sql" />
+    <Build Include="StoredProcedures\dbo.Theme\Theme_Add.sql" />
+    <Build Include="StoredProcedures\dbo.Theme\Theme_Delete.sql" />
+    <Build Include="StoredProcedures\dbo.Theme\Theme_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo.Theme\Theme_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo.Theme\Theme_Update.sql" />
+    <Build Include="Tables\Homework_Theme.sql" />
+    <Build Include="Tables\Theme.sql" />
+    <Build Include="Tables\Curse_Theme_Material.sql" />
+    <Build Include="Tables\Homework_Attempt.sql" />
     <Build Include="StoredProcedures\dbo.Comment_SelectAll.sql" />
     <Build Include="Tables\dbo.Comment.sql" />
     <Build Include="StoredProcedures\dbo.Comment_Add.sql" />
@@ -76,8 +96,6 @@
     <Build Include="StoredProcedures\dbo.Course_Theme_SelectById.sql" />
     <Build Include="StoredProcedures\dbo.Course_Update.sql" />
     <Build Include="Tables\dbo.Course.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Tables\dbo.Course_Theme.sql" />
   </ItemGroup>
 </Project>
