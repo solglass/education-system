@@ -59,4 +59,10 @@
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="StoredProcedures\dbo.Comment_SelectAll.sql" />
+    <Build Include="Tables\dbo.Comment.sql" />
+    <Build Include="StoredProcedures\Comment_SelectById.sql" />
+    <Build Include="StoredProcedures\Comment_Add.sql" />
+  </ItemGroup>
 </Project>
