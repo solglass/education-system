@@ -64,6 +64,9 @@
     <Folder Include="StoredProcedures\Comment" />
     <Folder Include="StoredProcedures\Course" />
     <Folder Include="StoredProcedures\Course_Theme" />
+    <Folder Include="StoredProcedures\Homework" />
+    <Folder Include="StoredProcedures\HomeworkAttempt" />
+    <Folder Include="StoredProcedures\HomeworkAttemptStatus" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -102,6 +105,21 @@
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectById.sql" />
     <Build Include="Tables\dbo.HomeworkAttemptStatus.sql" />
     <Build Include="Tables\dbo.Homework.sql" />
+    <Build Include="StoredProcedures\Homework\dbo_Homework_Add.sql" />
+    <Build Include="StoredProcedures\Homework\dbo_Homework_Delete.sql" />
+    <Build Include="StoredProcedures\Homework\dbo_Homework_SelectAll.sql" />
+    <Build Include="StoredProcedures\Homework\dbo_Homework_SelectById.sql" />
+    <Build Include="StoredProcedures\Homework\dbo_Homework_Update.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_Add.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_Delete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_SelectAll.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_SelectById.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_Update.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_Add.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_Delete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_SelectAll.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_SelectById.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_Update.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\dbo.Attachment_update.sql" />
@@ -118,20 +136,5 @@
     <Build Include="StoredProcedures\dbo_CommentAttachment_Delete.sql" />
     <Build Include="StoredProcedures\dbo_CommentAttachment_Select all.sql" />
     <Build Include="StoredProcedures\dbo_CommentAttachment_Select by id.sql" />
-    <Build Include="StoredProcedures\dbo_Homework_Add.sql" />
-    <Build Include="StoredProcedures\dbo_Homework_Delete.sql" />
-    <Build Include="StoredProcedures\dbo_Homework_SelectAll.sql" />
-    <Build Include="StoredProcedures\dbo_Homework_SelectById.sql" />
-    <Build Include="StoredProcedures\dbo_Homework_Update.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttempt_Add.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttempt_Delete.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttempt_SelectAll.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttempt_SelectById.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttempt_Update.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_Add.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_Delete.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_SelectAll.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_SelectById.sql" />
-    <Build Include="StoredProcedures\dbo_HomeworkAttemptStatus_Update.sql" />
   </ItemGroup>
 </Project>
