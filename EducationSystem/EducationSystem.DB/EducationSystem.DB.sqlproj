@@ -75,5 +75,9 @@
     <Build Include="StoredProcedures\dbo.Course_Theme_SelectAll.sql" />
     <Build Include="StoredProcedures\dbo.Course_Theme_SelectById.sql" />
     <Build Include="StoredProcedures\dbo.Course_Update.sql" />
+    <Build Include="Tables\dbo.Course.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tables\dbo.Course_Theme.sql" />
   </ItemGroup>
 </Project>
