@@ -88,7 +88,7 @@
     <Build Include="Tables\dbo.Homework_Attempt.sql" />
     <Build Include="Tables\dbo.Comment.sql" />
     <Build Include="Tables\dbo.Course.sql" />
-    <None Include="Tables\dbo.Course_Theme.sql" />
+    <Build Include="Tables\dbo.Course_Theme.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Add.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Delete.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_SelectAll.sql" />
