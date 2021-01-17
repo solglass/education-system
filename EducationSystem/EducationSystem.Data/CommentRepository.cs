@@ -7,30 +7,30 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class HomeworkRepository
+    public class CommentRepository
     {
         private SqlConnection _connection;
 
         private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
-        public HomeworkRepository()
+        public CommentRepository()
         {
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<HomeworkDto> GetHomeworks()
+        public List<CommentDto> GetComments()
         {
-            var homework = _connection
-                 .Query<HomeworkDto>("dbo.Homework_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+            var comment = _connection
+                .Query<CommentDto>("dbo.Comment_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
-            return homework;
+            return comment;
         }
 
-        public HomeworkDto GetHomeworkById(int id)
+        public CommentDto GetCommentById(int id)
         {
-            var homework = _connection
-                .Query<HomeworkDto>("dbo.Homework_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+            var comment = _connection
+                .Query<CommentDto>("dbo.Comment_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
-            return homework;
+            return comment;
         }
     }
 }
