@@ -24,8 +24,14 @@ namespace EducationSystem.Data
                 .Query<CourseDto>("dbo.Course_SelectAll", commandType:System.Data.CommandType.StoredProcedure)
                 .ToList();
             return courses;
+        }
 
-          
+        public CourseDto GetCourseById(int id)
+        {
+            var course = _connection
+                .Query<CourseDto>("dbo.Course_SelectById", new { id }, commandType:System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return course;
         }
     }
 }
