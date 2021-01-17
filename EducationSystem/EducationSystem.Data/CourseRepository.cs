@@ -34,6 +34,44 @@ namespace EducationSystem.Data
             return course;
         }
 
+        public int AddCourse(string name, string description, int duration)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Add", 
+                new
+                {
+                  name,
+                  description ,
+                  duration 
+                }, 
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
 
+        public int UpdateCourse(int id, string name, string description, int duration, bool isDeleted)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Update",
+                new
+                {   id,
+                    name,
+                    description ,
+                    duration,
+                    isDeleted
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int DeleteCourse(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Delete",
+                new
+                {
+                    id 
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
     }
 }

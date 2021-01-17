@@ -4,6 +4,6 @@
 	@Duration int
 ) as
 begin
-	insert into dbo.Course (Name, Description, Duration)
-	values (@Name, @Description, @Duration)
+	insert into dbo.Course (Name, Description, Duration, IsDeleted)
+	values (@Name, @Description, @Duration, 0)
 end

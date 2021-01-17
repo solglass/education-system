@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EducationSystem.Data;
+using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -28,7 +29,8 @@ namespace EducationSystem.Controllers
         public dynamic Get()
         { 
             var repo = new CourseRepository();
-            return repo.GetCourseById(3);
+            
+            return repo.GetCourses();
         }
     }
 }

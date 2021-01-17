@@ -2,6 +2,6 @@
 @userId int, @homeworkAttemptId int, @message nvarchar(max))
 as
 begin
-insert into dbo.Comment (UserID, HomeworkAttemptId, Message)
-	values (@userId, @homeworkAttemptId, @message)
+insert into dbo.Comment (UserID, HomeworkAttemptId, Message, IsDeleted)
+	values (@userId, @homeworkAttemptId, @message, 0)
 end
