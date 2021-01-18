@@ -1,8 +1,8 @@
 ﻿CREATE proc [dbo].[Course_Theme_Add](
 @courseId int, 
-@themeID int
+@themeId int
 ) as
 begin
 	insert into dbo.Course_Theme( CourseID, ThemeID)
-	values(@courseId, @themeID)
+	values(@courseId, @themeId)
 end
