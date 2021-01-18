@@ -55,7 +55,7 @@ namespace EducationSystem.Data
         {
             var data = _connection
                 .QuerySingleOrDefault<AttachmentDto>("dbo.Attachment_Add",
-                new { name = NewObject.Name, 
+                new { path = NewObject.Path, 
                     attachmentTypeId = NewObject.AttachmentTypeID },
                 commandType: System.Data.CommandType.StoredProcedure);
             return data;
