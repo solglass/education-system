@@ -32,5 +32,39 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return theme;
         }
+        public int AddTheme(string name)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Add",
+                new
+                {
+                    name
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int UpdateTheme(int id, string name)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Update",
+                new
+                {
+                    id,
+                    name
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int DeleteTheme(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
     }
 }
