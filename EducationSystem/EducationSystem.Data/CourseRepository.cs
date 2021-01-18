@@ -73,5 +73,17 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
+        public dynamic GetCourseThemesByCourseId(int courseId)
+        {
+
+            string sqlString = @"SELECT t.Id, t.Name FROM [dbo].[Course] c JOIN [dbo].[Course_Theme] ct on c.Id=ct.CourseId JOIN [dbo].[Theme] t on t.Id=ct.ThemeId WHERE c.Id=@courseId";
+
+            var result= _connection
+                .Query<ThemeDto>(sqlString,new { courseId }, commandType: System.Data.CommandType.Text)
+                .ToList(); 
+
+            return result;
+        }
     }
 }
