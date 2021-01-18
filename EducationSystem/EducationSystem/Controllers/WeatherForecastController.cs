@@ -28,9 +28,9 @@ namespace EducationSystem.Controllers
         [HttpGet]
         public dynamic Get()
         { 
-            var repo = new Course_ThemeRepository();
+            var repo = new HomeworkRepository();
             
-            return repo.DeleteCourse_Theme(12);
+            return repo.DeleteHomework(12);
         }
     }
 }

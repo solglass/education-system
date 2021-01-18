@@ -32,5 +32,51 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return homework;
         }
+
+        public int AddHomework(string description, DateTime StartDate, DateTime DeadlineDate, int GroupID, bool IsOptional)
+        {
+            var result = _connection
+                .Execute("dbo.Homework_Add",
+                new
+                {
+                    description,
+                    StartDate,
+                    DeadlineDate,
+                    GroupID,
+                    IsOptional
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int UpdateHomework(int id, string description, DateTime StartDate, DateTime DeadlineDate, int GroupID, bool IsOptional, bool isDeleted)
+        {
+            var result = _connection
+                .Execute("dbo.Homework_Update",
+                new
+                {
+                    id,
+                    description,
+                    StartDate,
+                    DeadlineDate,
+                    GroupID,
+                    IsOptional,
+                    isDeleted
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int DeleteHomework(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Homework_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
     }
 }
