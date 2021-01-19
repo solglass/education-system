@@ -32,5 +32,32 @@ namespace EducationSystem.Data.Models
                 .FirstOrDefault();
             return homeworkAttempt;
         }
+
+        public int AddHomeworkAttempt(string comment, int userId, int homeworkAttemptId, int statusId)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttempt_Add",
+                new { comment, userId, homeworkAttemptId, statusId },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int UpdateHomeworkAttempt(int id, string comment, int userId, int homeworkId, int statusId)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttempt_Update",
+                new { id, comment, userId, homeworkId, statusId },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int DeleteHomeworkAttempt(int id)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttempt_Delete", 
+                new { id }, 
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
     }
 }
