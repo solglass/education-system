@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    class HomeworkAttempt_AttachmentDto
+    public class HomeworkAttempt_AttachmentDto
     {
         public int Id { get; set; }
         public int HomeworkAttemptId { get; set; }

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    class HomeworkAttempt_AttachmentRepository
+    public class HomeworkAttempt_AttachmentRepository
     {
         private SqlConnection _connection;
         private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
@@ -25,35 +25,29 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure).ToList();
             return data;
         }
-        public HomeworkAttempt_AttachmentDto GetHomeworkAttempt_attachmentById(int id)
+        public HomeworkAttempt_AttachmentDto GetHomeworkAttempt_AttachmentById(int id)
         {
             var data = _connection.
                 QueryFirstOrDefault<HomeworkAttempt_AttachmentDto>(
-                "dbo.HomeworkAttempt_Attachment_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                "dbo.HomeworkAttempt_Attachment_SelectById", new { id } , commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
-        public HomeworkAttempt_AttachmentDto AddHomeworkAttempt_attachment(HomeworkAttempt_AttachmentDto NewObject)
+        public HomeworkAttempt_AttachmentDto AddHomeworkAttempt_Attachment(HomeworkAttempt_AttachmentDto newObject)
         {
             var data = _connection
                 .QuerySingleOrDefault<HomeworkAttempt_AttachmentDto>("dbo.HomeworkAttempt_Attachment_Add",
                 new
                 {
-                    HomeworkAttemptId = NewObject.HomeworkAttemptId,
-                    AttachmentId = NewObject.AttachmentId
+                    HomeworkAttemptId = newObject.HomeworkAttemptId,
+                    AttachmentId = newObject.AttachmentId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
-        public void DeleteHomeworkAttempt_AttachmentById(int id)
+        public int DeleteHomeworkAttempt_AttachmentById(int id)
         {
-            try
-            {
-                _connection.Execute("dbo.HomeworkAttempt_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            }
-            catch
-            {
-                return;
-            }
+            int rowsAffected = _connection.Execute("dbo.HomeworkAttempt_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            return rowsAffected;
         }
     }
 }
