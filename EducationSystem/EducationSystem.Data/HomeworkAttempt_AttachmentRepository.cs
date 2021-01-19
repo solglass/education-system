@@ -48,7 +48,7 @@ namespace EducationSystem.Data
         {
             try
             {
-                _connection.Query("dbo.HomeworkAttempt_Attachment_Delete", commandType: System.Data.CommandType.StoredProcedure);
+                _connection.Execute("dbo.HomeworkAttempt_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
             }
             catch
             {
