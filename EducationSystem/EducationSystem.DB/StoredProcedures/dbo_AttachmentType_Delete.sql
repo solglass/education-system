@@ -1,7 +1,7 @@
-create  proc [dbo].[Attachment_Delete] (
+create  proc [dbo].[AttachmentType_Delete] (
 @id int
 ) as
 begin
-	delete from [dbo].[Attachment] 
-	where Id = @id 
-end   
+	delete from [dbo].[AttachmentType] 
+	where Id = @id
+end
