@@ -30,7 +30,7 @@ namespace EducationSystem.Controllers
         { 
             var repo = new CourseRepository();
             
-            return repo.GetCourseThemesByCourseId(3);
+            return repo.GetCourseById(3);
         }
     }
 }
