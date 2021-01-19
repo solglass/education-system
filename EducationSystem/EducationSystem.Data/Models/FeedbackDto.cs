@@ -11,6 +11,7 @@ namespace EducationSystem.Data.Models
         public string Messege { get; set; }
         public int LessonID { get; set; }
         public int UnderstandingLevelID { get; set; }
+        
 
     }
 }

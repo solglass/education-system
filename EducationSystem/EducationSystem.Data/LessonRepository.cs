@@ -30,57 +30,54 @@ namespace EducationSystem.Data
         {
             return _connection
                 .Query<UnderstandingLevelDto>("dbo.Lesson_SelectByID", new { id }, commandType: CommandType.StoredProcedure)
-                .First();
+                .FirstOrDefault();
         }
 
-        public void AddLesson(int groupId, string description, DateTime date)
+        public int AddLesson(int groupId, string description, DateTime date)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.Lesson_Add",
                 new {groupId, description, date},
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void DeleteLesson(int id)
+        public int DeleteLesson(int id)
         {
-            _connection.Execute(
+           return _connection.Execute(
                 "dbo.Lesson_Delete",
                 new {id},
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateLesson(int id, int groupId, string description, DateTime date, bool isDeleted)
+        public int UpdateLesson(int id, int groupId, string description, DateTime date, bool isDeleted)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.Lesson_Update",
                 new {id, groupId, description, date, isDeleted},
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void GetFeedbacks(int userdId, string message, int lessonId, int understandingLevelId)
-        {
+    
 
-        }
-
-        public void AddFeedback(int userdId, string message, int lessonId, int understandingLevelId)
+        public int AddFeedback(int userdId, string message, int lessonId, int understandingLevelId)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.Feedback_Add",
                 new {userdId, message, lessonId, understandingLevelId},
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateFeedback(int id, int userdId, string message, int lessonId, int understandingLevelId)
+        public int UpdateFeedback(int id, int userdId, string message, int lessonId, int understandingLevelId)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.Feedback_Update",
                 new {id, userdId, message, lessonId, understandingLevelId},
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void DeleteFeedback(int id)
+        public int DeleteFeedback(int id)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.Feedback_Delete",
                 new {id},
                 commandType: CommandType.StoredProcedure);
