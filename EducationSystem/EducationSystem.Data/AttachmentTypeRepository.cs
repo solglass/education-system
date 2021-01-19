@@ -26,5 +26,35 @@ namespace EducationSystem.Data
 
 
         }
+
+        public AttachmentTypeDto GetAttachmentTypeById(int id)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                return data;
+        }
+
+        public AttachmentTypeDto ModifyAttachmentType(int id, string name)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_Update", new { id, name }, commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+        }
+
+        public void  DeleteAttachmentTypeById(int id)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+
+        public AttachmentTypeDto AddAttachmentType(AttachmentTypeDto NewObject)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_Add",
+                new { name = NewObject.Name}, commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+
+        }
     }
 }

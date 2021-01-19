@@ -27,5 +27,33 @@ namespace EducationSystem.Data
 
         }
 
+
+        public Comment_AttachmentDto GetComment_AttachmentById(int id)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+        }
+
+        public void DeleteComment_AttachmentById(int id)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+        public Comment_AttachmentDto AddComment_Attachment(Comment_AttachmentDto NewObject)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Add",
+                new
+                {
+                    commentId = NewObject.CommentId,
+                    attachmentId = NewObject.AttachmentId
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+
+        }
+
     }
 }
