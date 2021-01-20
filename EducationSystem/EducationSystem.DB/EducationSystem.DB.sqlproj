@@ -67,6 +67,7 @@
     <Folder Include="StoredProcedures\Homework" />
     <Folder Include="StoredProcedures\HomeworkAttempt" />
     <Folder Include="StoredProcedures\HomeworkAttemptStatus" />
+    <Folder Include="StoredProcedures\HomeworkAttempt_Attachment" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -120,6 +121,10 @@
     <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_SelectAll.sql" />
     <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_SelectById.sql" />
     <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_Update.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Delete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Add.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectAll.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectById.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\dbo.Attachment_update.sql" />
