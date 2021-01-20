@@ -32,10 +32,10 @@ namespace EducationSystem.Data
                 "dbo.HomeworkAttempt_Attachment_SelectById", new { id } , commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
-        public HomeworkAttempt_AttachmentDto AddHomeworkAttempt_Attachment(HomeworkAttempt_AttachmentDto newObject)
+        public int AddHomeworkAttempt_Attachment(HomeworkAttempt_AttachmentDto newObject)
         {
             var data = _connection
-                .QuerySingleOrDefault<HomeworkAttempt_AttachmentDto>("dbo.HomeworkAttempt_Attachment_Add",
+                .QueryFirst<int>("dbo.HomeworkAttempt_Attachment_Add",
                 new
                 {
                     HomeworkAttemptId = newObject.HomeworkAttemptId,
@@ -46,7 +46,10 @@ namespace EducationSystem.Data
         }
         public int DeleteHomeworkAttempt_AttachmentById(int id)
         {
-            int rowsAffected = _connection.Execute("dbo.HomeworkAttempt_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            int rowsAffected = _connection.Execute(
+                "dbo.HomeworkAttempt_Attachment_Delete",
+                new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
             return rowsAffected;
         }
     }
