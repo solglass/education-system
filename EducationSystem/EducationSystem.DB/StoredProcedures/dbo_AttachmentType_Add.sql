@@ -1,4 +1,4 @@
-create  [dbo].[AttachmentType_Add] (
+CREATE proc [dbo].[AttachmentType_Add] (
 @name nvarchar(15)
 ) as
 begin
