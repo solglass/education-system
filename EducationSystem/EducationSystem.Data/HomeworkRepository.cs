@@ -78,5 +78,65 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
+
+        public List<HomeworkAttemptDto> GetHomeworkAttempts()
+        {
+            var homeworkAttempt = _connection
+                .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return homeworkAttempt;
+        }
+
+        public HomeworkAttemptDto GetHomeworkAttemptById(int id)
+        {
+            var homeworkAttempt = _connection
+                .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return homeworkAttempt;
+        }
+
+        public int AddHomeworkAttempt(string comment, int userId, int homeworkAttemptId, int statusId)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttempt_Add",
+                new { comment, userId, homeworkAttemptId, statusId },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int UpdateHomeworkAttempt(int id, string comment, int userId, int homeworkId, int statusId)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttempt_Update",
+                new { id, comment, userId, homeworkId, statusId },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int DeleteHomeworkAttempt(int id)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttempt_Delete",
+                new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public List<CommentDto> GetComments()
+        {
+            var comment = _connection
+                .Query<CommentDto>("dbo.Comment_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return comment;
+        }
+
+        public CommentDto GetCommentById(int id)
+        {
+            var comment = _connection
+                .Query<CommentDto>("dbo.Comment_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return comment;
+        }
     }
 }
