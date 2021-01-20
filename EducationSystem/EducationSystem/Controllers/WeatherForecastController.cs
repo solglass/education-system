@@ -28,7 +28,7 @@ namespace EducationSystem.Controllers
         public dynamic Get()
         {
             var repo = new TagRepository();
-            return repo.UpdateTag(4,"Класс");
+            return repo.GetMaterial_Tag();
         }
     }
 }

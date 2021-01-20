@@ -8,7 +8,8 @@ namespace EducationSystem.Data.Models
     {
         public int Id { get; set; }
         public int TagId { get; set; }
-        public int Material_TagId { get; set; }
+        public int MaterialId { get; set; }
 
     }
 }
+

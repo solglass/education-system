@@ -8,7 +8,7 @@ namespace EducationSystem.Data.Models
     {
         public int Id { get; set; }
         public int TagId { get; set; }
-        public int Theme_TagId { get; set; }
+        public int ThemeId { get; set; }
 
     }
 }
