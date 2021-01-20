@@ -13,6 +13,5 @@ namespace EducationSystem.Data.Models
         public int GroupID { get; set; }
         public bool IsOptional { get; set; }
         public bool IsDeleted { get; set; }
-
     }
 }
