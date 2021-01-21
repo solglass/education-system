@@ -27,15 +27,11 @@ namespace EducationSystem.Controllers
 
         [HttpGet]
         public dynamic Get()
-        { 
-<<<<<<< HEAD
-            var repo = new AttachmentTypeRepository();
-            return repo.GetAttachmentTypes();
-=======
-            var repo = new CourseRepository();
-            
-            return repo.GetCourseById(3);
->>>>>>> Optimists
+        {
+
+            var repo = new AttachmentRepository();
+             return repo.GetAttachments();
+            //return 0;
         }
     }
 }
