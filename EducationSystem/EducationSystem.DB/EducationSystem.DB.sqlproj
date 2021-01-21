@@ -141,8 +141,6 @@
     <Build Include="StoredProcedures\Tables\dbo.Homework_Theme.sql" />
     <Build Include="StoredProcedures\Tables\dbo.HomeworkAttemptStatus.sql" />
     <Build Include="StoredProcedures\Tables\dbo.Theme.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <Build Include="StoredProcedures\dbo_CommentAttachment_Select by id.sql" />
+    <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Select by id.sql" />
   </ItemGroup>
 </Project>
