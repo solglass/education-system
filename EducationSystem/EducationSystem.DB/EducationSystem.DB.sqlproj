@@ -71,6 +71,8 @@
     <Folder Include="StoredProcedures\AttachmentType" />
     <Folder Include="StoredProcedures\CommentAttachment" />
     <Folder Include="StoredProcedures\Tables" />
+    <Folder Include="StoredProcedures\GroupStatus" />
+    <Folder Include="StoredProcedures\Payment" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -142,5 +144,16 @@
     <Build Include="StoredProcedures\Tables\dbo.HomeworkAttemptStatus.sql" />
     <Build Include="StoredProcedures\Tables\dbo.Theme.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Select by id.sql" />
+    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Add.sql" />
+    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Delete.sql" />
+    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_SelectAll.sql" />
+    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_SelectById.sql" />
+    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Update.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_Add.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_Delete.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_SelectAll.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByContractNumber.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_SelectById.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_Update.sql" />
   </ItemGroup>
 </Project>
