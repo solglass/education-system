@@ -111,15 +111,115 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public dynamic GetCourseThemesByCourseId(int courseId)
+        //public dynamic GetCourseThemesByCourseId(int courseId)
+        //{
+
+        //    string sqlString = @"SELECT t.Id, t.Name FROM [dbo].[Course] c JOIN [dbo].[Course_Theme] ct on c.Id=ct.CourseId JOIN [dbo].[Theme] t on t.Id=ct.ThemeId WHERE c.Id=@courseId";
+
+        //    var result= _connection
+        //        .Query<ThemeDto>(sqlString,new { courseId }, commandType: System.Data.CommandType.Text)
+        //        .ToList(); 
+
+        //    return result;
+        //}
+
+        public List<ThemeDto> GetThemes()
         {
+            var theme = _connection
+                 .Query<ThemeDto>("dbo.Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return theme;
+        }
+        public ThemeDto GetThemeById(int id)
+        {
+            var theme = _connection
+                .Query<ThemeDto>("dbo.Theme_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return theme;
+        }
+        public int AddTheme(string name)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Add",
+                new
+                {
+                    name
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int UpdateTheme(int id, string name)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Update",
+                new
+                {
+                    id,
+                    name
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int DeleteTheme(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
 
-            string sqlString = @"SELECT t.Id, t.Name FROM [dbo].[Course] c JOIN [dbo].[Course_Theme] ct on c.Id=ct.CourseId JOIN [dbo].[Theme] t on t.Id=ct.ThemeId WHERE c.Id=@courseId";
 
-            var result= _connection
-                .Query<ThemeDto>(sqlString,new { courseId }, commandType: System.Data.CommandType.Text)
-                .ToList(); 
 
+        public int AddCourse_Theme(int courseId, int themeId)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Theme_Add",
+                new
+                {
+                    courseId,
+                    themeId
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int DeleteCourse_Theme(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Theme_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+
+        public int AddCourse_Theme_Material(int courseThemeID, int materialID)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Theme_Material_Add",
+                new
+                {
+                    courseThemeID,
+                    materialID
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int DeleteCourse_Theme_Material(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Theme_Material_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
     }
