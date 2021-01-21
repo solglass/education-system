@@ -13,5 +13,7 @@ namespace EducationSystem.Data.Models
         public int GroupID { get; set; }
         public bool IsOptional { get; set; }
         public bool IsDeleted { get; set; }
+        public List<Homework_ThemeDto> Homework_Theme { get; set; }
+        public List<HomeworkAttemptStatusDto> HomeworkAttemptStatus { get; set; }
     }
 }

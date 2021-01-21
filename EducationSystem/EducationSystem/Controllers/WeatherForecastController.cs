@@ -26,11 +26,11 @@ namespace EducationSystem.Controllers
         }
 
         [HttpGet]
-        public dynamic Get()
+        public dynamic DeleteHomeworkAttemptStatus()
         { 
-            var repo = new CourseRepository();
+            var repo = new HomeworkRepository();
             
-            return repo.GetCourseById(3);
+            return repo.GetHomeworkAttemptStatus();
         }
     }
 }

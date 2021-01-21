@@ -138,5 +138,45 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return comment;
         }
+
+        public List<Homework_ThemeDto> GetHomework_Theme()
+        {
+            var result = _connection
+                 .Query<Homework_ThemeDto>("dbo.Homework_Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+
+        public int DeleteHomework_Theme(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Homework_Theme_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatus()
+        {
+            var result = _connection
+                 .Query<HomeworkAttemptStatusDto>("dbo.HomeworkAttemptStatus_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+
+        public int DeleteHomeworkAttemptStatus(int id)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttemptStatus_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
     }
 }

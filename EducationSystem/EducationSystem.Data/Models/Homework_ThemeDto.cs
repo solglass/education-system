@@ -4,9 +4,10 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class HomeworkAttemptStatusDto
+    public class Homework_ThemeDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public int HomeworkId { get; set; }
+        public int ThemeId { get; set; }
     }
 }
