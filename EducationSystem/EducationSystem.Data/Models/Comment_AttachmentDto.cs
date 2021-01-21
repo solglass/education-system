@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace EducationSystem.Data.Models
-{
+{ 
     public class Comment_AttachmentDto
     {
         public int Id { get; set; }
