@@ -71,6 +71,9 @@
     <Folder Include="StoredProcedures\AttachmentType" />
     <Folder Include="StoredProcedures\CommentAttachment" />
     <Folder Include="StoredProcedures\Tables" />
+    <Folder Include="StoredProcedures\Group" />
+    <Folder Include="StoredProcedures\Group_Material" />
+    <Folder Include="StoredProcedures\Material" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -142,5 +145,17 @@
     <Build Include="StoredProcedures\Tables\dbo.HomeworkAttemptStatus.sql" />
     <Build Include="StoredProcedures\Tables\dbo.Theme.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Select by id.sql" />
+    <Build Include="StoredProcedures\Group\Group_Add.sql" />
+    <Build Include="StoredProcedures\Group\Group_Delete.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAll.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectById.sql" />
+    <Build Include="StoredProcedures\Group\Group_Update.sql" />
+    <Build Include="StoredProcedures\Group_Material\Group_Material_Add.sql" />
+    <Build Include="StoredProcedures\Group_Material\Group_Material_Delete.sql" />
+    <Build Include="StoredProcedures\Material\Material_Add.sql" />
+    <Build Include="StoredProcedures\Material\Material_Delete.sql" />
+    <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
+    <Build Include="StoredProcedures\Material\Material_SelectById.sql" />
+    <Build Include="StoredProcedures\Material\Material_Update.sql" />
   </ItemGroup>
 </Project>
