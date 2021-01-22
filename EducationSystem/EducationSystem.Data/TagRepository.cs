@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class TagRepository : IRepository
+    public class TagRepository : BaseRepository
     {
 
         public TagRepository()

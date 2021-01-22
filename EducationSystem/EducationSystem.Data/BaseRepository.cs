@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public abstract class IRepository
+    public abstract class BaseRepository
     {
         protected SqlConnection _connection;
 

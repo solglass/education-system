@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class HomeworkRepository : IRepository
+    public class HomeworkRepository : BaseRepository
     {
         public HomeworkRepository()
         {
@@ -136,7 +136,7 @@ namespace EducationSystem.Data
             return comment;
         }
 
-        public List<Homework_ThemeDto> GetHomework_Theme()
+        public List<Homework_ThemeDto> GetHomework_Themes()
         {
             var result = _connection
                  .Query<Homework_ThemeDto>("dbo.Homework_Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)

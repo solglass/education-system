@@ -9,7 +9,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class LessonRepository : IRepository
+    public class LessonRepository : BaseRepository
     {
         public LessonRepository()
         {

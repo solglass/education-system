@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace EducationSystem.Test
 {
-    public class CourseRepositoryTest : ITest
+    public class CourseRepositoryTest : BaseTest
     {
 
         [TestCase(1)]

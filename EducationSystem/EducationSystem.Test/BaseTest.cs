@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EducationSystem.Test
 {
-    public abstract class ITest 
+    public abstract class BaseTest 
     {
         protected SqlConnection _connection;
 
