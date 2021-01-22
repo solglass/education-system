@@ -49,8 +49,7 @@ namespace EducationSystem.Data
                         groupID = tutorGroup.GroupID,
                     },
                     commandType: System.Data.CommandType.StoredProcedure);             
-            }
-            
+            }           
         }
     }
 }
