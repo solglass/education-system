@@ -13,5 +13,8 @@ namespace EducationSystem.Data.Models
         public int GroupID { get; set; }
         public bool IsOptional { get; set; }
         public bool IsDeleted { get; set; }
+        public List<TagDto> Tags { get; set; }
+        public List<ThemeDto> Themes { get; set; }
+        public List<HomeworkAttemptDto> HomeworkAttempts{ get; set; }
     }
 }

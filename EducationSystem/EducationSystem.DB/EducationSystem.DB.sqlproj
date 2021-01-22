@@ -85,7 +85,6 @@
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectAll.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectById.sql" />
-    <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Update.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Add.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Delete.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_SelectAll.sql" />

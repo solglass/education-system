@@ -4,11 +4,9 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class ThemeDto
+    public class HomeworkAttemptStatusDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public List<TagDto> Tags { get; set; }
     }
 }
