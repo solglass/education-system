@@ -87,7 +87,7 @@ namespace EducationSystem.Data
             },
             new { id },
             splitOn: "Id",
-            commandType: CommandType.StoredProcedure).First();
+            commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
 
