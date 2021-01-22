@@ -1,4 +1,5 @@
 using Dapper;
+using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -15,27 +16,10 @@ namespace EducationSystem.Test
         [TestCase(89)]
         public void DeleteCourseTest(int id)
         {
-            var courseDictionary = new Dictionary<int, CourseDto>();
+            CourseRepository courseRepository = new CourseRepository();
 
-            var expected = _connection
-                 .Query<CourseDto, ThemeDto, CourseDto>(
-                     "dbo.Course_SelectAll",
-                     (course, theme) =>
-                     {
-                         if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
-                         {
-                             courseEntry = course;
-                             courseEntry.Themes = new List<ThemeDto>();
-                             courseDictionary.Add(courseEntry.Id, courseEntry);
-                         }
 
-                         courseEntry.Themes.Add(theme);
-                         return courseEntry;
-                     },
-                     splitOn: "Id",
-                     commandType: System.Data.CommandType.StoredProcedure)
-                 .Distinct()
-                 .ToList();
+            var expected = courseRepository.GetCourses();
 
 
             var deleted = expected.Where(x => x.Id == id).ToList();
@@ -45,46 +29,13 @@ namespace EducationSystem.Test
 
 
 
-            var result = _connection
-                .Execute("dbo.Course_Delete",
-                new
-                {
-                    id
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
+            courseRepository.DeleteCourse(id);
 
-            var actual = _connection
-                 .Query<CourseDto, ThemeDto, CourseDto>(
-                     "dbo.Course_SelectAll",
-                     (course, theme) =>
-                     {
-                         if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
-                         {
-                             courseEntry = course;
-                             courseEntry.Themes = new List<ThemeDto>();
-                             courseDictionary.Add(courseEntry.Id, courseEntry);
-                         }
-
-                         courseEntry.Themes.Add(theme);
-                         return courseEntry;
-                     },
-                     splitOn: "Id",
-                     commandType: System.Data.CommandType.StoredProcedure)
-                 .Distinct()
-                 .ToList();
-
+            var actual = courseRepository.GetCourses();
 
             for (int i = 0; i < deleted.Count; ++i)
             {
-                result = _connection
-                .QuerySingle<int>("dbo.Course_Add",
-                new
-                {
-                    deleted[i].Name,
-                    deleted[i].Description,
-                    deleted[i].Duration
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
+                courseRepository.AddCourse(deleted[i].Name, deleted[i].Description, deleted[i].Duration);
             }
 
             Assert.AreEqual(expected,actual);
