@@ -64,19 +64,19 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public AttachmentDto ModifyAttachment(int id, string path, int attachmentTypeID)
+        public int ModifyAttachment(int id, string path, int attachmentTypeID)
         {
             var data = _connection
-                .QuerySingleOrDefault<AttachmentDto>("dbo.Attachment_Update", new { id, path, attachmentTypeID }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Attachment_Update", new { id, path, attachmentTypeID }, commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
 
 
-        public void DeleteAttachmentById(int id)
+        public int DeleteAttachmentById(int id)
         {
             var data = _connection
-                .QuerySingleOrDefault<AttachmentDto>("dbo.Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-
+                .Execute("dbo.Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            return data;
         }
 
 
@@ -110,17 +110,18 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public AttachmentTypeDto ModifyAttachmentType(int id, string name)
+        public int ModifyAttachmentType(int id, string name)
         {
             var data = _connection
-                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_Update", new { id, name }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.AttachmentType_Update", new { id, name }, commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
 
-        public void DeleteAttachmentTypeById(int id)
+        public int DeleteAttachmentTypeById(int id)
         {
             var data = _connection
-                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.AttachmentType_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            return data;
         }
 
 
