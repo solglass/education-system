@@ -76,7 +76,7 @@ namespace EducationSystem.Data
         {
             var data = _connection
                 .Execute("dbo.Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return data
+            return data;
         }
 
 

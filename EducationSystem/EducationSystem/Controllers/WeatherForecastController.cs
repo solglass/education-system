@@ -30,8 +30,7 @@ namespace EducationSystem.Controllers
         {
 
             var repo = new AttachmentRepository();
-             return repo.GetAttachments();
-            //return 0;
+             return repo.ModifyAttachmentType(4,"TXT");
         }
     }
 }
