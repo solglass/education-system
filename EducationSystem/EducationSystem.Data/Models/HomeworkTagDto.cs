@@ -4,11 +4,11 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class Theme_TagDto
+    public class HomeworkTagDto
     {
         public int Id { get; set; }
         public int TagId { get; set; }
-        public int ThemeId { get; set; }
+        public int HomeworkId { get; set; }
 
     }
 }
