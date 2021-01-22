@@ -14,17 +14,17 @@ namespace EducationSystem.Data
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<UserDto> GetUser()
+        public List<UserDto> GetUsers()
         {
             var user = _connection
                 .Query<UserDto>("dbo.User_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
                .ToList();
             return user;
         }
-        public UserDto SelectUserById()
+        public UserDto GetUserById(int id)
         {
             var user = _connection
-                .Query<UserDto>("dbo.User_SelectById", commandType: System.Data.CommandType.StoredProcedure)
+                .Query<UserDto>("dbo.User_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return user;
         }
