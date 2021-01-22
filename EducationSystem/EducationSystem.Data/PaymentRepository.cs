@@ -19,11 +19,9 @@ namespace EducationSystem.Data
             _connection = new SqlConnection(_connectionString);
         }
 
-        public PaymentDto GetPayments()
+        public List<PaymentDto> GetPayments()
         {
-            _connection.Open();
-
-            var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+            var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
                     "dbo.Payment_SelectAll",
                     (payment, user) =>
                     {
@@ -31,16 +29,13 @@ namespace EducationSystem.Data
                         return payment;
                     },
                             splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                .Distinct()
-                .FirstOrDefault();
-            return payment;
+                    commandType: System.Data.CommandType.StoredProcedure)               
+                .ToList();
+            return payments;
         }
 
         public PaymentDto GetPaymentById(int id)
         {
-            _connection.Open();
-
             var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
                     "dbo.Payment_SelectById",
                     (payment, user) =>
@@ -56,9 +51,7 @@ namespace EducationSystem.Data
         }
 
         public PaymentDto GetPaymentByContractNumber(int contractNumber)
-        {
-            _connection.Open();
-
+        {           
             var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
                     "dbo.Payment_SelectByContractNumber",
                     (payment, user) =>
