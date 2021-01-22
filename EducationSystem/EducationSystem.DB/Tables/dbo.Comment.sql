@@ -1,0 +1,34 @@
+﻿CREATE TABLE [dbo].[Comment](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[HomeworkAttemptId] [int] NOT NULL,
+	[Message] [nvarchar](max) NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+ CONSTRAINT [PK_COMMENT] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (
+PAD_INDEX = OFF,
+STATISTICS_NORECOMPUTE = OFF,
+IGNORE_DUP_KEY = OFF,
+ALLOW_ROW_LOCKS = ON,
+ALLOW_PAGE_LOCKS = ON
+--,
+--OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF
+) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Comment]  WITH CHECK ADD  CONSTRAINT [Comment_fk0] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([Id])
+ON UPDATE CASCADE
+GO
+
+ALTER TABLE [dbo].[Comment] CHECK CONSTRAINT [Comment_fk0]
+GO
+
+ALTER TABLE [dbo].[Comment]  WITH CHECK ADD  CONSTRAINT [Comment_fk1] FOREIGN KEY([HomeworkAttemptId])
+REFERENCES [dbo].[HomeworkAttempt] ([Id])
+GO
+
+ALTER TABLE [dbo].[Comment] CHECK CONSTRAINT [Comment_fk1]
