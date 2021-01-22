@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using EducationSystem.Data.Models;
+using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class CourseDto
+    public class HomeworkDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }
         public string Description { get; set; }
-        public int Duration { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime DeadlineDate { get; set; }
+        public int GroupID { get; set; }
+        public bool IsOptional { get; set; }
         public bool IsDeleted { get; set; }
-        public List<ThemeDto> Themes { get; set; }
     }
 }

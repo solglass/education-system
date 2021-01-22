@@ -1,53 +1,225 @@
-﻿using EducationSystem.Data.Models;
+﻿using Dapper;
+using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace EducationSystem.Data
 {
     public class CourseRepository
     {
+
+        private SqlConnection _connection;
+
         private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
         public CourseRepository()
         {
-
+            _connection = new SqlConnection(_connectionString);
         }
 
         public List<CourseDto> GetCourses()
         {
-            SqlConnection sqlConnection = new SqlConnection(_connectionString);
-            
-            sqlConnection.Open();
+            var courseDictionary = new Dictionary<int, CourseDto>();
 
-            SqlCommand sqlCommand = new SqlCommand 
-            {
-                CommandText = "dbo.Course_SelectAll", 
-                Connection = sqlConnection,
-                CommandType = System.Data.CommandType.StoredProcedure
-            };
-
-            var reader = sqlCommand.ExecuteReader();
-
-            List<CourseDto> result = new List<CourseDto>();
-
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    result.Add(new CourseDto 
+            var courses = _connection
+                .Query<CourseDto, ThemeDto, CourseDto>(
+                    "dbo.Course_SelectAll",
+                    (course, theme) =>
                     {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        Description = reader.GetString(2),
-                        Duration = reader.GetInt32(3),
-                        IsDeleted = reader.GetBoolean(4)
-                    });
-                }
-            }
-            reader.Close();
+                        if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
+                        {
+                            courseEntry = course;
+                            courseEntry.Themes = new List<ThemeDto>();
+                            courseDictionary.Add(courseEntry.Id, courseEntry);
+                        }
 
-            sqlConnection.Close();
-            
+                        courseEntry.Themes.Add(theme);
+                        return courseEntry;
+                    },
+                    splitOn: "Id",
+                    commandType:System.Data.CommandType.StoredProcedure)
+                .Distinct()
+                .ToList();
+            return courses;
+        }
+
+        public CourseDto GetCourseById(int id)
+        {
+            var courseEntry = new CourseDto();
+            var course = _connection
+                .Query<CourseDto, ThemeDto, CourseDto>(
+                    "dbo.Course_SelectById", 
+                    (course, theme) =>
+                    {
+                        if (courseEntry.Id == 0) 
+                        {
+                            courseEntry = course;
+                            courseEntry.Themes = new List<ThemeDto>();
+                        }
+                        courseEntry.Themes.Add(theme);
+                        return courseEntry;
+                    },
+                    new { id }, 
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return course;
+        }
+
+        // should return id of inserted entity, use 'QuerySingle' method
+        public int AddCourse(string name, string description, int duration)
+        {
+            var result = _connection
+                .QuerySingle<int>("dbo.Course_Add", 
+                new
+                {
+                  name,
+                  description ,
+                  duration 
+                }, 
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        // should return affected rows' count, use 'Execute' method
+        public int UpdateCourse(int id, string name, string description, int duration, bool isDeleted)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Update",
+                new
+                {   id,
+                    name,
+                    description ,
+                    duration,
+                    isDeleted
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        // should return affected rows' count, use 'Execute' method
+        public int DeleteCourse(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Delete",
+                new
+                {
+                    id 
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        //public dynamic GetCourseThemesByCourseId(int courseId)
+        //{
+
+        //    string sqlString = @"SELECT t.Id, t.Name FROM [dbo].[Course] c JOIN [dbo].[Course_Theme] ct on c.Id=ct.CourseId JOIN [dbo].[Theme] t on t.Id=ct.ThemeId WHERE c.Id=@courseId";
+
+        //    var result= _connection
+        //        .Query<ThemeDto>(sqlString,new { courseId }, commandType: System.Data.CommandType.Text)
+        //        .ToList(); 
+
+        //    return result;
+        //}
+
+        public List<ThemeDto> GetThemes()
+        {
+            var theme = _connection
+                 .Query<ThemeDto>("dbo.Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return theme;
+        }
+        public ThemeDto GetThemeById(int id)
+        {
+            var theme = _connection
+                .Query<ThemeDto>("dbo.Theme_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return theme;
+        }
+        public int AddTheme(string name)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Add",
+                new
+                {
+                    name
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int UpdateTheme(int id, string name)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Update",
+                new
+                {
+                    id,
+                    name
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int DeleteTheme(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+
+
+        public int AddCourse_Theme(int courseId, int themeId)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Theme_Add",
+                new
+                {
+                    courseId,
+                    themeId
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int DeleteCourse_Theme(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Theme_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+
+        public int AddCourse_Theme_Material(int courseThemeID, int materialID)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Theme_Material_Add",
+                new
+                {
+                    courseThemeID,
+                    materialID
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int DeleteCourse_Theme_Material(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Theme_Material_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
     }

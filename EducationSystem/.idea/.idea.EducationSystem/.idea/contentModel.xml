@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Администратор\AppData\Local\JetBrains\Rider2020.3\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Администратор\AppData\Local\JetBrains\Rider2020.3\resharper-host\Local\Transient\Rider\v203\SolutionCaches\_EducationSystem.345289527.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Администратор\AppData\Local\Temp" t="Include">
+      <e p=".NETFramework,Version=v4.5.SqlClrAttributes.cs" t="Include" />
+    </e>
+    <e p="C:\Users\Администратор\Documents\MEGA\projects\education-system\EducationSystem" t="IncludeFlat">
+      <e p="EducationSystem" t="IncludeRecursive">
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Controllers" t="Include">
+          <e p="WeatherForecastController.cs" t="Include" />
+        </e>
+        <e p="EducationSystem.API.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="EducationSystem.API.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="WeatherForecast.cs" t="Include" />
+      </e>
+      <e p="EducationSystem.Business" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Class1.cs" t="Include" />
+        <e p="EducationSystem.Business.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="EducationSystem.Business.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="EducationSystem.Data" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CourseRepository.cs" t="Include" />
+        <e p="EducationSystem.Data.csproj" t="IncludeRecursive" />
+        <e p="HomeworkRepository.cs" t="Include" />
+        <e p="LessonRepository.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="AttendanceDto.cs" t="Include" />
+          <e p="CourseDto.cs" t="Include" />
+          <e p="FeedbackDto.cs" t="Include" />
+          <e p="HomeworkDto.cs" t="Include" />
+          <e p="LessonDto.cs" t="Include" />
+          <e p="LessonThemeDto.cs" t="Include" />
+          <e p="UnderstandingLevelDto.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="EducationSystem.Data.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="EducationSystem.DB" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="EducationSystem.DB.sqlproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Properties" t="Include" />
+        <e p="StoredProcedures" t="Include" />
+        <e p="Tables" t="Include" />
+      </e>
+      <e p="EducationSystem.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
