@@ -24,8 +24,8 @@ namespace EducationSystem.Data
                 .Query<GroupDto, CourseDto, GroupStatusDto, GroupDto>("dbo.Group_SelectAll",
                     (group, course, groupStatus) =>
                     {
-                        group.CourseDto = course;
-                        group.GroupStatusDto = groupStatus;
+                        group.Course = course;
+                        group.GroupStatus = groupStatus;
                         return group;
                     },
                     splitOn: "Id",
@@ -41,8 +41,8 @@ namespace EducationSystem.Data
                 .Query<GroupDto, CourseDto, GroupStatusDto, GroupDto>("dbo.Group_SelectById",
                     (group, course, groupStatus) =>
                     {
-                        group.CourseDto = course;
-                        group.GroupStatusDto = groupStatus;
+                        group.Course = course;
+                        group.GroupStatus = groupStatus;
                         return group;
                     },
                     new { id },
@@ -59,8 +59,8 @@ namespace EducationSystem.Data
                 .Query<GroupDto>("dbo.Group_Add", 
                 new 
                 { 
-                    CourseID = groupDto.CourseID, 
-                    StatusId = groupDto.StatusId, 
+                    CourseID = groupDto.Course.Id, 
+                    StatusId = groupDto.GroupStatus.Id, 
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -73,8 +73,8 @@ namespace EducationSystem.Data
                 new 
                 { 
                     Id = groupDto.Id, 
-                    CourseID = groupDto.CourseID, 
-                    StatusId = groupDto.StatusId, 
+                    CourseID = groupDto.Course.Id, 
+                    StatusId = groupDto.GroupStatus.Id, 
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);

@@ -20,18 +20,14 @@ namespace EducationSystem.Data
 
         public List<AttachmentDto> GetAttachments()
         {
- 
-            var entry = new AttachmentDto();
+            
             var data = _connection
                 .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>(
                     "dbo.Attachment_SelectAll",
                     (attachment, attachmentType) =>
-                    {
-
-                        entry = attachment;
-                        entry.AttachmentType = attachmentType;
-
-                        return entry;
+                    {                       
+                        attachment.AttachmentType = attachmentType;
+                        return attachment;
                     },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
@@ -43,19 +39,13 @@ namespace EducationSystem.Data
 
         public AttachmentDto GetAttachmentById(int id)
         {
-
-            var entry = new AttachmentDto();
             var data = _connection
                 .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>(
                     "dbo.Attachment_SelectById",
                     (attachment, attachmentType) =>
-                    {
-                        if (entry.Id == 0)
-                        {
-                            entry = attachment;
-                            entry.AttachmentType = attachmentType;
-                        }
-                        return entry;
+                    {                                             
+                        attachment.AttachmentType = attachmentType;                       
+                        return attachment;
                     },
                     new { id },
                     splitOn: "Id",
