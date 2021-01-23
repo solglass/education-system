@@ -1,0 +1,20 @@
+﻿CREATE TABLE [dbo].[Payment](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ContractNumber] [int] NOT NULL,
+	[Amount] [decimal](6, 2) NOT NULL,
+	[Date] [datetime2](7) NOT NULL,
+	[Period] [nvarchar](7) NOT NULL,
+	[IsPaid] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+ CONSTRAINT [PK_PAYMENT] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (
+PAD_INDEX = OFF, 
+STATISTICS_NORECOMPUTE = OFF, 
+IGNORE_DUP_KEY = OFF, 
+ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON
+--, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF
+) ON [PRIMARY]) ON [PRIMARY]
+
+
