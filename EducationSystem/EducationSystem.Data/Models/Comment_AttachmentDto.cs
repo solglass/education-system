@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace EducationSystem.Data.Models
-{
-    public class ThemeDto
+{ 
+    public class Comment_AttachmentDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public int CommentId { get; set; }
+        public int AttachmentId { get; set; }
 
-        public List<TagDto> Tags { get; set; }
     }
 }

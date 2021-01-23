@@ -4,11 +4,10 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class ThemeDto
+    class TeacherGroupDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-
-        public List<TagDto> Tags { get; set; }
+        public int UserID { get; set; }
+        public int GroupID { get; set; }
     }
 }

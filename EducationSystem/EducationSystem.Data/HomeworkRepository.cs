@@ -7,11 +7,8 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class HomeworkRepository
+    public class HomeworkRepository : BaseRepository
     {
-        private SqlConnection _connection;
-
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
         public HomeworkRepository()
         {
             _connection = new SqlConnection(_connectionString);
@@ -139,7 +136,7 @@ namespace EducationSystem.Data
             return comment;
         }
 
-        public List<Homework_ThemeDto> GetHomework_Theme()
+        public List<Homework_ThemeDto> GetHomework_Themes()
         {
             var result = _connection
                  .Query<Homework_ThemeDto>("dbo.Homework_Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)

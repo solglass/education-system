@@ -7,12 +7,9 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class CourseRepository
+    public class CourseRepository : BaseRepository
     {
 
-        private SqlConnection _connection;
-
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
         public CourseRepository()
         {
             _connection = new SqlConnection(_connectionString);
