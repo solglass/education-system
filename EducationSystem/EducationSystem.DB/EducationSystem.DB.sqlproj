@@ -151,7 +151,6 @@
     <Build Include="StoredProcedures\Group\Group_SelectAll.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectById.sql" />
     <Build Include="StoredProcedures\Group\Group_Update.sql" />
-    
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Add.sql" />
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Delete.sql" />
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_SelectAll.sql" />
@@ -163,12 +162,14 @@
     <Build Include="StoredProcedures\Material\Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectById.sql" />
-    <Build Include="StoredProcedures\Material\Material_Update.sql" />      
+    <Build Include="StoredProcedures\Material\Material_Update.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Add.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Delete.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectAll.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByContractNumber.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectById.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Update.sql" />
+    <Build Include="StoredProcedures\Tables\dbo.Group.sql" />
+    <Build Include="StoredProcedures\Tables\dbo.Group_Material.sql" />
   </ItemGroup>
 </Project>
