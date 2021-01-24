@@ -11,6 +11,7 @@ namespace EducationSystem.Test
     public class CourseRepositoryTest
     {
 
+
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(89)]
