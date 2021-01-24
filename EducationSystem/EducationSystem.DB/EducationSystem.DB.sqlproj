@@ -76,6 +76,8 @@
     <Folder Include="StoredProcedures\Group_Material" />
     <Folder Include="StoredProcedures\Payment" />
     <Folder Include="StoredProcedures\Material" />
+    <Folder Include="StoredProcedures\Student_Group" />
+    <Folder Include="StoredProcedures\TeacherGroup" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -151,7 +153,6 @@
     <Build Include="StoredProcedures\Group\Group_SelectAll.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectById.sql" />
     <Build Include="StoredProcedures\Group\Group_Update.sql" />
-    
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Add.sql" />
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Delete.sql" />
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_SelectAll.sql" />
@@ -163,12 +164,20 @@
     <Build Include="StoredProcedures\Material\Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectById.sql" />
-    <Build Include="StoredProcedures\Material\Material_Update.sql" />      
+    <Build Include="StoredProcedures\Material\Material_Update.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Add.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Delete.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectAll.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByContractNumber.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectById.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Update.sql" />
+    <Build Include="StoredProcedures\Student_Group\Student_Group_SelectById.sql" />
+    <Build Include="StoredProcedures\Student_Group\Student_Group_Add.sql" />
+    <Build Include="StoredProcedures\Student_Group\Student_Group_Delete.sql" />
+    <Build Include="StoredProcedures\Student_Group\Student_Group_SelectAll.sql" />
+    <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_Add.sql" />
+    <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_Delete.sql" />
+    <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_SelectById.sql" />
+    <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_SelectAll.sql" />
   </ItemGroup>
 </Project>
