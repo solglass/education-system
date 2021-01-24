@@ -28,7 +28,7 @@ namespace EducationSystem.Data
                         payment.Student = user;
                         return payment;
                     },
-                            splitOn: "Id",
+                            splitOn: "Id,UserId,ContractNumber",                        
                     commandType: System.Data.CommandType.StoredProcedure)               
                 .ToList();
             return payments;
