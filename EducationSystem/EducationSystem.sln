@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Data", "Edu
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "EducationSystem.DB", "EducationSystem.DB\EducationSystem.DB.sqlproj", "{326CB266-0799-4B96-AA90-E1191605251D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Test", "EducationSystem.Test\EducationSystem.Test.csproj", "{287D7F53-D35D-4841-B084-5F1547434AB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Test", "EducationSystem.Test\EducationSystem.Data.Tests.csproj", "{287D7F53-D35D-4841-B084-5F1547434AB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

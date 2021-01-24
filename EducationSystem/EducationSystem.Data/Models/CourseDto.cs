@@ -12,6 +12,6 @@ namespace EducationSystem.Data.Models
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
-        
+        public List<GroupDto> Groups { get; set; }
     }
 }
