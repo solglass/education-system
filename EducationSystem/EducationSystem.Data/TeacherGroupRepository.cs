@@ -8,9 +8,8 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    class TeacherGroupRepository
-    {
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
+    class TeacherGroupRepository : BaseRepository
+    {     
         public List<TeacherGroupDto> GetTeacherGroups()
         {
             using(SqlConnection connection = new SqlConnection(_connectionString))
