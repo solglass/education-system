@@ -32,7 +32,7 @@ namespace EducationSystem.Data
                 connection.Execute("dbo.Teacher_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);        
             }
         }
-        public TeacherGroupDto AddGetTeacherGroup(TeacherGroupDto teacherGroup)
+        public TeacherGroupDto AddTeacherGroup(TeacherGroupDto teacherGroup)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {

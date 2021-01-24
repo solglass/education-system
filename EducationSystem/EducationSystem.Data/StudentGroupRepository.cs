@@ -16,8 +16,7 @@ namespace EducationSystem.Data
                 return connection
                     .Query<StudentGroupDto>("dbo.Student_Group_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
                     .ToList();             
-            }
-            
+            }           
         }
         public StudentGroupDto GetStudentGroupById(int id)
         {

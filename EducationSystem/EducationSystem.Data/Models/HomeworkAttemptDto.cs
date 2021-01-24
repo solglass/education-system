@@ -13,6 +13,7 @@ namespace EducationSystem.Data.Models
         public bool IsDeleted { get; set; }
         //public UserDto Author { get; set; }
         //public HomeworkAttemptStatusDto HomeworkAttemptStatus { get; set; }
+        //
         public List<CommentDto> Comments { get; set; }
     }
 }

@@ -9,8 +9,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Controllers
 {
+    // https://localhost:50221/api/WeatherForecast/
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -30,7 +31,7 @@ namespace EducationSystem.Controllers
         {
 
             var repo = new AttachmentRepository();
-             return repo.ModifyAttachmentType(4,"TXT");
+            return repo.ModifyAttachmentType(4,"TXT");
         }
     }
 }
