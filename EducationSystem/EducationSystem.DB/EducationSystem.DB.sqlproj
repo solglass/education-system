@@ -181,5 +181,7 @@
     <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_SelectAll.sql" />
     <Build Include="StoredProcedures\Tables\dbo.Group.sql" />
     <Build Include="StoredProcedures\Tables\dbo.Group_Material.sql" />
+    <Build Include="StoredProcedures\Tables\dbo.GroupStatus.sql" />
+    <Build Include="StoredProcedures\Tables\dbo.Payment.sql" />
   </ItemGroup>
 </Project>
