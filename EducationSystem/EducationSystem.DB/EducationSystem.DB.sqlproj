@@ -76,6 +76,8 @@
     <Folder Include="StoredProcedures\Payment" />
     <Folder Include="StoredProcedures\Material" />
     <Folder Include="Tables" />
+    <Folder Include="StoredProcedures\Student_Group" />
+    <Folder Include="StoredProcedures\TeacherGroup" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -160,6 +162,14 @@
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByContractNumber.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectById.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Update.sql" />
+    <Build Include="StoredProcedures\Student_Group\Student_Group_SelectById.sql" />
+    <Build Include="StoredProcedures\Student_Group\Student_Group_Add.sql" />
+    <Build Include="StoredProcedures\Student_Group\Student_Group_Delete.sql" />
+    <Build Include="StoredProcedures\Student_Group\Student_Group_SelectAll.sql" />
+    <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_Add.sql" />
+    <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_Delete.sql" />
+    <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_SelectById.sql" />
+    <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_SelectAll.sql" />
     <Build Include="Tables\dbo.Comment.sql" />
     <Build Include="Tables\dbo.Course.sql" />
     <Build Include="Tables\dbo.Course_Theme.sql" />
