@@ -1,9 +1,10 @@
 ﻿CREATE proc [dbo].[Course_Add] (
-	@Name nvarchar(50),
-	@Description nvarchar(MAX),
-	@Duration int
+	@name nvarchar(50),
+	@description nvarchar(MAX),
+	@duration int
 ) as
 begin
 	insert into dbo.Course (Name, Description, Duration, IsDeleted)
-	values (@Name, @Description, @Duration, 0)
+	values (@name, @description, @duration, 0)
+	select SCOPE_IDENTITY()
 end
