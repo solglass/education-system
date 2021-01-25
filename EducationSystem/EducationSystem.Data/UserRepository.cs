@@ -19,17 +19,56 @@ namespace EducationSystem.Data
 
         public List<UserDto> GetUser()
         {
-            var user = _connection
-                .Query<UserDto>("dbo.User_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-               .ToList();
-            return user;
+           
+                var UserDictionary = new Dictionary<int,UserDto>();
+
+
+                var users = _connection.
+                    Query<UserDto, RoleDto, UserDto>(
+                    "dbo.User_SelectAll",
+                    (user, role) =>
+                    {
+                        //TagDto tagEntry;
+
+                        if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                        {
+                           userEntry = user;
+                           userEntry.roles = new List<RoleDto>();
+                            UserDictionary.Add(userEntry.Id, userEntry);
+                        }
+
+                        userEntry.roles.Add(role);
+                        return userEntry;
+                    },
+                    splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+                return users;
+           
+           
         }
-        public UserDto SelectUserById()
+        public UserDto SelectUserById(int id)
         {
-            var user = _connection
-                .Query<UserDto>("dbo.User_SelectById", commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return user;
+            var UserDictionary = new Dictionary<int, UserDto>();
+            var users = _connection.
+                Query<UserDto, RoleDto, UserDto>(
+                "dbo.User_SelectAll",
+                (user, role) =>
+                {
+                        if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                    {
+                        userEntry = user;
+                        userEntry.roles = new List<RoleDto>();
+                        UserDictionary.Add(userEntry.Id, userEntry);
+                    }
+
+                    userEntry.roles.Add(role);
+                    return userEntry;
+                },
+               new { id},
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+            .FirstOrDefault();
+            return users;
         }
         public UserDto AddUser()
         {
