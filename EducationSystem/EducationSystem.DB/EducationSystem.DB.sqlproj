@@ -180,12 +180,12 @@
     <Build Include="Tables\dbo.Homework_Theme.sql" />
     <Build Include="Tables\dbo.HomeworkAttemptStatus.sql" />
     <Build Include="Tables\dbo.Theme.sql" />
-    <Build Include="StoredProcedures\Tables\dbo.Group.sql" />
-    <Build Include="StoredProcedures\Tables\dbo.Group_Material.sql" />
     <Build Include="StoredProcedures\Tables\dbo.GroupStatus.sql" />
     <Build Include="StoredProcedures\Tables\dbo.Payment.sql" />
     <Build Include="Tables\dbo.Attachment.sql" />
     <Build Include="Tables\dbo.AttachmentType.sql" />
     <Build Include="Tables\dbo.Comment_Attachment.sql" />
+    <Build Include="Tables\dbo.Group.sql" />
+    <Build Include="Tables\dbo.Group_Material.sql" />
   </ItemGroup>
 </Project>
