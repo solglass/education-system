@@ -154,9 +154,11 @@ namespace EducationSystem.Data
                             themeEntry.Lessons = new List<LessonDto>();
                             themeDictionary.Add(themeEntry.Id, themeEntry);
                         }
-                        if (course != null)
+                        if (course != null && !courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
                         {
+                            courseEntry = course;
                             themeEntry.Courses.Add(course);
+                            courseDictionary.Add(courseEntry.Id, courseEntry);
                         }
                         if (homework != null  && !homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
                         {
@@ -176,12 +178,7 @@ namespace EducationSystem.Data
                             themeEntry.Lessons.Add(lesson);
                             lessonDictionary.Add(lessonEntry.ID, lessonEntry);
                         }
-                        if (course != null && !courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
-                        {
-                            courseEntry = course;
-                            themeEntry.Courses.Add(course);
-                            courseDictionary.Add(courseEntry.Id, courseEntry);
-                        }
+                       
                         return themeEntry;
                     },
                     splitOn: "Id",
@@ -210,9 +207,11 @@ namespace EducationSystem.Data
                             themeEntry.Tags = new List<TagDto>();
                             themeEntry.Lessons = new List<LessonDto>();
                         }
-                        if (course != null)
+                        if (course != null&& !courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
                         {
+                            courseEntry = course;
                             themeEntry.Courses.Add(course);
+                            courseDictionary.Add(courseEntry.Id, courseEntry);
                         }
                         if (homework != null && !homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
                         {
@@ -232,12 +231,12 @@ namespace EducationSystem.Data
                             themeEntry.Lessons.Add(lesson);
                             lessonDictionary.Add(lessonEntry.ID, lessonEntry);
                         }
-                        if (course != null && !courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
-                        {
-                            courseEntry = course;
-                            themeEntry.Courses.Add(course);
-                            courseDictionary.Add(courseEntry.Id, courseEntry);
-                        }
+                        //if (course != null && !courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
+                        //{
+                        //    courseEntry = course;
+                        //    themeEntry.Courses.Add(course);
+                        //    courseDictionary.Add(courseEntry.Id, courseEntry);
+                        //}
                         return themeEntry;
                     },
                     new { id },
