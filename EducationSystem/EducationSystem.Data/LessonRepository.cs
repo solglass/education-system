@@ -88,7 +88,44 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-    
+        public List<FeedbackDto> GetFeedbacks()
+        {
+            return _connection
+                .Query<FeedbackDto, LessonDto, UnderstandingLevelDto, UserDto, FeedbackDto>(
+                    "dbo.Feedback_SelectAll",
+                    (feedback, lesson, understendinglevel, user) =>
+                    {
+                        feedback.Lesson = lesson;
+                        feedback.UnderstandingLevel = understendinglevel;
+                        feedback.User = user;
+                        return feedback;
+                    },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .Distinct()
+                .ToList();
+        }
+
+        public FeedbackDto GetFeedbackById(int id)
+        {
+            return _connection
+                .Query<FeedbackDto, LessonDto, UnderstandingLevelDto, UserDto, FeedbackDto>(
+                    "dbo.Feedback_SelectById",
+                    (feedback, lesson, understendinglevel, user) =>
+                    {
+                        feedback.Lesson = lesson;
+                        feedback.UnderstandingLevel = understendinglevel;
+                        feedback.User = user;
+                        return feedback;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .FirstOrDefault();
+        }
+
 
         public int AddFeedback(int userdId, string message, int lessonId, int understandingLevelId)
         {
