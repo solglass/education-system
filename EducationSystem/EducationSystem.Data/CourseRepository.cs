@@ -139,7 +139,7 @@ namespace EducationSystem.Data
             var homeworkDictionary = new Dictionary<int, HomeworkDto>();
             var tagDictionary = new Dictionary<int, TagDto>();
             var lessonDictionary = new Dictionary<int, LessonDto>();
-
+            var courseDictionary = new Dictionary<int, CourseDto>();
             var themes = _connection
                 .Query< ThemeDto, CourseDto ,HomeworkDto,TagDto, LessonDto, ThemeDto>(
                     "dbo.Theme_SelectAll",
@@ -176,6 +176,12 @@ namespace EducationSystem.Data
                             themeEntry.Lessons.Add(lesson);
                             lessonDictionary.Add(lessonEntry.ID, lessonEntry);
                         }
+                        if (course != null && !courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
+                        {
+                            courseEntry = course;
+                            themeEntry.Courses.Add(course);
+                            courseDictionary.Add(courseEntry.Id, courseEntry);
+                        }
                         return themeEntry;
                     },
                     splitOn: "Id",
@@ -190,7 +196,7 @@ namespace EducationSystem.Data
             var homeworkDictionary = new Dictionary<int, HomeworkDto>();
             var tagDictionary = new Dictionary<int, TagDto>();
             var lessonDictionary = new Dictionary<int, LessonDto>();
-
+            var courseDictionary = new Dictionary<int, CourseDto>();
             var theme = _connection
                 .Query<ThemeDto, CourseDto, HomeworkDto, TagDto, LessonDto, ThemeDto>(
                     "dbo.Theme_SelectById",
@@ -204,7 +210,7 @@ namespace EducationSystem.Data
                             themeEntry.Tags = new List<TagDto>();
                             themeEntry.Lessons = new List<LessonDto>();
                         }
-                        if (theme != null)
+                        if (course != null)
                         {
                             themeEntry.Courses.Add(course);
                         }
@@ -225,6 +231,12 @@ namespace EducationSystem.Data
                             lessonEntry = lesson;
                             themeEntry.Lessons.Add(lesson);
                             lessonDictionary.Add(lessonEntry.ID, lessonEntry);
+                        }
+                        if (course != null && !courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
+                        {
+                            courseEntry = course;
+                            themeEntry.Courses.Add(course);
+                            courseDictionary.Add(courseEntry.Id, courseEntry);
                         }
                         return themeEntry;
                     },
