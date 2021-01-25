@@ -136,13 +136,7 @@ namespace EducationSystem.Data
             return comment;
         }
 
-        public List<Homework_ThemeDto> GetHomework_Themes()
-        {
-            var result = _connection
-                 .Query<Homework_ThemeDto>("dbo.Homework_Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return result;
-        }
+        
 
         public int DeleteHomework_Theme(int id)
         {

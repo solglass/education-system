@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using EducationSystem.Data.Models;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -18,24 +17,34 @@ namespace EducationSystem.Data
         public List<CourseDto> GetCourses()
         {
             var courseDictionary = new Dictionary<int, CourseDto>();
-
+            var groupDictionary = new Dictionary<int, GroupDto>();
             var courses = _connection
-                .Query<CourseDto, ThemeDto, CourseDto>(
+                .Query<CourseDto, ThemeDto, GroupDto, GroupStatusDto, CourseDto>(
                     "dbo.Course_SelectAll",
-                    (course, theme) =>
+                    (course, theme, group, groupStatus) =>
                     {
                         if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
                         {
                             courseEntry = course;
                             courseEntry.Themes = new List<ThemeDto>();
+                            courseEntry.Groups = new List<GroupDto>();
                             courseDictionary.Add(courseEntry.Id, courseEntry);
                         }
-
-                        courseEntry.Themes.Add(theme);
+                        if(group!=null && groupStatus!=null&& !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
+                        {
+                            groupEntry = group;
+                            groupEntry.GroupStatus = groupStatus;
+                            courseEntry.Groups.Add(groupEntry);
+                            groupDictionary.Add(groupEntry.Id, groupEntry);
+                        }
+                       if(theme!=null)
+                        {
+                            courseEntry.Themes.Add(theme);
+                        }
                         return courseEntry;
                     },
                     splitOn: "Id",
-                    commandType:System.Data.CommandType.StoredProcedure)
+                    commandType: System.Data.CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
             return courses;
@@ -43,21 +52,34 @@ namespace EducationSystem.Data
 
         public CourseDto GetCourseById(int id)
         {
+            var groupDictionary = new Dictionary<int, GroupDto>();
             var courseEntry = new CourseDto();
             var course = _connection
-                .Query<CourseDto, ThemeDto, CourseDto>(
-                    "dbo.Course_SelectById", 
-                    (course, theme) =>
+                .Query<CourseDto, ThemeDto, GroupDto, GroupStatusDto, CourseDto>(
+                    "dbo.Course_SelectById",
+                    (course, theme, group, groupStatus) =>
                     {
-                        if (courseEntry.Id == 0) 
+                        if (courseEntry.Id == 0)
                         {
                             courseEntry = course;
                             courseEntry.Themes = new List<ThemeDto>();
+                            courseEntry.Groups = new List<GroupDto>();
                         }
-                        courseEntry.Themes.Add(theme);
+                        if(theme!=null)
+                        {
+                            courseEntry.Themes.Add(theme);
+                        }
+                        
+                        if (group != null && groupStatus != null && !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
+                        {
+                            groupEntry = group;
+                            group.GroupStatus = groupStatus;
+                            courseEntry.Groups.Add(group);
+                            groupDictionary.Add(groupEntry.Id, groupEntry);
+                        }
                         return courseEntry;
                     },
-                    new { id }, 
+                    new { id },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
@@ -65,31 +87,32 @@ namespace EducationSystem.Data
         }
 
         // should return id of inserted entity, use 'QuerySingle' method
-        public int AddCourse(string name, string description, int duration)
+        public int AddCourse(/*string name, string description, int duration*/CourseDto course)
         {
             var result = _connection
-                .QuerySingle<int>("dbo.Course_Add", 
+                .QuerySingle<int>("dbo.Course_Add",
                 new
                 {
-                  name,
-                  description ,
-                  duration 
-                }, 
+                    name = course.Name,
+                    description = course.Description,
+                    duration = course.Duration
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
         // should return affected rows' count, use 'Execute' method
-        public int UpdateCourse(int id, string name, string description, int duration, bool isDeleted)
+        public int UpdateCourse(/*int id, string name, string description, int duration, bool isDeleted*/ CourseDto course)
         {
             var result = _connection
                 .Execute("dbo.Course_Update",
                 new
-                {   id,
-                    name,
-                    description ,
-                    duration,
-                    isDeleted
+                {
+                    id = course.Id,
+                    name = course.Name,
+                    description = course.Description,
+                    duration = course.Duration,
+                    isDeleted = course.IsDeleted
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -102,23 +125,13 @@ namespace EducationSystem.Data
                 .Execute("dbo.Course_Delete",
                 new
                 {
-                    id 
+                    id
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
-        //public dynamic GetCourseThemesByCourseId(int courseId)
-        //{
 
-        //    string sqlString = @"SELECT t.Id, t.Name FROM [dbo].[Course] c JOIN [dbo].[Course_Theme] ct on c.Id=ct.CourseId JOIN [dbo].[Theme] t on t.Id=ct.ThemeId WHERE c.Id=@courseId";
-
-        //    var result= _connection
-        //        .Query<ThemeDto>(sqlString,new { courseId }, commandType: System.Data.CommandType.Text)
-        //        .ToList(); 
-
-        //    return result;
-        //}
 
         public List<ThemeDto> GetThemes()
         {
@@ -168,6 +181,9 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
+
+
 
 
 
