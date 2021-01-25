@@ -119,6 +119,104 @@ namespace EducationSystem.Data
                  .FirstOrDefault();
             return role;
         }
+
+
+        // paymentrepository
+        public List<PaymentDto> GetPayments()
+        {
+            var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+                    "dbo.Payment_SelectAll",
+                    (payment, user) =>
+                    {
+                        payment.Student = user;
+                        return payment;
+                    },
+                            splitOn: "Id,UserId,ContractNumber",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return payments;
+        }
+
+        public PaymentDto GetPaymentById(int id)
+        {
+            var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+                    "dbo.Payment_SelectById",
+                    (payment, user) =>
+                    {
+                        payment.Student = user;
+                        return payment;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return payment;
+        }
+
+        public PaymentDto GetPaymentByContractNumber(int contractNumber)
+        {
+            var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+                    "dbo.Payment_SelectByContractNumber",
+                    (payment, user) =>
+                    {
+                        payment.Student = user;
+                        return payment;
+                    },
+                    new { contractNumber },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return payment;
+        }
+
+        // should return id of inserted entity, use 'QuerySingle' method
+        public int AddPayment(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid)
+        {
+            var result = _connection
+                .QuerySingle<int>("dbo.Payment_Add",
+                new
+                {
+                    contractNumber,
+                    amount,
+                    date,
+                    period,
+                    IsPaid
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        // should return affected rows' count, use 'Execute' method
+        public int UpdatePayment(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Update",
+                new
+                {
+                    contractNumber,
+                    amount,
+                    date,
+                    period,
+                    IsPaid
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        // should return affected rows' count, use 'Execute' method
+        public int DeletePayment(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Payment_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
     }
 
 }
+
+

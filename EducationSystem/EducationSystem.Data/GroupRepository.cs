@@ -113,5 +113,50 @@ namespace EducationSystem.Data
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
         }
+
+        //GroupStatus
+        public List<GroupStatusDto> GetGroupStatus()
+        {
+            var groupStatus = _connection
+                                .Query<GroupStatusDto>("dbo.GroupStatus_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                                .ToList();
+            return groupStatus;
+        }
+
+        public GroupStatusDto GetGroupStatusById(int id)
+        {
+            var groupStatus = _connection
+            .QuerySingleOrDefault<GroupStatusDto>("dbo.GroupStatus_SelectAll", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            return groupStatus;
+        }
+
+        public int AddGroupStatus(string Name)
+        {
+            var result = _connection
+              .Execute("dbo.GroupStatuses_Add",
+              new { Name },
+              commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+
+        }
+        public int UpdateGroupStatus(int id, string Name)
+        {
+            var result = _connection
+                .Execute("dbo.GroupStatus_Update",
+                new { id, Name },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int DeleteGroupStatus(int id)
+        {
+            var result = _connection
+                .Execute("dbo.GroupStatus_Delete",
+                new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+
     }
 }
