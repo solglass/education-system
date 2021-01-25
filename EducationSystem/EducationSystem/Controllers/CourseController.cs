@@ -14,7 +14,7 @@ namespace EducationSystem.API.Controllers
     [Route("api/[controller]")]
     public class CourseController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<CourseController> _logger;
         private CourseRepository _repo;
 
         public CourseController()
