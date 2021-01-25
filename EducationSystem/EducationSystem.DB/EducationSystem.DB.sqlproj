@@ -78,6 +78,7 @@
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures\Student_Group" />
     <Folder Include="StoredProcedures\TeacherGroup" />
+    <Folder Include="StoredProcedures\Tables\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -183,5 +184,8 @@
     <Build Include="StoredProcedures\Tables\dbo.Group_Material.sql" />
     <Build Include="StoredProcedures\Tables\dbo.GroupStatus.sql" />
     <Build Include="StoredProcedures\Tables\dbo.Payment.sql" />
+    <Build Include="Tables\dbo.Attachment.sql" />
+    <Build Include="Tables\dbo.AttachmentType.sql" />
+    <Build Include="Tables\dbo.Comment_Attachment.sql" />
   </ItemGroup>
 </Project>
