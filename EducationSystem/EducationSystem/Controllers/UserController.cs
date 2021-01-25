@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using EducationSystem.Data;
+using EducationSystem.Data.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
+namespace EducationSystem.Controllers
+{
+    // https://localhost:50221/api/user/
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
+    {
+        private readonly ILogger<WeatherForecastController> _logger;
+        private UserRepository _repo;
+
+        public UserController(ILogger<WeatherForecastController> logger)
+        {
+            _logger = logger;
+            _repo = new UserRepository();
+        }
+
+        // https://localhost:50221/api/user/register
+        [HttpPost("register")]
+        public ActionResult Register([FromBody] dynamic user)
+        {
+            _repo.AddUser(/*user*/);
+            return Ok("пользователь зарегистрирован");
+        }
+
+        // https://localhost:50221/api/user/change-password
+        [HttpPut("change-password")]
+        public ActionResult ChangePassword(string oldPassword, string newPassword) 
+        {
+            // _repo.ChangePassword(oldPassword, newPassword)
+            return Ok("success");
+        }
+
+        // https://localhost:50221/api/user
+        [HttpGet]
+        public ActionResult GetUsers()
+        {
+            var users = _repo.GetUsers();
+            return Ok(users);
+        }
+
+        // https://localhost:50221/api/user/42
+        [HttpGet("{id}")]
+        public dynamic GetUser(int id)
+        {
+            var user = _repo.GetUserById(id);
+            return Ok(user);
+        }
+
+        // https://localhost:50221/api/user/42
+        [HttpPut("{id}")]
+        public ActionResult UpdateUserInfo(int id, [FromBody] dynamic data) 
+        {
+            _repo.UpdateUser(/*userData*/);
+            return Ok("success");
+        }
+
+        // https://localhost:50221/api/user/42
+        [HttpDelete("{id}")]
+        public ActionResult DeleteUser(int id) 
+        {
+            _repo.DeleteUser(/*userData*/);
+            return Ok("success");
+        }
+    }
+}

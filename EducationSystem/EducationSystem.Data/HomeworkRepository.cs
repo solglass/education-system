@@ -7,11 +7,8 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class HomeworkRepository
+    public class HomeworkRepository : BaseRepository
     {
-        private SqlConnection _connection;
-
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
         public HomeworkRepository()
         {
             _connection = new SqlConnection(_connectionString);
@@ -137,6 +134,40 @@ namespace EducationSystem.Data
                 .Query<CommentDto>("dbo.Comment_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return comment;
+        }
+
+        
+
+        public int DeleteHomework_Theme(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Homework_Theme_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatus()
+        {
+            var result = _connection
+                 .Query<HomeworkAttemptStatusDto>("dbo.HomeworkAttemptStatus_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+
+        public int DeleteHomeworkAttemptStatus(int id)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttemptStatus_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
     }
 }

@@ -7,18 +7,16 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class UserRepository
+    public class UserRepository : BaseRepository
     {
-        private SqlConnection _connection;
-
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
         public UserRepository()
         {
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<UserDto> GetUser()
+        public List<UserDto> GetUsers()
         {
+<<<<<<< HEAD
            
                 var UserDictionary = new Dictionary<int,UserDto>();
 
@@ -69,6 +67,19 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure)
             .FirstOrDefault();
             return users;
+=======
+            var user = _connection
+                .Query<UserDto>("dbo.User_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+               .ToList();
+            return user;
+        }
+        public UserDto GetUserById(int id)
+        {
+            var user = _connection
+                .Query<UserDto>("dbo.User_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return user;
+>>>>>>> Dev
         }
         public UserDto AddUser()
         {

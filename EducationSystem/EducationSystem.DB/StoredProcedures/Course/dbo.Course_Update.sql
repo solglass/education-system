@@ -1,17 +1,17 @@
 ﻿CREATE proc [dbo].[Course_Update] (
 @id int,
-@Name nvarchar(50),
-@Description nvarchar(MAX),
-@Duration int,
-@IsDeleted bit
+@name nvarchar(50),
+@description nvarchar(MAX),
+@duration int,
+@isDeleted bit
 )
 as
 begin 
 	update dbo.Course
 		set
-		Name = @Name,
-		Description = @Description,
-		Duration = @Duration,
-		IsDeleted = @IsDeleted
+		Name = @name,
+		Description = @description,
+		Duration = @duration,
+		IsDeleted = @isDeleted
 		where Id=@id
 end

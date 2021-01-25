@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.API", "EducationSystem\EducationSystem.API.csproj", "{34759EF5-9A22-42A8-93E3-5BBD59BC711B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.API", "EducationSystem\EducationSystem.API.csproj", "{34759EF5-9A22-42A8-93E3-5BBD59BC711B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Business", "EducationSystem.Business\EducationSystem.Business.csproj", "{195B529B-F952-4562-9E0B-8FF7B2F90703}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Business", "EducationSystem.Business\EducationSystem.Business.csproj", "{195B529B-F952-4562-9E0B-8FF7B2F90703}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Data", "EducationSystem.Data\EducationSystem.Data.csproj", "{4EB6C38A-0387-4769-AF63-70832F3A15DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Data", "EducationSystem.Data\EducationSystem.Data.csproj", "{4EB6C38A-0387-4769-AF63-70832F3A15DF}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "EducationSystem.DB", "EducationSystem.DB\EducationSystem.DB.sqlproj", "{326CB266-0799-4B96-AA90-E1191605251D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Test", "EducationSystem.Test\EducationSystem.Data.Tests.csproj", "{287D7F53-D35D-4841-B084-5F1547434AB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{326CB266-0799-4B96-AA90-E1191605251D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{326CB266-0799-4B96-AA90-E1191605251D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{326CB266-0799-4B96-AA90-E1191605251D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{287D7F53-D35D-4841-B084-5F1547434AB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{287D7F53-D35D-4841-B084-5F1547434AB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{287D7F53-D35D-4841-B084-5F1547434AB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{287D7F53-D35D-4841-B084-5F1547434AB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
