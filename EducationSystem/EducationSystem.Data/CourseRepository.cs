@@ -135,10 +135,54 @@ namespace EducationSystem.Data
 
         public List<ThemeDto> GetThemes()
         {
-            var theme = _connection
-                 .Query<ThemeDto>("dbo.Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+            var themeDictionary = new Dictionary<int, ThemeDto>();
+            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
+            var tagDictionary = new Dictionary<int, TagDto>();
+            var lessonDictionary = new Dictionary<int, LessonDto>();
+
+            var themes = _connection
+                .Query< ThemeDto, CourseDto ,HomeworkDto,TagDto, LessonDto, ThemeDto>(
+                    "dbo.Theme_SelectAll",
+                    (theme, course, homework,tag,lesson) =>
+                    {
+                        if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
+                        {
+                            themeEntry = theme;
+                            themeEntry.Courses = new List<CourseDto>();
+                            themeEntry.Homeworks = new List<HomeworkDto>();
+                            themeEntry.Tags = new List<TagDto>();
+                            themeEntry.Lessons = new List<LessonDto>();
+                            themeDictionary.Add(themeEntry.Id, themeEntry);
+                        }
+                        if (course != null)
+                        {
+                            themeEntry.Courses.Add(course);
+                        }
+                        if (homework != null  && !homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
+                        {
+                            homeworkEntry = homework;
+                            themeEntry.Homeworks.Add(homework);
+                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
+                        }
+                        if (tag != null && !tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
+                        {
+                            tagEntry = tag;
+                            themeEntry.Tags.Add(tag);
+                            tagDictionary.Add(tagEntry.Id, tagEntry);
+                        }
+                        if (lesson != null && !lessonDictionary.TryGetValue(lesson.ID, out LessonDto lessonEntry))
+                        {
+                            lessonEntry = lesson;
+                            themeEntry.Lessons.Add(lesson);
+                            lessonDictionary.Add(lessonEntry.ID, lessonEntry);
+                        }
+                        return themeEntry;
+                    },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
-            return theme;
+            return themes;
         }
         public ThemeDto GetThemeById(int id)
         {
