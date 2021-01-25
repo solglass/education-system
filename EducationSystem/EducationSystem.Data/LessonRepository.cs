@@ -18,16 +18,50 @@ namespace EducationSystem.Data
 
         public List<LessonDto> GetLessons()
         {
-            return _connection
-                .Query<LessonDto>("dbo.Lesson_SelectAll", commandType: CommandType.StoredProcedure)
+            var lessonDictionary = new Dictionary<int, LessonDto>();
+            var lessons = _connection
+                .Query<LessonDto, ThemeDto, LessonDto>("dbo.Lesson_SelectAll",
+               (lesson, theme) =>
+               {
+
+                   if (!lessonDictionary.TryGetValue(lesson.ID, out LessonDto lessonEntry))
+                   {
+                       lessonEntry = lesson;
+                       lessonEntry.Themes = new List<ThemeDto>();
+                       lessonDictionary.Add(lessonEntry.ID, lessonEntry);
+                   }
+
+                   lessonEntry.Themes.Add(theme);
+                   return lessonEntry;
+               },
+                splitOn: "ID",
+                commandType: CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
+            return lessons;
         }
 
-        public UnderstandingLevelDto GetLessonById(int id)
+        public LessonDto GetLessonById(int id)
         {
-            return _connection
-                .Query<UnderstandingLevelDto>("dbo.Lesson_SelectByID", new { id }, commandType: CommandType.StoredProcedure)
+            var lessonEntry = new LessonDto();
+            var lesson = _connection
+                .Query<LessonDto, ThemeDto, LessonDto>("dbo.Lesson_SelectByID",
+               (lesson, theme) =>
+               {
+
+                   if (lessonEntry.ID == 0)
+                   {
+                       lessonEntry = lesson;
+                       lessonEntry.Themes = new List<ThemeDto>();
+                   }
+
+                   lessonEntry.Themes.Add(theme);
+                   return lessonEntry;
+               },
+                splitOn: "ID",
+                commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
+            return lesson;
         }
 
         public int AddLesson(int groupId, string description, DateTime date)
