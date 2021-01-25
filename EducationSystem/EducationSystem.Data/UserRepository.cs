@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-
 namespace EducationSystem.Data
 {
     public class UserRepository : BaseRepository
@@ -30,11 +29,11 @@ namespace EducationSystem.Data
                         if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
                         {
                            userEntry = user;
-                           userEntry.roles = new List<RoleDto>();
+                           userEntry.Roles = new List<RoleDto>();
                             UserDictionary.Add(userEntry.Id, userEntry);
                         }
 
-                        userEntry.roles.Add(role);
+                        userEntry.Roles.Add(role);
                         return userEntry;
                     },
                     splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
@@ -43,7 +42,7 @@ namespace EducationSystem.Data
            
            
         }
-        public UserDto SelectUserById(int id)
+        public UserDto GetUserById(int id)
         {
             var UserDictionary = new Dictionary<int, UserDto>();
             var users = _connection.
@@ -54,11 +53,11 @@ namespace EducationSystem.Data
                         if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
                     {
                         userEntry = user;
-                        userEntry.roles = new List<RoleDto>();
+                        userEntry.Roles = new List<RoleDto>();
                         UserDictionary.Add(userEntry.Id, userEntry);
                     }
 
-                    userEntry.roles.Add(role);
+                    userEntry.Roles.Add(role);
                     return userEntry;
                 },
                new { id},

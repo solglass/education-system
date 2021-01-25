@@ -17,11 +17,11 @@ namespace EducationSystem.Data
 
         public List<TagDto> GetTags()
         {
-           
-            //var result = _connection
-            //    .Query<TagDto>("dbo.Tag_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-            //    .ToList();
-            //return result;
+
+            var result = _connection
+                .Query<TagDto>("dbo.Tag_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
         }
         public List<TagDto> GetTagById(int Id)
         {
