@@ -16,8 +16,7 @@ namespace EducationSystem.Data
 
         public List<UserDto> GetUsers()
         {
-<<<<<<< HEAD
-           
+
                 var UserDictionary = new Dictionary<int,UserDto>();
 
 
@@ -26,7 +25,7 @@ namespace EducationSystem.Data
                     "dbo.User_SelectAll",
                     (user, role) =>
                     {
-                        //TagDto tagEntry;
+                      
 
                         if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
                         {
@@ -49,7 +48,7 @@ namespace EducationSystem.Data
             var UserDictionary = new Dictionary<int, UserDto>();
             var users = _connection.
                 Query<UserDto, RoleDto, UserDto>(
-                "dbo.User_SelectAll",
+                "dbo.User_SelectById",
                 (user, role) =>
                 {
                         if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
@@ -67,19 +66,6 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure)
             .FirstOrDefault();
             return users;
-=======
-            var user = _connection
-                .Query<UserDto>("dbo.User_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-               .ToList();
-            return user;
-        }
-        public UserDto GetUserById(int id)
-        {
-            var user = _connection
-                .Query<UserDto>("dbo.User_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return user;
->>>>>>> Dev
         }
         public UserDto AddUser()
         {
