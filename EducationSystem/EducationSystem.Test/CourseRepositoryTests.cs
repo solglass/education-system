@@ -36,7 +36,7 @@ namespace EducationSystem.Test
 
             for (int i = 0; i < deleted.Count; ++i)
             {
-                courseRepository.AddCourse(deleted[i].Name, deleted[i].Description, deleted[i].Duration);
+              //  courseRepository.AddCourse(deleted[i].Name, deleted[i].Description, deleted[i].Duration);
             }
 
             Assert.AreEqual(expected,actual);
