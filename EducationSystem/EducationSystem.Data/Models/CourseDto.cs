@@ -19,28 +19,29 @@ namespace EducationSystem.Data.Models
             CourseDto courseObj = (CourseDto)obj;
             if(courseObj.Description.Equals(Description) && courseObj.Name.Equals(Name) && courseObj.Duration==Duration)
             {
-                if(courseObj.Groups.Count==Groups.Count)
+                if(courseObj.Groups==null || Groups==null || courseObj.Groups.Count!=Groups.Count)
                 {
-                    for (int i=0; i<Groups.Count;i++)
+                    return false; 
+                }
+                for (int i = 0; i < Groups.Count; i++)
+                {
+                    if (courseObj.Groups[i].StartDate != Groups[i].StartDate)
                     {
-                        if(courseObj.Groups[i].StartDate!=Groups[i].StartDate)
-                        {
-                            return false;
-                        }
-                    }
-                    if (courseObj.Themes.Count==Themes.Count)
-                    {
-                        for (int i = 0; i < Themes.Count; i++)
-                        {
-                            if (!courseObj.Themes[i].Name.Equals(Themes[i].Name))
-                            {
-                                return false;
-                            }
-                        }
-                        return true;
-
+                        return false;
                     }
                 }
+                if (courseObj.Themes == null || Themes == null || courseObj.Themes.Count != Themes.Count)
+                {
+                    return false;
+                }
+                for (int i = 0; i < Themes.Count; i++)
+                {
+                    if (!courseObj.Themes[i].Name.Equals(Themes[i].Name))
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
             return false;
         }
