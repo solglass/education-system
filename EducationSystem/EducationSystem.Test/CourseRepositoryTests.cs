@@ -8,15 +8,40 @@ using System.Linq;
 
 namespace EducationSystem.Test
 {
-    public class CourseRepositoryTest
+    [TestFixture]
+    public class CourseAddTest
     {
+        private BaseRepository _courseRepo = new CourseRepository();
+        private GroupRepository _groupRepo = new GroupRepository();
         private int _courseId;
-        private List<int> _groupIdArray;
-        private List<int> _themeIdArray;
+        private List<int> _groupIdList;
+        private List<int> _themeIdList;
+        private CourseDto _course;
 
+        [TestCase(1)]
+       // [TestCase(2)]
+        //[TestCase(3)]
+        public void TestAddCourse(int courseMock )
+        {
 
+        }
 
+        [SetUp]
+        public void SetUpTest()
+        {
+            _course = GetCourseMock(1);
+            _course.Themes = GetThemeMock(3);
+            _course.Groups = GetGroupMock(3);
+            foreach(var theme in _course.Themes)
+            {
+               // _themeIdList.Add()
+            }
+        }
+        [TearDown]
+        public void TearDownTest()
+        {
 
+        }
         public List<GroupDto>  GetGroupMock(int n)
         {
             List<GroupDto> groups = new List<GroupDto>() ;
