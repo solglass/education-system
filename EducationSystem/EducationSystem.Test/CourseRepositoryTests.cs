@@ -19,8 +19,28 @@ namespace EducationSystem.Test
         private CourseDto _expectedCourse;
         private List<CourseDto> _coursesFromDb;
         private List<int> _courseThemeIdList;
-        [TestCase(1)]
-      
+
+        [OneTimeSetUp]
+        public void SetUpTest()
+        {
+            _coursesFromDb = new List<CourseDto>();
+            _courseThemeIdList = new List<int>();
+            _groupIdList = new List<int>();
+            _themeIdList = new List<int>();
+            _expectedCourse = GetCourseMock(1);
+            _expectedCourse.Themes = GetThemeMock(3);
+            _expectedCourse.Groups = GetGroupMock(3);
+            foreach (var theme in _expectedCourse.Themes)
+            {
+                int i = _courseRepo.AddTheme(theme.Name);
+                _themeIdList.Add(i);
+            }
+
+            _coursesFromDb.AddRange(_courseRepo.GetCourses());
+        }
+
+
+        [TestCase(1), Order(1)]
         public void TestAddCourse(int courseMock )
         {
             CourseDto course = GetCourseMock(courseMock);
@@ -37,8 +57,21 @@ namespace EducationSystem.Test
             CourseDto actualCourse = _courseRepo.GetCourseById(_courseId);
             Assert.AreEqual(_expectedCourse, actualCourse);
         }
-
-        [Test]
+        [TestCase(3), Order(2)]
+        public void TestUpdateCourse(int courseMock)
+        {
+            CourseDto tempCourse = GetCourseMock(courseMock);
+            _expectedCourse.Id = _courseId;
+            _expectedCourse.Name = tempCourse.Name;
+            _expectedCourse.Duration = tempCourse.Duration;
+            if (_courseRepo.UpdateCourse(_expectedCourse) == 1)
+            {
+                CourseDto actualCourse = _courseRepo.GetCourseById(_courseId);
+                Assert.AreEqual(_expectedCourse, actualCourse);
+            }
+            else Assert.Fail();
+        }
+        [Test, Order(3)]
         public void TestDeleteCourse()
         {
             foreach (var id in _courseThemeIdList)
@@ -74,27 +107,10 @@ namespace EducationSystem.Test
                 else Assert.Fail();
             }
         }
-        [SetUp]
-        public void SetUpTest()
-        {
-            _coursesFromDb = new List<CourseDto>();
-            _courseThemeIdList = new List<int>();
-            _groupIdList = new List<int>();
-            _themeIdList = new List<int>();
-            _expectedCourse = GetCourseMock(1);
-            _expectedCourse.Themes = GetThemeMock(3);
-            _expectedCourse.Groups = GetGroupMock(3);
-            foreach(var theme in _expectedCourse.Themes)
-            {
-                int i = _courseRepo.AddTheme(theme.Name);
-                _themeIdList.Add(i);
-            }
-            
-            _coursesFromDb.AddRange(_courseRepo.GetCourses());
-        }
+       
        
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDowTest()
         {
             foreach (int id in _courseThemeIdList)
