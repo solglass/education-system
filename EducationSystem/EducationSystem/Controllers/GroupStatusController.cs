@@ -15,12 +15,12 @@ namespace EducationSystem.Controllers
     public class GroupStatusController : ControllerBase
     {
         private readonly ILogger<WeatherForecastController> _logger;
-        private GroupStatusRepository _repo;
+        private GroupRepository _repo;
 
         public GroupStatusController(ILogger<WeatherForecastController> logger)
         {
             _logger =logger;
-            _repo = new GroupStatusRepository();
+            _repo = new GroupRepository();
         }
        
         // https://localhost:50221/api/groupStatus/register*/

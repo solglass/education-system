@@ -15,12 +15,12 @@ namespace EducationSystem.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly ILogger<WeatherForecastController> _logger;
-        private PaymentRepository _repo;
+        private UserRepository _repo;
 
         public PaymentController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
-            _repo = new PaymentRepository();
+            _repo = new UserRepository();
         }
 
         // https://localhost:50221/api/payment/register
