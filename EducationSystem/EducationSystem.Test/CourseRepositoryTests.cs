@@ -9,15 +9,15 @@ using System.Linq;
 namespace EducationSystem.Test
 {
     [TestFixture]
-    public class CourseAddTest
+    public class CourseTests
     {
-        private BaseRepository _courseRepo = new CourseRepository();
+        private CourseRepository _courseRepo = new CourseRepository();
         private GroupRepository _groupRepo = new GroupRepository();
         private int _courseId;
         private List<int> _groupIdList;
         private List<int> _themeIdList;
         private CourseDto _course;
-
+        private List<CourseDto> _coursesFromDb;
         [TestCase(1)]
        // [TestCase(2)]
         //[TestCase(3)]
@@ -34,7 +34,11 @@ namespace EducationSystem.Test
             _course.Groups = GetGroupMock(3);
             foreach(var theme in _course.Themes)
             {
-               // _themeIdList.Add()
+                _themeIdList.Add(_courseRepo.AddTheme(theme.Name));
+            }
+            foreach(var group in _course.Groups)
+            {
+               // _groupIdList.Add(_groupRepo.GetGroupAdd(group));
             }
         }
         [TearDown]
