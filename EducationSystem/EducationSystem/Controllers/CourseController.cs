@@ -73,10 +73,10 @@ namespace EducationSystem.API.Controllers
         [HttpDelete("{courseId}/theme/{themeId}")]
         public ActionResult RemoveThemeFromCourse(int courseId, int themeId)
         {
-            /*var result = _repo.DeleteCourse_Theme(courseId, themeId);
+            var result = _repo.DeleteCourse_Theme(courseId, themeId);
             if (result > 0)
                 return Ok(result);
-            else*/
+            else
                 return Problem("о-ё-ё-й");
         }
     }
