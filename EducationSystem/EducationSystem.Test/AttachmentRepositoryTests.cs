@@ -8,12 +8,13 @@ namespace NUnitTestProject
 {
     public class AttachmentsTests
     {
-        private int attachmentId;
-        private int attachmentTypeId;
+        private int _attachmentId;
+        private int _attachmentTypeId;
         [SetUp]
         public void AttachmentsTestsSetup()
         {
-
+//setup attachment add
+//check if attachment type exists
         }
 
         [TestCase(1)]
@@ -21,8 +22,8 @@ namespace NUnitTestProject
         {
             AttachmentDto expected = GetMockAttachment_Add(dtoMockNumber);
             AttachmentRepository aRepo = new AttachmentRepository();
-            attachmentId = aRepo.AddAttachment(expected);
-            AttachmentDto actual = aRepo.GetAttachmentById(attachmentId);
+            _attachmentId = aRepo.AddAttachment(expected);
+            AttachmentDto actual = aRepo.GetAttachmentById(_attachmentId);
 
             Assert.AreEqual(expected, actual);
 
@@ -33,8 +34,8 @@ namespace NUnitTestProject
         {
             AttachmentTypeDto expected = GetMockAttachmentType_Add(dtoMockNumber);
             AttachmentRepository aRepo = new AttachmentRepository();
-            attachmentTypeId = aRepo.AddAttachmentType(expected);
-            AttachmentTypeDto actual = aRepo.GetAttachmentTypeById(attachmentTypeId);
+            _attachmentTypeId = aRepo.AddAttachmentType(expected);
+            AttachmentTypeDto actual = aRepo.GetAttachmentTypeById(_attachmentTypeId);
 
             Assert.AreEqual(expected, actual);
 
@@ -44,12 +45,12 @@ namespace NUnitTestProject
         public void AttachmentsTestsTearDown()
         {
             AttachmentRepository aRepo = new AttachmentRepository();
-            if (attachmentId != 0)
+            if (_attachmentId != 0)
             {
-                aRepo.DeleteAttachmentById(attachmentId);
+                aRepo.DeleteAttachmentById(_attachmentId);
             }
-            if (attachmentTypeId != 0)
-            aRepo.DeleteAttachmentTypeById(attachmentTypeId);
+            if (_attachmentTypeId != 0)
+            aRepo.DeleteAttachmentTypeById(_attachmentTypeId);
         }
 
         public AttachmentDto GetMockAttachment_Add(int n)
