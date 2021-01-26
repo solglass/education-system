@@ -53,7 +53,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public void AddGroup(GroupDto groupDto)
+        public int AddGroup(GroupDto groupDto)
         {
             var result = _connection
                 .QuerySingle<int>("dbo.Group_Add", 
@@ -64,6 +64,7 @@ namespace EducationSystem.Data
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
 
         public void UpdateGroup(GroupDto groupDto)
@@ -80,7 +81,7 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public void DeleteGroup(int Id)
+        public int DeleteGroup(int Id)
         {
             var result = _connection
                 .Execute("dbo.Group_Delete", 
@@ -89,6 +90,7 @@ namespace EducationSystem.Data
                     Id 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
 
         public void AddGroup_Material(int GroupID, int MaterialID)
