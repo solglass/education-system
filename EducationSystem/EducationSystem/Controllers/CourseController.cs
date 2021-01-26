@@ -29,12 +29,7 @@ namespace EducationSystem.API.Controllers
             return Ok(courses);
         }
 
-        //[HttpPost("Course/{name}/{description}/{duration}")]
-        //public ActionResult AddCourse(string name, string description, int duration)
-        //{
-        //    _repo.AddCourse(name, description, duration);
-        //    return Ok("пользователь зарегистрирован");
-        //}
+       
 
     }
 }

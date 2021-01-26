@@ -16,35 +16,101 @@ namespace EducationSystem.Test
         private int _courseId;
         private List<int> _groupIdList;
         private List<int> _themeIdList;
-        private CourseDto _course;
+        private CourseDto _expectedCourse;
         private List<CourseDto> _coursesFromDb;
+        private List<int> _courseThemeIdList;
         [TestCase(1)]
-       // [TestCase(2)]
-        //[TestCase(3)]
+      
         public void TestAddCourse(int courseMock )
         {
-
+            CourseDto course = GetCourseMock(courseMock);
+            _courseId = _courseRepo.AddCourse(_expectedCourse);
+            foreach (var group in _expectedCourse.Groups)
+            {
+                group.Course.Id = _courseId;
+                _groupIdList.Add(_groupRepo.AddGroup(group));
+            }
+            foreach (var id in _themeIdList)
+            {
+               _courseThemeIdList.Add( _courseRepo.AddCourse_Theme(_courseId, id));
+            }
+            CourseDto actualCourse = _courseRepo.GetCourseById(_courseId);
+            Assert.AreEqual(_expectedCourse, actualCourse);
         }
 
+        [Test]
+        public void TestDeleteCourse()
+        {
+            foreach (var id in _courseThemeIdList)
+            {
+                if (_courseRepo.DeleteCourse_Theme(id) != 1)
+                    throw new System.Exception();
+            }
+            foreach (var themeId in _themeIdList)
+            {
+                if (_courseRepo.DeleteTheme(themeId) != 1)
+                    throw new System.Exception();
+            }
+            foreach (var groupId in _groupIdList)
+            {
+                if (_groupRepo.DeleteGroup(groupId) != 1)
+                    throw new System.Exception();
+            }
+            if (_courseRepo.DeleteCourse(_courseId) != 1)
+            {
+                Assert.Fail();
+            }
+            else
+            {
+                List<CourseDto> actualCourses = _courseRepo.GetCourses();
+                if (actualCourses.Count == _coursesFromDb.Count)
+                {
+                    for (int i = 0; i < actualCourses.Count; i++)
+                    {
+                        if (actualCourses[i].Id != _coursesFromDb[i].Id) Assert.Fail();
+                    }
+                    Assert.Pass();
+                }
+                else Assert.Fail();
+            }
+        }
         [SetUp]
         public void SetUpTest()
         {
-            _course = GetCourseMock(1);
-            _course.Themes = GetThemeMock(3);
-            _course.Groups = GetGroupMock(3);
-            foreach(var theme in _course.Themes)
+            _coursesFromDb = new List<CourseDto>();
+            _courseThemeIdList = new List<int>();
+            _groupIdList = new List<int>();
+            _themeIdList = new List<int>();
+            _expectedCourse = GetCourseMock(1);
+            _expectedCourse.Themes = GetThemeMock(3);
+            _expectedCourse.Groups = GetGroupMock(3);
+            foreach(var theme in _expectedCourse.Themes)
             {
-                _themeIdList.Add(_courseRepo.AddTheme(theme.Name));
+                int i = _courseRepo.AddTheme(theme.Name);
+                _themeIdList.Add(i);
             }
-            foreach(var group in _course.Groups)
-            {
-               // _groupIdList.Add(_groupRepo.GetGroupAdd(group));
-            }
+            
+            _coursesFromDb.AddRange(_courseRepo.GetCourses());
         }
-        [TearDown]
-        public void TearDownTest()
-        {
+       
 
+        [TearDown]
+        public void TearDowTest()
+        {
+            foreach (int id in _courseThemeIdList)
+            {
+              _courseRepo.DeleteCourse_Theme(id);
+            }
+            foreach (int themeId in _themeIdList)
+            {
+              _courseRepo.DeleteTheme(themeId);
+            }
+            foreach (int groupId in _groupIdList)
+            {
+              _groupRepo.DeleteGroup(groupId);
+            }
+            _courseRepo.DeleteCourse(_courseId);
+            
         }
         public List<GroupDto>  GetGroupMock(int n)
         {
@@ -54,11 +120,12 @@ namespace EducationSystem.Test
                 case 1:
                     return groups;
                 case 2:
-                    groups.Add(new GroupDto { StartDate = new System.DateTime(2020, 10, 12) });
+                    groups.Add(new GroupDto {GroupStatus = new GroupStatusDto() { Id = 1 }, Course = new CourseDto(), StartDate = new System.DateTime(2020, 10, 12) });
                     return groups;
                 case 3:
-                    groups.Add(new GroupDto { StartDate = new System.DateTime(2020, 10, 12) });
-                    groups.Add(new GroupDto { StartDate = new System.DateTime(2021, 10, 12) });
+                    groups.Add(new GroupDto {GroupStatus = new GroupStatusDto() { Id = 1 }, Course = new CourseDto(), StartDate = new System.DateTime(2020, 10, 12) });
+                    groups.Add(new GroupDto {GroupStatus = new GroupStatusDto() { Id = 1 }, Course = new CourseDto(), StartDate = new System.DateTime(2021, 10, 12) });
+                  
                     return groups;
                 default:
                     return groups;

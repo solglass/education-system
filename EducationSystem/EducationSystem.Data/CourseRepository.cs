@@ -18,6 +18,7 @@ namespace EducationSystem.Data
         {
             var courseDictionary = new Dictionary<int, CourseDto>();
             var groupDictionary = new Dictionary<int, GroupDto>();
+            var themeDictionary = new Dictionary<int, ThemeDto>();
             var courses = _connection
                 .Query<CourseDto, ThemeDto, GroupDto, GroupStatusDto, CourseDto>(
                     "dbo.Course_SelectAll",
@@ -37,9 +38,11 @@ namespace EducationSystem.Data
                             courseEntry.Groups.Add(groupEntry);
                             groupDictionary.Add(groupEntry.Id, groupEntry);
                         }
-                       if(theme!=null)
+                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                         {
-                            courseEntry.Themes.Add(theme);
+                            themeEntry = theme;
+                            courseEntry.Themes.Add(themeEntry);
+                            themeDictionary.Add(themeEntry.Id, themeEntry);
                         }
                         return courseEntry;
                     },
@@ -53,6 +56,7 @@ namespace EducationSystem.Data
         public CourseDto GetCourseById(int id)
         {
             var groupDictionary = new Dictionary<int, GroupDto>();
+            var themeDictionary = new Dictionary<int, ThemeDto>();
             var courseEntry = new CourseDto();
             var course = _connection
                 .Query<CourseDto, ThemeDto, GroupDto, GroupStatusDto, CourseDto>(
@@ -65,9 +69,11 @@ namespace EducationSystem.Data
                             courseEntry.Themes = new List<ThemeDto>();
                             courseEntry.Groups = new List<GroupDto>();
                         }
-                        if(theme!=null)
+                        if(theme!=null && !themeDictionary.TryGetValue(theme.Id, out  ThemeDto themeEntry))
                         {
+                            themeEntry = theme;
                             courseEntry.Themes.Add(theme);
+                            themeDictionary.Add(themeEntry.Id, themeEntry);
                         }
                         
                         if (group != null && groupStatus != null && !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
@@ -247,8 +253,8 @@ namespace EducationSystem.Data
         }
         public int AddTheme(string name)
         {
-            var result = _connection
-                .Execute("dbo.Theme_Add",
+            int result = _connection
+                .QuerySingle<int>("dbo.Theme_Add",
                 new
                 {
                     name
@@ -288,7 +294,7 @@ namespace EducationSystem.Data
         public int AddCourse_Theme(int courseId, int themeId)
         {
             var result = _connection
-                .Execute("dbo.Course_Theme_Add",
+                .QuerySingle<int>("dbo.Course_Theme_Add",
                 new
                 {
                     courseId,
