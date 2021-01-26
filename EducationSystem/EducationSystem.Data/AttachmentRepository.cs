@@ -70,17 +70,19 @@ namespace EducationSystem.Data
         }
 
 
-        public AttachmentDto AddAttachment(AttachmentDto NewObject)
+        public dynamic AddAttachment(AttachmentDto NewObject)
         {
-            var data = _connection
-                .QuerySingleOrDefault<AttachmentDto>("dbo.Attachment_Add",
+            var firstRow = _connection
+                .QuerySingleOrDefault("dbo.Attachment_Add",
                 new
                 {
                     path = NewObject.Path,
                     attachmentTypeId = NewObject.AttachmentType.Id
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
-            return data;
+            var data = (IDictionary<string, object>)firstRow;
+            int value = Convert.ToInt32(data["LastId"]);
+            return value;
 
         }
         public List<AttachmentTypeDto> GetAttachmentTypes()
@@ -115,14 +117,19 @@ namespace EducationSystem.Data
         }
 
 
-        public AttachmentTypeDto AddAttachmentType(AttachmentTypeDto NewObject)
+        public int AddAttachmentType(AttachmentTypeDto NewObject)
         {
-            var data = _connection
-                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_Add",
-                new { name = NewObject.Name }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
+            var firstRow = _connection
+                .QuerySingleOrDefault("dbo.AttachmentType_Add",
+                new { name = NewObject.Name },
+                commandType: System.Data.CommandType.StoredProcedure);
+            var data = (IDictionary<string, object>)firstRow;
+            int value = Convert.ToInt32(data["LastId"]);
+            return value;
 
         }
+
+
 
     }
 }
