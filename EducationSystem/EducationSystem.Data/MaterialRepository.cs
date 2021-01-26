@@ -8,11 +8,8 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class MaterialRepository
+    public class MaterialRepository: BaseRepository
     {
-        private SqlConnection _connection;
-
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
         public MaterialRepository()
         {
             _connection = new SqlConnection(_connectionString);
@@ -26,7 +23,7 @@ namespace EducationSystem.Data
             return materials;
         }
 
-        public MaterialDto GetMaterialsById(int id)
+        public MaterialDto GetMaterialById(int id)
         {
             var materials = _connection
                 .Query<MaterialDto>("dbo.Material_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
@@ -34,22 +31,39 @@ namespace EducationSystem.Data
             return materials;
         }
 
-        public void GetMaterialsAdd(string Link, string Description, bool IsDeleted)
+        public int GetMaterialsAdd(MaterialDto material)
         {
-            var materials = _connection
-                .Execute("dbo.Material_Add", new { Link, Description, IsDeleted }, commandType: System.Data.CommandType.StoredProcedure);
+            int rows = _connection
+                .Execute("dbo.Material_Add", 
+                new 
+                { 
+                    material.Link,
+                    material.Description,
+                    material.IsDeleted
+                }, 
+                commandType: System.Data.CommandType.StoredProcedure);
+            return rows;
         }
 
-        public void GetMaterialsUpdate(int Id, string Link, string Description)
+        public int UpdateMaterial(MaterialDto material)
         {
-            var materials = _connection
-                .Execute("dbo.Material_Update", new { Id, Link, Description }, commandType: System.Data.CommandType.StoredProcedure);
+            int rows = _connection
+                .Execute("dbo.Material_Update", 
+                new 
+                {
+                    material.Id,
+                    material.Link,
+                    material.Description
+                }, 
+                commandType: System.Data.CommandType.StoredProcedure);
+            return rows;
         }
 
-        public void GetMaterialsDelete(int Id)
+        public int DeleteMaterialById(int id)
         {
-            var materials = _connection
-                .Execute("dbo.Material_Delete", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
+            int rows = _connection
+                .Execute("dbo.Material_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            return rows;
         }
     }
 }
