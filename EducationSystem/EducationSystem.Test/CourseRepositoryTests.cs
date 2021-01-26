@@ -54,7 +54,7 @@ namespace EducationSystem.Test
             }
             foreach (var id in _themeIdList)
             {
-               _courseThemeIdList.Add( _courseRepo.AddCourse_Theme(_courseId, id));
+               /*_courseThemeIdList.Add(*/ _courseRepo.AddCourse_Theme(_courseId, id)/*)*/;
             }
             CourseDto actualCourse = _courseRepo.GetCourseById(_courseId);
             Assert.AreEqual(_expectedCourse, actualCourse);
@@ -76,13 +76,15 @@ namespace EducationSystem.Test
         [Test, Order(3)]
         public void TestDeleteCourse()
         {
-            foreach (var id in _courseThemeIdList)
-            {
-                if (_courseRepo.DeleteCourse_Theme(id) != 1)
-                    throw new System.Exception("Course_theme delete went wrong, the amount of affected rows is not 1");
-            }
+            //foreach (var id in _courseThemeIdList)
+            //{
+            //    if (_courseRepo.DeleteCourse_Theme(id) != 1)
+            //        throw new System.Exception("Course_theme delete went wrong, the amount of affected rows is not 1");
+            //}
             foreach (var themeId in _themeIdList)
             {
+                if (_courseRepo.DeleteCourse_Theme(_courseId, themeId) != 1)
+                    throw new System.Exception("Course_theme delete went wrong, the amount of affected rows is not 1");
                 if (_courseRepo.DeleteTheme(themeId) != 1)
                     throw new System.Exception("Theme delete went wrong, the amount of affected rows is not 1");
             }
@@ -116,13 +118,11 @@ namespace EducationSystem.Test
         [OneTimeTearDown]
         public void TearDowTest()
         {
-            foreach (int id in _courseThemeIdList)
-            {
-              _courseRepo.DeleteCourse_Theme(id);
-            }
+           
             foreach (int themeId in _themeIdList)
             {
-              _courseRepo.DeleteTheme(themeId);
+                _courseRepo.DeleteCourse_Theme(_courseId, themeId);
+                _courseRepo.DeleteTheme(themeId);
             }
             foreach (int groupId in _groupIdList)
             {

@@ -303,13 +303,14 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int DeleteCourse_Theme(int id)
+        public int DeleteCourse_Theme(int courseId, int themeId)
         {
             var result = _connection
-                .Execute("dbo.Course_Theme_Delete",
+                .Execute("dbo.Course_Theme_DeleteByCourseIdAndThemeId",
                 new
                 {
-                    id
+                    courseId,
+                    themeId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
