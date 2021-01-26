@@ -7,9 +7,8 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class StudentGroupRepository
-    {      
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";  
+    public class StudentGroupRepository : BaseRepository
+    {             
         public List<StudentGroupDto> GetStudentGroups()
         {
             using(SqlConnection connection = new SqlConnection(_connectionString))

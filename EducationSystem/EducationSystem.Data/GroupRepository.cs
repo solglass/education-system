@@ -53,10 +53,10 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public void GetGroupAdd(GroupDto groupDto)
+        public int AddGroup(GroupDto groupDto)
         {
             var result = _connection
-                .Query<GroupDto>("dbo.Group_Add", 
+                .QuerySingle<int>("dbo.Group_Add", 
                 new 
                 { 
                     CourseID = groupDto.Course.Id, 
@@ -64,9 +64,10 @@ namespace EducationSystem.Data
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
 
-        public void GetGroupUpdate(GroupDto groupDto)
+        public void UpdateGroup(GroupDto groupDto)
         {
             var result = _connection
                 .Execute("dbo.Group_Update", 
@@ -80,7 +81,7 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public void GetGroupDelete(int Id)
+        public int DeleteGroup(int Id)
         {
             var result = _connection
                 .Execute("dbo.Group_Delete", 
@@ -89,12 +90,13 @@ namespace EducationSystem.Data
                     Id 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
 
-        public void GetGroup_MaterialAdd(int GroupID, int MaterialID)
+        public void AddGroup_Material(int GroupID, int MaterialID)
         {
             var result = _connection
-                .Query<Group_MaterialDto>("dbo.Group_Material_Add", 
+                .QuerySingle<int>("dbo.Group_Material_Add", 
                 new 
                 { 
                     GroupID, 
@@ -103,7 +105,7 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public void GetGroup_MaterialDelete(int Id)
+        public void DeleteGroup_Material(int Id)
         {
             var result = _connection
                 .Execute("dbo.Group_Material_Delete", 
@@ -113,5 +115,50 @@ namespace EducationSystem.Data
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
         }
+
+        //GroupStatus
+        public List<GroupStatusDto> GetGroupStatus()
+        {
+            var groupStatus = _connection
+                                .Query<GroupStatusDto>("dbo.GroupStatus_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                                .ToList();
+            return groupStatus;
+        }
+
+        public GroupStatusDto GetGroupStatusById(int id)
+        {
+            var groupStatus = _connection
+            .QuerySingleOrDefault<GroupStatusDto>("dbo.GroupStatus_SelectAll", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            return groupStatus;
+        }
+
+        public int AddGroupStatus(string Name)
+        {
+            var result = _connection
+              .Execute("dbo.GroupStatuses_Add",
+              new { Name },
+              commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+
+        }
+        public int UpdateGroupStatus(int id, string Name)
+        {
+            var result = _connection
+                .Execute("dbo.GroupStatus_Update",
+                new { id, Name },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int DeleteGroupStatus(int id)
+        {
+            var result = _connection
+                .Execute("dbo.GroupStatus_Delete",
+                new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+
     }
 }
