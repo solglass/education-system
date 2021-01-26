@@ -11,11 +11,6 @@ namespace EducationSystem.Data
 {
     public class LessonRepository : BaseRepository
     {
-        public LessonRepository()
-        {
-            _connection = new SqlConnection(_connectionString);
-        }
-
         public List<LessonDto> GetLessons()
         {
             var lessonDictionary = new Dictionary<int, LessonDto>();
@@ -64,11 +59,11 @@ namespace EducationSystem.Data
             return lesson;
         }
 
-        public int AddLesson(int groupId, string description, DateTime date)
+        public int AddLesson(LessonDto lessonDto)
         {
             return _connection.Execute(
                 "dbo.Lesson_Add",
-                new {groupId, description, date},
+                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.Data},
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -80,11 +75,11 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int UpdateLesson(int id, int groupId, string description, DateTime date, bool isDeleted)
+        public int UpdateLesson(LessonDto lessonDto)
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new {id, groupId, description, date, isDeleted},
+                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.Data, lessonDto.IsDeleted },
                 commandType: CommandType.StoredProcedure);
         }
 
