@@ -75,15 +75,15 @@ namespace EducationSystem.Controllers
       
             // https://localhost:50221/api/user/payment/payment/name
             [HttpPost("payment/name")]
-            /*public ActionResult AddPayment([FromBody] PaymentDto paymentDto)
-            {
+        public ActionResult AddPayment(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid, [FromBody] dynamic payment)
+        {
 
-                _repo.AddPayment(paymentDto);
-                return Ok("Платеж добавлен");
-            }*/
+            _repo.AddPayment(contractNumber, amount, date, period, IsPaid);
+            return Ok("Платеж добавлен");
+        }
 
-            // https://localhost:50221/api/user/payment/payment
-            [HttpGet("payment")]
+        // https://localhost:50221/api/user/payment/payment
+        [HttpGet("payment")]
             public ActionResult GetPayments()
             {
                 var payments = _repo.GetPayments();
