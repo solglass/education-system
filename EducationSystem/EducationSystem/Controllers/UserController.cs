@@ -71,52 +71,43 @@ namespace EducationSystem.Controllers
             return Ok("success");
         }
 
-        // payment Controller
-        public class PaymentController : ControllerBase
-        {
-            private readonly ILogger<WeatherForecastController> _logger;
-            private UserRepository _repo;
-
-            public PaymentController(ILogger<WeatherForecastController> logger)
+        
+      
+            // https://localhost:50221/api/user/payment/payment/name
+            [HttpPost("payment/name")]
+            /*public ActionResult AddPayment([FromBody] PaymentDto paymentDto)
             {
-                _logger = logger;
-                _repo = new UserRepository();
-            }
 
-            // https://localhost:50221/api/payment/register
-            [HttpPost("register")]
-            public ActionResult Register(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid, [FromBody] dynamic payment)
-            {
-                _repo.AddPayment(contractNumber, amount, date, period, IsPaid);
+                _repo.AddPayment(paymentDto);
                 return Ok("Платеж добавлен");
-            }
+            }*/
 
-            // https://localhost:50221/api/payment
-            [HttpGet]
+            // https://localhost:50221/api/user/payment/payment
+            [HttpGet("payment")]
             public ActionResult GetPayments()
             {
                 var payments = _repo.GetPayments();
                 return Ok(payments);
             }
 
-            // https://localhost:50221/api/payment/42
-            [HttpGet("{id}")]
+            // https://localhost:50221/api/user/payment/payment/32
+            [HttpGet("payment/{id}")]
             public dynamic GetPayment(int id)
             {
                 var payment = _repo.GetPaymentById(id);
                 return Ok(payment);
             }
 
-            // https://localhost:50221/api/payment/42
-            [HttpPut("{id}")]
-            public ActionResult UpdatePayment(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid, [FromBody] dynamic data)
+            // https://localhost:50221/api/user/payment/payment/42
+            [HttpPut("payment/{id}")]
+           public ActionResult UpdatePayment(int id,[FromBody] PaymentDto payment)
             {
-                _repo.UpdatePayment(contractNumber, amount, date, period, IsPaid);
+                _repo.UpdatePayment(payment);
                 return Ok("success");
             }
 
-            // https://localhost:50221/api/payment/42
-            [HttpDelete("{id}")]
+            // https://localhost:50221/api/user/payment/payment/42
+            [HttpDelete("payment/{id}")]
             public ActionResult DeletePayment(int id)
             {
                 _repo.DeletePayment(id);
@@ -124,4 +115,4 @@ namespace EducationSystem.Controllers
             }
         }
     }
-}
+
