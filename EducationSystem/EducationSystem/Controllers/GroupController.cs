@@ -86,7 +86,65 @@ namespace EducationSystem.Controllers
             _repo.DeleteGroup_Material(id);
             return Ok("success");
         }
+
+
+        // GroupStatusController
+
+        /*public GroupStatusController(ILogger<WeatherForecastController> logger)
+        {
+            _logger = logger;
+            _repo = new GroupRepository();
+        }*/
+
+        // https://localhost:50221/api/groupStatus/register*/
+        [HttpPost("register")]
+        public ActionResult Register(string Name, [FromBody] dynamic groupStatus)
+        {
+            _repo.AddGroupStatus(Name);
+            return Ok("Cтатус обновлен");
+        }
+
+        /* 
+         [HttpPut("change-password")]
+         public ActionResult ChangePassword(string oldPassword, string newPassword)
+         {
+             // _repo.ChangePassword(oldPassword, newPassword)
+             return Ok("success");
+         }*/
+
+        // https://localhost:50221/api/user
+        [HttpGet]
+        public ActionResult GetGroupStatus()
+        {
+            var payments = _repo.GetGroupStatus();
+            return Ok(payments);
+        }
+
+        // https://localhost:50221/api/groupstatus/42
+        [HttpGet("{id}")]
+        public dynamic GetGroupStatus(int id)
+        {
+            var groupStatus = _repo.GetGroupStatusById(id);
+            return Ok(groupStatus);
+        }
+
+        // https://localhost:50221/api/groupstatus/42
+        [HttpPut("{id}")]
+        public ActionResult UpdateGroupStatus(int id, string Name, [FromBody] dynamic data)
+        {
+            _repo.UpdateGroupStatus(id, Name);
+            return Ok("success");
+        }
+
+        // https://localhost:50221/api/groupstatus/42
+        [HttpDelete("{id}")]
+        public ActionResult DeleteGroupStatus(int id)
+        {
+            _repo.DeleteGroupStatus(id);
+            return Ok("success");
+        }
     }
+    
 }
 
 

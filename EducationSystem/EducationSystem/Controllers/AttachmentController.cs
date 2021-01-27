@@ -25,14 +25,10 @@ namespace EducationSystem.API.Controllers
             _repo = new AttachmentRepository();
         }
 
-        // https://localhost:44365/api/attachment/register
-        [HttpPost("register")]
-        public ActionResult Register(string path, int typeId)
+        // https://localhost:44365/api/attachment/
+        [HttpPost]
+        public ActionResult AddAttachment([FromBody] AttachmentDto attachmentDto)
         {
-            AttachmentDto attachmentDto = new AttachmentDto();
-            attachmentDto.Path = path;
-            AttachmentTypeDto attachmentTypeDto = _repo.GetAttachmentTypeById(typeId);
-            attachmentDto.AttachmentType = attachmentTypeDto;
             _repo.AddAttachment(attachmentDto);
             return Ok("Вложение добавлено");
         }
@@ -55,9 +51,9 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/42
         [HttpPut("{id}")]
-        public ActionResult UpdateAttachment(int attachmentId, string path, int typeId)
+        public ActionResult UpdateAttachment([FromBody] AttachmentDto attachmentDto)
         {
-            _repo.ModifyAttachment(attachmentId, path, typeId);
+            _repo.ModifyAttachment(attachmentDto);
             return Ok("success");
         }
 
@@ -70,8 +66,8 @@ namespace EducationSystem.API.Controllers
         }
 
         // https://localhost:44365/api/attachment/attachmentType/register
-        [HttpPost("attachmentType/register")]
-        public ActionResult Register(string name)
+        [HttpPost("attachmentType/{name}")]
+        public ActionResult AddAttachmentType(string name)
         {
             AttachmentTypeDto attachmentTypeDto = new AttachmentTypeDto();
             attachmentTypeDto.Name = name;
