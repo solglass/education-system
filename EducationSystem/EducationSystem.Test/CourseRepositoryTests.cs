@@ -18,7 +18,6 @@ namespace EducationSystem.Test
         private List<int> _themeIdList;
         private CourseDto _expectedCourse;
         private List<CourseDto> _coursesFromDb;
-        private List<int> _courseThemeIdList;
 
         [OneTimeSetUp]
         public void SetUpTest()
@@ -26,7 +25,6 @@ namespace EducationSystem.Test
             _courseRepo = new CourseRepository();
             _groupRepo = new GroupRepository();
             _coursesFromDb = new List<CourseDto>();
-            _courseThemeIdList = new List<int>();
             _groupIdList = new List<int>();
             _themeIdList = new List<int>();
             _expectedCourse = GetCourseMock(1);
@@ -34,10 +32,8 @@ namespace EducationSystem.Test
             _expectedCourse.Groups = GetGroupMock(3);
             foreach (var theme in _expectedCourse.Themes)
             {
-                int i = _courseRepo.AddTheme(theme.Name);
-                _themeIdList.Add(i);
+                _themeIdList.Add(_courseRepo.AddTheme(theme.Name));
             }
-
             _coursesFromDb.AddRange(_courseRepo.GetCourses());
         }
 
@@ -54,11 +50,12 @@ namespace EducationSystem.Test
             }
             foreach (var id in _themeIdList)
             {
-               /*_courseThemeIdList.Add(*/ _courseRepo.AddCourse_Theme(_courseId, id)/*)*/;
+               _courseRepo.AddCourse_Theme(_courseId, id);
             }
             CourseDto actualCourse = _courseRepo.GetCourseById(_courseId);
             Assert.AreEqual(_expectedCourse, actualCourse);
         }
+
         [TestCase(3), Order(2)]
         public void TestUpdateCourse(int courseMock)
         {
@@ -73,14 +70,10 @@ namespace EducationSystem.Test
             }
             else Assert.Fail("Course update went wrong, the amount of affected rows is not 1");
         }
+
         [Test, Order(3)]
         public void TestDeleteCourse()
         {
-            //foreach (var id in _courseThemeIdList)
-            //{
-            //    if (_courseRepo.DeleteCourse_Theme(id) != 1)
-            //        throw new System.Exception("Course_theme delete went wrong, the amount of affected rows is not 1");
-            //}
             foreach (var themeId in _themeIdList)
             {
                 if (_courseRepo.DeleteCourse_Theme(_courseId, themeId) != 1)
@@ -118,7 +111,6 @@ namespace EducationSystem.Test
         [OneTimeTearDown]
         public void TearDowTest()
         {
-           
             foreach (int themeId in _themeIdList)
             {
                 _courseRepo.DeleteCourse_Theme(_courseId, themeId);
@@ -129,8 +121,8 @@ namespace EducationSystem.Test
               _groupRepo.DeleteGroup(groupId);
             }
             _courseRepo.DeleteCourse(_courseId);
-            
         }
+
         public List<GroupDto>  GetGroupMock(int n)
         {
             List<GroupDto> groups = new List<GroupDto>() ;
