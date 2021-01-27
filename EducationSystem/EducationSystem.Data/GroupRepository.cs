@@ -142,11 +142,11 @@ namespace EducationSystem.Data
             return result;
 
         }
-        public int UpdateGroupStatus(int id, string Name)
+        public int UpdateGroupStatus(GroupStatusDto groupStatus)
         {
             var result = _connection
                 .Execute("dbo.GroupStatus_Update",
-                new { id, Name },
+                new { groupStatus.Id,groupStatus.Name },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
