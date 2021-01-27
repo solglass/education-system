@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    class TeacherGroupDto
+    public class TeacherGroupDto
     {
         public int Id { get; set; }
         public int UserID { get; set; }

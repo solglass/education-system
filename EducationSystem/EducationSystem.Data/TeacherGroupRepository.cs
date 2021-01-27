@@ -8,7 +8,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    class TeacherGroupRepository : BaseRepository
+    public class TeacherGroupRepository : BaseRepository
     {     
         public List<TeacherGroupDto> GetTeacherGroups()
         {
@@ -32,11 +32,11 @@ namespace EducationSystem.Data
                 connection.Execute("dbo.Teacher_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);        
             }
         }
-        public TeacherGroupDto AddTeacherGroup(TeacherGroupDto teacherGroup)
+        public int AddTeacherGroup(TeacherGroupDto teacherGroup)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                return connection.QuerySingleOrDefault<TeacherGroupDto>("dbo.Teacher_Group_Add",
+                return connection.QuerySingleOrDefault<int>("dbo.Teacher_Group_Add",
                     new
                     {
                         userID = teacherGroup.UserID,
