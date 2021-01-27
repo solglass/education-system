@@ -1,47 +1,57 @@
-using Dapper;
-using EducationSystem.Data;
-using EducationSystem.Data.Models;
+
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
+using System;
+using EducationSystem.Data.Models;
+using EducationSystem.Data;
 
-namespace EducationSystem.Test
+namespace NUnitTestProject
 {
-    public class TagRepositoryTest
+    public class TagsTests
     {
-
-
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(4)]
-        public void DeleteTagTest(int id)
+        private int tagId;
+        [SetUp]
+        public void TagTestsSetup()
         {
-            TagRepository tagRepository = new TagRepository();
 
-
-            var expected = tagRepository.GetTags();
-
-
-            var deleted = expected.Where(x => x.Id == id).ToList();
-            
-
-            expected.RemoveAll(x => x.Id == id);
-
-
-
-            tagRepository.TagDelete(id);
-
-            var actual = tagRepository.GetTags();
-
-            for (int i = 0; i < deleted.Count; ++i)
-            {
-                tagRepository.TagAdd(deleted[i]);
-            }
-
-            Assert.AreEqual(expected,actual);
         }
 
+        [TestCase(1)]
+        public void Tag_AddTests(int dtoMockNumber)
+        {
+            TagDto expected = GetMockTag_Add(dtoMockNumber);
+           TagRepository tRepo = new TagRepository();
+           tagId = tRepo.TagAdd(expected);
+            TagDto actual = tRepo.GetTagById(tagId);
+            Assert.AreEqual(expected, actual);
+        }
 
+       
+
+        [TearDown]
+        public void TagsTestsTearDown()
+        {
+            TagRepository tRepo = new TagRepository();
+            if (tagId != 0)
+            {
+                tRepo.TagDelete(tagId);
+            }
+            
+        }
+
+        public TagDto GetMockTag_Add(int n)
+        {
+            switch (n)
+            {
+                case 1:
+                   TagDto tagDto = new TagDto();
+                    tagDto.Id = 1;
+                    tagDto.Name = "WPF";
+                    return tagDto;
+                default:
+                    throw new Exception();
+            }
+        }
+
+     
     }
 }

@@ -23,11 +23,10 @@ namespace EducationSystem.Data
                 .ToList();
             return result;
         }
-        public List<TagDto> GetTagById(int Id)
+        public TagDto GetTagById(int Id)
         {
             var result = _connection
-                .Query<TagDto>("dbo.Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
+                .QuerySingleOrDefault<TagDto>("dbo.Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
         public int TagUpdate(int Id, string Name)
@@ -59,11 +58,11 @@ namespace EducationSystem.Data
                 .ToList();
             return result;
         }
-        public List<MaterialTagDto> GetTag_ById(int Id)
+        public MaterialTagDto GetMaterial_TagById(int Id)
         {
             var result = _connection
-                .Query<MaterialTagDto>("dbo.Material_Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
+                .QuerySingleOrDefault<MaterialTagDto>("dbo.Material_Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure)
+                ;
             return result;
         }
         public int Material_TagUpdate(MaterialTagDto Tag)
