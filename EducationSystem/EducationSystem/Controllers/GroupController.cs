@@ -87,7 +87,6 @@ namespace EducationSystem.Controllers
             return Ok("success");
         }
 
-
         // https://localhost:50221/api/group/group-status/name
         [HttpPost("group-status/name")]
         public ActionResult AddGroupStatus(string name)
@@ -114,7 +113,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/group/group-status/3
         [HttpPut("group-status/{id}")]
-        public ActionResult UpdateGroupStatus(int id,[FromBody] GroupStatusDto groupStatus)
+        public ActionResult UpdateGroupStatus(int id, [FromBody] GroupStatusDto groupStatus)
         {
             _repo.UpdateGroupStatus(groupStatus);
             return Ok("success");
@@ -127,6 +126,11 @@ namespace EducationSystem.Controllers
             _repo.DeleteGroupStatus(id);
             return Ok("success");
         }
+
+
+
+
+
     }
     
 }

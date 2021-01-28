@@ -117,7 +117,6 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        //GroupStatus
         public List<GroupStatusDto> GetGroupStatus()
         {
             var groupStatus = _connection
@@ -146,7 +145,7 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .Execute("dbo.GroupStatus_Update",
-                new { groupStatus.Id,groupStatus.Name },
+                new { groupStatus.Id, groupStatus.Name },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
