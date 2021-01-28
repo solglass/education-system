@@ -70,11 +70,8 @@ namespace EducationSystem.Controllers
             _repo.DeleteUser(/*userData*/);
             return Ok("success");
         }
-
-        
-      
-            // https://localhost:50221/api/user/payment/payment/name
-            [HttpPost("payment/name")]
+        // https://localhost:50221/api/user/payment/payment/name
+        [HttpPost("payment/name")]
         public ActionResult AddPayment(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid, [FromBody] dynamic payment)
         {
 
@@ -84,35 +81,39 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/user/payment/payment
         [HttpGet("payment")]
-            public ActionResult GetPayments()
-            {
-                var payments = _repo.GetPayments();
-                return Ok(payments);
-            }
-
-            // https://localhost:50221/api/user/payment/payment/32
-            [HttpGet("payment/{id}")]
-            public dynamic GetPayment(int id)
-            {
-                var payment = _repo.GetPaymentById(id);
-                return Ok(payment);
-            }
-
-            // https://localhost:50221/api/user/payment/payment/42
-            [HttpPut("payment/{id}")]
-           public ActionResult UpdatePayment(int id,[FromBody] PaymentDto payment)
-            {
-                _repo.UpdatePayment(payment);
-                return Ok("success");
-            }
-
-            // https://localhost:50221/api/user/payment/payment/42
-            [HttpDelete("payment/{id}")]
-            public ActionResult DeletePayment(int id)
-            {
-                _repo.DeletePayment(id);
-                return Ok("success");
-            }
+        public ActionResult GetPayments()
+        {
+            var payments = _repo.GetPayments();
+            return Ok(payments);
         }
+
+        // https://localhost:50221/api/user/payment/payment/32
+        [HttpGet("payment/{id}")]
+        public dynamic GetPayment(int id)
+        {
+            var payment = _repo.GetPaymentById(id);
+            return Ok(payment);
+        }
+
+        // https://localhost:50221/api/user/payment/payment/42
+        [HttpPut("payment/{id}")]
+        public ActionResult UpdatePayment(int id, [FromBody] PaymentDto payment)
+        {
+            _repo.UpdatePayment(payment);
+            return Ok("success");
+        }
+
+        // https://localhost:50221/api/user/payment/payment/42
+        [HttpDelete("payment/{id}")]
+        public ActionResult DeletePayment(int id)
+        {
+            _repo.DeletePayment(id);
+            return Ok("success");
+        }
+
+
+
+
     }
+}
 

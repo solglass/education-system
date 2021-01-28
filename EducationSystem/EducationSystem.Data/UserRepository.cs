@@ -119,9 +119,6 @@ namespace EducationSystem.Data
                  .FirstOrDefault();
             return role;
         }
-
-
-        // paymentrepository
         public List<PaymentDto> GetPayments()
         {
             var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
@@ -193,7 +190,7 @@ namespace EducationSystem.Data
                 .Execute("dbo.Course_Update",
                 new
                 {
-                    
+
                     payment.Amount,
                     payment.Date,
                     payment.Period,
@@ -215,6 +212,9 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+    
+
+
     }
 
 }
