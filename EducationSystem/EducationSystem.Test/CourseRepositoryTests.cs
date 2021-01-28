@@ -11,20 +11,20 @@ namespace EducationSystem.Test
     [TestFixture]
     public class CourseTests
     {
-        private CourseRepository _courseRepo = new CourseRepository();
-        private GroupRepository _groupRepo = new GroupRepository();
+        private CourseRepository _courseRepo;
+        private GroupRepository _groupRepo;
         private int _courseId;
         private List<int> _groupIdList;
         private List<int> _themeIdList;
         private CourseDto _expectedCourse;
         private List<CourseDto> _coursesFromDb;
-        private List<int> _courseThemeIdList;
 
         [OneTimeSetUp]
         public void SetUpTest()
         {
+            _courseRepo = new CourseRepository();
+            _groupRepo = new GroupRepository();
             _coursesFromDb = new List<CourseDto>();
-            _courseThemeIdList = new List<int>();
             _groupIdList = new List<int>();
             _themeIdList = new List<int>();
             _expectedCourse = GetCourseMock(1);
@@ -32,10 +32,8 @@ namespace EducationSystem.Test
             _expectedCourse.Groups = GetGroupMock(3);
             foreach (var theme in _expectedCourse.Themes)
             {
-                int i = _courseRepo.AddTheme(theme.Name);
-                _themeIdList.Add(i);
+                _themeIdList.Add(_courseRepo.AddTheme(theme.Name));
             }
-
             _coursesFromDb.AddRange(_courseRepo.GetCourses());
         }
 
@@ -52,11 +50,12 @@ namespace EducationSystem.Test
             }
             foreach (var id in _themeIdList)
             {
-               _courseThemeIdList.Add( _courseRepo.AddCourse_Theme(_courseId, id));
+               _courseRepo.AddCourse_Theme(_courseId, id);
             }
             CourseDto actualCourse = _courseRepo.GetCourseById(_courseId);
             Assert.AreEqual(_expectedCourse, actualCourse);
         }
+
         [TestCase(3), Order(2)]
         public void TestUpdateCourse(int courseMock)
         {
@@ -69,29 +68,27 @@ namespace EducationSystem.Test
                 CourseDto actualCourse = _courseRepo.GetCourseById(_courseId);
                 Assert.AreEqual(_expectedCourse, actualCourse);
             }
-            else Assert.Fail();
+            else Assert.Fail("Course update went wrong, the amount of affected rows is not 1");
         }
+
         [Test, Order(3)]
         public void TestDeleteCourse()
         {
-            foreach (var id in _courseThemeIdList)
-            {
-                if (_courseRepo.DeleteCourse_Theme(id) != 1)
-                    throw new System.Exception();
-            }
             foreach (var themeId in _themeIdList)
             {
+                if (_courseRepo.DeleteCourse_Theme(_courseId, themeId) != 1)
+                    throw new System.Exception("Course_theme delete went wrong, the amount of affected rows is not 1");
                 if (_courseRepo.DeleteTheme(themeId) != 1)
-                    throw new System.Exception();
+                    throw new System.Exception("Theme delete went wrong, the amount of affected rows is not 1");
             }
             foreach (var groupId in _groupIdList)
             {
                 if (_groupRepo.DeleteGroup(groupId) != 1)
-                    throw new System.Exception();
+                    throw new System.Exception("Group delete went wrong, the amount of affected rows is not 1");
             }
             if (_courseRepo.DeleteCourse(_courseId) != 1)
             {
-                Assert.Fail();
+                Assert.Fail("Course delete went wrong, the amount of affected rows is not 1");
             }
             else
             {
@@ -100,11 +97,12 @@ namespace EducationSystem.Test
                 {
                     for (int i = 0; i < actualCourses.Count; i++)
                     {
-                        if (actualCourses[i].Id != _coursesFromDb[i].Id) Assert.Fail();
+                        if (actualCourses[i].Id != _coursesFromDb[i].Id) 
+                            Assert.Fail("Something wrong was deleted");
                     }
                     Assert.Pass();
                 }
-                else Assert.Fail();
+                else Assert.Fail("The amount of courses before and after don't match");
             }
         }
        
@@ -113,21 +111,18 @@ namespace EducationSystem.Test
         [OneTimeTearDown]
         public void TearDowTest()
         {
-            foreach (int id in _courseThemeIdList)
-            {
-              _courseRepo.DeleteCourse_Theme(id);
-            }
             foreach (int themeId in _themeIdList)
             {
-              _courseRepo.DeleteTheme(themeId);
+                _courseRepo.DeleteCourse_Theme(_courseId, themeId);
+                _courseRepo.DeleteTheme(themeId);
             }
             foreach (int groupId in _groupIdList)
             {
               _groupRepo.DeleteGroup(groupId);
             }
             _courseRepo.DeleteCourse(_courseId);
-            
         }
+
         public List<GroupDto>  GetGroupMock(int n)
         {
             List<GroupDto> groups = new List<GroupDto>() ;

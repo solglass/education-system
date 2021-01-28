@@ -93,7 +93,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public void AddGroup_Material(int GroupID, int MaterialID)
+        public int AddGroup_Material(int GroupID, int MaterialID)
         {
             var result = _connection
                 .QuerySingle<int>("dbo.Group_Material_Add", 
@@ -103,6 +103,7 @@ namespace EducationSystem.Data
                     MaterialID 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
 
         public void DeleteGroup_Material(int Id)

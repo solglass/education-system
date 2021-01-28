@@ -93,7 +93,7 @@ namespace EducationSystem.Data
         }
 
         // should return id of inserted entity, use 'QuerySingle' method
-        public int AddCourse(/*string name, string description, int duration*/CourseDto course)
+        public int AddCourse(CourseDto course)
         {
             var result = _connection
                 .QuerySingle<int>("dbo.Course_Add",
@@ -108,7 +108,7 @@ namespace EducationSystem.Data
         }
 
         // should return affected rows' count, use 'Execute' method
-        public int UpdateCourse(/*int id, string name, string description, int duration, bool isDeleted*/ CourseDto course)
+        public int UpdateCourse( CourseDto course)
         {
             var result = _connection
                 .Execute("dbo.Course_Update",
@@ -303,13 +303,14 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int DeleteCourse_Theme(int id)
+        public int DeleteCourse_Theme(int courseId, int themeId)
         {
             var result = _connection
-                .Execute("dbo.Course_Theme_Delete",
+                .Execute("dbo.Course_Theme_DeleteByCourseIdAndThemeId",
                 new
                 {
-                    id
+                    courseId,
+                    themeId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
