@@ -51,7 +51,7 @@ namespace EducationSystem.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateTag(int id, [FromBody] dynamic data) 
         {
-            _repo.TagUpdate(id, data);
+            _repo.TagUpdate(data);
             return Ok("success");
         }
 
