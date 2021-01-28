@@ -32,16 +32,13 @@ namespace EducationSystem.Data
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Execute("dbo.Student_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            }
-                         
-
+            }                        
         }
-        public StudentGroupDto AddStudentGroup(StudentGroupDto studentGroup)
+        public int AddStudentGroup(StudentGroupDto studentGroup)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-
-                return connection.QuerySingleOrDefault<StudentGroupDto>("dbo.Student_Group_Add",
+                return connection.QuerySingleOrDefault<int>("dbo.Student_Group_Add",
                     new
                     {
                         usertID = studentGroup.UserID,

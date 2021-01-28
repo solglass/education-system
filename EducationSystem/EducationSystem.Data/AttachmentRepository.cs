@@ -54,8 +54,11 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public int ModifyAttachment(int id, string path, int attachmentTypeID)
+        public int ModifyAttachment(AttachmentDto attachmentDto)
         {
+            int id = attachmentDto.Id;
+            string path = attachmentDto.Path;
+            int attachmentTypeID = attachmentDto.AttachmentType.Id;
             var data = _connection
                 .Execute("dbo.Attachment_Update", new { id, path, attachmentTypeID }, commandType: System.Data.CommandType.StoredProcedure);
             return data;
@@ -72,16 +75,14 @@ namespace EducationSystem.Data
 
         public dynamic AddAttachment(AttachmentDto NewObject)
         {
-            var firstRow = _connection
-                .QuerySingleOrDefault("dbo.Attachment_Add",
+            var value = _connection
+                .QuerySingleOrDefault<int>("dbo.Attachment_Add",
                 new
                 {
                     path = NewObject.Path,
                     attachmentTypeId = NewObject.AttachmentType.Id
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
-            var data = (IDictionary<string, object>)firstRow;
-            int value = Convert.ToInt32(data["LastId"]);
             return value;
 
         }
