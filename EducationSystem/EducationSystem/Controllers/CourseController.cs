@@ -1,4 +1,6 @@
-﻿using EducationSystem.Controllers;
+﻿using EducationSystem.API.Mappers;
+using EducationSystem.API.Models;
+using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,37 +19,40 @@ namespace EducationSystem.API.Controllers
     {
         private readonly ILogger<CourseController> _logger;
         private CourseRepository _repo;
-
+        private CourseMapper _courseMapper;
         public CourseController()
         {
             _repo = new CourseRepository();
+            _courseMapper = new CourseMapper();
         }
 
         [HttpGet]
-        public ActionResult GetCourses()
+        public ActionResult GetCourses()            //rewrite using CourseMapper FromDto
         {
             var courses = _repo.GetCourses();
             return Ok(courses);
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetCourse(int id)
+        public ActionResult GetCourse(int id)       //rewrite using CourseMapper FromDto
         {
             var course = _repo.GetCourseById(id);
             return Ok(course);
         }
 
         [HttpPost]
-        public ActionResult CreateCourse([FromBody] CourseDto course)
+        public ActionResult CreateCourse([FromBody] CourseInputModel course)
         {
-            var result = _repo.AddCourse(course);
+            CourseDto courseDto = _courseMapper.ToDto(course);
+            var result = _repo.AddCourse(courseDto);
             return Ok($"Курс №{result} добавлен!");
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateCourseInfo(int id, [FromBody] CourseDto course)
+        public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
         {
-            var result = _repo.AddCourse(course);
+            CourseDto courseDto = _courseMapper.ToDto(course);
+            var result = _repo.AddCourse(courseDto);
             return Ok("Курс обновлен!");
         }
 
