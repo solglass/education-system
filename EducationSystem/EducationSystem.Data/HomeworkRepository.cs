@@ -183,20 +183,34 @@ namespace EducationSystem.Data
             return homeworkAttempt;
         }
 
-        public int AddHomeworkAttempt(string comment, int userId, int homeworkAttemptId, int statusId)
+        public int AddHomeworkAttempt(HomeworkAttemptDto homeworkAttempt)
         {
             var result = _connection
                 .Execute("dbo.HomeworkAttempt_Add",
-                new { comment, userId, homeworkAttemptId, statusId },
+                new
+                {
+                    comment = homeworkAttempt.Comment,
+                    author = homeworkAttempt.Author,
+                    homework = homeworkAttempt.Homework,
+                    homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus,
+                    IsDeleted = homeworkAttempt.IsDeleted
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
-        public int UpdateHomeworkAttempt(int id, string comment, int userId, int homeworkId, int statusId)
+        public int UpdateHomeworkAttempt(HomeworkAttemptDto homeworkAttempt)
         {
             var result = _connection
                 .Execute("dbo.HomeworkAttempt_Update",
-                new { id, comment, userId, homeworkId, statusId },
+                 new
+                 {
+                     comment = homeworkAttempt.Comment,
+                     author = homeworkAttempt.Author,
+                     homework = homeworkAttempt.Homework,
+                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus,
+                     IsDeleted = homeworkAttempt.IsDeleted
+                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
