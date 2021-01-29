@@ -37,33 +37,9 @@ namespace EducationSystem.Data.Tests
             _themeIdList = new List<int>();
             _userIdList = new List<int>();
             _homeworkAttemptIdIdList = new List<int>();
-            _expectedHomework = GetHomeworkMock(1);
-            _expectedHomework.GroupId = (GetGroupMock(1)).Id;
-            _expectedHomework.HomeworkAttempts = GetHomeworkAttemptMock(1);
-            _expectedHomework.Themes = GetThemeMock(3);
-            _expectedHomework.Tags = GetTagMock(3);
-            foreach (var theme in _expectedHomework.Themes)
-            {
-                _themeIdList.Add(_courseRepo.AddTheme(theme.Name));
-            }
-            foreach (var tag in _expectedHomework.Tags)
-            {
-                _tagIdList.Add(_tagRepo.TagAdd(tag));
-            }
-            _homeworkFromDb.AddRange(_homeworkRepo.GetHomeworks());
-        }
 
-        [TestCase(1), Order(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        public void TestAddHomework(int homeworkMock)
-        {
-            HomeworkDto homework = GetHomeworkMock(homeworkMock);
-        }
 
-        [OneTimeTearDown]
-        public void TearDowTest()
-        {
+
             foreach (int groupId in _groupIdList)
             {
                 _groupRepo.DeleteGroup(groupId);
@@ -79,6 +55,55 @@ namespace EducationSystem.Data.Tests
             foreach (int userId in _userIdList)
             {
                 _userRepo.DeleteUser();
+            }
+
+        }
+
+        [TestCase(1), Order(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public void TestAddHomeworkAttempt(int homeworkAttemptMock)
+        {
+            List<HomeworkAttemptDto> homeworkAttempts = GetHomeworkAttemptMock(homeworkAttemptMock);
+
+
+        }
+
+        [OneTimeTearDown]
+        public void TearDowTest()
+        {
+            deleteGroups();
+            deleteUsers();
+            deleteTags();
+            deleteThemes();
+        }
+
+        public void deleteGroups()
+        {
+            foreach (int groupId in _groupIdList)
+            {
+                _groupRepo.DeleteGroup(groupId);
+            }
+        }
+        public void deleteUsers()
+        {
+            foreach (int userId in _userIdList)
+            {
+                _userRepo.DeleteUser();
+            }
+        }
+        public void deleteTags()
+        {
+            foreach (int tagId in _tagIdList)
+            {
+                _tagRepo.TagDelete(tagId);
+            }
+        }
+        public void deleteThemes()
+        {
+            foreach (int themeId in _themeIdList)
+            {
+                _courseRepo.DeleteTheme(themeId);
             }
         }
         public List<ThemeDto> GetThemeMock(int n)
@@ -126,16 +151,16 @@ namespace EducationSystem.Data.Tests
                     return result;
                 case 2:
                     result.Add(new HomeworkAttemptDto
-                    { 
-                        Comment = "Test comment 1" ,
+                    {
+                        Comment = "Test comment 1",
                         HomeworkAttemptStatus = new HomeworkAttemptStatusDto { Id = 1, Name = "Test status 1" },
                         IsDeleted = false
                     });
 
                     _userIdList.Add(_userRepo.AddUser().Id);
-                    result[result.Count  - 1].Author = (GetUserMock(n));
+                    result[result.Count - 1].Author = (GetUserMock(n));
                     result[result.Count - 1].Author.Id = _userIdList[_userIdList.Count - 1];
-                    
+
                     return result;
                 case 3:
                     result.Add(new HomeworkAttemptDto
@@ -144,9 +169,16 @@ namespace EducationSystem.Data.Tests
                         HomeworkAttemptStatus = new HomeworkAttemptStatusDto { Id = 1, Name = "Test status 1" },
                         IsDeleted = false
                     });
+
                     _userIdList.Add(_userRepo.AddUser().Id);
                     result[result.Count - 1].Author = (GetUserMock(n));
                     result[result.Count - 1].Author.Id = _userIdList[_userIdList.Count - 1];
+
+                    foreach(TagDto tag in GetTagMock(n))
+                    _tagIdList.Add(_tagRepo.TagAdd().Id);
+                    result[result.Count - 1].Author = (GetUserMock(n));
+                    result[result.Count - 1].Author.Id = _userIdList[_userIdList.Count - 1];
+
                     result.Add(new HomeworkAttemptDto
                     {
                         Comment = "Test comment 1",
