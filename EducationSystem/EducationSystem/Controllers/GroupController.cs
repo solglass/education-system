@@ -96,7 +96,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/group/group-status
-        [HttpGet("group-status}")]
+        [HttpGet("group-status")]
         public ActionResult GetGroupStatus()
         {
             var groupStatuses = _repo.GetGroupStatus();
