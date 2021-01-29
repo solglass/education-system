@@ -61,7 +61,8 @@ namespace EducationSystem.Data
 
         public int AddLesson(LessonDto lessonDto)
         {
-            return _connection.Execute(
+            return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
                 new { lessonDto.GroupID, lessonDto.Comment, lessonDto.Data},
                 commandType: CommandType.StoredProcedure);
@@ -122,19 +123,20 @@ namespace EducationSystem.Data
         }
 
 
-        public int AddFeedback(int userdId, string message, int lessonId, int understandingLevelId)
+        public int AddFeedback(FeedbackDto feedbackDto)
         {
-            return _connection.Execute(
+            return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.Feedback_Add",
-                new {userdId, message, lessonId, understandingLevelId},
+                new {feedbackDto.UserID, feedbackDto.Messege, feedbackDto.LessonID, feedbackDto.UnderstandingLevelID},
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int UpdateFeedback(int id, int userdId, string message, int lessonId, int understandingLevelId)
+        public int UpdateFeedback(FeedbackDto feedbackDto)
         {
             return _connection.Execute(
                 "dbo.Feedback_Update",
-                new {id, userdId, message, lessonId, understandingLevelId},
+                new {feedbackDto.ID, feedbackDto.UserID, feedbackDto.Messege, feedbackDto.LessonID, feedbackDto.UnderstandingLevelID},
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -146,11 +148,12 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void AddUnderstandingLevel(string name)
+        public int AddUnderstandingLevel(UnderstandingLevelDto understandingLevel)
         {
-            _connection.Execute(
+           return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.UnderstandingLevel_Add", 
-                new {name}, 
+                new {understandingLevel.Name}, 
                 commandType: CommandType.StoredProcedure);
         }
         public void DeleteUnderstandingLevel(int id)
@@ -161,11 +164,11 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateUnderstandingLevel(int id, string name)
+        public void UpdateUnderstandingLevel(UnderstandingLevelDto understandingLevel)
         {
             _connection.Execute(
                 "dbo.UnderstandingLevel_Update",
-                new { id, name },
+                new {understandingLevel.ID, understandingLevel.Name },
                 commandType: CommandType.StoredProcedure);
         }
         public List<UnderstandingLevelDto> GetUnderstandingLevels()
@@ -182,11 +185,12 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return understandingLevel;
         }
-        public void AddAttendance(int lessonId,int userId,byte isAbsent)
+        public int AddAttendance(AttendanceDto attendance)
         {
-            _connection.Execute(
+           return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.Attendance_Add",
-                new { lessonId,userId,isAbsent },
+                new {attendance.LessonID,attendance.UserID,attendance.IsAbsent},
                 commandType: CommandType.StoredProcedure);
         }
         public void DeleteAttendance(int id)
@@ -197,11 +201,11 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateAttendance(int id, int lessonId, int userId, byte isAbsent)
+        public void UpdateAttendance(AttendanceDto attendance)
         {
             _connection.Execute(
                 "dbo.Attendance_Update",
-                new { id, lessonId, userId, isAbsent },
+                new {attendance.ID,attendance.LessonID,attendance.UserID,attendance.IsAbsent},
                 commandType: CommandType.StoredProcedure);
         }
         public List<AttendanceDto> GetAttendances()
@@ -219,11 +223,12 @@ namespace EducationSystem.Data
             return attendance;
         }
 
-        public void AddLessonTheme(int themeId,int lessonId)
+        public int AddLessonTheme(LessonThemeDto lessonTheme)
         {
-            _connection.Execute(
+           return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.LessonTheme_Add",
-                new { themeId, lessonId },
+                new {lessonTheme.ThemeID,lessonTheme.LessonID },
                 commandType: CommandType.StoredProcedure);
         }
         public void DeleteLessonTheme(int id)
@@ -234,11 +239,11 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateLessonTheme(int id, int themeId, int lessonId)
+        public void UpdateLessonTheme(LessonThemeDto lessonTheme)
         {
             _connection.Execute(
                 "dbo.LessonTheme_Update",
-                new { id, themeId, lessonId },
+                new {lessonTheme.ID,lessonTheme.ThemeID,lessonTheme.LessonID },
                 commandType: CommandType.StoredProcedure);
         }
         public List<LessonThemeDto> GetLessonThemes()

@@ -15,6 +15,5 @@ namespace EducationSystem.Data.Models
         public UserDto User { get; set; }
         public UnderstandingLevelDto UnderstandingLevel { get; set; }
         
-
     }
 }
