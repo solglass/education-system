@@ -9,12 +9,8 @@ namespace EducationSystem.API.Models.InputModels
     {
         public int Id { get; set; }
         public string Comment { get; set; }
-
-        public bool IsDeleted { get; set; }
-        public UserInputModel Author { get; set; }
-        public HomeworkInputModel Homework { get; set; }
-        public HomeworkAttemptStatusInputModel HomeworkAttemptStatus { get; set; }
-        public List<AttachmentInputModel> Attachments { get; set; } // TODO: Check necessity
-        public List<CommentInputModel> Comments { get; set; }
+        public int HomeworkAttemptStatusId { get; set; }
+        public int AuthorId { get; set; }
+        public int HomeworkId { get; set; }
     }
 }
