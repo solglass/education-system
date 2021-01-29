@@ -212,16 +212,87 @@ namespace EducationSystem.Data
 
         public List<CommentDto> GetComments()
         {
-            var comment = _connection
-                .Query<CommentDto>("dbo.Comment_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var userDictionary = new Dictionary<int, UserDto>();
+            var homeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
+    
+
+            var comments = _connection
+                .Query<CommentDto, UserDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, CommentDto>(
+                    "dbo.Homework_SelectById",
+                    (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
+                    {
+                        if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
+                        {
+                            commentEntry = comment;
+                            commentEntry.Author = new UserDto();
+                            commentEntry.HomeworkAttempt = new HomeworkAttemptDto();
+                            commentDictionary.Add(commentEntry.Id, commentEntry);
+                        }
+
+                        if (homeworkAttempt != null && homeworkAttemptStatus != null && user != null && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
+                        {
+                            homeworkAttemptEntry = homeworkAttempt;
+                            homeworkAttemptEntry.Author = user;
+                            homeworkAttemptEntry.HomeworkAttemptStatus = homeworkAttemptStatus;
+                            commentEntry.HomeworkAttempt = homeworkAttemptEntry;
+                            homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
+                        }
+                        if(user != null && !userDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                        {
+                            userEntry = user;
+                            commentEntry.Author = user;
+                            userDictionary.Add(userEntry.Id, userEntry);
+                        }
+                        return commentEntry;
+                    },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
-            return comment;
+            return comments;
+
+
         }
 
         public CommentDto GetCommentById(int id)
         {
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var userDictionary = new Dictionary<int, UserDto>();
+            var homeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
+
+
             var comment = _connection
-                .Query<CommentDto>("dbo.Comment_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .Query<CommentDto, UserDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, CommentDto>(
+                    "dbo.Homework_SelectById",
+                    (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
+                    {
+                        if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
+                        {
+                            commentEntry = comment;
+                            commentEntry.Author = new UserDto();
+                            commentEntry.HomeworkAttempt = new HomeworkAttemptDto();
+                            commentDictionary.Add(commentEntry.Id, commentEntry);
+                        }
+
+                        if (homeworkAttempt != null && homeworkAttemptStatus != null && user != null && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
+                        {
+                            homeworkAttemptEntry = homeworkAttempt;
+                            homeworkAttemptEntry.Author = user;
+                            homeworkAttemptEntry.HomeworkAttemptStatus = homeworkAttemptStatus;
+                            commentEntry.HomeworkAttempt = homeworkAttemptEntry;
+                            homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
+                        }
+                        if (user != null && !userDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                        {
+                            userEntry = user;
+                            commentEntry.Author = user;
+                            userDictionary.Add(userEntry.Id, userEntry);
+                        }
+                        return commentEntry;
+                    },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return comment;
         }
