@@ -23,9 +23,9 @@ namespace EducationSystem.Data
             var themeDictionary = new Dictionary<int, ThemeDto>();
 
             var homeworks = _connection
-                .Query<HomeworkDto, TagDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, UserDto, ThemeDto, HomeworkDto>(
+                .Query<HomeworkDto, GroupDto, TagDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, UserDto, ThemeDto, HomeworkDto>(
                     "dbo.Homework_SelectById",
-                    (homework, tag, homeworkAttempt, homeworkAttemptStatus, user, theme) =>
+                    (homework, group, tag, homeworkAttempt, homeworkAttemptStatus, user, theme) =>
                     {
                         if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
                         {
@@ -128,7 +128,7 @@ namespace EducationSystem.Data
                     description = homework.Description,
                     StartDate = homework.StartDate,
                     DeadlineDate = homework.StartDate,
-                    GroupID = homework.GroupId,
+                    Group = homework.Group,
                     IsOptional = homework.IsOptional
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -146,7 +146,7 @@ namespace EducationSystem.Data
                     description = homework.Description,
                     StartDate = homework.StartDate,
                     DeadlineDate = homework.DeadlineDate,
-                    GroupID = homework.GroupId,
+                    Group = homework.Group,
                     IsOptional = homework.IsOptional,
                     isDeleted = homework.IsDeleted
                 },
