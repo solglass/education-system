@@ -4,4 +4,5 @@ as
 begin
 Insert into dbo.Course_Theme_Material (CourseThemeID,MaterialID)
 Values (@courseThemeID,@materialID)
+select SCOPE_IDENTITY()
 end
