@@ -76,6 +76,10 @@ namespace EducationSystem.Data.Tests
             {
                 _tagRepo.TagDelete(tagId);
             }
+            foreach (int userId in _userIdList)
+            {
+                _userRepo.DeleteUser();
+            }
         }
         public List<ThemeDto> GetThemeMock(int n)
         {
