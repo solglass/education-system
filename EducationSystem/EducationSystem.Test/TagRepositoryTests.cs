@@ -8,13 +8,14 @@ namespace NUnitTestProject
 {
     public class TagsTests
     {
-        private List<int> tagId;
+        private List<int> _tagId;
+        private TagRepository _tRepo;
         [SetUp]
         public void TagTestsSetup()
         {
-            tagId = new List<int>();
-            TagDto expected = GetMockTag_Add(1);
-            TagRepository tRepo = new TagRepository();
+            _tagId = new List<int>();
+            _tRepo = new TagRepository();
+
         }
 
 
@@ -22,12 +23,16 @@ namespace NUnitTestProject
         public void Tag_AddTests(int dtoMockNumber)
         {
             TagDto expected = GetMockTag_Add(dtoMockNumber);
-            TagRepository tRepo = new TagRepository();
-            tagId.Add(tRepo.TagAdd(expected));
-            if (tagId.Count == 0) { Assert.Fail("Tag addition failed"); }
+
+            //expected.Id = _tRepo.GetTagById(_tagId[_tagId.Count - 1]);
+            var added = _tRepo.TagAdd(expected);
+            _tagId.Add(added);
+            expected.Id = added;
+            
+            if (_tagId.Count == 0) { Assert.Fail("Tag addition failed"); }
             else
             {
-                TagDto actual = tRepo.GetTagById(tagId[tagId.Count - 1]);
+                TagDto actual = _tRepo.GetTagById(_tagId[_tagId.Count - 1]);
                 Assert.AreEqual(expected, actual);
             }
         }
@@ -38,7 +43,7 @@ namespace NUnitTestProject
         public void TagsTestsTearDown()
         {
             TagRepository tRepo = new TagRepository();
-            foreach (int elem in tagId)
+            foreach (int elem in _tagId)
             {
                 tRepo.TagDelete(elem);
             }
@@ -48,11 +53,11 @@ namespace NUnitTestProject
         {
             TagDto expected = GetMockTag_Add(dtoMockNumber);
             TagRepository tRepo = new TagRepository();
-            tagId.Add(tRepo.TagAdd(expected));
-            if (tagId.Count == 0) { Assert.Fail("Tag addition failed"); }
+            _tagId.Add(tRepo.TagAdd(expected));
+            if (_tagId.Count == 0) { Assert.Fail("Tag addition failed"); }
             else
             {
-                int newId = tagId[tagId.Count - 1];
+                int newId = _tagId[_tagId.Count - 1];
                 tRepo.TagDelete(newId);
                 TagDto actual = tRepo.GetTagById(newId);
                 if (actual == null) { Assert.Pass(); }
@@ -65,11 +70,11 @@ namespace NUnitTestProject
         {
             TagDto expected = GetMockTag_Add(dtoMockNumber);
             TagRepository tRepo = new TagRepository();
-            tagId.Add(tRepo.TagAdd(expected));
-            if (tagId.Count == 0) { Assert.Fail("Attachment addition failed"); }
+            _tagId.Add(tRepo.TagAdd(expected));
+            if (_tagId.Count == 0) { Assert.Fail("Attachment addition failed"); }
             else
             {
-                int newId = tagId[tagId.Count - 1];
+                int newId = _tagId[_tagId.Count - 1];
                 expected.Name = "B_TESTCASE2";
                 expected.Id = newId;
                 tRepo.TagUpdate(expected);
@@ -85,8 +90,8 @@ namespace NUnitTestProject
             {
                 case 1:
                     TagDto tagDto = new TagDto();
-                    tagDto.Id = 1;
                     tagDto.Name = "B_TESTCASE2";
+                    
                     return tagDto;
                 default:
                     throw new Exception();

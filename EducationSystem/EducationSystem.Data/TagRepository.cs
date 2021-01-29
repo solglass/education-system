@@ -47,7 +47,7 @@ namespace EducationSystem.Data
         public int TagAdd(TagDto tag)
         {
             var result = _connection
-                .Execute("dbo.Tag_Add", new { tag.Name },
+                .QuerySingle<int>("dbo.Tag_Add", new { tag.Name },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
