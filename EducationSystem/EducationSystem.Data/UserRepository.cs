@@ -119,9 +119,6 @@ namespace EducationSystem.Data
                  .FirstOrDefault();
             return role;
         }
-
-
-        // paymentrepository
         public List<PaymentDto> GetPayments()
         {
             var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
@@ -187,17 +184,17 @@ namespace EducationSystem.Data
         }
 
         // should return affected rows' count, use 'Execute' method
-        public int UpdatePayment(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid)
+        public int UpdatePayment(PaymentDto payment)
         {
             var result = _connection
                 .Execute("dbo.Course_Update",
                 new
                 {
-                    contractNumber,
-                    amount,
-                    date,
-                    period,
-                    IsPaid
+
+                    payment.Amount,
+                    payment.Date,
+                    payment.Period,
+                    payment.IsPaid
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -215,6 +212,9 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+    
+
+
     }
 
 }
