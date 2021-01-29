@@ -79,6 +79,7 @@
     <Folder Include="StoredProcedures\Student_Group" />
     <Folder Include="StoredProcedures\TeacherGroup" />
     <Folder Include="StoredProcedures\Tables\" />
+    <Folder Include="Scripts" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -187,5 +188,6 @@
     <Build Include="Tables\dbo.Comment_Attachment.sql" />
     <Build Include="Tables\dbo.Group.sql" />
     <Build Include="Tables\dbo.Group_Material.sql" />
+    <PostDeploy Include="Scripts\ForeignKeys.sql" />
   </ItemGroup>
 </Project>
