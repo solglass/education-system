@@ -65,7 +65,7 @@ namespace EducationSystem.API.Controllers
             return Ok("success");
         }
 
-        // https://localhost:44365/api/attachment/attachmentType/register
+        // https://localhost:44365/api/attachment/attachmentType/
         [HttpPost("attachmentType/{name}")]
         public ActionResult AddAttachmentType(string name)
         {
@@ -94,7 +94,7 @@ namespace EducationSystem.API.Controllers
         }
 
         // https://localhost:44365/api/attachment/attachmentType/42
-        [HttpPut("attachmentType/{id}")]
+        [HttpPut("attachmentType/{id}/{name}")]
         public ActionResult UpdateAttachmentType(int attachmentTypeId, string name)
         {
             _repo.ModifyAttachmentType(attachmentTypeId, name);
