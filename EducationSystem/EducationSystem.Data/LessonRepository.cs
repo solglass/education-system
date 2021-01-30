@@ -11,56 +11,60 @@ namespace EducationSystem.Data
 {
     public class LessonRepository : BaseRepository
     {
-        public LessonRepository()
-        {
-            _connection = new SqlConnection(_connectionString);
-        }
-
         public List<LessonDto> GetLessons()
         {
-            var lessons = new Dictionary<int, LessonDto>();
-            return _connection.Query<LessonDto, ThemeDto, LessonDto>(
-                "dbo.Lesson_SelectAll",
-                (lesson, theme) =>
-                {
-                    LessonDto lessonEntry;
+            var lessonDictionary = new Dictionary<int, LessonDto>();
+            var lessons = _connection
+                .Query<LessonDto, ThemeDto, LessonDto>("dbo.Lesson_SelectAll",
+               (lesson, theme) =>
+               {
 
-                    if (!lessons.TryGetValue(lesson.ID, out lessonEntry))
-                    {
-                        lessonEntry = lesson;
-                        lessonEntry.Themes = new List<ThemeDto>();
-                        lessons.Add(lessonEntry.ID, lessonEntry);
-                    }
+                   if (!lessonDictionary.TryGetValue(lesson.ID, out LessonDto lessonEntry))
+                   {
+                       lessonEntry = lesson;
+                       lessonEntry.Themes = new List<ThemeDto>();
+                       lessonDictionary.Add(lessonEntry.ID, lessonEntry);
+                   }
 
-                    lessonEntry.Themes.Add(theme);
-                    return lessonEntry;
-                },
-                splitOn: "OrderDetailID")
-            .Distinct()
-            .ToList();
+                   lessonEntry.Themes.Add(theme);
+                   return lessonEntry;
+               },
+                splitOn: "ID",
+                commandType: CommandType.StoredProcedure)
+                .Distinct()
+                .ToList();
+            return lessons;
         }
 
         public LessonDto GetLessonById(int id)
         {
+            var lessonEntry = new LessonDto();
+            var lesson = _connection
+                .Query<LessonDto, ThemeDto, LessonDto>("dbo.Lesson_SelectByID",
+               (lesson, theme) =>
+               {
 
-            return _connection.Query<LessonDto, ThemeDto, LessonDto>(
-                "dbo.Lesson_SelectByID",
-                (lesson, theme) =>
-                {
-                    lesson.Themes = new List<ThemeDto>();
-                    lesson.Themes.Add(theme);
-                    return lesson;
-                },
-                new { id },
-                splitOn: "OrderDetailID").FirstOrDefault();
+                   if (lessonEntry.ID == 0)
+                   {
+                       lessonEntry = lesson;
+                       lessonEntry.Themes = new List<ThemeDto>();
+                   }
 
+                   lessonEntry.Themes.Add(theme);
+                   return lessonEntry;
+               },
+                splitOn: "ID",
+                commandType: CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return lesson;
         }
 
-        public int AddLesson(LessonDto lesson)
+        public int AddLesson(LessonDto lessonDto)
         {
-            return _connection.Execute(
+            return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
-                new { lesson.GroupID, lesson.Comment, lesson.Data },
+                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.Data},
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -72,29 +76,67 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int UpdateLesson(LessonDto lesson)
+        public int UpdateLesson(LessonDto lessonDto)
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new { lesson.ID, lesson.GroupID, lesson.Comment, lesson.Data, lesson.IsDeleted},
+                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.Data, lessonDto.IsDeleted },
                 commandType: CommandType.StoredProcedure);
         }
 
-    
-
-        public int AddFeedback(FeedbackDto feedback)
+        public List<FeedbackDto> GetFeedbacks()
         {
-            return _connection.Execute(
+            return _connection
+                .Query<FeedbackDto, LessonDto, UnderstandingLevelDto, UserDto, FeedbackDto>(
+                    "dbo.Feedback_SelectAll",
+                    (feedback, lesson, understendinglevel, user) =>
+                    {
+                        feedback.Lesson = lesson;
+                        feedback.UnderstandingLevel = understendinglevel;
+                        feedback.User = user;
+                        return feedback;
+                    },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .Distinct()
+                .ToList();
+        }
+
+        public FeedbackDto GetFeedbackById(int id)
+        {
+            return _connection
+                .Query<FeedbackDto, LessonDto, UnderstandingLevelDto, UserDto, FeedbackDto>(
+                    "dbo.Feedback_SelectById",
+                    (feedback, lesson, understendinglevel, user) =>
+                    {
+                        feedback.Lesson = lesson;
+                        feedback.UnderstandingLevel = understendinglevel;
+                        feedback.User = user;
+                        return feedback;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: CommandType.StoredProcedure
+                )
+                .FirstOrDefault();
+        }
+
+
+        public int AddFeedback(FeedbackDto feedbackDto)
+        {
+            return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.Feedback_Add",
-                new { feedback.UserID, feedback.Messege, feedback.LessonID, feedback.UnderstandingLevelID },
+                new {feedbackDto.UserID, feedbackDto.Messege, feedbackDto.LessonID, feedbackDto.UnderstandingLevelID},
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int UpdateFeedback(FeedbackDto feedback)
+        public int UpdateFeedback(FeedbackDto feedbackDto)
         {
             return _connection.Execute(
                 "dbo.Feedback_Update",
-                new {feedback.ID, feedback.UserID, feedback.Messege, feedback.LessonID, feedback.UnderstandingLevelID},
+                new {feedbackDto.ID, feedbackDto.UserID, feedbackDto.Messege, feedbackDto.LessonID, feedbackDto.UnderstandingLevelID},
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -106,11 +148,12 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int AddUnderstandingLevel(string name)
+        public int AddUnderstandingLevel(UnderstandingLevelDto understandingLevel)
         {
-            return _connection.Execute(
+           return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.UnderstandingLevel_Add", 
-                new {name}, 
+                new {understandingLevel.Name}, 
                 commandType: CommandType.StoredProcedure);
         }
         public int DeleteUnderstandingLevel(int id)
@@ -121,11 +164,11 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int UpdateUnderstandingLevel(UnderstandingLevelDto understanding)
+        public void UpdateUnderstandingLevel(UnderstandingLevelDto understandingLevel)
         {
             return _connection.Execute(
                 "dbo.UnderstandingLevel_Update",
-                new { understanding.ID, understanding.Name },
+                new {understandingLevel.ID, understandingLevel.Name },
                 commandType: CommandType.StoredProcedure);
         }
         public List<UnderstandingLevelDto> GetUnderstandingLevels()
@@ -144,9 +187,10 @@ namespace EducationSystem.Data
         }
         public int AddAttendance(AttendanceDto attendance)
         {
-            return _connection.Execute(
+           return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.Attendance_Add",
-                new { attendance.LessonID, attendance.UserID, attendance.IsAbsent },
+                new {attendance.LessonID,attendance.UserID,attendance.IsAbsent},
                 commandType: CommandType.StoredProcedure);
         }
         public int DeleteAttendance(int id)
@@ -157,11 +201,11 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int UpdateAttendance(AttendanceDto attendance)
+        public void UpdateAttendance(AttendanceDto attendance)
         {
             return _connection.Execute(
                 "dbo.Attendance_Update",
-                new { attendance.ID, attendance.LessonID, attendance.UserID, attendance.IsAbsent },
+                new {attendance.ID,attendance.LessonID,attendance.UserID,attendance.IsAbsent},
                 commandType: CommandType.StoredProcedure);
         }
         public List<AttendanceDto> GetAttendances()
@@ -192,11 +236,12 @@ namespace EducationSystem.Data
 
         }
 
-        public void AddLessonTheme(LessonThemeDto lessonTheme)
+        public int AddLessonTheme(LessonThemeDto lessonTheme)
         {
-            _connection.Execute(
+           return _connection
+                .QuerySingleOrDefault<int>(
                 "dbo.LessonTheme_Add",
-                new { lessonTheme.ThemeID, lessonTheme.LessonID },
+                new {lessonTheme.ThemeID,lessonTheme.LessonID },
                 commandType: CommandType.StoredProcedure);
         }
         public void DeleteLessonTheme(int id)
@@ -211,7 +256,7 @@ namespace EducationSystem.Data
         {
             _connection.Execute(
                 "dbo.LessonTheme_Update",
-                new { lessonTheme.ID, lessonTheme.ThemeID, lessonTheme.LessonID },
+                new {lessonTheme.ID,lessonTheme.ThemeID,lessonTheme.LessonID },
                 commandType: CommandType.StoredProcedure);
         }
         public List<LessonThemeDto> GetLessonThemes()
