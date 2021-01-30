@@ -51,101 +51,100 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public List<MaterialTagDto> GetMaterial_Tag()
+        public List<MaterialTagDto> GetMaterialTag()
         {
             var result = _connection
                 .Query<MaterialTagDto>("dbo.Material_Tag_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
         }
-        public MaterialTagDto GetMaterial_TagById(int Id)
+        public MaterialTagDto GetMaterialTagById(int Id)
         {
             var result = _connection
-                .QuerySingleOrDefault<MaterialTagDto>("dbo.Material_Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure)
-                ;
+                .QuerySingleOrDefault<MaterialTagDto>("dbo.Material_Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int Material_TagUpdate(MaterialTagDto Tag)
+        public int MaterialTagUpdate(MaterialTagDto Tag)
         {
             var result = _connection
                 .Execute("dbo.Material_Tag_Update", new { Tag.Id, Tag.TagId, Tag.MaterialId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
 
         }
-        public int Material_TagDelete(int Id)
+        public int MaterialTagDelete(int Id)
         {
             var result = _connection
                 .Execute("dbo.Material_Tag_Delete", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int Material_TagAdd(MaterialTagDto Tag)
+        public int MaterialTagAdd(MaterialTagDto Tag)
         {
             var result = _connection
-                .Execute("dbo.Material_Tag_Add", new { Tag.TagId, Tag.MaterialId }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingle<int>("dbo.Material_Tag_Add", new { Tag.TagId, Tag.MaterialId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public List<ThemeTagDto> GetTheme_Tag()
+        public List<ThemeTagDto> GetThemeTag()
         {
             var result = _connection
                 .Query<ThemeTagDto>("dbo.Theme_Tag_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
         }
-        public List<ThemeTagDto> GetTheme_TagById(int Id)
+        public List<ThemeTagDto> GetThemeTagById(int Id)
         {
             var result = _connection
                 .Query<ThemeTagDto>("dbo.Theme_Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
         }
-        public int Theme_TagUpdate(ThemeTagDto Tag)
+        public int ThemeTagUpdate(ThemeTagDto Tag)
         {
             var result = _connection
                 .Execute("dbo.Theme_Tag_Update", new { Tag.Id, Tag.TagId, Tag.ThemeId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int Theme_TagDelete(int Id)
+        public int ThemeTagDelete(int Id)
         {
             var result = _connection
                 .Execute("dbo.Theme_Tag_Delete", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int Theme_TagAdd(ThemeTagDto Tag)
+        public int ThemeTagAdd(ThemeTagDto Tag)
         {
             var result = _connection
-                .Execute("dbo.Theme_Tag_Add", new { Tag.TagId, Tag.ThemeId }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingle<int>("dbo.Theme_Tag_Add", new { Tag.TagId, Tag.ThemeId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public List<HomeworkTagDto> GetHomework_Tag()
+        public List<HomeworkTagDto> GetHomeworkTag()
         {
             var result = _connection
                 .Query<HomeworkTagDto>("dbo.Homework_Tag_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
         }
-        public List<HomeworkTagDto> GetHomework_TagById(int Id)
+        public List<HomeworkTagDto> GetHomeworkTagById(int Id)
         {
             var result = _connection
                 .Query<HomeworkTagDto>("dbo.Homework_Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
         }
-        public int Homework_TagUpdate(HomeworkTagDto Tag)
+        public int HomeworkTagUpdate(HomeworkTagDto Tag)
         {
             var result = _connection
                 .Execute("dbo.Homework_Tag_Update", new { Tag.Id, Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int Homework_TagDelete(int Id)
+        public int HomeworkTagDelete(int Id)
         {
             var result = _connection
                 .Execute("dbo.Homework_Tag_Delete", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int Homework_TagAdd(HomeworkTagDto Tag)
+        public int HomeworkTagAdd(HomeworkTagDto Tag)
         {
             var result = _connection
-                .Execute("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingle<int>("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
     }
