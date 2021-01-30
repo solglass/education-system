@@ -156,9 +156,9 @@ namespace EducationSystem.Data
                 new {understandingLevel.Name}, 
                 commandType: CommandType.StoredProcedure);
         }
-        public void DeleteUnderstandingLevel(int id)
+        public int DeleteUnderstandingLevel(int id)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.UnderstandingLevel_Delete",
                 new { id },
                 commandType: CommandType.StoredProcedure);
@@ -166,7 +166,7 @@ namespace EducationSystem.Data
 
         public void UpdateUnderstandingLevel(UnderstandingLevelDto understandingLevel)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.UnderstandingLevel_Update",
                 new {understandingLevel.ID, understandingLevel.Name },
                 commandType: CommandType.StoredProcedure);
@@ -193,9 +193,9 @@ namespace EducationSystem.Data
                 new {attendance.LessonID,attendance.UserID,attendance.IsAbsent},
                 commandType: CommandType.StoredProcedure);
         }
-        public void DeleteAttendance(int id)
+        public int DeleteAttendance(int id)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.Attendance_Delete",
                 new { id },
                 commandType: CommandType.StoredProcedure);
@@ -203,24 +203,37 @@ namespace EducationSystem.Data
 
         public void UpdateAttendance(AttendanceDto attendance)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.Attendance_Update",
                 new {attendance.ID,attendance.LessonID,attendance.UserID,attendance.IsAbsent},
                 commandType: CommandType.StoredProcedure);
         }
         public List<AttendanceDto> GetAttendances()
         {
-            var attendance = _connection
-                .Query<AttendanceDto>("dbo.Attendance_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return attendance;
+            return _connection.Query<AttendanceDto, UserDto, AttendanceDto>(
+            "dbo.Attendance_SelectAll",
+            (attendance, user) =>
+            {
+                attendance.User = user;
+                return attendance;
+            },
+            splitOn: "Id")
+            .Distinct()
+            .ToList();
         }
         public AttendanceDto GetAttendanceById(int id)
         {
-            var attendance = _connection
-                .Query<AttendanceDto>("dbo.Attendance_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+            return _connection.Query<AttendanceDto, UserDto, AttendanceDto>(
+            "dbo.Attendance_SelectById",
+            (attendance, user) =>
+            {
+                attendance.User = user;
+                return attendance;
+            },
+            new { id },
+            splitOn: "Id")
                 .FirstOrDefault();
-            return attendance;
+
         }
 
         public int AddLessonTheme(LessonThemeDto lessonTheme)
