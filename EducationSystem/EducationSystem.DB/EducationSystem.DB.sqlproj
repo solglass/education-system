@@ -78,8 +78,11 @@
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures\Student_Group" />
     <Folder Include="StoredProcedures\TeacherGroup" />
+<<<<<<< HEAD
     <Folder Include="StoredProcedures\Tables\" />
     <Folder Include="Scripts" />
+=======
+>>>>>>> TagRepositoryTests
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -181,6 +184,7 @@
     <Build Include="Tables\dbo.Homework_Theme.sql" />
     <Build Include="Tables\dbo.HomeworkAttemptStatus.sql" />
     <Build Include="Tables\dbo.Theme.sql" />
+<<<<<<< HEAD
     <Build Include="StoredProcedures\Tables\dbo.GroupStatus.sql" />
     <Build Include="StoredProcedures\Tables\dbo.Payment.sql" />
     <Build Include="Tables\dbo.Attachment.sql" />
@@ -189,5 +193,7 @@
     <Build Include="Tables\dbo.Group.sql" />
     <Build Include="Tables\dbo.Group_Material.sql" />
     <PostDeploy Include="Scripts\ForeignKeys.sql" />
+=======
+>>>>>>> TagRepositoryTests
   </ItemGroup>
 </Project>

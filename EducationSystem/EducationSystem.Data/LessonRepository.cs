@@ -164,9 +164,9 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateUnderstandingLevel(UnderstandingLevelDto understandingLevel)
+        public int UpdateUnderstandingLevel(UnderstandingLevelDto understandingLevel)
         {
-            return _connection.Execute(
+           return _connection.Execute(
                 "dbo.UnderstandingLevel_Update",
                 new {understandingLevel.ID, understandingLevel.Name },
                 commandType: CommandType.StoredProcedure);
@@ -201,7 +201,7 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateAttendance(AttendanceDto attendance)
+        public int UpdateAttendance(AttendanceDto attendance)
         {
             return _connection.Execute(
                 "dbo.Attendance_Update",

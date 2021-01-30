@@ -28,10 +28,18 @@ namespace EducationSystem.Controllers
 
         [HttpGet]
         public dynamic Get()
-        {
 
-            var repo = new CourseRepository();
-            return repo.GetCourseById(14);
+        {
+            var repo = new TagRepository();
+
+            return repo.GetTags();
+
+            {
+
+                //var repo = new CourseRepository();
+                //return repo.GetCourseById(14);
+
+            }
         }
     }
 }
