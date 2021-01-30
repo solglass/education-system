@@ -24,8 +24,8 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/tag/add
-        [HttpPost("add")]
-        public ActionResult Add([FromBody] dynamic user)
+        [HttpPost]
+        public ActionResult Add([FromBody] TagDto user)
         {
             _repo.TagAdd(user);
             return Ok("Тег добавлен");
@@ -48,19 +48,19 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/tag/3
-        [HttpPut("{id}")]
-        public ActionResult UpdateTag(int id, [FromBody] dynamic data) 
+        [HttpPut]
+        public ActionResult UpdateTag( [FromBody] TagDto data)
         {
             _repo.TagUpdate(data);
-            return Ok("success");
+            return Ok("Tag обновлён");
         }
 
         // https://localhost:50221/api/tag/3
         [HttpDelete("{id}")]
-        public ActionResult DeleteTag(int id) 
+        public ActionResult DeleteTag(int id)
         {
             _repo.TagDelete(id);
-            return Ok("success");
+            return Ok("Tag удалён");
         }
     }
 }
