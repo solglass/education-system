@@ -28,7 +28,7 @@ namespace EducationSystem.Controllers
         public ActionResult AddNewLesson(LessonDto lessonDto)
         {
             _repo.AddLesson(lessonDto);
-            return Ok("Add success");
+            return Ok("Урок добавлен");
         }
 
         // https://localhost:50221/api/lesson/
@@ -52,14 +52,14 @@ namespace EducationSystem.Controllers
         public ActionResult DeleteLesson(int id)
         {
             _repo.DeleteLesson(id);
-            return Ok("Delete success");
+            return Ok("Урок удалён");
         }
-        // https://localhost:50221/api/lesson/
-        [HttpPost("update")]
-        public ActionResult UpdateLesson([FromBody]LessonDto lessonDto)
+        // https://localhost:50221/api/lesson/5
+        [HttpPost("{id}")]
+        public ActionResult UpdateLesson(int id,[FromBody]LessonDto lessonDto)
         {
             _repo.UpdateLesson(lessonDto);
-            return Ok("Update success");
+            return Ok("Урок обновлён");
         }
 
         // https://localhost:50221/api/feedback/
@@ -83,15 +83,15 @@ namespace EducationSystem.Controllers
         public ActionResult AddNewFeedback(FeedbackDto feedbackDto)
         {
             _repo.AddFeedback(feedbackDto);
-            return Ok("Add success");
+            return Ok("Отзыв добавлен");
         }
 
-        // https://localhost:50221/api/feedback/update
-        [HttpPost("update")]
-        public ActionResult UpdateFeedback([FromBody]FeedbackDto feedbackDto)
+        // https://localhost:50221/api/feedback/5
+        [HttpPost("{id}")]
+        public ActionResult UpdateFeedback(int id,[FromBody]FeedbackDto feedbackDto)
         {
             _repo.UpdateFeedback(feedbackDto);
-            return Ok("Update Success");
+            return Ok("Отзыв обновлён");
         }
 
         // https://localhost:50221/api/feedback/3
@@ -99,7 +99,7 @@ namespace EducationSystem.Controllers
         public ActionResult DeleteFeedback(int id)
         {
             _repo.DeleteFeedback(id);
-            return Ok("Delete success");
+            return Ok("Отзыв удалён");
         }
 
         // https://localhost:50221/api/understandingLevel/
@@ -123,23 +123,23 @@ namespace EducationSystem.Controllers
         public ActionResult AddNewUnderstandingLevel(UnderstandingLevelDto understandingLevel)
         {
             _repo.AddUnderstandingLevel(understandingLevel);
-            return Ok("Add success");
+            return Ok("Сложность добавлена");
         }
 
-        // https://localhost:50221/api/understandingLevel/update
-        [HttpPost("update")]
-        public ActionResult UpdateUnderstandingLevel([FromBody]UnderstandingLevelDto understandingLevelDto)
+        // https://localhost:50221/api/understandingLevel/5
+        [HttpPost("{id}")]
+        public ActionResult UpdateUnderstandingLevel(int id,[FromBody]UnderstandingLevelDto understandingLevelDto)
         {
             _repo.UpdateUnderstandingLevel(understandingLevelDto);
-            return Ok("Update success");
+            return Ok("Сложность обновлена");
         }
 
         // https://localhost:50221/api/UnderstandingLevel/3
         [HttpDelete("{id}")]
         public ActionResult DeleteUnderstandingLevel(int id)
         {
-            _repo.DeleteFeedback(id);
-            return Ok("Delete success");
+            _repo.DeleteUnderstandingLevel(id);
+            return Ok("Сложность удалена");
         }
 
         // https://localhost:50221/api/attendance/
@@ -163,15 +163,15 @@ namespace EducationSystem.Controllers
         public ActionResult AddNewAttendance(AttendanceDto attendance)
         {
             _repo.AddAttendance(attendance);
-            return Ok("Add success");
+            return Ok("Посещаемость добавлена");
         }
 
-        // https://localhost:50221/api/attendance/update
-        [HttpPost("update")]
-        public ActionResult UpdateAttendance([FromBody]AttendanceDto attendance)
+        // https://localhost:50221/api/attendance/5
+        [HttpPost("{id}")]
+        public ActionResult UpdateAttendance(int id,[FromBody]AttendanceDto attendance)
         {
             _repo.UpdateAttendance(attendance);
-            return Ok("Update success");
+            return Ok("Посещаемость обновлена");
         }
 
         // https://localhost:50221/api/attendance/3
@@ -179,7 +179,7 @@ namespace EducationSystem.Controllers
         public ActionResult DeleteAttendance(int id)
         {
             _repo.DeleteAttendance(id);
-            return Ok("Delete success");
+            return Ok("Посещаемость удалена");
         }
 
         // https://localhost:50221/api/lesson-theme/
@@ -203,15 +203,15 @@ namespace EducationSystem.Controllers
         public ActionResult AddNewLessonTheme(LessonThemeDto lessontheme)
         {
             _repo.AddLessonTheme(lessontheme);
-            return Ok("Add success");
+            return Ok("Тема урока добавлена");
         }
 
-        // https://localhost:50221/api/lesson-theme/update
-        [HttpPost("update")]
-        public ActionResult UpdateLessonTheme([FromBody]LessonThemeDto lessonTheme)
+        // https://localhost:50221/api/lesson-theme/3
+        [HttpPost("{id}")]
+        public ActionResult UpdateLessonTheme(int id,[FromBody]LessonThemeDto lessonTheme)
         {
             _repo.UpdateLessonTheme(lessonTheme);
-            return Ok("Update success");
+            return Ok("Тема урока обновлена");
         }
 
         // https://localhost:50221/api/lesson-theme/3
@@ -219,7 +219,7 @@ namespace EducationSystem.Controllers
         public ActionResult DeleteLessonTheme(int id)
         {
             _repo.DeleteAttendance(id);
-            return Ok("Delete success");
+            return Ok("Тема урока удалена");
         }
     }
 }
