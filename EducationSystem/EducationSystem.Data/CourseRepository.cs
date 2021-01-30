@@ -142,14 +142,14 @@ namespace EducationSystem.Data
         public List<ThemeDto> GetThemes()
         {
             var themes = _connection
-                .Query<ThemeDto>("dbo.Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .Query<ThemeDto>("dbo.Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return themes;
         }
         public ThemeDto GetThemeById(int id)
-        {
+        {
            
-            var theme = _connection
+            var theme = _connection
                 .QuerySingleOrDefault<ThemeDto>("dbo.Theme_SelectById",
                 new { id }, 
                 commandType: System.Data.CommandType.StoredProcedure);

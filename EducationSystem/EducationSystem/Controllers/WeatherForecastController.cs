@@ -30,8 +30,8 @@ namespace EducationSystem.Controllers
         public dynamic Get()
         {
 
-            var repo = new CourseRepository();
-            return repo.GetThemeById(1);
+            var repo = new HomeworkRepository();
+            return repo.GetHomeworkAttemptById(22);
         }
     }
 }

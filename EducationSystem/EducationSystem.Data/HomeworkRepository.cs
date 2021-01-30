@@ -167,20 +167,83 @@ namespace EducationSystem.Data
         }
 
 
+        //public List<HomeworkAttemptDto> GetHomeworkAttempts()
+        //{
+        //    var homeworkAttempt = _connection
+        //        .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+        //        .ToList();
+        //    return homeworkAttempt;
+        //}
+
         public List<HomeworkAttemptDto> GetHomeworkAttempts()
         {
-            var homeworkAttempt = _connection
-                .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+            var hwAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var hwAttempts = _connection
+                .Query<HomeworkAttemptDto, UserDto, HomeworkAttemptStatusDto, CommentDto, HomeworkAttemptDto>(
+                "dbo.HomeworkAttempt_SelectAll",
+                (hwAttempt, user, hwAttemptStatus, comment) =>
+                {
+                    if (!hwAttemptDictionary.TryGetValue(hwAttempt.Id, out HomeworkAttemptDto hwAttemptEntry))
+                    {
+                        hwAttemptEntry =  hwAttempt;
+                        hwAttemptEntry.Author = user;
+                        hwAttemptEntry.HomeworkAttemptStatus = hwAttemptStatus;
+                        hwAttemptEntry.Comments = new List<CommentDto>();
+                        hwAttemptDictionary.Add(hwAttemptEntry.Id, hwAttemptEntry);
+                    }
+                    if (comment != null && !commentDictionary.TryGetValue(hwAttempt.Id, out CommentDto commentEntry))
+                    {
+                        commentEntry = comment;
+                        hwAttemptEntry.Comments.Add(comment);
+                        commentDictionary.Add(comment.Id, commentEntry);
+                    }
+                    return hwAttemptEntry;
+                },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
-            return homeworkAttempt;
+            return hwAttempts;
         }
+
+        //public HomeworkAttemptDto GetHomeworkAttemptById(int id)
+        //{
+        //    var homeworkAttempt = _connection
+        //        .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+        //        .FirstOrDefault();
+        //    return homeworkAttempt;
+        //}
 
         public HomeworkAttemptDto GetHomeworkAttemptById(int id)
         {
-            var homeworkAttempt = _connection
-                .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var hwAttemptEntry = new HomeworkAttemptDto();
+            var hwAttempt = _connection
+                .Query<HomeworkAttemptDto, UserDto, HomeworkAttemptStatusDto, CommentDto, HomeworkAttemptDto>(
+                "dbo.HomeworkAttempt_SelectById",
+                (hwAttempt, user, hwAttemptStatus, comment) =>
+                {
+                    if (hwAttemptEntry.Id == 0)
+                    {
+                        hwAttemptEntry = hwAttempt;
+                        hwAttemptEntry.Author = user;
+                        hwAttemptEntry.HomeworkAttemptStatus = hwAttemptStatus;
+                        hwAttemptEntry.Comments = new List<CommentDto>();
+                    }
+                    if (comment != null && !commentDictionary.TryGetValue(hwAttempt.Id, out CommentDto commentEntry))
+                    {
+                        commentEntry = comment;
+                        hwAttemptEntry.Comments.Add(comment);
+                        commentDictionary.Add(comment.Id, commentEntry);
+                    }
+                    return hwAttemptEntry;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
-            return homeworkAttempt;
+            return hwAttempt;
         }
 
         public int AddHomeworkAttempt(HomeworkAttemptDto homeworkAttempt)
