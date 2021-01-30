@@ -26,9 +26,9 @@ namespace EducationSystem.API.Mappers
         public List<ThemeDto> ToDtos(List<ThemeInputModel> inputModels)
         {
             List<ThemeDto> themes = new List<ThemeDto>();
-            if (inputModels != null)
+            if (inputModels == null || inputModels.Count==0)
             {
-                throw new Exception("Ошибка! Темы не обнаружены!");
+                throw new Exception("Ошибка! Темы не найдены!");
             }
             foreach (var model in inputModels)
             {
@@ -40,6 +40,10 @@ namespace EducationSystem.API.Mappers
 
         public ThemeOutputModel FromDto(ThemeDto themeDto)
         {
+            if(themeDto==null)
+            {
+                throw new Exception("Ошибка! Тема не найдена!");
+            }
             return new ThemeOutputModel()
             {
                 Id=themeDto.Id,
@@ -50,9 +54,9 @@ namespace EducationSystem.API.Mappers
         public List<ThemeOutputModel> FromDtos(List<ThemeDto> themeDtos)
         {
             List<ThemeOutputModel> models = new List<ThemeOutputModel>();
-            if (themeDtos != null)
+            if (themeDtos == null || themeDtos.Count==0)
             {
-                throw new Exception("Ошибка! Темы не обнаружены!");
+                throw new Exception("Ошибка! Темы не найдены!");
             }
             foreach (var theme in themeDtos)
             {

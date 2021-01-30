@@ -12,35 +12,24 @@ namespace EducationSystem.API.Mappers
     {
         public CourseDto ToDto(CourseInputModel inputModel)
         {
-            var groupMapper = new GroupMapper();
             var themeMapper = new ThemeMapper();
             return new CourseDto
             {
                 Id=inputModel.Id,
                 Name = inputModel.Name,
                 Description=inputModel.Description,
-                Duration=inputModel.Duration,
-                IsDeleted=inputModel.IsDeleted,
-               // Groups=groupMapper.ToDto(inputModel.Groups),
-                Themes=themeMapper.ToDto(inputModel.Themes)
+                Duration=inputModel.Duration                //TODO list of theme ids and validation, duration
             };
         }
 
-        public List<CourseDto> ToDto(List<CourseInputModel> inputModels)
+        public List<CourseDto> ToDtos(List<CourseInputModel> inputModels)
         {
             List<CourseDto> courses = new List<CourseDto>();
             if (inputModels != null)
             {
                 foreach (var model in inputModels)
                 {
-                    courses.Add(new CourseDto()
-                    {
-                        Id = model.Id,
-                        Name = model.Name,
-                        Description = model.Description,
-                        Duration = model.Duration,
-                        IsDeleted = model.IsDeleted
-                    });
+                    courses.Add(ToDto(model));
                 }
             }
             return courses;
@@ -54,20 +43,14 @@ namespace EducationSystem.API.Mappers
             };
         }
 
-        public List<CourseOutputModel> FromDto(List<CourseDto> courseDtos)
+        public List<CourseOutputModel> FromDtos(List<CourseDto> courseDtos)
         {
             List<CourseOutputModel> models = new List<CourseOutputModel>();
             if (courseDtos != null)
             {
                 foreach (var course in courseDtos)
                 {
-                    models.Add(new CourseOutputModel()
-                    {
-                        //Id = course.Id,
-                        //Name = course.Name,
-                        //Duration = course.Duration,
-                        //Description = course.Description
-                    });
+                    models.Add(FromDto(course));
                 }
             }
             return models;

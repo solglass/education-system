@@ -1,6 +1,7 @@
 ﻿using EducationSystem.API.Mappers;
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
@@ -44,7 +45,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateCourse([FromBody] CourseInputModel course)
+        public ActionResult CreateCourse([FromBody] CourseInputModel course)    //TODO mapper and exceptions
         {
             CourseDto courseDto = _courseMapper.ToDto(course);
             var result = _repo.AddCourse(courseDto);
@@ -52,7 +53,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
+        public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)    //TODO mapper and exceptions
         {
             CourseDto courseDto = _courseMapper.ToDto(course);
             var result = _repo.AddCourse(courseDto);
@@ -63,7 +64,10 @@ namespace EducationSystem.API.Controllers
         public ActionResult RemoveCourseInfo(int id)
         {
             var result = _repo.DeleteCourse(id);
-            return Ok("Курс удален!");
+            if (result > 0)
+                return Ok("Курс удален!");
+            else
+                return Problem("о-ё-ё-й");
         }
 
         // https://localhost:XXXXX/api/course/3/theme/8
@@ -87,42 +91,61 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem("о-ё-ё-й");
         }
+
+
         [HttpGet("themes")]
         public ActionResult GetThemes()
         {
-            var themes = _repo.GetThemes();
-            if(themes!=null && themes.Count>0)
-                return Ok(themes);
-            else 
-                return Problem("Темы не обнаружены!");
+            List<ThemeOutputModel> themes;
+            try
+            {
+                themes = _themeMapper.FromDtos(_repo.GetThemes());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(themes);
         }
+
+
         [HttpGet("theme/{id}")]
         public ActionResult GetTheme(int id)
         {
-            var themes = _repo.GetThemes();
-            if (themes != null && themes.Count > 0)
-                return Ok(themes);
-            else
-                return Problem("Тема не обнаружена!");
+            ThemeOutputModel theme;
+            try
+            {
+                theme = _themeMapper.FromDto(_repo.GetThemeById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(theme);
+
         }
 
         [HttpPost("theme")]
         public ActionResult CreateTheme([FromBody] ThemeInputModel inputModel)
         {
+            ThemeDto themeDto;
             try
             {
-                ThemeDto themeDto = _themeMapper.ToDto(inputModel);
+               themeDto  = _themeMapper.ToDto(inputModel);
             }
             catch(Exception ex)
             {
-
+                return BadRequest(ex.Message);
             }
+
             var result = _repo.AddTheme(themeDto.Name);
             if (result > 0)
                 return Ok("Тема добавлена!");
             else
                 return Problem("о-ё-ё-й!");
         }
+
+
         [HttpDelete("theme/{id}")]
         public ActionResult RemoveTheme(int id)
         {
