@@ -109,7 +109,14 @@ namespace EducationSystem.API.Controllers
         [HttpPost("theme")]
         public ActionResult CreateTheme([FromBody] ThemeInputModel inputModel)
         {
-            ThemeDto themeDto = _themeMapper.ToDto(inputModel);
+            try
+            {
+                ThemeDto themeDto = _themeMapper.ToDto(inputModel);
+            }
+            catch(Exception ex)
+            {
+
+            }
             var result = _repo.AddTheme(themeDto.Name);
             if (result > 0)
                 return Ok("Тема добавлена!");

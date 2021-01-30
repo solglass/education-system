@@ -12,7 +12,10 @@ namespace EducationSystem.API.Mappers
     {
         public ThemeDto ToDto(ThemeInputModel inputModel)
         {
-           
+           if(string.IsNullOrEmpty(inputModel.Name))
+            {
+                throw new Exception("Ошибка! Не было передано значение Name!");
+            }
             return new ThemeDto()
             {
                 Id=inputModel.Id,
@@ -20,20 +23,18 @@ namespace EducationSystem.API.Mappers
             };
         }
 
-        public List<ThemeDto> ToDto(List<ThemeInputModel> inputModels)
+        public List<ThemeDto> ToDtos(List<ThemeInputModel> inputModels)
         {
             List<ThemeDto> themes = new List<ThemeDto>();
             if (inputModels != null)
             {
-                foreach (var model in inputModels)
-                {
-                    themes.Add(new ThemeDto()
-                    {
-                        Id = model.Id,
-                        Name = model.Name
-                    });
-                }
+                throw new Exception("Ошибка! Темы не обнаружены!");
             }
+            foreach (var model in inputModels)
+            {
+                themes.Add(ToDto(model));
+            }
+
             return themes;
         }
 
@@ -41,23 +42,21 @@ namespace EducationSystem.API.Mappers
         {
             return new ThemeOutputModel()
             {
-
+                Id=themeDto.Id,
+                Name=themeDto.Name
             };
         }
 
-        public List<ThemeOutputModel> FromDto(List<ThemeDto> themeDtos)
+        public List<ThemeOutputModel> FromDtos(List<ThemeDto> themeDtos)
         {
             List<ThemeOutputModel> models = new List<ThemeOutputModel>();
             if (themeDtos != null)
             {
-                foreach (var theme in themeDtos)
-                {
-                    models.Add(new ThemeOutputModel()
-                    {
-                        //Id = theme.Id,
-                        //Name = theme.Name
-                    });
-                }
+                throw new Exception("Ошибка! Темы не обнаружены!");
+            }
+            foreach (var theme in themeDtos)
+            {
+                models.Add(FromDto(theme));
             }
             return models;
         }
