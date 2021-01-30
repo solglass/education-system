@@ -1,5 +1,6 @@
 ﻿using EducationSystem.API.Mappers;
 using EducationSystem.API.Models;
+using EducationSystem.API.Models.InputModels;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
@@ -20,10 +21,12 @@ namespace EducationSystem.API.Controllers
         private readonly ILogger<CourseController> _logger;
         private CourseRepository _repo;
         private CourseMapper _courseMapper;
+        private ThemeMapper _themeMapper;
         public CourseController()
         {
             _repo = new CourseRepository();
             _courseMapper = new CourseMapper();
+            _themeMapper = new ThemeMapper();
         }
 
         [HttpGet]
@@ -83,6 +86,44 @@ namespace EducationSystem.API.Controllers
                 return Ok(result);
             else
                 return Problem("о-ё-ё-й");
+        }
+        [HttpGet("themes")]
+        public ActionResult GetThemes()
+        {
+            var themes = _repo.GetThemes();
+            if(themes!=null && themes.Count>0)
+                return Ok(themes);
+            else 
+                return Problem("Темы не обнаружены!");
+        }
+        [HttpGet("theme/{id}")]
+        public ActionResult GetTheme(int id)
+        {
+            var themes = _repo.GetThemes();
+            if (themes != null && themes.Count > 0)
+                return Ok(themes);
+            else
+                return Problem("Тема не обнаружена!");
+        }
+
+        [HttpPost("theme")]
+        public ActionResult CreateTheme([FromBody] ThemeInputModel inputModel)
+        {
+            ThemeDto themeDto = _themeMapper.ToDto(inputModel);
+            var result = _repo.AddTheme(themeDto.Name);
+            if (result > 0)
+                return Ok("Тема добавлена!");
+            else
+                return Problem("о-ё-ё-й!");
+        }
+        [HttpDelete("theme/{id}")]
+        public ActionResult RemoveTheme(int id)
+        {
+            var result = _repo.DeleteTheme(id);
+            if (result > 0)
+                return Ok("Тема удалена!");
+            else
+                return Problem("Тема не обнаружена!");
         }
     }
 }

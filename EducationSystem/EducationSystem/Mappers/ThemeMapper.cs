@@ -12,16 +12,11 @@ namespace EducationSystem.API.Mappers
     {
         public ThemeDto ToDto(ThemeInputModel inputModel)
         {
-            //var lessonMapper = new LessonMapper();
-            // var homeworkMapper = new HomeworkMapper();
-           // var tagMapper = new TagMapper();
+           
             return new ThemeDto()
             {
                 Id=inputModel.Id,
-                Name=inputModel.Name//,
-                                    // Lessons=lessonMapper(inputModel.Lessons),
-                                    //Tags=tagMapper(inputModel.Tags),
-                                    //Homeworks = homeworkMapper(inputModel.Homeworks)
+                Name=inputModel.Name
             };
         }
 
