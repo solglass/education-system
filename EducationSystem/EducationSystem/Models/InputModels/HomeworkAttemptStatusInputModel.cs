@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EducationSystem.API.Models.OutputModels
+namespace EducationSystem.API.Models.InputModels
 {
-    public class ThemeOutputModel
+    public class HomeworkAttemptStatusInputModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
     }
 }
