@@ -1,5 +1,6 @@
 ﻿using EducationSystem.API.Mappers;
 using EducationSystem.API.Models;
+using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
@@ -21,12 +22,14 @@ namespace EducationSystem.API.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private AttachmentRepository _repo;
         private AttachmentMapper _attachmentMapper;
+        private AttachmentTypeMapper _attachmentTypeMapper;
 
         public AttachmentController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
             _repo = new AttachmentRepository();
             _attachmentMapper = new AttachmentMapper();
+            _attachmentTypeMapper = new AttachmentTypeMapper();
         }
 
         // https://localhost:44365/api/attachment/
@@ -42,15 +45,32 @@ namespace EducationSystem.API.Controllers
         [HttpGet]
         public ActionResult GetAttachments()
         {
-            var attachments = _repo.GetAttachments();
+            List<AttachmentOutputModel> attachments;
+            try
+            {
+               attachments = _attachmentMapper.FromDtos(_repo.GetAttachments());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(attachments);
+
         }
 
         // https://localhost:44365/api/attachment/42
         [HttpGet("{id}")]
         public dynamic GetAttachment(int id)
         {
-            var attachment = _repo.GetAttachmentById(id);
+           var attachment = new AttachmentOutputModel();
+            try
+            {
+                attachment = _attachmentMapper.FromDto(_repo.GetAttachmentById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(attachment);
         }
 
@@ -58,7 +78,16 @@ namespace EducationSystem.API.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel)
         {
-            var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
+            var attachmentDto = new AttachmentDto();
+            try
+            {
+                attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
             _repo.ModifyAttachment(attachmentDto);
             return Ok("Обновлено успешно");
         }
@@ -85,7 +114,15 @@ namespace EducationSystem.API.Controllers
         [HttpGet("attachmentType")]
         public ActionResult GetAttachmentTypes()
         {
-            var attachmentTypes = _repo.GetAttachmentTypes();
+            List<AttachmentTypeOutputModel> attachmentTypes;
+            try
+            {
+                attachmentTypes = _attachmentTypeMapper.FromDtos(_repo.GetAttachmentTypes());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(attachmentTypes);
         }
 
@@ -93,7 +130,15 @@ namespace EducationSystem.API.Controllers
         [HttpGet("attachmentType/{id}")]
         public dynamic GetAttachmentType(int id)
         {
-            var attachmentType = _repo.GetAttachmentTypeById(id);
+            var attachmentType = new AttachmentTypeOutputModel();
+            try
+            {
+                attachmentType = _attachmentTypeMapper.FromDto(_repo.GetAttachmentTypeById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(attachmentType);
         }
 
