@@ -87,62 +87,50 @@ namespace EducationSystem.Controllers
             return Ok("success");
         }
 
-
-        // GroupStatusController
-
-        /*public GroupStatusController(ILogger<WeatherForecastController> logger)
+        // https://localhost:50221/api/group/group-status/name
+        [HttpPost("group-status/name")]
+        public ActionResult AddGroupStatus(string name)
         {
-            _logger = logger;
-            _repo = new GroupRepository();
-        }*/
-
-        // https://localhost:50221/api/groupStatus/register*/
-        [HttpPost("register")]
-        public ActionResult Register(string Name, [FromBody] dynamic groupStatus)
-        {
-            _repo.AddGroupStatus(Name);
+            _repo.AddGroupStatus(name);
             return Ok("Cтатус обновлен");
         }
 
-        /* 
-         [HttpPut("change-password")]
-         public ActionResult ChangePassword(string oldPassword, string newPassword)
-         {
-             // _repo.ChangePassword(oldPassword, newPassword)
-             return Ok("success");
-         }*/
-
-        // https://localhost:50221/api/user
-        [HttpGet]
+        // https://localhost:50221/api/group/group-status
+        [HttpGet("group-status")]
         public ActionResult GetGroupStatus()
         {
-            var payments = _repo.GetGroupStatus();
-            return Ok(payments);
+            var groupStatuses = _repo.GetGroupStatus();
+            return Ok(groupStatuses);
         }
 
-        // https://localhost:50221/api/groupstatus/42
-        [HttpGet("{id}")]
+        // https://localhost:50221/api/group/group-status/3
+        [HttpGet("group-status/{id}")]
         public dynamic GetGroupStatus(int id)
         {
             var groupStatus = _repo.GetGroupStatusById(id);
             return Ok(groupStatus);
         }
 
-        // https://localhost:50221/api/groupstatus/42
-        [HttpPut("{id}")]
-        public ActionResult UpdateGroupStatus(int id, string Name, [FromBody] dynamic data)
+        // https://localhost:50221/api/group/group-status/3
+        [HttpPut("group-status/{id}")]
+        public ActionResult UpdateGroupStatus(int id, [FromBody] GroupStatusDto groupStatus)
         {
-            _repo.UpdateGroupStatus(id, Name);
+            _repo.UpdateGroupStatus(groupStatus);
             return Ok("success");
         }
 
-        // https://localhost:50221/api/groupstatus/42
-        [HttpDelete("{id}")]
+        // https://localhost:50221/api/group/group-status/3
+        [HttpDelete("group - status /{id}")]
         public ActionResult DeleteGroupStatus(int id)
         {
             _repo.DeleteGroupStatus(id);
             return Ok("success");
         }
+
+
+
+
+
     }
     
 }

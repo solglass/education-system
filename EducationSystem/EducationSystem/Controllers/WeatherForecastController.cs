@@ -28,10 +28,18 @@ namespace EducationSystem.Controllers
 
         [HttpGet]
         public dynamic Get()
-        {
 
-            var repo = new HomeworkRepository();
-            return repo.GetHomeworkAttemptById(22);
+        {
+            var repo = new TagRepository();
+
+            return repo.GetTags();
+
+            {
+
+                //var repo = new CourseRepository();
+                //return repo.GetCourseById(14);
+
+            }
         }
     }
 }

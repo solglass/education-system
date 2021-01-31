@@ -1,3 +1,4 @@
+
 ﻿using Dapper;
 using EducationSystem.Data.Models;
 using System;
@@ -50,3 +51,4 @@ namespace EducationSystem.Data
         }
     }
 }
+
