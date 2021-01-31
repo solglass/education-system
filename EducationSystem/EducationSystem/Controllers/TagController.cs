@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EducationSystem.API.Models;
+using EducationSystem.API.Mappers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace EducationSystem.Controllers
 {
@@ -16,6 +19,7 @@ namespace EducationSystem.Controllers
     {
         private readonly ILogger<WeatherForecastController> _logger;
         private TagRepository _repo;
+        private TagMapper _groupMapper;
 
         public TagController(ILogger<WeatherForecastController> logger)
         {
@@ -25,10 +29,11 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/tag/add
         [HttpPost]
-        public ActionResult Add([FromBody] TagDto user)
+        public ActionResult AddNewTag([FromBody] TagInputModel tag)
         {
-            _repo.TagAdd(user);
-            return Ok("Тег добавлен");
+            var tagDto = _groupMapper.ToDto(tag);
+            var result=_repo.TagAdd(tagDto);
+            return Ok($"Тег№{result} добавлен");
         }
 
         // https://localhost:50221/api/tag
