@@ -1,4 +1,6 @@
-﻿using EducationSystem.Controllers;
+﻿using EducationSystem.API.Mappers;
+using EducationSystem.API.Models;
+using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +20,20 @@ namespace EducationSystem.API.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private AttachmentRepository _repo;
+        private AttachmentMapper _attachmentMapper;
 
         public AttachmentController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
             _repo = new AttachmentRepository();
+            _attachmentMapper = new AttachmentMapper();
         }
 
         // https://localhost:44365/api/attachment/
         [HttpPost]
-        public ActionResult AddAttachment([FromBody] AttachmentDto attachmentDto)
+        public ActionResult AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
         {
+            var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
             _repo.AddAttachment(attachmentDto);
             return Ok("Вложение добавлено");
         }
@@ -51,8 +56,9 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/42
         [HttpPut("{id}")]
-        public ActionResult UpdateAttachment([FromBody] AttachmentDto attachmentDto)
+        public ActionResult UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel)
         {
+            var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
             _repo.ModifyAttachment(attachmentDto);
             return Ok("success");
         }
