@@ -8,11 +8,10 @@ namespace EducationSystem.Data.Models
     {
         public int Id { get; set; }
         public string Comment { get; set; }
-        public HomeworkDto Homework { get; set; }
         public bool IsDeleted { get; set; }
         public UserDto Author { get; set; }
+        public HomeworkDto Homework { get; set; }
         public HomeworkAttemptStatusDto HomeworkAttemptStatus { get; set; }
-        public List<CommentDto> Comments { get; set; }
         
     }
 }
