@@ -7,11 +7,11 @@ namespace EducationSystem.API.Mappers
     {
         public AttachmentTypeDto ToDto(AttachmentTypeInputModel inputModel)
         {
-            var attachmentTypeMapper = new AttachmentTypeMapper();
-            return new AttachmentTypeDto
-            {
-                Name = inputModel.Name
-            };
+            var attachmentTypeDto = new AttachmentTypeDto();
+            attachmentTypeDto.Id = inputModel.Id;
+            if (string.IsNullOrEmpty(inputModel.Name) == false)
+            { attachmentTypeDto.Name = inputModel.Name; }
+            return attachmentTypeDto;
         }
     }
 }

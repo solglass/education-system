@@ -34,8 +34,8 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
         {
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
-            _repo.AddAttachment(attachmentDto);
-            return Ok("Вложение добавлено");
+            var result = _repo.AddAttachment(attachmentDto);
+            return Ok($"Вложение #{result} добавлено");
         }
 
         // https://localhost:44365/api/attachment/
@@ -60,7 +60,7 @@ namespace EducationSystem.API.Controllers
         {
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
             _repo.ModifyAttachment(attachmentDto);
-            return Ok("success");
+            return Ok("Обновлено успешно");
         }
 
         // https://localhost:44365/api/attachment/42
@@ -68,17 +68,15 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteAttachment(int id)
         {
             _repo.DeleteAttachmentById(id);
-            return Ok("success");
+            return Ok("Успех");
         }
 
         // https://localhost:44365/api/attachment/attachmentType/
         [HttpPost("attachmentType/{name}")]
         public ActionResult AddAttachmentType(string name)
         {
-            AttachmentTypeDto attachmentTypeDto = new AttachmentTypeDto();
-            attachmentTypeDto.Name = name;
-            _repo.AddAttachmentType(attachmentTypeDto);
-            return Ok("Тип вложения добавлен");
+            var result = _repo.AddAttachmentType(name);
+            return Ok($"Тип вложения #{result} добавлен");
         }
 
 
@@ -101,10 +99,10 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/attachmentType/42
         [HttpPut("attachmentType/{id}/{name}")]
-        public ActionResult UpdateAttachmentType(int attachmentTypeId, string name)
+        public ActionResult UpdateAttachmentType(int id, string name)
         {
-            _repo.ModifyAttachmentType(attachmentTypeId, name);
-            return Ok("success");
+            _repo.ModifyAttachmentType(id, name);
+            return Ok("Успех");
         }
 
         // https://localhost:44365/api/attachment/attachmentType/42
@@ -112,7 +110,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteAttachmentType(int id)
         {
             _repo.DeleteAttachmentTypeById(id);
-            return Ok("success");
+            return Ok("Успех");
         }
         
 

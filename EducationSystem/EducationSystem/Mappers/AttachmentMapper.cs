@@ -12,11 +12,11 @@ namespace EducationSystem.API.Mappers
         public AttachmentDto ToDto(AttachmentInputModel inputModel)
         {
             var attachmentTypeMapper = new AttachmentTypeMapper();
-            return new AttachmentDto
-            {
-                Path = inputModel.Path,
-                AttachmentType = attachmentTypeMapper.ToDto(inputModel.AttachmentType)
-            };
+            var attachmentDto = new AttachmentDto();
+            attachmentDto.Id = inputModel.Id;
+            attachmentDto.Path = inputModel.Path;
+            attachmentDto.AttachmentType = attachmentTypeMapper.ToDto(inputModel.AttachmentType);
+            return attachmentDto;
         }
     }
 }
