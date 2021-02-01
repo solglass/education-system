@@ -1,4 +1,6 @@
-﻿using EducationSystem.Controllers;
+﻿using EducationSystem.API.Mappers;
+using EducationSystem.API.Models.InputModels;
+using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +20,13 @@ namespace EducationSystem.API.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private HomeworkRepository _repo;
+        private HomeworkAttemptMapper _homeworkAttemptMapper;
 
         public HomeworkController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
             _repo = new HomeworkRepository();
+            _homeworkAttemptMapper = new HomeworkAttemptMapper();
         }
 
 
@@ -70,10 +74,11 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/homeworkAttempts
         [HttpPost]
-        public ActionResult Register([FromBody] HomeworkAttemptDto homeworkAttempt)
+        public ActionResult Create([FromBody] HomeworkAttemptInputModel inputModel)
         {
-            _repo.AddHomeworkAttempt(homeworkAttempt);
-            return Ok("success");
+            HomeworkAttemptDto attempt = _homeworkAttemptMapper.ToDto(inputModel);
+            _repo.AddHomeworkAttempt(attempt);
+            return Ok("Задание принято на проверку");
         }
 
 
