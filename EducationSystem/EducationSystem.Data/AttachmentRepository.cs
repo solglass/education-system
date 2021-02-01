@@ -119,11 +119,11 @@ namespace EducationSystem.Data
         }
 
 
-        public int AddAttachmentType(AttachmentTypeDto NewObject)
-        {
+        public int AddAttachmentType(string name)
+        {          
             var firstRow = _connection
                 .QuerySingleOrDefault("dbo.AttachmentType_Add",
-                new { name = NewObject.Name },
+                new { name = name },
                 commandType: System.Data.CommandType.StoredProcedure);
             var data = (IDictionary<string, object>)firstRow;
             int value = Convert.ToInt32(data["LastId"]);
