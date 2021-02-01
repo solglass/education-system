@@ -74,11 +74,11 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/homeworkAttempts
         [HttpPost]
-        public ActionResult Create([FromBody] HomeworkAttemptInputModel inputModel)
+        public ActionResult CreateAttempt([FromBody] HomeworkAttemptInputModel inputModel)
         {
             HomeworkAttemptDto attempt = _homeworkAttemptMapper.ToDto(inputModel);
             _repo.AddHomeworkAttempt(attempt);
-            return Ok("Задание принято на проверку");
+            return Ok("Задание отправлено на проверку");
         }
 
 
@@ -100,10 +100,11 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpPut("homeworkAttempts/{id}")]
-        public ActionResult UpdateHomeworkAttempt(int id, [FromBody] HomeworkAttemptDto homeworkAttempt)
+        public ActionResult UpdateHomeworkAttempt(int id, [FromBody] HomeworkAttemptInputModel inputModel) 
         {
-            _repo.UpdateHomeworkAttempt(homeworkAttempt);
-            return Ok("success");
+            HomeworkAttemptDto attempt = _homeworkAttemptMapper.ToDto(inputModel);
+            _repo.UpdateHomeworkAttempt(attempt);
+            return Ok("Изменения сохранены");
         }
 
         // https://localhost:44365/api/homework/homeworkAttempts/42
@@ -111,7 +112,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteHomeworkAttempt(int id)
         {
             var results = _repo.DeleteHomeworkAttempt(id);
-            return Ok(results);
+            return Ok("Задание удалено");
         }
 
         // https://localhost:44365/api/homework/comments
