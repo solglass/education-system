@@ -11,7 +11,8 @@ namespace EducationSystem.API.Models.OutputModels
         public decimal Amount { get; set; }
         public string Date { get; set; }
         public string Period { get; set; }
-        public UserOutputModel User { get; set; }
+        //2DO FIX
+        //   public UserOutputModel User { get; set; }
         
 
 

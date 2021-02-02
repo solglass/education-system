@@ -9,7 +9,8 @@ namespace EducationSystem.API.Models
         public decimal Amount { get; set; }
         public string Date { get; set; }
         public string Period { get; set; }
-        public List <UserInputModel> Ids { get; set; }
+        //2DO FIX
+        //public List <UserInputModel> Ids { get; set; }
     
     }
 }
