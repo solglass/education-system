@@ -4,4 +4,5 @@ as
 begin
 insert into dbo.Theme (Name)
 values(@name)
+select SCOPE_IDENTITY()
 end
