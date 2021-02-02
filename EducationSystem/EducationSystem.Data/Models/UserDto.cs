@@ -16,5 +16,6 @@ namespace EducationSystem.Data.Models
         public string UserPic { get; set; }
         public string Email { get; set; }
         public bool IsDeleted { get; set; }
+        public List<RoleDto> Roles { get; set; }
     }
 }

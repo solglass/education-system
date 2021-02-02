@@ -1,3 +1,4 @@
+
 ﻿using Dapper;
 using EducationSystem.Data.Models;
 using System;
@@ -25,11 +26,11 @@ namespace EducationSystem.Data
                 return connection.QuerySingleOrDefault<TeacherGroupDto>("dbo.Teacher_Group_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);             
             }
         }
-        public void DeleteTeacherGroup(int id)
+        public int DeleteTeacherGroup(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                connection.Execute("dbo.Teacher_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);        
+                return connection.Execute("dbo.Teacher_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);        
             }
         }
         public int AddTeacherGroup(TeacherGroupDto teacherGroup)

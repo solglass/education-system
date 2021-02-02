@@ -11,8 +11,6 @@ namespace EducationSystem.Data.Models
         public string Comment { get; set; }
         public DateTime Data { get; set; }
         public byte IsDeleted { get; set; }
-
         public List<ThemeDto> Themes { get; set; }
-
     }
 }

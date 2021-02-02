@@ -188,5 +188,7 @@
     <Build Include="Tables\dbo.Group.sql" />
     <Build Include="Tables\dbo.Group_Material.sql" />
     <PostDeploy Include="Scripts\ForeignKeys.sql" />
+    <Build Include="Tables\dbo.GroupStatus.sql" />
+    <Build Include="Tables\dbo.Payment.sql" />
   </ItemGroup>
 </Project>

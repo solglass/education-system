@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace EducationSystem.API.Models.InputModels
+namespace EducationSystem.API.Models
 {
     public class AttachmentInputModel
     {
+        public int Id { get; set; }     
+        public string Path { get; set; }
+       
+        public int AttachmentTypeId { get; set; }
     }
 }
