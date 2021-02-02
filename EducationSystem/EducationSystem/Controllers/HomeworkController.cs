@@ -19,10 +19,13 @@ namespace EducationSystem.API.Controllers
         private readonly ILogger<HomeworkController> _logger;
         private HomeworkRepository _repo;
         private HomeworkMapper _homeworkMapper;
+        private HomeworkAttemptMapper _homeworkAttemptMapper;
+
         public HomeworkController()
         {
             _repo = new HomeworkRepository();
             _homeworkMapper = new HomeworkMapper();
+            _homeworkAttemptMapper = new HomeworkAttemptMapper();
         }
 
         [HttpPost]
@@ -33,7 +36,7 @@ namespace EducationSystem.API.Controllers
             {
                 homework = _homeworkMapper.ToDto(inputModel);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -43,5 +46,13 @@ namespace EducationSystem.API.Controllers
 
         }
 
+        [HttpGet("id")]
+        public ActionResult GetHomeworkAttemptsByHomeworkId(int id)
+        {
+            var outputModel = _homeworkAttemptMapper.FromDtos(_repo.GetHomeworkAttemptsByHomeworkId(id));
+            return Ok(outputModel);
+        }
+
     }
+
 }

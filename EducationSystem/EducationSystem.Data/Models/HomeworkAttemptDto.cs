@@ -11,9 +11,9 @@ namespace EducationSystem.Data.Models
 
         public bool IsDeleted { get; set; }
         public UserDto Author { get; set; }
-        public HomeworkDto Homework { get;set;}
+        public HomeworkDto Homework { get; set; }
         public HomeworkAttemptStatusDto HomeworkAttemptStatus { get; set; }
-        public List<AttachmentDto> Attachments { get; set; } // TODO: Check necessity
+        public List<AttachmentDto> Attachments { get; set; }
         public List<CommentDto> Comments { get; set; }
         
     }

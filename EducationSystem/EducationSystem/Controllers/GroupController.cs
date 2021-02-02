@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using EducationSystem.API.Models;
 using EducationSystem.API.Mappers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Globalization;
 
 namespace EducationSystem.Controllers
 {
@@ -71,8 +67,8 @@ namespace EducationSystem.Controllers
             return Ok("success");
         }
 
-        // https://localhost:50221/api/group/group-material/new-group-material
-        [HttpPost("new-group-material")]
+        // https://localhost:50221/api/group/group-material/group-material
+        [HttpPost("group-material")]
         public ActionResult AddGroup_Material(int GroupID, int MaterialID)
         {
             _repo.AddGroup_Material(GroupID, MaterialID);
@@ -80,7 +76,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/group/group-material/3
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}")]    // by groupId and materialId
         public ActionResult DeleteGroup_Material(int id)
         {
             _repo.DeleteGroup_Material(id);
@@ -120,17 +116,12 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/group/group-status/3
-        [HttpDelete("group - status /{id}")]
+        [HttpDelete("group-status/{id}")]
         public ActionResult DeleteGroupStatus(int id)
         {
             _repo.DeleteGroupStatus(id);
             return Ok("success");
         }
-
-
-
-
-
     }
     
 }
