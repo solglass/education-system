@@ -28,11 +28,11 @@ namespace EducationSystem.Data
             }
             
         }
-        public void DeleteStudentGroupById(int id)
+        public int DeleteStudentGroupById(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                connection.Execute("dbo.Student_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                return connection.Execute("dbo.Student_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
             }                        
         }
         public int AddStudentGroup(StudentGroupDto studentGroup)
