@@ -12,8 +12,8 @@ namespace EducationSystem.API.Models.OutputModels
         public string Description { get; set; }
         public int Duration { get; set; }
         
-        //public List<ThemeOutputModel> Themes { get; set; }
-        //public List<GroupOutputModel> Groups { get; set; }
+        public List<ThemeOutputModel> Themes { get; set; }
+        public List<GroupOutputModel> Groups { get; set; }
 
     }
 }

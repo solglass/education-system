@@ -31,16 +31,16 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetCourses()            //rewrite using CourseMapper FromDto
+        public ActionResult GetCourses()             //TODO list of groupids and themeids
         {
-            var courses = _repo.GetCourses();
+            var courses =_courseMapper.FromDtos( _repo.GetCourses());
             return Ok(courses);
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetCourse(int id)       //rewrite using CourseMapper FromDto
+        public ActionResult GetCourse(int id)       //TODO list of groupids and themeids
         {
-            var course = _repo.GetCourseById(id);
+            var course = _courseMapper.FromDto(_repo.GetCourseById(id));
             return Ok(course);
         }
 
