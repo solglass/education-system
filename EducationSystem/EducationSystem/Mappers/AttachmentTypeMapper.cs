@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace EducationSystem.API.Mappers
 {
-    internal class AttachmentTypeMapper
+    public class AttachmentTypeMapper
     {
         public AttachmentTypeDto ToDto(AttachmentTypeInputModel inputModel)
         {

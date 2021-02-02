@@ -142,7 +142,7 @@ namespace EducationSystem.API.Controllers
             return Ok(attachmentType);
         }
 
-        // https://localhost:44365/api/attachment/attachmentType/42
+        // https://localhost:44365/api/attachment/attachmentType/42/IMAGE
         [HttpPut("attachmentType/{id}/{name}")]
         public ActionResult UpdateAttachmentType(int id, string name)
         {
