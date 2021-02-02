@@ -228,14 +228,13 @@ namespace EducationSystem.Data
         public int AddHomeworkAttempt(HomeworkAttemptDto homeworkAttempt)
         {
             var result = _connection
-                .Execute("dbo.HomeworkAttempt_Add",
+                .QuerySingle<int>("dbo.HomeworkAttempt_Add",
                 new
                 {
                     comment = homeworkAttempt.Comment,
                     author = homeworkAttempt.Author,
                     homework = homeworkAttempt.Homework,
-                    homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus,
-                    IsDeleted = homeworkAttempt.IsDeleted
+                    homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -247,11 +246,11 @@ namespace EducationSystem.Data
                 .Execute("dbo.HomeworkAttempt_Update",
                  new
                  {
+                     id = homeworkAttempt.Id,
                      comment = homeworkAttempt.Comment,
                      author = homeworkAttempt.Author,
                      homework = homeworkAttempt.Homework,
-                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus,
-                     IsDeleted = homeworkAttempt.IsDeleted
+                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus
                  },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
