@@ -37,6 +37,37 @@ namespace EducationSystem.API.Mappers
                 DeadlineDate = deadlineDate
             };
         }
+        public List<HomeworkDto> ToDtos(List<HomeworkInputModel> inputModels)
+        {
+            List<HomeworkDto> homeworks = new List<HomeworkDto>();
+            foreach (HomeworkInputModel inputModel in inputModels)
+            {
+                if (string.IsNullOrEmpty(inputModel.StartDate) || string.IsNullOrEmpty(inputModel.DeadlineDate))
+                {
+                    throw new Exception("Ошибка! Не было передано значение StartDate или DeadlineDate");
+                }
+
+                var (isStartDateParsed, startDate) = Converters.StrToDateTime(inputModel.StartDate);
+                var (isDeadlineDateParsed, deadlineDate) = Converters.StrToDateTime(inputModel.DeadlineDate);
+
+                if (!isStartDateParsed || !isDeadlineDateParsed)
+                {
+                    throw new Exception("Ошибка! Неверный формат StartDate или DeadlineDate");
+                }
+                homeworks.Add( new HomeworkDto
+                {
+                    Id = inputModel.Id,
+                    Description = inputModel.Description,
+                    Group = new GroupDto { Id = inputModel.GroupId }, //TODO: Use GroupMapper here
+                    IsOptional = inputModel.IsOptional,
+                    StartDate = startDate,
+                    DeadlineDate = deadlineDate
+                });
+            }
+
+
+            return homeworks;
+        }
 
         public HomeworkOutputModel FromDto(HomeworkDto dto)
         {

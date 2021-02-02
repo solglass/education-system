@@ -12,16 +12,17 @@ namespace EducationSystem.Data.Tests
         private GroupRepository _groupRepo;
         private CourseRepository _courseRepo;
         private UserRepository _userRepo;
-        private TagRepository _tagRepo;
         private HomeworkAttemptRepository _homeworkAttemptRepo;
-        private int _homeworkId;
+
+        private List<int> _homeworkIdList;
         private List<int> _groupIdList;
-        private List<int> _themeIdList;
-        private List<int> _tagIdList;
         private List<int> _userIdList;
-        private List<int> _homeworkAttemptIdIdList;
+        private List<int> _homeworkAttemptIdList;
+        private List<int> _homeworkAttemptStatusIdList;
+
         private HomeworkDto _expectedHomework;
         private List<HomeworkDto> _homeworkFromDb;
+        private List<HomeworkAttemptDto> _homeworkAttemptFromDb;
 
         [OneTimeSetUp]
         public void SetUpTest()
@@ -30,127 +31,199 @@ namespace EducationSystem.Data.Tests
             _homeworkRepo = new HomeworkRepository();
             _userRepo = new UserRepository();
             _courseRepo = new CourseRepository();
-            _tagRepo = new TagRepository();
             _homeworkAttemptRepo = new HomeworkAttemptRepository();
+
             _homeworkFromDb = new List<HomeworkDto>();
+            _homeworkAttemptFromDb = new List<HomeworkAttemptDto>();
+            _expectedHomework = new HomeworkDto();
+
             _groupIdList = new List<int>();
-            _themeIdList = new List<int>();
             _userIdList = new List<int>();
-            _homeworkAttemptIdIdList = new List<int>();
-
-
-
-            foreach (int groupId in _groupIdList)
-            {
-                _groupRepo.DeleteGroup(groupId);
-            }
-            foreach (int userId in _userIdList)
-            {
-                _userRepo.DeleteUser();
-            }
-            foreach (int tagId in _tagIdList)
-            {
-                _tagRepo.TagDelete(tagId);
-            }
-            foreach (int userId in _userIdList)
-            {
-                _userRepo.DeleteUser();
-            }
+            _homeworkAttemptIdList = new List<int>();
+            _homeworkAttemptStatusIdList = new List<int>();
 
         }
 
-        [TestCase(1), Order(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        public void TestAddHomeworkAttempt(int homeworkAttemptMock)
+        [Test, Order(1)]
+        public void TestAddHomework()
         {
-            List<HomeworkAttemptDto> homeworkAttempts = GetHomeworkAttemptMock(homeworkAttemptMock);
+            _homeworkFromDb = _homeworkRepo.GetHomeworks();
+            HomeworkDto homework;
+            for (int i = 1; i < 4; ++i)
+            {
+                homework= GetHomeworkMock(i);
+                _homeworkFromDb.Add(homework);
+                _homeworkIdList.Add(_homeworkRepo.AddHomework(homework));
+            }
+            
 
+            Assert.AreEqual(_homeworkFromDb, _homeworkRepo.GetHomeworks());
 
         }
 
+        [Test, Order(2)]
+        public void TestUpdateHomework()
+        {
+            _homeworkFromDb = _homeworkRepo.GetHomeworks();
+            HomeworkDto homework;
+            foreach (int homeworkId in _homeworkIdList)
+            {
+                homework = _homeworkRepo.GetHomeworkById(homeworkId);
+                homework.Description = $"New Description {homeworkId}";
+                _homeworkRepo.UpdateHomework(homework);
+                if (!homework.Equals(_homeworkRepo.GetHomeworkById(homeworkId)))
+                {
+                    Assert.Fail();
+                }
+            }
+            Assert.Pass();
+        }
+        [Test, Order(3)]
+        public void TestAddHomeworkAttempt()
+        {
+            _homeworkAttemptFromDb = _homeworkRepo.GetHomeworkAttempts();
+            HomeworkAttemptDto homeworkAttempt;
+            for (int i = 1; i < 4; ++i)
+            {
+                homeworkAttempt = GetHomeworkAttemptMock(i);
+                _homeworkAttemptFromDb.Add(homeworkAttempt);
+                _homeworkAttemptIdList.Add(_homeworkRepo.AddHomeworkAttempt(homeworkAttempt));
+            }
+
+
+            Assert.AreEqual(_homeworkAttemptFromDb, _homeworkRepo.GetHomeworkAttempts());
+
+        }
+
+        [Test, Order(4)]
+        public void TestUpdateHomeworkAttempt()
+        {
+            _homeworkAttemptFromDb = _homeworkRepo.GetHomeworkAttempts();
+            HomeworkAttemptDto homeworkAttempt;
+            foreach (int homeworkAttemptId in _homeworkAttemptIdList)
+            {
+                homeworkAttempt = _homeworkRepo.GetHomeworkAttemptById(homeworkAttemptId);
+                homeworkAttempt.Comment = $"New Comment {homeworkAttemptId}";
+                _homeworkRepo.UpdateHomeworkAttempt(homeworkAttempt);
+                if (!homeworkAttempt.Equals(_homeworkRepo.GetHomeworkAttemptById(homeworkAttemptId)))
+                {
+                    Assert.Fail();
+                }
+            }
+            Assert.Pass();
+        }
+
+        [Test, Order(5)]
+        public void TestDeleteHomeworkAttempt()
+        {
+            _homeworkAttemptFromDb = _homeworkRepo.GetHomeworkAttempts();
+            int deletedId;
+            foreach (int homeworkAttemptId in _homeworkAttemptIdList)
+            {
+                deletedId = _homeworkRepo.DeleteHomeworkAttempt(homeworkAttemptId);
+
+                List < HomeworkAttemptDto > newHomeworkAttemptFromDb = _homeworkRepo.GetHomeworkAttempts();
+
+                if (_homeworkAttemptFromDb.Count != newHomeworkAttemptFromDb.Count)
+                {
+
+                    Assert.Fail("Nothing was deleted");
+                }
+                else
+                {
+                    _homeworkAttemptFromDb = newHomeworkAttemptFromDb;
+                }
+                if(deletedId != homeworkAttemptId)
+                {
+                    Assert.Fail("Something wrong was deleted");
+                }
+            }
+            Assert.Pass();
+
+        }
+
+        [Test, Order(6)]
+        public void TestDeleteHomework()
+        {
+            _homeworkFromDb = _homeworkRepo.GetHomeworks();
+            int deletedId;
+            foreach (int homeworkId in _homeworkIdList)
+            {
+                deletedId = _homeworkRepo.DeleteHomework(homeworkId);
+                List<HomeworkDto> newHomeworkFromDb = _homeworkRepo.GetHomeworks();
+                if (_homeworkFromDb.Count != newHomeworkFromDb.Count)
+                {
+                    Assert.Fail("Nothing was deleted");
+                }
+                else
+                {
+                    _homeworkFromDb = newHomeworkFromDb;
+                }
+                if (deletedId != homeworkId)
+                {
+                    Assert.Fail("Something wrong was deleted");
+                }
+            }
+            Assert.Pass();
+
+        }
         [OneTimeTearDown]
         public void TearDowTest()
         {
-            deleteGroups();
-            deleteUsers();
-            deleteTags();
-            deleteThemes();
+            DeleteGroups();
+            DeleteUsers();
+            DeleteAttemptStatus();
         }
 
-        public void deleteGroups()
+        public void DeleteAttemptStatus()
+        {
+            foreach (int homeworkAttemptStatusId in _homeworkAttemptStatusIdList)
+            {
+                _homeworkRepo.DeleteHomeworkAttemptStatus(homeworkAttemptStatusId);
+            }
+        } 
+        public void DeleteGroups()
         {
             foreach (int groupId in _groupIdList)
             {
                 _groupRepo.DeleteGroup(groupId);
             }
         }
-        public void deleteUsers()
+        public void DeleteUsers()
         {
             foreach (int userId in _userIdList)
             {
                 _userRepo.DeleteUser();
             }
         }
-        public void deleteTags()
+        public HomeworkAttemptStatusDto GetHomeworkAttemptStatusMock(int n)
         {
-            foreach (int tagId in _tagIdList)
-            {
-                _tagRepo.TagDelete(tagId);
-            }
-        }
-        public void deleteThemes()
-        {
-            foreach (int themeId in _themeIdList)
-            {
-                _courseRepo.DeleteTheme(themeId);
-            }
-        }
-        public List<ThemeDto> GetThemeMock(int n)
-        {
-            List<ThemeDto> result = new List<ThemeDto>();
+            HomeworkAttemptStatusDto result = new HomeworkAttemptStatusDto();
             switch (n)
             {
                 case 1:
                     return result;
                 case 2:
-                    result.Add(new ThemeDto { Name="Test theme 1"});
+                    result=  (new HomeworkAttemptStatusDto { Name= "Test HomeworkAttemptStatusDto 1" });
                     return result;
                 case 3:
-                    result.Add(new ThemeDto { Name = "Test theme 2" });
-                    result.Add(new ThemeDto { Name = "Test theme 3" });
+                    result = (new HomeworkAttemptStatusDto { Name = "Test HomeworkAttemptStatusDto 2" });
                     return result;
                 default:
                     return result;
             }
         }
-        public List<TagDto> GetTagMock(int n)
+        public HomeworkAttemptDto GetHomeworkAttemptMock(int n)
         {
-            List<TagDto> result = new List<TagDto>();
+            HomeworkAttemptDto result = new HomeworkAttemptDto();
+
             switch (n)
             {
+
                 case 1:
                     return result;
                 case 2:
-                    result.Add(new TagDto { Name= "Test tag 1" });
-                    return result;
-                case 3:
-                    result.Add(new TagDto { Name = "Test tag 2" });
-                    result.Add(new TagDto { Name = "Test tag 3" });
-                    return result;
-                default:
-                    return result;
-            }
-        }
-        public List<HomeworkAttemptDto> GetHomeworkAttemptMock(int n)
-        {
-            List<HomeworkAttemptDto> result = new List<HomeworkAttemptDto>();
-            switch (n)
-            {
-                case 1:
-                    return result;
-                case 2:
-                    result.Add(new HomeworkAttemptDto
+                    result = (new HomeworkAttemptDto
                     {
                         Comment = "Test comment 1",
                         HomeworkAttemptStatus = new HomeworkAttemptStatusDto { Id = 1, Name = "Test status 1" },
@@ -158,12 +231,22 @@ namespace EducationSystem.Data.Tests
                     });
 
                     _userIdList.Add(_userRepo.AddUser().Id);
-                    result[result.Count - 1].Author = (GetUserMock(n));
-                    result[result.Count - 1].Author.Id = _userIdList[_userIdList.Count - 1];
+                    result.Author = (GetUserMock(n));
+                    result.Author.Id = _userIdList[_userIdList.Count - 1];
+
+                    HomeworkDto homework =  GetHomeworkMock(n);
+                    _homeworkIdList.Add(_homeworkRepo.AddHomework(homework));
+                    result.Homework = homework;
+                    result.Homework.Id = _homeworkIdList[_homeworkIdList.Count - 1];
+
+                    HomeworkAttemptStatusDto homeworkAttemptStatus = GetHomeworkAttemptStatusMock(n);
+                    _homeworkAttemptStatusIdList.Add(_homeworkRepo.AddHomeworkAttemptStatus(homeworkAttemptStatus));
+                    result.HomeworkAttemptStatus = homeworkAttemptStatus;
+                    result.HomeworkAttemptStatus.Id = _homeworkAttemptStatusIdList[_homeworkAttemptStatusIdList.Count - 1];
 
                     return result;
                 case 3:
-                    result.Add(new HomeworkAttemptDto
+                    result = (new HomeworkAttemptDto
                     {
                         Comment = "Test comment 1",
                         HomeworkAttemptStatus = new HomeworkAttemptStatusDto { Id = 1, Name = "Test status 1" },
@@ -171,23 +254,18 @@ namespace EducationSystem.Data.Tests
                     });
 
                     _userIdList.Add(_userRepo.AddUser().Id);
-                    result[result.Count - 1].Author = (GetUserMock(n));
-                    result[result.Count - 1].Author.Id = _userIdList[_userIdList.Count - 1];
+                    result.Author = (GetUserMock(n));
+                    result.Author.Id = _userIdList[_userIdList.Count - 1];
 
-                    foreach(TagDto tag in GetTagMock(n))
-                    _tagIdList.Add(_tagRepo.TagAdd().Id);
-                    result[result.Count - 1].Author = (GetUserMock(n));
-                    result[result.Count - 1].Author.Id = _userIdList[_userIdList.Count - 1];
+                    homework = GetHomeworkMock(n);
+                    _homeworkIdList.Add(_homeworkRepo.AddHomework(homework));
+                    result.Homework = homework;
+                    result.Homework.Id = _homeworkIdList[_homeworkIdList.Count - 1];
 
-                    result.Add(new HomeworkAttemptDto
-                    {
-                        Comment = "Test comment 1",
-                        HomeworkAttemptStatus = new HomeworkAttemptStatusDto { Id = 1, Name = "Test status 1" },
-                        IsDeleted = false
-                    });
-                    _userIdList.Add(_userRepo.AddUser().Id);
-                    result[result.Count - 1].Author = (GetUserMock(n + 1));
-                    result[result.Count - 1].Author.Id = _userIdList[_userIdList.Count - 1];
+                    homeworkAttemptStatus = GetHomeworkAttemptStatusMock(n);
+                    _homeworkAttemptStatusIdList.Add(_homeworkRepo.AddHomeworkAttemptStatus(homeworkAttemptStatus));
+                    result.HomeworkAttemptStatus = homeworkAttemptStatus;
+                    result.HomeworkAttemptStatus.Id = _homeworkAttemptStatusIdList[_homeworkAttemptStatusIdList.Count - 1];
 
                     return result;
                 default:
@@ -256,32 +334,22 @@ namespace EducationSystem.Data.Tests
             {
                 case 1:
                     result = new HomeworkDto() { Description = "Test case 1", StartDate = new DateTime(2021, 1, 5), DeadlineDate = new DateTime(2021, 1, 11), IsOptional = true};
+                    result.Group = result.Group;
                     _groupIdList.Add(_groupRepo.AddGroup(GetGroupMock(n)));
-                    result.GroupId = _groupIdList[_groupIdList.Count - 1];
-
-                    foreach(TagDto tag in GetTagMock(n))
-                    {
-                        _tagIdList.Add(_tagRepo.TagAdd(tag));
-                        result.Tags.Add(new TagDto { Id = _tagIdList[_tagIdList.Count - 1], Name = tag.Name });
-                    }
-                    
-                    foreach (ThemeDto theme in GetThemeMock(n))
-                    {
-                        _themeIdList.Add(_courseRepo.AddTheme(theme.Name));
-                        result.Themes.Add(new ThemeDto { Id = _themeIdList[_themeIdList.Count - 1], Name = theme.Name });
-                    }
-                    foreach (HomeworkAttemptDto homeworkAttempt in GetHomeworkAttemptMock(n))
-                    {
-                        _homeworkAttemptIdIdList.Add(_homeworkRepo.AddHomeworkAttempt(homeworkAttempt));
-                        result.Themes.Add(new ThemeDto { Id = _themeIdList[_themeIdList.Count - 1], Name = theme.Name });
-                    }
+                    result.Group.Id = _groupIdList[_groupIdList.Count - 1];
 
                     return result;
                 case 2:
                     result = new HomeworkDto() { Description = "Test case 2", StartDate = new DateTime(2021, 1, 12), DeadlineDate = new DateTime(2021, 1, 19),  IsOptional = true };
+                    result.Group = result.Group;
+                    _groupIdList.Add(_groupRepo.AddGroup(GetGroupMock(n)));
+                    result.Group.Id = _groupIdList[_groupIdList.Count - 1];
                     return result;
                 case 3:
                     result = new HomeworkDto() { Description = "Test case 3", StartDate = new DateTime(2021, 1, 20), DeadlineDate = new DateTime(2021, 1, 25), IsOptional = false };
+                    result.Group = result.Group;
+                    _groupIdList.Add(_groupRepo.AddGroup(GetGroupMock(n)));
+                    result.Group.Id = _groupIdList[_groupIdList.Count - 1];
                     return result;
                 default:
                     return result;
