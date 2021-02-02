@@ -12,7 +12,6 @@ namespace EducationSystem.Data.Tests
         private GroupRepository _groupRepo;
         private CourseRepository _courseRepo;
         private UserRepository _userRepo;
-        private HomeworkAttemptRepository _homeworkAttemptRepo;
 
         private List<int> _homeworkIdList;
         private List<int> _groupIdList;
@@ -31,7 +30,6 @@ namespace EducationSystem.Data.Tests
             _homeworkRepo = new HomeworkRepository();
             _userRepo = new UserRepository();
             _courseRepo = new CourseRepository();
-            _homeworkAttemptRepo = new HomeworkAttemptRepository();
 
             _homeworkFromDb = new List<HomeworkDto>();
             _homeworkAttemptFromDb = new List<HomeworkAttemptDto>();
@@ -240,7 +238,7 @@ namespace EducationSystem.Data.Tests
                     result.Homework.Id = _homeworkIdList[_homeworkIdList.Count - 1];
 
                     HomeworkAttemptStatusDto homeworkAttemptStatus = GetHomeworkAttemptStatusMock(n);
-                    _homeworkAttemptStatusIdList.Add(_homeworkRepo.AddHomeworkAttemptStatus(homeworkAttemptStatus));
+                    //_homeworkAttemptStatusIdList.Add(_homeworkRepo.AddHomeworkAttemptStatus(homeworkAttemptStatus));
                     result.HomeworkAttemptStatus = homeworkAttemptStatus;
                     result.HomeworkAttemptStatus.Id = _homeworkAttemptStatusIdList[_homeworkAttemptStatusIdList.Count - 1];
 
@@ -263,7 +261,7 @@ namespace EducationSystem.Data.Tests
                     result.Homework.Id = _homeworkIdList[_homeworkIdList.Count - 1];
 
                     homeworkAttemptStatus = GetHomeworkAttemptStatusMock(n);
-                    _homeworkAttemptStatusIdList.Add(_homeworkRepo.AddHomeworkAttemptStatus(homeworkAttemptStatus));
+                    //_homeworkAttemptStatusIdList.Add(_homeworkRepo.AddHomeworkAttemptStatus(homeworkAttemptStatus));
                     result.HomeworkAttemptStatus = homeworkAttemptStatus;
                     result.HomeworkAttemptStatus.Id = _homeworkAttemptStatusIdList[_homeworkAttemptStatusIdList.Count - 1];
 
