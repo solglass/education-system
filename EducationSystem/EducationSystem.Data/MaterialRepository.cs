@@ -25,13 +25,13 @@ namespace EducationSystem.Data
 
         public MaterialDto GetMaterialById(int id)
         {
-            var materials = _connection
+            var material = _connection
                 .Query<MaterialDto>("dbo.Material_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
-            return materials;
+            return material;
         }
 
-        public int GetMaterialsAdd(MaterialDto material)
+        public int AddMaterial(MaterialDto material)
         {
             int rows = _connection
                 .Execute("dbo.Material_Add", 
@@ -45,7 +45,7 @@ namespace EducationSystem.Data
             return rows;
         }
 
-        public int UpdateMaterial(MaterialDto material)
+        public int UpdateMaterial(int id, MaterialDto material)
         {
             int rows = _connection
                 .Execute("dbo.Material_Update", 
