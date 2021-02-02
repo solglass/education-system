@@ -19,7 +19,7 @@ namespace EducationSystem.Controllers
     {
         private readonly ILogger<WeatherForecastController> _logger;
         private TagRepository _repo;
-        private TagMapper _groupMapper;
+        private TagMapper _tagMapper;
 
         public TagController(ILogger<WeatherForecastController> logger)
         {
@@ -27,11 +27,11 @@ namespace EducationSystem.Controllers
             _repo = new TagRepository();
         }
 
-        // https://localhost:50221/api/tag/add
+        // https://localhost:50221/api/tag/
         [HttpPost]
         public ActionResult AddNewTag([FromBody] TagInputModel tag)
         {
-            var tagDto = _groupMapper.ToDto(tag);
+            var tagDto = _tagMapper.ToDto(tag);
             var result=_repo.TagAdd(tagDto);
             return Ok($"Тег№{result} добавлен");
         }
@@ -53,8 +53,8 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/tag/3
-        [HttpPut]
-        public ActionResult UpdateTag( [FromBody] TagDto data)
+        [HttpPut("{id}")]
+        public ActionResult UpdateTag(int id, [FromBody] TagDto data)
         {
             _repo.TagUpdate(data);
             return Ok("Tag обновлён");
