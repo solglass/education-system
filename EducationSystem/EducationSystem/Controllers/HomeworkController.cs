@@ -23,7 +23,7 @@ namespace EducationSystem.API.Controllers
         private HomeworkMapper _homeworkMapper;
         private HomeworkAttemptMapper _homeworkAttemptMapper;
 
-        public HomeworkController()
+        public HomeworkController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
             _repo = new HomeworkRepository();
@@ -34,18 +34,19 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework
         [HttpPost]
-        public ActionResult Register([FromBody] HomeworkDto homework)
-        {
-            HomeworkDto homework;
-            try
-            {
-                homework = _homeworkMapper.ToDto(inputModel);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+        //public ActionResult Register([FromBody] HomeworkDto homework)   //INPUTMODEL!!!!! FIX THIS ONE METHOD!!!!!
+        //{
+        //    HomeworkDto homework;
+        //    try
+        //    {
+        //        homework = _homeworkMapper.ToDto(inputModel);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //    return Ok("success");
+        //}
         // https://localhost:44365/api/homework
         [HttpGet]
         public ActionResult GetHomeworks()
