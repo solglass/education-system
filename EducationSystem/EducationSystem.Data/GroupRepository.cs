@@ -186,5 +186,80 @@ namespace EducationSystem.Data
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
+        public List<StudentGroupDto> GetStudentGroups()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return connection
+                    .Query<StudentGroupDto>("dbo.Student_Group_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                    .ToList();
+            }
+        }
+        public StudentGroupDto GetStudentGroupById(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return connection
+                    .QuerySingleOrDefault<StudentGroupDto>("dbo.Student_Group_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            }
+
+        }
+        public int DeleteStudentGroupById(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return connection.Execute("dbo.Student_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+        public int AddStudentGroup(StudentGroupDto studentGroup)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return connection.QuerySingleOrDefault<int>("dbo.Student_Group_Add",
+                    new
+                    {
+                        usertID = studentGroup.UserID,
+                        groupID = studentGroup.GroupID,
+                        contractNumber = studentGroup.ContractNumber
+                    },
+                    commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+
+        public List<TeacherGroupDto> GetTeacherGroups()
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return connection.Query<TeacherGroupDto>("dbo.Teacher_Group_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            }
+        }
+        public TeacherGroupDto GetTeacherGroupById(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return connection.QuerySingleOrDefault<TeacherGroupDto>("dbo.Teacher_Group_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+        public int DeleteTeacherGroup(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return connection.Execute("dbo.Teacher_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+        public int AddTeacherGroup(TeacherGroupDto teacherGroup)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                return connection.QuerySingleOrDefault<int>("dbo.Teacher_Group_Add",
+                    new
+                    {
+                        userID = teacherGroup.UserID,
+                        groupID = teacherGroup.GroupID
+                    },
+                    commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
     }
 }
