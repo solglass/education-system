@@ -21,7 +21,7 @@ namespace EducationSystem.Data.Tests
             _materials = new List<MaterialDto>();
         }
 
-        [Test]
+        [Test, Order(1)]
         public void GetMaterialsTest()
         {
             GetMaterialsMock();
@@ -83,10 +83,32 @@ namespace EducationSystem.Data.Tests
                     _materialDto.Link = "";
                     _materialDto.Description = "Kotlin";
                     break;
+                case 8:
+                    _materialDto.Link = "";
+                    _materialDto.Description = "Base C#";
+                    break;
+                case 9:
+                    _materialDto.Link = "";
+                    _materialDto.Description = "Front-end";
+                    break;
+                case 10:
+                    _materialDto.Link = "";
+                    _materialDto.Description = "Back-end";
+                    break;
+                case 12:
+                    _materialDto.Link = "https://metanit.com/sharp/";
+                    _materialDto.Description = "";
+                    break;
+                case 13:
+                    _materialDto.Link = "";
+                    _materialDto.Description = "React";
+                    break;
+                default:
+                    throw new Exception("Case does not exist");
             }
             return _materialDto;
         }
-        public void GetMaterialByIdMock(int a)
+        public MaterialDto GetMaterialByIdMock(int a)
         {
             switch (a)
             {
@@ -126,7 +148,55 @@ namespace EducationSystem.Data.Tests
                              IsDeleted = false
                          };
                     break;
+                case 8:
+                    _materialDto = new MaterialDto
+                    {
+                        Id = 8,
+                        Link = "",
+                        Description = "Base C#",
+                        IsDeleted = false
+                    };
+                    break;
+                case 9:
+                    _materialDto = new MaterialDto
+                    {
+                        Id = 9,
+                        Link = "",
+                        Description = "Front-end",
+                        IsDeleted = false
+                    };
+                    break;
+                case 10:
+                    _materialDto = new MaterialDto
+                    {
+                        Id = 10,
+                        Link = "",
+                        Description = "Back-end",
+                        IsDeleted = false
+                    };
+                    break;
+                case 12:
+                    _materialDto = new MaterialDto
+                    {
+                        Id = 12,
+                        Link = "https://metanit.com/sharp/",
+                        Description = "",
+                        IsDeleted = false
+                    };
+                    break;
+                case 13:
+                    _materialDto = new MaterialDto
+                    {
+                        Id = 13,
+                        Link = "",
+                        Description = "React",
+                        IsDeleted = false
+                    };
+                    break;
+                default:
+                    throw new Exception("Case does not exist");
             }
+            return _materialDto;
         }
         public void GetMaterialsMock()
         {
@@ -159,8 +229,43 @@ namespace EducationSystem.Data.Tests
                     Link = "",
                     Description = "Kotlin",
                     IsDeleted = false
-                }
-            };
+                },
+                new MaterialDto
+                    {
+                        Id = 8,
+                        Link = "",
+                        Description = "Base C#",
+                        IsDeleted = false
+                    },
+                new MaterialDto
+                    {
+                        Id = 9,
+                        Link = "",
+                        Description = "Front-end",
+                        IsDeleted = false
+                    },
+                  new MaterialDto
+                    {
+                        Id = 10,
+                        Link = "",
+                        Description = "Back-end",
+                        IsDeleted = false
+                    },
+                  new MaterialDto
+                    {
+                        Id = 12,
+                        Link = "https://metanit.com/sharp/",
+                        Description = "",
+                        IsDeleted = false
+                    },
+                  new MaterialDto
+                    {
+                        Id = 13,
+                        Link = "",
+                        Description = "React",
+                        IsDeleted = false
+                    }
+        };
         }
         [TearDown]
         public void ClearMaterials()
