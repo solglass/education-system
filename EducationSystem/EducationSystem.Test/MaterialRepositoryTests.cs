@@ -13,31 +13,29 @@ namespace EducationSystem.Data.Tests
         MaterialDto _materialDto;
         MaterialRepository _materialRepository;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void MaterialRepositorySetUp()
         {
             _materialDto = new MaterialDto();
             _materialRepository = new MaterialRepository();
-            _materials = new List<MaterialDto>();
+            _materials = GetMaterialsMock();
         }
 
         [Test, Order(1)]
         public void GetMaterialsTest()
         {
-            GetMaterialsMock();
-            List<MaterialDto> expected = _materials;
+            List<MaterialDto> expected = GetMaterialsMock();
             List<MaterialDto> actual = _materialRepository.GetMaterials();
             Assert.AreEqual(expected, actual);
         }
-        
+
         [TestCase(4)]
         [TestCase(5)]
         [TestCase(6)]
         [TestCase(7)]
         public void GetMaterialByIdTest(int a)
         {
-            GetMaterialByIdMock(a);
-            MaterialDto expected = _materialDto;
+            MaterialDto expected = GetMaterialByIdMock(a);
             MaterialDto actual = _materialRepository.GetMaterialById(a);
             Assert.AreEqual(expected, actual);
         }
@@ -48,9 +46,15 @@ namespace EducationSystem.Data.Tests
         [TestCase(7)]
         public void AddMaterialTest(int caseOfMock)
         {
-            MaterialDto expected = AddMaterialMock(caseOfMock);
-            int actual = _materialRepository.AddMaterial(expected);
-            Assert.AreEqual(1, actual);
+            _materialDto = AddMaterialMock(caseOfMock);
+            _materials.Add(_materialDto);
+            List<MaterialDto> expected = _materials;
+            if (_materialRepository.AddMaterial(_materialDto) != 1)
+            {
+                throw new Exception("Addiction failed");
+            }
+            List<MaterialDto> actual = _materialRepository.GetMaterials();
+            Assert.AreEqual(expected, actual);
         }
 
         [TestCase(4)]
@@ -59,10 +63,41 @@ namespace EducationSystem.Data.Tests
         [TestCase(7)]
         public void DeleteMaterialTest(int caseOfMock)
         {
-            int actual = _materialRepository.DeleteMaterialById(caseOfMock);
-            Assert.AreEqual(1, actual);
+            List<MaterialDto> expected = DeleteMaterialMock(caseOfMock);
+            if (_materialRepository.DeleteMaterialById(caseOfMock) != 1)
+                throw new Exception("Delete failed");
+            List<MaterialDto> actual = _materialRepository.GetMaterials();
+            Assert.AreEqual(expected, actual);
         }
 
+        public List<MaterialDto> DeleteMaterialMock(int a)
+        {
+            List<MaterialDto> materials = GetMaterialsMock();
+            switch(a)
+            {
+                case 4:
+                    materials.Add(AddMaterialMock(5));
+                    materials.Add(AddMaterialMock(6));
+                    materials.Add(AddMaterialMock(7));
+                    break;
+                case 5:
+                    materials.Add(AddMaterialMock(4));
+                    materials.Add(AddMaterialMock(6));
+                    materials.Add(AddMaterialMock(7));
+                    break;
+                case 6:
+                    materials.Add(AddMaterialMock(4));
+                    materials.Add(AddMaterialMock(5));
+                    materials.Add(AddMaterialMock(7));
+                    break;
+                case 7:
+                    materials.Add(AddMaterialMock(4));
+                    materials.Add(AddMaterialMock(5));
+                    materials.Add(AddMaterialMock(6));
+                    break;
+            }
+            return materials;
+        }
         public MaterialDto AddMaterialMock(int a)
         {
             switch (a)
@@ -114,39 +149,39 @@ namespace EducationSystem.Data.Tests
             {
                 case 4:
                     _materialDto = new MaterialDto
-                        {
-                            Id = 4,
-                            Link = "",
-                            Description = "Base C#",
-                            IsDeleted = false
-                        };
+                    {
+                        Id = 4,
+                        Link = "",
+                        Description = "Base C#",
+                        IsDeleted = false
+                    };
                     break;
                 case 5:
                     _materialDto = new MaterialDto
-                         {
-                             Id = 5,
-                             Link = "",
-                             Description = "Front-end",
-                             IsDeleted = false
-                         };
+                    {
+                        Id = 5,
+                        Link = "",
+                        Description = "Front-end",
+                        IsDeleted = false
+                    };
                     break;
                 case 6:
                     _materialDto = new MaterialDto
-                         {
-                             Id = 6,
-                             Link = "",
-                             Description = "Back-end",
-                             IsDeleted = false
-                         };
+                    {
+                        Id = 6,
+                        Link = "",
+                        Description = "Back-end",
+                        IsDeleted = false
+                    };
                     break;
                 case 7:
                     _materialDto = new MaterialDto
-                         {
-                             Id = 7,
-                             Link = "",
-                             Description = "Kotlin",
-                             IsDeleted = false
-                         };
+                    {
+                        Id = 7,
+                        Link = "",
+                        Description = "Kotlin",
+                        IsDeleted = false
+                    };
                     break;
                 case 8:
                     _materialDto = new MaterialDto
@@ -198,7 +233,7 @@ namespace EducationSystem.Data.Tests
             }
             return _materialDto;
         }
-        public void GetMaterialsMock()
+        public List<MaterialDto> GetMaterialsMock()
         {
             _materials = new List<MaterialDto>
             {
@@ -266,11 +301,12 @@ namespace EducationSystem.Data.Tests
                         IsDeleted = false
                     }
         };
+            return _materials;
         }
         [TearDown]
         public void ClearMaterials()
         {
-            _materials.Clear();
+            //_materials.Clear();
         }
     }
 }
