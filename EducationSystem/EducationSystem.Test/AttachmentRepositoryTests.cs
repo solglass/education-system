@@ -42,7 +42,7 @@ namespace NUnitTestProject
         {
             AttachmentTypeDto expected = GetMockAttachmentType_Add(dtoMockNumber);
             AttachmentRepository aRepo = new AttachmentRepository();
-            _attachmentTypeId.Add(aRepo.AddAttachmentType(expected));
+            _attachmentTypeId.Add(aRepo.AddAttachmentType(expected.Name));
             if (_attachmentTypeId.Count == 0) { Assert.Fail("Attachment type addition failed"); }
             else
             {
@@ -78,7 +78,7 @@ namespace NUnitTestProject
             AttachmentTypeDto expected = GetMockAttachmentType_Add(dtoMockNumber);
             AttachmentRepository aRepo = new AttachmentRepository();
 
-            _attachmentTypeId.Add(aRepo.AddAttachmentType(expected));
+            _attachmentTypeId.Add(aRepo.AddAttachmentType(expected.Name));
             if (_attachmentTypeId.Count == 0) { Assert.Fail("Attachment addition failed"); }
             else
             {
@@ -99,7 +99,7 @@ namespace NUnitTestProject
             AttachmentTypeDto expected = GetMockAttachmentType_Add(dtoMockNumber);
             AttachmentRepository aRepo = new AttachmentRepository();
 
-            _attachmentTypeId.Add(aRepo.AddAttachmentType(expected));
+            _attachmentTypeId.Add(aRepo.AddAttachmentType(expected.Name));
             if (_attachmentTypeId.Count == 0) { Assert.Fail("Attachment addition failed"); }
             else
             {

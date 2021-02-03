@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Models.OutputModels
 {
-    public class AttachmentOutputModel
+    public class TagOutputModel
     {
-
         public int Id { get; set; }
-        public string Path { get; set; }
-        public AttachmentTypeOutputModel AttachmentType { get; set; }
+        public string Name { get; set; }
     }
 }
