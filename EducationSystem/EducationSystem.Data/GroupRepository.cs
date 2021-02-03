@@ -67,7 +67,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public void UpdateGroup(GroupDto groupDto)
+        public int UpdateGroup(GroupDto groupDto)
         {
             var result = _connection
                 .Execute("dbo.Group_Update", 
@@ -79,42 +79,45 @@ namespace EducationSystem.Data
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
 
-        public int DeleteGroup(int Id)
+        public int DeleteGroup(int id)
         {
             var result = _connection
                 .Execute("dbo.Group_Delete", 
                 new 
                 { 
-                    Id 
+                    id 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
-        public int AddGroup_Material(int GroupID, int MaterialID)
+        public int AddGroup_Material(int groupId, int materialId)
         {
             var result = _connection
                 .QuerySingle<int>("dbo.Group_Material_Add", 
                 new 
-                { 
-                    GroupID, 
-                    MaterialID 
+                {
+                    groupId,
+                    materialId
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
-        public void DeleteGroup_Material(int Id)
+        public int DeleteGroup_Material(int groupId, int materialId)
         {
             var result = _connection
                 .Execute("dbo.Group_Material_Delete", 
                 new 
-                { 
-                    Id 
+                {
+                    groupId,
+                    materialId
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
 
         public List<GroupStatusDto> GetGroupStatus()

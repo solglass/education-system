@@ -1,4 +1,5 @@
 using EducationSystem.API.Models;
+using EducationSystem.API.Models.InputModels;
 using EducationSystem.Data.Models;
 
 namespace EducationSystem.API.Mappers
