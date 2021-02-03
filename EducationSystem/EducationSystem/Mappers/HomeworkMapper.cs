@@ -37,6 +37,17 @@ namespace EducationSystem.API.Mappers
                 DeadlineDate = deadlineDate
             };
         }
+        public List<HomeworkDto> ToDtos(List<HomeworkInputModel> inputModels)
+        {
+            List<HomeworkDto> homeworks = new List<HomeworkDto>();
+            foreach (HomeworkInputModel inputModel in inputModels)
+            {
+               
+                homeworks.Add(ToDto(inputModel));
+            }
+
+            return homeworks;
+        }
 
         public HomeworkOutputModel FromDto(HomeworkDto dto)
         {

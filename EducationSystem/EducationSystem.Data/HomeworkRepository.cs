@@ -270,7 +270,7 @@ namespace EducationSystem.Data
             var commentDictionary = new Dictionary<int, CommentDto>();
             var userDictionary = new Dictionary<int, UserDto>();
             var homeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
-    
+
 
             var comments = _connection
                 .Query<CommentDto, UserDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, CommentDto>(
@@ -293,7 +293,7 @@ namespace EducationSystem.Data
                             commentEntry.HomeworkAttempt = homeworkAttemptEntry;
                             homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
                         }
-                        if(user != null && !userDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                        if (user != null && !userDictionary.TryGetValue(user.Id, out UserDto userEntry))
                         {
                             userEntry = user;
                             commentEntry.Author = user;
@@ -397,5 +397,70 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
+
+        public List<Comment_AttachmentDto> GetComment_Attachments()
+        {
+            var data = _connection
+                .Query<Comment_AttachmentDto>("dbo.Comment_Attachment_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return data;
+
+        }
+
+
+        public Comment_AttachmentDto GetComment_AttachmentById(int id)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+        }
+
+        public void DeleteComment_AttachmentById(int id)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+        public Comment_AttachmentDto AddComment_Attachment(Comment_AttachmentDto NewObject)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Add",
+                new
+                {
+                    commentId = NewObject.CommentId,
+                    attachmentId = NewObject.AttachmentId
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+
+        }
+        
+        // todo: dapper logic
+        // method doesn't work =(
+        public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
+        {
+            var homeworkAttempts = _connection
+                .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return homeworkAttempts;
+        }
+
+        public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
+        {
+            var comments = _connection
+                .Query<CommentDto>("dbo.Comment_SelectByHomeworkAttemptId", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return comments;
+        }
+
+        public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
+        {
+            var comments = _connection
+                .Query<AttachmentDto>("dbo.Attachment_SelectByHomeworkAttemptId", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return comments;
+        }
+
     }
 }

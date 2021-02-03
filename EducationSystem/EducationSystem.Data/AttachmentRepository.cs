@@ -74,14 +74,14 @@ namespace EducationSystem.Data
         }
 
 
-        public dynamic AddAttachment(AttachmentDto NewObject)
+        public int AddAttachment(AttachmentDto attachmentDto)
         {
             var value = _connection
                 .QuerySingleOrDefault<int>("dbo.Attachment_Add",
                 new
                 {
-                    path = NewObject.Path,
-                    attachmentTypeId = NewObject.AttachmentType.Id
+                    path = attachmentDto.Path,
+                    attachmentTypeId = attachmentDto.AttachmentType.Id
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return value;

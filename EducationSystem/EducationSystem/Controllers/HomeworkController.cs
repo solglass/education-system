@@ -20,12 +20,14 @@ namespace EducationSystem.API.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private HomeworkRepository _repo;
+        private HomeworkMapper _homeworkMapper;
         private HomeworkAttemptMapper _homeworkAttemptMapper;
 
-        public HomeworkController(ILogger<WeatherForecastController> logger)
+        public HomeworkController()
         {
             _logger = logger;
             _repo = new HomeworkRepository();
+            _homeworkMapper = new HomeworkMapper();
             _homeworkAttemptMapper = new HomeworkAttemptMapper();
         }
 
@@ -34,9 +36,15 @@ namespace EducationSystem.API.Controllers
         [HttpPost]
         public ActionResult Register([FromBody] HomeworkDto homework)
         {
-            _repo.AddHomework(homework);
-            return Ok("success");
-        }
+            HomeworkDto homework;
+            try
+            {
+                homework = _homeworkMapper.ToDto(inputModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         // https://localhost:44365/api/homework
         [HttpGet]
@@ -52,6 +60,13 @@ namespace EducationSystem.API.Controllers
         {
             var results = _repo.GetHomeworkById(id);
             return Ok(results);
+        }
+
+        [HttpGet("id")]
+        public ActionResult GetHomeworkAttemptsByHomeworkId(int id)
+        {
+            var outputModel = _homeworkAttemptMapper.FromDtos(_repo.GetHomeworkAttemptsByHomeworkId(id));
+            return Ok(outputModel);
         }
 
         // https://localhost:44365/api/homework/42
@@ -155,4 +170,5 @@ namespace EducationSystem.API.Controllers
             return Ok(results);
         }
     }
+
 }

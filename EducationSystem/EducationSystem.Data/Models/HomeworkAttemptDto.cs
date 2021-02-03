@@ -12,6 +12,8 @@ namespace EducationSystem.Data.Models
         public UserDto Author { get; set; }
         public HomeworkDto Homework { get; set; }
         public HomeworkAttemptStatusDto HomeworkAttemptStatus { get; set; }
+        public List<AttachmentDto> Attachments { get; set; }
+        public List<CommentDto> Comments { get; set; }
         
     }
 }

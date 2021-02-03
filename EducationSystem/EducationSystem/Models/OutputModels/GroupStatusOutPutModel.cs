@@ -1,6 +1,6 @@
-namespace EducationSystem.API.Models
+﻿namespace EducationSystem.API.Models
 {
-    public class TagInputModel
+    public class CroupStatusOutputModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

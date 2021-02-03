@@ -12,5 +12,7 @@ namespace EducationSystem.API.Models.OutputModels
         public bool IsDeleted { get; set; }
         public UserOutputModel Author { get; set; }
         public HomeworkAttemptStatusOutputModel HomeworkAttemptStatus { get; set; }
+        public List<CommentOutputModel> Comments { get; set; }
+        public List<AttachmentOutputModel> Attachments { get; set; }
     }
 }

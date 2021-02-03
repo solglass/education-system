@@ -16,17 +16,14 @@ namespace EducationSystem.API.Mappers
             var attachmentDto = new AttachmentDto();
             attachmentDto.Id = inputModel.Id;
             attachmentDto.Path = inputModel.Path;
-            attachmentDto.AttachmentType = attachmentTypeMapper.ToDto(inputModel.AttachmentType);
+            attachmentDto.AttachmentType = new AttachmentTypeDto { Id = inputModel.AttachmentTypeId };
             return attachmentDto;
         }
 
         public List<AttachmentDto> ToDtos(List<AttachmentInputModel> inputModels)
         {
             List<AttachmentDto> result = new List<AttachmentDto>();
-            if (inputModels == null || inputModels.Count == 0)
-            {
-                throw new Exception("Ошибка! Вложения не найдены!");
-            }
+
             foreach (var model in inputModels)
             {
                 result.Add(ToDto(model));
@@ -38,10 +35,7 @@ namespace EducationSystem.API.Mappers
         public AttachmentOutputModel FromDto(AttachmentDto attachmentDto)
         {
             var attachmentTypeMapper = new AttachmentTypeMapper();
-            if (attachmentDto == null)
-            {
-                throw new Exception("Ошибка! Вложение не найдено!");
-            }
+
             return new AttachmentOutputModel()
             {
                 Id = attachmentDto.Id,
@@ -54,10 +48,7 @@ namespace EducationSystem.API.Mappers
         public List<AttachmentOutputModel> FromDtos(List<AttachmentDto> attachmentDtos)
         {
             List<AttachmentOutputModel> models = new List<AttachmentOutputModel>();
-            if (attachmentDtos == null || attachmentDtos.Count == 0)
-            {
-                throw new Exception("Ошибка! Вложения не найдены!");
-            }
+
             foreach (var attachment in attachmentDtos)
             {
                 models.Add(FromDto(attachment));
