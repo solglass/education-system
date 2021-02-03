@@ -7,7 +7,6 @@ namespace EducationSystem.Data.Models
     public class CommentDto
     {
         public int Id { get; set; }
-        public int HomeworkAttemptId { get; set; }
         public string Message { get; set; }
         public UserDto Author { get; set; }
         public HomeworkAttemptDto HomeworkAttempt { get; set; }
