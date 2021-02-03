@@ -2,14 +2,11 @@
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Controllers;
-using EducationSystem.Data;
-using EducationSystem.Data.Models;
+using EducationSystem.Business;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EducationSystem.API.Controllers
 {
@@ -20,14 +17,14 @@ namespace EducationSystem.API.Controllers
     {
 
         private readonly ILogger<WeatherForecastController> _logger;
-        private AttachmentRepository _repo;
+        private AttachmentService _service;
         private AttachmentMapper _attachmentMapper;
         private AttachmentTypeMapper _attachmentTypeMapper;
 
         public AttachmentController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
-            _repo = new AttachmentRepository();
+            _service = new AttachmentService();
             _attachmentMapper = new AttachmentMapper();
             _attachmentTypeMapper = new AttachmentTypeMapper();
         }
@@ -37,7 +34,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
         {
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
-            var result = _repo.AddAttachment(attachmentDto);
+            var result = _service.AddAttachment(attachmentDto);
             return Ok($"Вложение #{result} добавлено");
         }
 
@@ -48,7 +45,7 @@ namespace EducationSystem.API.Controllers
             List<AttachmentOutputModel> attachments;
             try
             {
-               attachments = _attachmentMapper.FromDtos(_repo.GetAttachments());
+               attachments = _attachmentMapper.FromDtos(_service.GetAttachments());
             }
             catch (Exception ex)
             {
@@ -65,7 +62,7 @@ namespace EducationSystem.API.Controllers
            var attachment = new AttachmentOutputModel();
             try
             {
-                attachment = _attachmentMapper.FromDto(_repo.GetAttachmentById(id));
+                attachment = _attachmentMapper.FromDto(_service.GetAttachmentById(id));
             }
             catch (Exception ex)
             {
@@ -78,17 +75,15 @@ namespace EducationSystem.API.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel)
         {
-            var attachmentDto = new AttachmentDto();
             try
             {
-                attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
+                _service.ModifyAttachment(_attachmentMapper.ToDto(attachmentInputModel));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
             
-            _repo.ModifyAttachment(attachmentDto);
             return Ok("Обновлено успешно");
         }
 
@@ -96,7 +91,7 @@ namespace EducationSystem.API.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteAttachment(int id)
         {
-            _repo.DeleteAttachmentById(id);
+            _service.DeleteAttachmentById(id);
             return Ok("Успех");
         }
 
@@ -104,7 +99,7 @@ namespace EducationSystem.API.Controllers
         [HttpPost("attachmentType/{name}")]
         public ActionResult AddAttachmentType(string name)
         {
-            var result = _repo.AddAttachmentType(name);
+            var result = _service.AddAttachmentType(name);
             return Ok($"Тип вложения #{result} добавлен");
         }
 
@@ -117,7 +112,7 @@ namespace EducationSystem.API.Controllers
             List<AttachmentTypeOutputModel> attachmentTypes;
             try
             {
-                attachmentTypes = _attachmentTypeMapper.FromDtos(_repo.GetAttachmentTypes());
+                attachmentTypes = _attachmentTypeMapper.FromDtos(_service.GetAttachmentTypes());
             }
             catch (Exception ex)
             {
@@ -133,7 +128,7 @@ namespace EducationSystem.API.Controllers
             var attachmentType = new AttachmentTypeOutputModel();
             try
             {
-                attachmentType = _attachmentTypeMapper.FromDto(_repo.GetAttachmentTypeById(id));
+                attachmentType = _attachmentTypeMapper.FromDto(_service.GetAttachmentTypeById(id));
             }
             catch (Exception ex)
             {
@@ -146,7 +141,7 @@ namespace EducationSystem.API.Controllers
         [HttpPut("attachmentType/{id}/{name}")]
         public ActionResult UpdateAttachmentType(int id, string name)
         {
-            _repo.ModifyAttachmentType(id, name);
+            _service.ModifyAttachmentType(id, name);
             return Ok("Успех");
         }
 
@@ -154,7 +149,7 @@ namespace EducationSystem.API.Controllers
         [HttpDelete("attachmentType/{id}")]
         public ActionResult DeleteAttachmentType(int id)
         {
-            _repo.DeleteAttachmentTypeById(id);
+            _service.DeleteAttachmentTypeById(id);
             return Ok("Успех");
         }
         

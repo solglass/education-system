@@ -31,9 +31,7 @@ namespace EducationSystem.Controllers
 
         {
             var repo = new TagRepository();
-
-            var repo = new CourseRepository();
-            return repo.GetThemeById(1);
+            return repo.GetTags() ;
         }
     }
 }
