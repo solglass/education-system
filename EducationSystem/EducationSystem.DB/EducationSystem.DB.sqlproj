@@ -78,7 +78,6 @@
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures\Student_Group" />
     <Folder Include="StoredProcedures\TeacherGroup" />
-    <Folder Include="StoredProcedures\Tables\" />
     <Folder Include="Scripts" />
   </ItemGroup>
   <ItemGroup>
@@ -108,21 +107,21 @@
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAll.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectById.sql" />
-    <Build Include="StoredProcedures\Homework\dbo_Homework_Add.sql" />
-    <Build Include="StoredProcedures\Homework\dbo_Homework_Delete.sql" />
-    <Build Include="StoredProcedures\Homework\dbo_Homework_SelectAll.sql" />
-    <Build Include="StoredProcedures\Homework\dbo_Homework_SelectById.sql" />
-    <Build Include="StoredProcedures\Homework\dbo_Homework_Update.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_Add.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_Delete.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_SelectAll.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_SelectById.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo_HomeworkAttempt_Update.sql" />
-    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_Add.sql" />
-    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_Delete.sql" />
-    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_SelectAll.sql" />
-    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_SelectById.sql" />
-    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo_HomeworkAttemptStatus_Update.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_Add.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_Delete.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_SelectAll.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_SelectById.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_Update.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Add.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Delete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectAll.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectById.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Update.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo.HomeworkAttemptStatus_Add.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo.HomeworkAttemptStatus_Delete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo.HomeworkAttemptStatus_SelectAll.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo.HomeworkAttemptStatus_SelectById.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo.HomeworkAttemptStatus_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Delete.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Add.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectAll.sql" />
@@ -181,8 +180,8 @@
     <Build Include="Tables\dbo.Homework_Theme.sql" />
     <Build Include="Tables\dbo.HomeworkAttemptStatus.sql" />
     <Build Include="Tables\dbo.Theme.sql" />
-    <Build Include="StoredProcedures\Tables\dbo.GroupStatus.sql" />
-    <Build Include="StoredProcedures\Tables\dbo.Payment.sql" />
+    <Build Include="Tables\dbo.GroupStatus.sql" />
+    <Build Include="Tables\dbo.Payment.sql" />
     <Build Include="Tables\dbo.Attachment.sql" />
     <Build Include="Tables\dbo.AttachmentType.sql" />
     <Build Include="Tables\dbo.Comment_Attachment.sql" />
