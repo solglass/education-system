@@ -159,6 +159,32 @@ namespace EducationSystem.Data
             return result;
         }
 
+        public List<TutorGroupDto> GetTutorGroups()
+        {
+            return _connection
+                .Query<TutorGroupDto>("dbo.Tutor_Group_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
 
+        }
+        public TutorGroupDto GetTutorGroupById(int id)
+        {
+            return _connection
+                   .QuerySingleOrDefault<TutorGroupDto>("dbo.Tutor_Group_SelectAll", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public void DeleteTutorGroupsByIds(int userId, int groupId)
+        {
+            _connection.Execute("dbo.Tutor_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public int AddTutorToGroup(TutorGroupDto tutorGroup)
+        {
+
+            return _connection.Execute("dbo.Tutor_Group_Add",
+                new
+                {
+                    userID = tutorGroup.UserID,
+                    groupID = tutorGroup.GroupID,
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+        }
     }
 }
