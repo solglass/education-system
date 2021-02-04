@@ -162,6 +162,13 @@ namespace EducationSystem.Data
             return result;
         }
 
-
+        public List<GroupDto> GetGroupsByCourseId(int id)
+        {
+            var groups = _connection.
+                Query<GroupDto>("dbo.Group_SelectAllByCourseId",
+                new { courseId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return groups;
+        }
     }
 }

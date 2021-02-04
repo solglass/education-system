@@ -244,5 +244,22 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
+        public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
+        {
+            var themes = _connection.
+                Query<ThemeDto>("dbo.Theme_SelectAllUncoveredByGroupId",
+                new { groupId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return themes;
+        }
+        public List<ThemeDto> GetThemesByCourseId(int id)
+        {
+            var themes = _connection.
+                Query<ThemeDto>("dbo.Theme_SelectAllByCourseId",
+                new { courseId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return themes;
+        }
     }
 }

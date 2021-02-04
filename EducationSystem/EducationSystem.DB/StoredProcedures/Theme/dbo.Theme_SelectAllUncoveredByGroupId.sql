@@ -9,7 +9,7 @@ begin
 		t.Name
 	from dbo.[Group] g 
 		inner join dbo.[Course_Theme] ct on ct.CourseID=g.CourseID
-		left join dbo.[Theme] t on t.Id=ct.ThemeID 
+		inner join dbo.[Theme] t on t.Id=ct.ThemeID 
 	WHERE g.Id=@groupId and t.Id NOT IN (SELECT t.Id 
 							from [dbo].[Lesson] l 
 								inner join dbo.Lesson_Theme lt on lt.LessonID=l.Id

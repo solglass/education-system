@@ -8,6 +8,6 @@ begin
 		t.Name
 	from dbo.[Group] g 
 	inner join dbo.[Course_Theme] ct on ct.CourseID=g.CourseID
-	left join dbo.[Theme] t on t.Id=ct.ThemeID
+	inner join dbo.[Theme] t on t.Id=ct.ThemeID
 	where g.Id=@groupId
 end
