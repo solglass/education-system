@@ -1,4 +1,4 @@
-namespace EducationSystem.API.Models
+namespace EducationSystem.API.Models.InputModels
 {
     public class GroupInputModel
     {
