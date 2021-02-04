@@ -29,17 +29,25 @@ namespace EducationSystem.Data
         public GroupStatusDto GetGroupStatusById(int id)
         {
             var groupStatus = _connection
-            .QuerySingleOrDefault<GroupStatusDto>("dbo.GroupStatus_SelectAll", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            .QuerySingleOrDefault<GroupStatusDto>("dbo.GroupStatus_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
             return groupStatus;
         }
                             
         public int AddGroupStatus(string Name)
         {
-            var result = _connection
-              .Execute("dbo.GroupStatuses_Add",
+            var firstRow = _connection
+            .QuerySingleOrDefault("dbo.GroupStatus_Add",
+                new { Name },
+                commandType: System.Data.CommandType.StoredProcedure);
+            var data = (IDictionary<string, object>)firstRow;
+            int value = Convert.ToInt32(data["LastId"]);
+            return value;
+
+            /*var result = _connection
+              .QuerySingle<int>("dbo.GroupStatus_Add",
               new { Name },
               commandType: System.Data.CommandType.StoredProcedure);
-            return result;
+            return result;*/
 
         }
         public int UpdateGroupStatus(int id, string Name)

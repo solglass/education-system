@@ -17,7 +17,7 @@ namespace EducationSystem.API.Mappers
             return new GroupDto 
             {
                 StartDate =  DateTime.ParseExact(inputModel.StartDate, "dd.MM.yyyy", CultureInfo.InvariantCulture),
-                Course = new CourseDto { Id = inputModel.Course.Id },   // delete
+                Course = new CourseDto { Id = inputModel.Course.Id },       // delete
                 //Course = courseMapper.ToDto(inputModel.Course),
                 GroupStatus = groupStatusMapper.ToDto(inputModel.GroupStatus)
             };
@@ -30,6 +30,8 @@ namespace EducationSystem.API.Mappers
             return new GroupOutputModel
             {
                 StartDate = (groupDto.StartDate).ToString(),
+                Course = groupDto.Course,                                    // delete
+                GroupStatus = groupDto.GroupStatus                           // delete
                 //Course = courseMapper.FromDto(groupDto.Course),
                 //GroupStatus = groupStatusMapper.FromDto(groupDto.GroupStatus)
             };
