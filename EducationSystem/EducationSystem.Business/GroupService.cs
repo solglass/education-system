@@ -25,6 +25,11 @@ namespace EducationSystem.Business
             return _groupRepository.GetGroupById(id); 
         }
 
+        public List<GroupDto> GetGroupsWithoutTutors()
+        {
+            return _groupRepository.GetGroupsWithoutTutors();
+        }
+
         public int AddGroup(GroupDto groupDto) 
         { 
             return _groupRepository.AddGroup(groupDto); 

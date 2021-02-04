@@ -29,6 +29,7 @@ namespace EducationSystem.API.Mappers
             //var groupStatusMapper = new GroupStatusMapper();
             return new GroupOutputModel
             {
+                Id = groupDto.Id,
                 StartDate = (groupDto.StartDate).ToString(),
                 Course = groupDto.Course,                                    // delete
                 GroupStatus = groupDto.GroupStatus                           // delete

@@ -53,6 +53,14 @@ namespace EducationSystem.Data
             return result;
         }
 
+        public List<GroupDto> GetGroupsWithoutTutors()
+        {
+            var result = _connection
+                .Query<GroupDto>("Group_SelectWithoutTutors", commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+
         public int AddGroup(GroupDto groupDto)
         {
             var result = _connection

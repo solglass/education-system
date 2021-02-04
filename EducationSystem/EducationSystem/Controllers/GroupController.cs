@@ -46,6 +46,14 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
+        // https://localhost:44365/api/group/groups-without-tutors
+        [HttpGet("groups-without-tutors")]
+        public ActionResult GetGroupsWithoutTutors()
+        {
+            List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroupsWithoutTutors());
+            return Ok(result);
+        }
+
         // https://localhost:44365/api/group
         [HttpPost]
         public ActionResult AddNewGroup([FromBody] GroupInputModel newGroup)
