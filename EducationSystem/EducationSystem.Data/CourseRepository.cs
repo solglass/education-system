@@ -17,36 +17,36 @@ namespace EducationSystem.Data
         public List<CourseDto> GetCourses()
         {
             var courseDictionary = new Dictionary<int, CourseDto>();
-            var groupDictionary = new Dictionary<int, GroupDto>();
-            var themeDictionary = new Dictionary<int, ThemeDto>();
+            //var groupDictionary = new Dictionary<int, GroupDto>();
+            //var themeDictionary = new Dictionary<int, ThemeDto>();
             var courses = _connection
-                .Query<CourseDto, ThemeDto, GroupDto, GroupStatusDto, CourseDto>(
+                .Query<CourseDto/*, ThemeDto, GroupDto, GroupStatusDto, CourseDto*/>(
                     "dbo.Course_SelectAll",
-                    (course, theme, group, groupStatus) =>
-                    {
-                        if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
-                        {
-                            courseEntry = course;
-                            courseEntry.Themes = new List<ThemeDto>();
-                            courseEntry.Groups = new List<GroupDto>();
-                            courseDictionary.Add(courseEntry.Id, courseEntry);
-                        }
-                        if(group!=null && groupStatus!=null&& !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
-                        {
-                            groupEntry = group;
-                            groupEntry.GroupStatus = groupStatus;
-                            courseEntry.Groups.Add(groupEntry);
-                            groupDictionary.Add(groupEntry.Id, groupEntry);
-                        }
-                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                        {
-                            themeEntry = theme;
-                            courseEntry.Themes.Add(themeEntry);
-                            themeDictionary.Add(themeEntry.Id, themeEntry);
-                        }
-                        return courseEntry;
-                    },
-                    splitOn: "Id",
+                    //(course, theme, group, groupStatus) =>
+                    //{
+                    //    if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
+                    //    {
+                    //        courseEntry = course;
+                    //        courseEntry.Themes = new List<ThemeDto>();
+                    //        courseEntry.Groups = new List<GroupDto>();
+                    //        courseDictionary.Add(courseEntry.Id, courseEntry);
+                    //    }
+                    //    if(group!=null && groupStatus!=null&& !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
+                    //    {
+                    //        groupEntry = group;
+                    //        groupEntry.GroupStatus = groupStatus;
+                    //        courseEntry.Groups.Add(groupEntry);
+                    //        groupDictionary.Add(groupEntry.Id, groupEntry);
+                    //    }
+                    //    if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
+                    //    {
+                    //        themeEntry = theme;
+                    //        courseEntry.Themes.Add(themeEntry);
+                    //        themeDictionary.Add(themeEntry.Id, themeEntry);
+                    //    }
+                    //    return courseEntry;
+                    //},
+                    //splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();

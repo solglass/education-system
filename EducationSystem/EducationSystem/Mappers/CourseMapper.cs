@@ -62,7 +62,7 @@ namespace EducationSystem.API.Mappers
             }
             if (courseDto.Groups != null && courseDto.Groups.Count > 0)
             {
-              //  groups = groupMapper.FromDtos(courseDto.Themes);
+                groups = groupMapper.FromDtos(courseDto.Groups);
             }
             return new CourseOutputModel()
             {
