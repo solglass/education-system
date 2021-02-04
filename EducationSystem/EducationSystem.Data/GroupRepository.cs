@@ -53,6 +53,24 @@ namespace EducationSystem.Data
             return result;
         }
 
+        /*public GroupDto GetGroupByProgram(int id)
+        {
+            var result = _connection
+                .Query<GroupDto, CourseDto, ThemeDto, GroupDto>("Group_SelectByProgram",
+                    (group, course, theme) =>
+                    {
+                        group.Course = course;
+                        course.Themes = theme;
+                        return group;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
+                .FirstOrDefault();
+            return result;
+        }*/
+
         public List<GroupDto> GetGroupsWithoutTutors()
         {
             var result = _connection
