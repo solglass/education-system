@@ -11,7 +11,8 @@ namespace EducationSystem.API.Utils
         private const string _dateFormat = "dd.MM.yyyy";
         public static (bool, DateTime) StrToDateTime(string strDate)
         {
-            bool isDateParsed = DateTime.TryParseExact(strDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result);
+            bool isDateParsed = DateTime
+                .TryParseExact(strDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result);
             return (isDateParsed, result);
         }
 
