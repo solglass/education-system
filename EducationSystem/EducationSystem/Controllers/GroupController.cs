@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.Business;
 
 namespace EducationSystem.Controllers
 {
@@ -19,19 +20,21 @@ namespace EducationSystem.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private GroupRepository _repo;
         private GroupMapper _groupMapper;
+        private GroupService _service;
 
         public GroupController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
             _repo = new GroupRepository();
             _groupMapper = new GroupMapper();
+            _service = new GroupService();
         }
 
         // https://localhost:44365/api/group/
         [HttpGet]
         public ActionResult GetGroups()
         {
-            List<GroupOutputModel> result = _groupMapper.FromDtos(_repo.GetGroups());
+            List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroups());
             return Ok(result);
         }
 
@@ -39,7 +42,7 @@ namespace EducationSystem.Controllers
         [HttpGet("{id}")]
         public ActionResult GetGroupById(int id)
         {
-            GroupOutputModel result = _groupMapper.FromDto(_repo.GetGroupById(id));
+            GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupById(id));
             return Ok(result);
         }
 
@@ -48,7 +51,7 @@ namespace EducationSystem.Controllers
         public ActionResult AddNewGroup([FromBody] GroupInputModel newGroup)
         {
             var groupDto = _groupMapper.ToDto(newGroup);
-            var result = _repo.AddGroup(groupDto);
+            var result = _service.AddGroup(groupDto);
             return Ok($"Группа #{result} добавлена");
         }
 
@@ -56,12 +59,12 @@ namespace EducationSystem.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateGroupInfo(int id, [FromBody] GroupInputModel group)
         {
-            if (_repo.GetGroupById(id) == null)
+            if (_service.GetGroupById(id) == null)
             {
                 return Ok("Ошибка! Отсутствует группа с введенным id!");
             }
             var groupDto = _groupMapper.ToDto(group);
-            _repo.UpdateGroup(groupDto);
+            _service.UpdateGroup(groupDto);
             return Ok("Изменения внесены!");
         }
 
@@ -69,7 +72,7 @@ namespace EducationSystem.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteGroup(int id)
         {
-            _repo.DeleteGroup(id);
+            _service.DeleteGroup(id);
             return Ok("Группа удалена");
         }
 
@@ -77,7 +80,7 @@ namespace EducationSystem.Controllers
         [HttpPost()]
         public ActionResult AddGroup_Material(int groupId, int materialId)
         {
-            _repo.AddGroup_Material(groupId, materialId);
+            _service.AddGroup_Material(groupId, materialId);
             return Ok("Добавлено");
         }
 
@@ -85,7 +88,7 @@ namespace EducationSystem.Controllers
         [HttpDelete("{groupId}/material/{materialId}")]    
         public ActionResult DeleteGroup_Material(int groupId, int materialId)
         {
-            var result = _repo.DeleteGroup_Material(groupId, materialId);
+            var result = _service.DeleteGroup_Material(groupId, materialId);
             if (result > 0)
                 return Ok("Удалено");
             else

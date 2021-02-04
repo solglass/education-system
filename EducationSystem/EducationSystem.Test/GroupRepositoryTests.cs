@@ -66,7 +66,7 @@ namespace EducationSystem.Data.Tests
             }
             else
             {
-                expected.StartDate = new System.DateTime(2021, 02, 04);
+                expected.StartDate = new DateTime(2021, 02, 04);
                 _groupRepo.UpdateGroup(expected);
                 GroupDto actual = _groupRepo.GetGroupById(_groupId);
                 Assert.AreEqual(expected, actual);
@@ -132,7 +132,7 @@ namespace EducationSystem.Data.Tests
             {
                 Course = _courseRepo.GetCourseById(_courseId),
                 GroupStatus = _groupStatusRepo.GetGroupStatusById(_groupStatusId),
-                StartDate = new System.DateTime(2021, 01, 01)
+                StartDate = new DateTime(2021, 01, 01)
             };
         }
     }
