@@ -131,6 +131,62 @@ namespace EducationSystem.Controllers
             _repo.DeleteGroupStatus(id);
             return Ok("success");
         }
+        // https://localhost:50221/api/group/teacher-groups
+        [HttpGet("teacher-groups")]
+        public ActionResult GetTeacherGroups()
+        {
+            var groups = _repo.GetTeacherGroups();
+            return Ok(groups);
+        }
+        // https://localhost:50221/api/group/teacher-group/1
+        [HttpGet("teacher-group/{id}")]
+        public ActionResult GetTeacherGroupById(int id)
+        {
+            var group = _repo.GetTeacherGroupById(id);
+            return Ok(group);
+        }
+        // https://localhost:50221/api/group/teacher-group/2
+        [HttpDelete("teacher-group/{id}")]
+        public ActionResult DeleteTeacherGroup(int id)
+        {
+            var deletedGroup = _repo.DeleteTeacherGroup(id);
+            return Ok(deletedGroup);
+        }
+        // https://localhost:50221/api/group/teacher-group
+        [HttpPost("teacher-group")]
+        public ActionResult AddTeacherGroup(TeacherGroupDto teacherGroup)
+        {
+            var addGroup = _repo.AddTeacherGroup(teacherGroup);
+            return Ok(addGroup);
+        }
+        // https://localhost:50221/api/group/student-groups
+        [HttpGet("student-groups")]
+        public ActionResult GetStudentGroups()
+        {
+            var groups = _repo.GetStudentGroups();
+            return Ok(groups);
+        }
+        // https://localhost:50221/api/group/student-group/1
+        [HttpGet("student-group/{id}")]
+        public ActionResult GetStudentGroupById(int id)
+        {
+            var group = _repo.GetStudentGroupById(id);
+            return Ok(group);
+        }
+        // https://localhost:50221/api/group/student-group/1
+        [HttpDelete("student-group{id}")]
+        public ActionResult DeleteStudentGroup(int id)
+        {
+            var deletedGroup = _repo.DeleteStudentGroupById(id);
+            return Ok(deletedGroup);
+        }
+        // https://localhost:50221/api/group/student-group
+        [HttpPost("student-group")]
+        public ActionResult AddStudentGroup(StudentGroupDto studentGroup)
+        {
+            var addGroup = _repo.AddStudentGroup(studentGroup);
+            return Ok(addGroup);
+        }
     }
     
 }
