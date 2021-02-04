@@ -24,7 +24,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetMaterial()
+        public ActionResult GetMaterials()
         {
             var courses = _repo.GetMaterials();
             return Ok(courses);
@@ -39,17 +39,17 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpPost("new-material")]
-        public ActionResult AddNewMaterial([FromBody] MaterialDto newGroup)
+        public ActionResult AddNewMaterial([FromBody] MaterialDto newMaterial)
         {
-            _repo.GetMaterialsAdd(newGroup);
+            _repo.AddMaterial(newMaterial);
             return Ok("Материалы добавлены");
         }
 
         // https://localhost:50221/material/2
         [HttpPut("{id}")]
-        public ActionResult UpdateMaterial(MaterialDto group)
+        public ActionResult UpdateMaterial(int id, [FromBody] MaterialDto material)
         {
-            _repo.UpdateMaterial(group);
+            _repo.UpdateMaterial(id, material);
             return Ok("success");
         }
 

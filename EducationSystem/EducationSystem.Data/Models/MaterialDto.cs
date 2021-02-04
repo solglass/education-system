@@ -10,5 +10,24 @@ namespace EducationSystem.Data.Models
         public string Link { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
+        public override bool Equals(object obj)
+        {
+            MaterialDto materialDto = (MaterialDto)obj;
+            if (Link == materialDto.Link && Description == materialDto.Description)
+            {
+                return true;
+            }
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        public override string ToString()
+        {
+            string s = "";
+            s += Id + " " + Link + " " + Description + " " + IsDeleted + "; ";
+            return s;
+        }
     }
 }
