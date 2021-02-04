@@ -2,6 +2,7 @@
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
+using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
@@ -23,47 +24,90 @@ namespace EducationSystem.API.Controllers
         private CourseRepository _repo;
         private CourseMapper _courseMapper;
         private ThemeMapper _themeMapper;
+        private CourseService _courseService;
         public CourseController()
         {
             _repo = new CourseRepository();
             _courseMapper = new CourseMapper();
             _themeMapper = new ThemeMapper();
+            _courseService = new CourseService();
         }
 
         [HttpGet]
-        public ActionResult GetCourses()             //TODO list of groupids and themeids
+        public ActionResult GetCourses()            
         {
-            var courses =_courseMapper.FromDtos( _repo.GetCourses());
+            //var courses =_courseMapper.FromDtos( _repo.GetCourses());
+            List<CourseOutputModel> courses;
+            try
+            {
+                courses = _courseMapper.FromDtos(_courseService.GetCourses());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(courses);
         }
 
         [HttpGet("{id}")]
         public ActionResult GetCourse(int id)       //TODO list of groupids and themeids
         {
-            var course = _courseMapper.FromDto(_repo.GetCourseById(id));
+            CourseOutputModel course;
+            try
+            {
+                 course = _courseMapper.FromDto(_courseService.GetCourseById(id));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(course);
         }
+
 
         [HttpPost]
         public ActionResult CreateCourse([FromBody] CourseInputModel course)    //TODO mapper and exceptions
         {
-            CourseDto courseDto = _courseMapper.ToDto(course);
-            var result = _repo.AddCourse(courseDto);
-            return Ok($"Курс №{result} добавлен!");
+            // CourseDto courseDto = _courseMapper.ToDto(course);
+            int result;
+            try
+            {
+                result = _courseService.AddCourse(_courseMapper.ToDto(course));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            if (result>0)
+                return Ok($"Курс №{result} добавлен!");
+            else
+                return Problem("о-ё-ё-й");
         }
 
         [HttpPut("{id}")]
         public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)    //TODO mapper and exceptions
         {
-            CourseDto courseDto = _courseMapper.ToDto(course);
-            var result = _repo.AddCourse(courseDto);
-            return Ok("Курс обновлен!");
+            // CourseDto courseDto = _courseMapper.ToDto(course);
+            int result;
+            try
+            {
+                result = _courseService.UpdateCourse(_courseMapper.ToDto(course));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            if (result > 0)
+                return Ok("Курс обновлен!");
+            else
+                return Problem("о-ё-ё-й");
         }
 
+        //-------------------------------------------------------------
         [HttpDelete("{id}")]
         public ActionResult RemoveCourseInfo(int id)
         {
-            var result = _repo.DeleteCourse(id);
+            var result = _courseService.RemoveCourse(id);
             if (result > 0)
                 return Ok("Курс удален!");
             else

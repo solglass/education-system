@@ -5,6 +5,9 @@ using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using EducationSystem.API.Models.OutputModels;
+using EducationSystem.API.Models.InputModels;
 
 namespace EducationSystem.Controllers
 {
@@ -24,23 +27,23 @@ namespace EducationSystem.Controllers
             _groupMapper = new GroupMapper();
         }
 
-        // https://localhost:50221/api/group/
+        // https://localhost:44365/api/group/
         [HttpGet]
         public ActionResult GetGroups()
         {
-            var result = _repo.GetGroups();
+            List<GroupOutputModel> result = _groupMapper.FromDtos(_repo.GetGroups());
             return Ok(result);
         }
 
-        // https://localhost:50221/api/group/3
+        // https://localhost:44365/api/group/3
         [HttpGet("{id}")]
         public ActionResult GetGroupById(int id)
         {
-            var result = _repo.GetGroupById(id);
+            GroupOutputModel result = _groupMapper.FromDto(_repo.GetGroupById(id));
             return Ok(result);
         }
 
-        // https://localhost:50221/api/group
+        // https://localhost:44365/api/group
         [HttpPost]
         public ActionResult AddNewGroup([FromBody] GroupInputModel newGroup)
         {
@@ -49,41 +52,47 @@ namespace EducationSystem.Controllers
             return Ok($"Группа #{result} добавлена");
         }
 
-         // https://localhost:50221/api/group/3
-         [HttpPut("{id}")]
+        // https://localhost:44365/api/group/3
+        [HttpPut("{id}")]
         public ActionResult UpdateGroupInfo(int id, [FromBody] GroupInputModel group)
         {
-            // check if entity exists and then...
+            if (_repo.GetGroupById(id) == null)
+            {
+                return Ok("Ошибка! Отсутствует группа с введенным id!");
+            }
             var groupDto = _groupMapper.ToDto(group);
-            _repo.UpdateGroup(groupDto);             
-            return Ok("success");
+            _repo.UpdateGroup(groupDto);
+            return Ok("Изменения внесены!");
         }
 
-        // https://localhost:50221/api/group/3
+        // https://localhost:44365/api/group/3
         [HttpDelete("{id}")]
         public ActionResult DeleteGroup(int id)
         {
             _repo.DeleteGroup(id);
-            return Ok("success");
+            return Ok("Группа удалена");
         }
 
-        // https://localhost:50221/api/group/group-material/group-material
-        [HttpPost("group-material")]
-        public ActionResult AddGroup_Material(int GroupID, int MaterialID)
+        // https://localhost:44365/api/group/group-material/
+        [HttpPost()]
+        public ActionResult AddGroup_Material(int groupId, int materialId)
         {
-            _repo.AddGroup_Material(GroupID, MaterialID);
-            return Ok("success");
+            _repo.AddGroup_Material(groupId, materialId);
+            return Ok("Добавлено");
         }
 
-        // https://localhost:50221/api/group/group-material/3
-        [HttpDelete("{id}")]    // by groupId and materialId
-        public ActionResult DeleteGroup_Material(int id)
+        // https://localhost:44365/api/group/3/material/8
+        [HttpDelete("{groupId}/material/{materialId}")]    
+        public ActionResult DeleteGroup_Material(int groupId, int materialId)
         {
-            _repo.DeleteGroup_Material(id);
-            return Ok("success");
+            var result = _repo.DeleteGroup_Material(groupId, materialId);
+            if (result > 0)
+                return Ok("Удалено");
+            else
+                return Problem("Ошибка!");
         }
 
-        // https://localhost:50221/api/group/group-status/name
+        // https://localhost:44365/api/group/group-status/name
         [HttpPost("group-status/name")]
         public ActionResult AddGroupStatus(string name)
         {
@@ -91,7 +100,7 @@ namespace EducationSystem.Controllers
             return Ok("Cтатус обновлен");
         }
 
-        // https://localhost:50221/api/group/group-status
+        // https://localhost:44365/api/group/group-status
         [HttpGet("group-status")]
         public ActionResult GetGroupStatus()
         {
@@ -99,7 +108,7 @@ namespace EducationSystem.Controllers
             return Ok(groupStatuses);
         }
 
-        // https://localhost:50221/api/group/group-status/3
+        // https://localhost:44365/api/group/group-status/3
         [HttpGet("group-status/{id}")]
         public dynamic GetGroupStatus(int id)
         {
@@ -107,7 +116,7 @@ namespace EducationSystem.Controllers
             return Ok(groupStatus);
         }
 
-        // https://localhost:50221/api/group/group-status/3
+        // https://localhost:44365/api/group/group-status/3
         [HttpPut("group-status/{id}")]
         public ActionResult UpdateGroupStatus(int id, [FromBody] GroupStatusDto groupStatus)
         {

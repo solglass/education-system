@@ -34,19 +34,12 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework
         [HttpPost]
-        //public ActionResult Register([FromBody] HomeworkDto homework)   //INPUTMODEL!!!!! FIX THIS ONE METHOD!!!!!
-        //{
-        //    HomeworkDto homework;
-        //    try
-        //    {
-        //        homework = _homeworkMapper.ToDto(inputModel);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //    return Ok("success");
-        //}
+        public ActionResult Register([FromBody] HomeworkDto homework)
+        {
+            _repo.AddHomework(homework);
+            return Ok("success");
+        }
+
         // https://localhost:44365/api/homework
         [HttpGet]
         public ActionResult GetHomeworks()
