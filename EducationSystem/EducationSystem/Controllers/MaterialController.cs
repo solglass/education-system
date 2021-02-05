@@ -1,4 +1,7 @@
-﻿using EducationSystem.Controllers;
+﻿using EducationSystem.API.Mappers;
+using EducationSystem.API.Models.InputModels;
+using EducationSystem.Business;
+using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -16,40 +19,45 @@ namespace EducationSystem.API.Controllers
     public class MaterialContoller : ControllerBase
     {
         private readonly ILogger<WeatherForecastController> _logger;
-        private MaterialRepository _repo;
+        private MaterialService _service;
+        private MaterialMapper _mapper;
 
         public MaterialContoller()
         {
-            _repo = new MaterialRepository();
+            _mapper = new MaterialMapper();
+            _service = new MaterialService();
         }
 
         [HttpGet]
-        public ActionResult GetMaterial()
+        public ActionResult GetMaterials()
         {
-            var courses = _repo.GetMaterials();
-            return Ok(courses);
+            var courses = _service.GetMaterials();
+            var result = _mapper.FromDtos(courses);
+            return Ok(result);
         }
 
         // https://localhost:50221/api/material/2
         [HttpGet("{id}")]
         public ActionResult GetMaterialById(int id)
         {
-            var course = _repo.GetMaterialById(id);
-            return Ok(course);
+            var course = _service.GetMaterialById(id);
+            var result = _mapper.FromDto(course);
+            return Ok(result);
         }
 
         [HttpPost("new-material")]
-        public ActionResult AddNewMaterial([FromBody] MaterialDto newGroup)
+        public ActionResult AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
-            _repo.GetMaterialsAdd(newGroup);
+            var newMaterial = _mapper.ToDto(materialInputModel);
+            _service.AddMaterial(newMaterial);
             return Ok("Материалы добавлены");
         }
 
         // https://localhost:50221/material/2
         [HttpPut("{id}")]
-        public ActionResult UpdateMaterial(MaterialDto group)
+        public ActionResult UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
-            _repo.UpdateMaterial(group);
+            _service.UpdateMaterial(id, _mapper.ToDto(material));
             return Ok("success");
         }
 
@@ -57,7 +65,7 @@ namespace EducationSystem.API.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteMaterial(int id)
         {
-            _repo.DeleteMaterialById(id);
+            _service.DeleteMaterialById(id);
             return Ok("success");
         }
     }
