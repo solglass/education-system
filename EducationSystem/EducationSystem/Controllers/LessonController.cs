@@ -47,7 +47,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson/
         [HttpGet]
-        public ActionResult GetLesson()
+        public ActionResult GetLessons()
         {
             var result = _repo.GetLessons();
             return Ok(result);
