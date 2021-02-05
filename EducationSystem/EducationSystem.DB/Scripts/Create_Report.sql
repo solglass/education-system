@@ -1,15 +1,5 @@
 ﻿USE [DevEdu]
 GO
-/****** Object:  StoredProcedure [dbo].[Create_Report]    Script Date: 04.02.2021 19:27:10 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE proc [dbo].[Create_Report]
-as
-begin
-USE [DevEdu]
-GO
 /****** Object:  StoredProcedure [dbo].[Create_Report]    Script Date: 05.02.2021 20:50:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -65,5 +55,4 @@ with st as
 	left join tt on gd.GroupId = tt.GroupId
 	left join tc on gd.GroupId = tc.GroupId
 	where StudentCount >0
-end
 end
