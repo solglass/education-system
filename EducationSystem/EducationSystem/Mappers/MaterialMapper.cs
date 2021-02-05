@@ -33,26 +33,24 @@ namespace EducationSystem.API.Mappers
             return result;
         }
 
-        public AttachmentOutputModel FromDto(AttachmentDto attachmentDto)
+        public MaterialOutputModel FromDto(MaterialDto materialDto)
         {
-            var attachmentTypeMapper = new AttachmentTypeMapper();
-
-            return new AttachmentOutputModel()
+            return new MaterialOutputModel()
             {
-                Id = attachmentDto.Id,
-                Path = attachmentDto.Path,
-                AttachmentType = attachmentTypeMapper.FromDto(attachmentDto.AttachmentType)
+                Id = materialDto.Id,
+                Link = materialDto.Link,
+                Description = materialDto.Description
             };
         }
 
 
-        public List<AttachmentOutputModel> FromDtos(List<AttachmentDto> attachmentDtos)
+        public List<MaterialOutputModel> FromDtos(List<MaterialDto> materialDtos)
         {
-            List<AttachmentOutputModel> models = new List<AttachmentOutputModel>();
+            List<MaterialOutputModel> models = new List<MaterialOutputModel>();
 
-            foreach (var attachment in attachmentDtos)
+            foreach (var material in materialDtos)
             {
-                models.Add(FromDto(attachment));
+                models.Add(FromDto(material));
             }
             return models;
         }

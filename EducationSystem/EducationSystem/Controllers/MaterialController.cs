@@ -1,4 +1,6 @@
-﻿using EducationSystem.Controllers;
+﻿using EducationSystem.API.Mappers;
+using EducationSystem.API.Models.InputModels;
+using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +19,11 @@ namespace EducationSystem.API.Controllers
     {
         private readonly ILogger<WeatherForecastController> _logger;
         private MaterialRepository _repo;
+        private MaterialMapper _mapper;
 
         public MaterialContoller()
         {
+            _mapper = new MaterialMapper();
             _repo = new MaterialRepository();
         }
 
@@ -27,7 +31,8 @@ namespace EducationSystem.API.Controllers
         public ActionResult GetMaterials()
         {
             var courses = _repo.GetMaterials();
-            return Ok(courses);
+            var result = _mapper.FromDtos(courses);
+            return Ok(result);
         }
 
         // https://localhost:50221/api/material/2
@@ -35,21 +40,23 @@ namespace EducationSystem.API.Controllers
         public ActionResult GetMaterialById(int id)
         {
             var course = _repo.GetMaterialById(id);
-            return Ok(course);
+            var result = _mapper.FromDto(course);
+            return Ok(result);
         }
 
         [HttpPost("new-material")]
-        public ActionResult AddNewMaterial([FromBody] MaterialDto newMaterial)
+        public ActionResult AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
+            var newMaterial = _mapper.ToDto(materialInputModel);
             _repo.AddMaterial(newMaterial);
             return Ok("Материалы добавлены");
         }
 
         // https://localhost:50221/material/2
         [HttpPut("{id}")]
-        public ActionResult UpdateMaterial(int id, [FromBody] MaterialDto material)
+        public ActionResult UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
-            _repo.UpdateMaterial(id, material);
+            _repo.UpdateMaterial(id, _mapper.ToDto(material));
             return Ok("success");
         }
 
