@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.11" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Business\EducationSystem.Business.csproj" />
+    <ProjectReference Include="..\EducationSystem.Core\EducationSystem.Core.csproj" />
     <ProjectReference Include="..\EducationSystem.Data\EducationSystem.Data.csproj" />
   </ItemGroup>
 

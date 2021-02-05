@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Data", "Edu
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "EducationSystem.DB", "EducationSystem.DB\EducationSystem.DB.sqlproj", "{326CB266-0799-4B96-AA90-E1191605251D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Test", "EducationSystem.Test\EducationSystem.Data.Tests.csproj", "{287D7F53-D35D-4841-B084-5F1547434AB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Data.Tests", "EducationSystem.Test\EducationSystem.Data.Tests.csproj", "{287D7F53-D35D-4841-B084-5F1547434AB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Core", "EducationSystem.Core\EducationSystem.Core.csproj", "{A272B930-A608-4DDE-8C2F-FB1195C7ED29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{287D7F53-D35D-4841-B084-5F1547434AB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{287D7F53-D35D-4841-B084-5F1547434AB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{287D7F53-D35D-4841-B084-5F1547434AB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A272B930-A608-4DDE-8C2F-FB1195C7ED29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A272B930-A608-4DDE-8C2F-FB1195C7ED29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A272B930-A608-4DDE-8C2F-FB1195C7ED29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A272B930-A608-4DDE-8C2F-FB1195C7ED29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

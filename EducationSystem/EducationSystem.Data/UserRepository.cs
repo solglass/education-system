@@ -9,7 +9,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class UserRepository
+    public class UserRepository : BaseRepository
     {
         private SqlConnection _connection;
 
@@ -21,7 +21,6 @@ namespace EducationSystem.Data
 
         public List<UserDto> GetUsers()
         {
-
             var UserDictionary = new Dictionary<int, UserDto>();
 
 
@@ -45,7 +44,6 @@ namespace EducationSystem.Data
                 splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
             .ToList();
             return users;
-
 
         }
         public UserDto GetUserById(int id)
@@ -159,5 +157,28 @@ namespace EducationSystem.Data
                 new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
+        public UserDto CheckUser(string login, string password)
+        {         
+            var userEntry = new UserDto();
+            var result = _connection.
+                Query<UserDto, RoleDto, UserDto>(
+                "dbo.Check_User_Authentication",
+                (user, role) =>
+                {
+                if (userEntry.Id == 0)
+                    {
+                        userEntry = user;
+                        userEntry.Roles = new List<RoleDto>();                      
+                    }
+                    userEntry.Roles.Add(role);
+                    return userEntry;
+                },
+                new { login, password },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return result;
+
+        } 
     }
 }
