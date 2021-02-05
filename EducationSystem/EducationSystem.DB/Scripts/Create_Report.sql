@@ -5,7 +5,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER proc [dbo].[Create_Report]
+CREATE proc [dbo].[Create_Report]
 as
 begin
 with st as 
