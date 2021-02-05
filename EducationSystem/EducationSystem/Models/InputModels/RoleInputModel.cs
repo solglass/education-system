@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Models.InputModels
 {
-    public class UserInputModel
+    public class RoleInputModel
     {
     }
 }

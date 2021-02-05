@@ -8,7 +8,7 @@ namespace EducationSystem.Data.Tests
 {
     public class HomeworkRepositoryTests
     {
-        private HomeworkRepository _homeworkRepo;
+        /*private HomeworkRepository _homeworkRepo;
         private GroupRepository _groupRepo;
         private CourseRepository _courseRepo;
         private UserRepository _userRepo;
@@ -375,6 +375,6 @@ namespace EducationSystem.Data.Tests
                 default:
                     return groups;
             }
-        }
+        }*/
     }
 }

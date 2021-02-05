@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EducationSystem.Core\EducationSystem.Core.csproj" />
     <ProjectReference Include="..\EducationSystem.Data\EducationSystem.Data.csproj" />
   </ItemGroup>
 
