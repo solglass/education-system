@@ -46,10 +46,10 @@ namespace EducationSystem.Data.Tests
         [TestCase(7)]
         public void AddMaterialTest(int caseOfMock)
         {
-            _materialDto = AddMaterialMock(caseOfMock);
-            _materials.Add(_materialDto);
+            MaterialDto materialDto = AddMaterialMock(caseOfMock);
+            _materials.Add(materialDto);
             List<MaterialDto> expected = _materials;
-            if (_materialRepository.AddMaterial(_materialDto) != 1)
+            if (_materialRepository.AddMaterial(materialDto) != 1)
             {
                 throw new Exception("Addiction failed");
             }
@@ -63,7 +63,8 @@ namespace EducationSystem.Data.Tests
         [TestCase(7)]
         public void DeleteMaterialTest(int caseOfMock)
         {
-            List<MaterialDto> expected = DeleteMaterialMock(caseOfMock);
+            _materials.RemoveAt(0);
+            List<MaterialDto> expected = _materials;
             if (_materialRepository.DeleteMaterialById(caseOfMock) != 1)
                 throw new Exception("Delete failed");
             List<MaterialDto> actual = _materialRepository.GetMaterials();
@@ -100,48 +101,49 @@ namespace EducationSystem.Data.Tests
         }
         public MaterialDto AddMaterialMock(int a)
         {
+            MaterialDto materialDto = new MaterialDto();
             switch (a)
             {
                 case 4:
-                    _materialDto.Link = "";
-                    _materialDto.Description = "Base C#";
+                    materialDto.Link = "";
+                    materialDto.Description = "Base C#";
                     break;
                 case 5:
-                    _materialDto.Link = "";
-                    _materialDto.Description = "Front-end";
+                    materialDto.Link = "";
+                    materialDto.Description = "Front-end";
                     break;
                 case 6:
-                    _materialDto.Link = "";
-                    _materialDto.Description = "Back-end";
+                    materialDto.Link = "";
+                    materialDto.Description = "Back-end";
                     break;
                 case 7:
-                    _materialDto.Link = "";
-                    _materialDto.Description = "Kotlin";
+                    materialDto.Link = "";
+                    materialDto.Description = "Kotlin";
                     break;
                 case 8:
-                    _materialDto.Link = "";
-                    _materialDto.Description = "Base C#";
+                    materialDto.Link = "";
+                    materialDto.Description = "Base C#";
                     break;
                 case 9:
-                    _materialDto.Link = "";
-                    _materialDto.Description = "Front-end";
+                    materialDto.Link = "";
+                    materialDto.Description = "Front-end";
                     break;
                 case 10:
-                    _materialDto.Link = "";
-                    _materialDto.Description = "Back-end";
+                    materialDto.Link = "";
+                    materialDto.Description = "Back-end";
                     break;
                 case 12:
-                    _materialDto.Link = "https://metanit.com/sharp/";
-                    _materialDto.Description = "";
+                    materialDto.Link = "https://metanit.com/sharp/";
+                    materialDto.Description = "";
                     break;
                 case 13:
-                    _materialDto.Link = "";
-                    _materialDto.Description = "React";
+                    materialDto.Link = "";
+                    materialDto.Description = "React";
                     break;
                 default:
                     throw new Exception("Case does not exist");
             }
-            return _materialDto;
+            return materialDto;
         }
         public MaterialDto GetMaterialByIdMock(int a)
         {
