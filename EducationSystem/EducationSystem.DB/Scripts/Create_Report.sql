@@ -8,7 +8,17 @@ GO
 CREATE proc [dbo].[Create_Report]
 as
 begin
-	with st as 
+USE [DevEdu]
+GO
+/****** Object:  StoredProcedure [dbo].[Create_Report]    Script Date: 05.02.2021 20:50:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER proc [dbo].[Create_Report]
+as
+begin
+with st as 
 	(select  
 	g.Id as GroupId,
 	count(sg.UserId) as StudentCount
@@ -36,25 +46,24 @@ begin
 	group by g.Id)
 	,
 	gd as 
-	(select Min(gr.StartDate) as StartDate,
+	(select gr.StartDate as StartDate,
 	gr.Id as GroupId,
 	cr.Name,
-	Max(ls.Date) as EndDate
-	from [dbo].[Group] gr join [dbo].[Course] cr 
-	on gr.CourseID = cr.Id join [dbo].[Lesson] ls on ls.GroupID = gr.Id
-	join st on gr.Id = st.GroupId
-	where cr.IsDeleted = 0 and ls.IsDeleted = 0
-	group by gr.Id,cr.Name)
+	DATEADD(week, cr.Duration, gr.StartDate) as EndDate
+	from [dbo].[Group] gr  join [dbo].[Course] cr 
+	on gr.CourseID = cr.Id 
+	where cr.IsDeleted = 0)
 	select gd.GroupId,
 	Name,
 	StartDate,
 	EndDate,
-	Max(st.StudentCount) as StudentCount,
-	Max(tt.TutorCount) as TutorCount,
-	Max(tc.TeacherCount) as TeacherCount
+	isnull(st.StudentCount,0) as StudentCount,
+	isnull(tt.TutorCount,0) as TutorCount,
+	isnull(tc.TeacherCount,0) as TeacherCount
 
-	from gd join st on gd.GroupId = st.GroupId
-	join tt on gd.GroupId = tt.GroupId
-	join tc on gd.GroupId = tc.GroupId
-	group by  gd.GroupId,Name,StartDate,EndDate
+	from gd left join st on gd.GroupId = st.GroupId
+	left join tt on gd.GroupId = tt.GroupId
+	left join tc on gd.GroupId = tc.GroupId
+	where StudentCount >0
+end
 end
