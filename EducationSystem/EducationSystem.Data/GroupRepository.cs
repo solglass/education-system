@@ -53,23 +53,41 @@ namespace EducationSystem.Data
             return result;
         }
 
-        /*public GroupDto GetGroupByProgram(int id)
+        public GroupDto GetGroupByProgram(int id)
         {
+            var groupEntry = new GroupDto();
+            var courseEntry = new CourseDto();
+            var themeDictionary = new Dictionary<int, ThemeDto>();
             var result = _connection
-                .Query<GroupDto, CourseDto, ThemeDto, GroupDto>("Group_SelectByProgram",
+                .Query<GroupDto, CourseDto, ThemeDto, GroupDto>(
+                    "dbo.Group_SelectByProgram",
                     (group, course, theme) =>
                     {
-                        group.Course = course;
-                        course.Themes = theme;
-                        return group;
+                        if (groupEntry.Id == 0)
+                        {
+                            groupEntry = group;
+                            groupEntry.Course = new CourseDto();
+                        }
+                        if (courseEntry.Id == 0)
+                        {
+                            courseEntry = course;
+                            courseEntry.Themes = new List<ThemeDto>();
+                            groupEntry.Course = courseEntry;
+                        }
+                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
+                        {
+                            themeEntry = theme;
+                            courseEntry.Themes.Add(theme);
+                            themeDictionary.Add(themeEntry.Id, themeEntry);
+                        }
+                        return groupEntry;
                     },
                     new { id },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
-                .Distinct()
                 .FirstOrDefault();
             return result;
-        }*/
+        }
 
         public List<GroupDto> GetGroupsWithoutTutors()
         {

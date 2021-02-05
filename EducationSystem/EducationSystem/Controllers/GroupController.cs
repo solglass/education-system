@@ -54,6 +54,14 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
+        // https://localhost:44365/api/group/3/program-for-group
+        [HttpGet("{Id}/program-for-group")]
+        public ActionResult GetGroupByProgram(int id)
+        {
+            GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupByProgram(id));
+            return Ok(result);
+        }
+
         // https://localhost:44365/api/group
         [HttpPost]
         public ActionResult AddNewGroup([FromBody] GroupInputModel newGroup)
