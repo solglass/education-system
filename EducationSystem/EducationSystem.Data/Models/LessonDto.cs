@@ -9,7 +9,7 @@ namespace EducationSystem.Data.Models
         public int ID { get; set; }
         public int GroupID { get; set; }
         public string Comment { get; set; }
-        public DateTime Data { get; set; }
+        public DateTime LessonDate { get; set; }
         public byte IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
     }

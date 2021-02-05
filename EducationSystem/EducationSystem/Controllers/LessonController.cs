@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EducationSystem.API.Mappers;
+using EducationSystem.API.Models.InputModels;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -16,24 +18,36 @@ namespace EducationSystem.Controllers
     {
         private readonly ILogger<WeatherForecastController> _logger;
         private LessonRepository _repo;
+        private LessonMapper _lessonMapper;
 
         public LessonController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
             _repo = new LessonRepository();
+            _lessonMapper = new LessonMapper();
         }
 
         // https://localhost:50221/api/lesson/
         [HttpPost]
-        public ActionResult AddNewLesson(LessonDto lessonDto)
+        public ActionResult AddNewLesson([FromBody] LessonInputModel inputModel)
         {
-            _repo.AddLesson(lessonDto);
+            LessonDto lesson;
+            try
+            {
+                lesson = _lessonMapper.ToDto(inputModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            _repo.AddLesson(lesson);
             return Ok("Урок добавлен");
         }
 
         // https://localhost:50221/api/lesson/
         [HttpGet]
-        public ActionResult GetLesson()
+        public ActionResult GetLessons()
         {
             var result = _repo.GetLessons();
             return Ok(result);
