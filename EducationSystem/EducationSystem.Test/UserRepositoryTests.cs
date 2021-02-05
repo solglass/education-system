@@ -34,7 +34,7 @@ namespace NUnitTestProject
             _userId.Add(added);
             expected.Id = added;
 
-            if (_userId.Count == 0) { Assert.Fail("Tag addition failed"); }
+            if (_userId.Count == 0) { Assert.Fail("User addition failed"); }
             else
             {
                 UserDto actual = _uRepo.GetUserById(_userId[_userId.Count - 1]);
@@ -47,7 +47,7 @@ namespace NUnitTestProject
         {
             UserDto expected = GetMockUserAdd(dtoMockNumber);
             _userId.Add(_uRepo.AddUser(expected));
-            if (_userId.Count == 0) { Assert.Fail("Tag addition failed"); }
+            if (_userId.Count == 0) { Assert.Fail("User addition failed"); }
             else
             {
                 int newId = _userId[_userId.Count - 1];
@@ -116,13 +116,16 @@ namespace NUnitTestProject
         {
             RoleDto expected = GetMockRoleAdd(dtoMockNumber);
             _roleId.Add(_uRepo.AddRole(expected));
-            if (_roleId.Count == 0) { Assert.Fail("Role addition failed"); }
+            if (_roleId.Count == 0) 
+            {
+                Assert.Fail("Role addition failed"); 
+            }
             else
             {
                 int newId = _roleId[_roleId.Count - 1];
                 expected.Id = newId;
                 _uRepo.UpdateRole(expected);
-                RoleDto actual = _uRepo.GetRoleById(newId);
+                RoleDto actual = _uRepo.GetRoleById (newId);
                 Assert.AreEqual(expected, actual);
             }
         }
@@ -132,7 +135,7 @@ namespace NUnitTestProject
             UserRepository uRepo = new UserRepository();
             foreach (int elem in _userRoleId)
             {
-                uRepo.DeleteUserRole(elem);
+                uRepo.DeleteRoleToUser(elem);
             }
             foreach (int elem in _roleId)
             {
@@ -182,6 +185,5 @@ namespace NUnitTestProject
                     throw new Exception();
             }
         }
-
     }
 }
