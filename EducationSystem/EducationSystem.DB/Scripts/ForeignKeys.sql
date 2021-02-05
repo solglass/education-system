@@ -61,3 +61,37 @@ GO
 
 ALTER TABLE [dbo].[HomeworkAttempt] CHECK CONSTRAINT [HomeworkAttempt_fk2]
 GO
+
+
+ALTER TABLE [dbo].[Group]  WITH CHECK ADD  CONSTRAINT [Group_fk0] FOREIGN KEY([CourseID])
+REFERENCES [dbo].[Course] ([Id])
+ON UPDATE CASCADE
+GO
+
+ALTER TABLE [dbo].[Group] CHECK CONSTRAINT [Group_fk0]
+GO
+
+ALTER TABLE [dbo].[Group]  WITH CHECK ADD  CONSTRAINT [Group_fk1] FOREIGN KEY([StatusId])
+REFERENCES [dbo].[GroupStatus] ([Id])
+ON UPDATE CASCADE
+GO
+
+ALTER TABLE [dbo].[Group] CHECK CONSTRAINT [Group_fk1]
+GO
+
+
+ALTER TABLE [dbo].[Group_Material]  WITH CHECK ADD  CONSTRAINT [Group_Material_fk0] FOREIGN KEY([GroupID])
+REFERENCES [dbo].[Group] ([Id])
+ON UPDATE CASCADE
+GO
+
+ALTER TABLE [dbo].[Group_Material] CHECK CONSTRAINT [Group_Material_fk0]
+GO
+
+ALTER TABLE [dbo].[Group_Material]  WITH CHECK ADD  CONSTRAINT [Group_Material_fk1] FOREIGN KEY([MaterialID])
+REFERENCES [dbo].[Material] ([Id])
+ON UPDATE CASCADE
+GO
+
+ALTER TABLE [dbo].[Group_Material] CHECK CONSTRAINT [Group_Material_fk1]
+GO
