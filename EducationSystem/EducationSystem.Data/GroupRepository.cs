@@ -200,9 +200,9 @@ namespace EducationSystem.Data
             return _connection
                    .QuerySingleOrDefault<TutorGroupDto>("dbo.Tutor_Group_SelectAll", new { id }, commandType: System.Data.CommandType.StoredProcedure);
         }
-        public void DeleteTutorGroupsByIds(int userId, int groupId)
+        public int DeleteTutorGroupsByIds(int userId, int groupId)
         {
-            _connection.Execute("dbo.Tutor_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);
+            return _connection.Execute("dbo.Tutor_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);
         }
         public int AddTutorToGroup(TutorGroupDto tutorGroup)
         {

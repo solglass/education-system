@@ -198,6 +198,36 @@ namespace EducationSystem.Controllers
             var addGroup = _repo.AddStudentGroup(studentGroup);
             return Ok(addGroup);
         }
+        // 2DO: Change stored procedures
+        // it must take id of user
+        // https://localhost:50221/api/group/tutor-groups
+        [HttpGet("tutor-groups")]
+        public ActionResult GetTutorGroups()
+        {
+            var groups = _repo.GetTutorGroups();
+            return Ok(groups);
+        }
+        // https://localhost:50221/api/group/tutor-groups/1
+        [HttpGet("tutor-groups/{id}")]
+        public ActionResult GetTutorGroupById(int id)
+        {
+            var group = _repo.GetTutorGroupById(id);
+            return Ok(group);
+        }
+        // https://localhost:50221/api/group/tutor-groups/1
+        [HttpDelete("tutor-groups/{userId}/{groupId}")]
+        public ActionResult DeleteTutorGroupsByIds(int userId, int groupId)
+        {
+            var deletedGroup = _repo.DeleteTutorGroupsByIds(userId, groupId);
+            return Ok(deletedGroup);
+        }
+        // https://localhost:50221/api/group/tutor-groups
+        [HttpPost("tutor-groups")]
+        public ActionResult AddTutorToGroup(TutorGroupDto tutorGroup)
+        {
+            var addGroup = _repo.AddTutorToGroup(tutorGroup);
+            return Ok(addGroup);
+        }
     }
     
 }
