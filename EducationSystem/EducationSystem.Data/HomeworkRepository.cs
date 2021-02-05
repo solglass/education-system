@@ -166,34 +166,75 @@ namespace EducationSystem.Data
             return result;
         }
 
-
         public List<HomeworkAttemptDto> GetHomeworkAttempts()
         {
-            var homeworkAttempt = _connection
-                .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+            var hwAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
+            var hwAttempts = _connection
+                .Query<HomeworkAttemptDto, UserDto, HomeworkDto, HomeworkAttemptStatusDto, HomeworkAttemptDto>(
+                "dbo.HomeworkAttempt_SelectAll",
+                (hwAttempt, user, homework, hwAttemptStatus) =>
+                {
+                    if (!hwAttemptDictionary.TryGetValue(hwAttempt.Id, out HomeworkAttemptDto hwAttemptEntry))
+                    {
+                        hwAttemptEntry =  hwAttempt;
+                        hwAttemptEntry.Author = user;
+                        hwAttemptEntry.Homework = homework;
+                        hwAttemptEntry.HomeworkAttemptStatus = hwAttemptStatus;
+                        hwAttemptDictionary.Add(hwAttemptEntry.Id, hwAttemptEntry);
+                    }
+                    return hwAttemptEntry;
+                },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
-            return homeworkAttempt;
+            return hwAttempts;
         }
+
+        //public HomeworkAttemptDto GetHomeworkAttemptById(int id)
+        //{
+        //    var homeworkAttempt = _connection
+        //        .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+        //        .FirstOrDefault();
+        //    return homeworkAttempt;
+        //}
 
         public HomeworkAttemptDto GetHomeworkAttemptById(int id)
         {
-            var homeworkAttempt = _connection
-                .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+            //var commentDictionary = new Dictionary<int, CommentDto>();
+            var hwAttemptEntry = new HomeworkAttemptDto();
+            var hwAttempt = _connection
+                .Query<HomeworkAttemptDto, UserDto,  HomeworkDto, HomeworkAttemptStatusDto, HomeworkAttemptDto>(
+                "dbo.HomeworkAttempt_SelectById",
+                (hwAttempt, user, homework, hwAttemptStatus) =>
+                {
+                    if (hwAttemptEntry.Id == 0)
+                    {
+                        hwAttemptEntry = hwAttempt;
+                        hwAttemptEntry.Author = user;
+                        hwAttemptEntry.Homework = homework;
+                        hwAttemptEntry.HomeworkAttemptStatus = hwAttemptStatus;
+                    }
+                    
+                    return hwAttemptEntry;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
-            return homeworkAttempt;
+            return hwAttempt;
         }
 
         public int AddHomeworkAttempt(HomeworkAttemptDto homeworkAttempt)
         {
             var result = _connection
-                .Execute("dbo.HomeworkAttempt_Add",
+                .QuerySingle<int>("dbo.HomeworkAttempt_Add",
                 new
                 {
                     comment = homeworkAttempt.Comment,
                     author = homeworkAttempt.Author,
                     homework = homeworkAttempt.Homework,
-                    homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus,
-                    IsDeleted = homeworkAttempt.IsDeleted
+                    homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -205,11 +246,11 @@ namespace EducationSystem.Data
                 .Execute("dbo.HomeworkAttempt_Update",
                  new
                  {
+                     id = homeworkAttempt.Id,
                      comment = homeworkAttempt.Comment,
                      author = homeworkAttempt.Author,
                      homework = homeworkAttempt.Homework,
-                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus,
-                     IsDeleted = homeworkAttempt.IsDeleted
+                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus
                  },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;

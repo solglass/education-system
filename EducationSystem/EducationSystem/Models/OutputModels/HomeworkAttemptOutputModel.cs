@@ -9,7 +9,6 @@ namespace EducationSystem.API.Models.OutputModels
     {
         public int Id { get; set; }
         public string Comment { get; set; }
-
         public bool IsDeleted { get; set; }
         public UserOutputModel Author { get; set; }
         public HomeworkAttemptStatusOutputModel HomeworkAttemptStatus { get; set; }

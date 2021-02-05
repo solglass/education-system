@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace EducationSystem.API.Models.InputModels
+namespace EducationSystem.API.Models
 {
     public class TagInputModel
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

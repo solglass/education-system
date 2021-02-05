@@ -1,15 +1,19 @@
-
-﻿using Dapper;
+using Dapper;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class UserRepository : BaseRepository
+    public class UserRepository
     {
+        private SqlConnection _connection;
+
+        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
         public UserRepository()
         {
             _connection = new SqlConnection(_connectionString);
@@ -17,205 +21,143 @@ namespace EducationSystem.Data
 
         public List<UserDto> GetUsers()
         {
-            var user = _connection
-                .Query<UserDto>("dbo.User_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-               .ToList();
-            return user;
+
+            var UserDictionary = new Dictionary<int, UserDto>();
+
+
+            var users = _connection.
+                Query<UserDto, RoleDto, UserDto>(
+                "dbo.User_SelectAll",
+                (user, role) =>
+                {
+
+
+                    if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                    {
+                        userEntry = user;
+                        userEntry.Roles = new List<RoleDto>();
+                        UserDictionary.Add(userEntry.Id, userEntry);
+                    }
+
+                    userEntry.Roles.Add(role);
+                    return userEntry;
+                },
+                splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+            .ToList();
+            return users;
+
+
         }
         public UserDto GetUserById(int id)
         {
-            var user = _connection
-                .Query<UserDto>("dbo.User_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return user;
-        }
-        public UserDto AddUser()
-        {
-            var user = _connection
-                .Query<UserDto>("dbo.UserRole_Add", commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return user;
-        }
-        public UserDto UpdateUser()
-        {
-            var user = _connection
-               .Query<UserDto>("dbo.User_Update", commandType: System.Data.CommandType.StoredProcedure)
-               .FirstOrDefault();
-            return user;
-        }
-        public UserDto DeleteUser()
-        {
-            var user = _connection
-               .Query<UserDto>("dbo.dbo.User_Delete", commandType: System.Data.CommandType.StoredProcedure)
-               .FirstOrDefault();
-            return user;
-        }
-        public List<UserRoleDto> GetUserRole()
-        {
-            var userRole = _connection
-                .Query<UserRoleDto>("dbo.UserRole_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-               .ToList();
-            return userRole;
-        }
-        public UserRoleDto SelectUserRoleById()
-        {
-            var userRole = _connection
-                .Query<UserRoleDto>("dbo.UserRole_SelectById", commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return userRole;
-        }
-        public UserRoleDto AddUserRole()
-        {
-            var userRole = _connection
-                .Query<UserRoleDto>("dbo.UserRole_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return userRole;
-        }
-        public UserRoleDto UpdateUserRole()
-        {
-            var userRole = _connection
-                .Query<UserRoleDto>("dbo.UserRole_Update", commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return userRole;
-        }
-        public UserRoleDto DeleteUserRole()
-        {
-            var userRole = _connection
-                .Query<UserRoleDto>("dbo.UserRole_Delete", commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return userRole;
-        }
-        public List<RoleDto> GetRole()
-        {
-            var role = _connection
-                .Query<RoleDto>("dbo.Role_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-               .ToList();
-            return role;
-        }
-        public RoleDto SelectRoleById()
-        {
-            var role = _connection
-                .Query<RoleDto>("dbo.Role_SelectById", commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return role;
-        }
-        public RoleDto AddRole()
-        {
-            var role = _connection
-                .Query<RoleDto>("dbo.Role_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return role;
-        }
-        public RoleDto UpdateRole()
-        {
-            var role = _connection
-                 .Query<RoleDto>("dbo.Role_Update", commandType: System.Data.CommandType.StoredProcedure)
-                 .FirstOrDefault();
-            return role;
-        }
-        public RoleDto DeleteRole()
-        {
-            var role = _connection
-                 .Query<RoleDto>("dbo.Role_Delete", commandType: System.Data.CommandType.StoredProcedure)
-                 .FirstOrDefault();
-            return role;
-        }
-        public List<PaymentDto> GetPayments()
-        {
-            var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
-                    "dbo.Payment_SelectAll",
-                    (payment, user) =>
-                    {
-                        payment.Student = user;
-                        return payment;
-                    },
-                            splitOn: "Id,UserId,ContractNumber",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return payments;
-        }
-
-        public PaymentDto GetPaymentById(int id)
-        {
-            var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
-                    "dbo.Payment_SelectById",
-                    (payment, user) =>
-                    {
-                        payment.Student = user;
-                        return payment;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return payment;
-        }
-
-        public PaymentDto GetPaymentByContractNumber(int contractNumber)
-        {
-            var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
-                    "dbo.Payment_SelectByContractNumber",
-                    (payment, user) =>
-                    {
-                        payment.Student = user;
-                        return payment;
-                    },
-                    new { contractNumber },
-                    splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return payment;
-        }
-
-        // should return id of inserted entity, use 'QuerySingle' method
-        public int AddPayment(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid)
-        {
-            var result = _connection
-                .QuerySingle<int>("dbo.Payment_Add",
-                new
+            var UserDictionary = new Dictionary<int, UserDto>();
+            var users = _connection.
+                Query<UserDto, RoleDto, UserDto>(
+                "dbo.User_SelectById",
+                (user, role) =>
                 {
-                    contractNumber,
-                    amount,
-                    date,
-                    period,
-                    IsPaid
+                    if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                    {
+                        userEntry = user;
+                        userEntry.Roles = new List<RoleDto>();
+                        UserDictionary.Add(userEntry.Id, userEntry);
+                    }
+
+                    userEntry.Roles.Add(role);
+                    return userEntry;
+                },
+               new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+            .FirstOrDefault();
+            return users;
+        }
+
+        public int AddUser(UserDto user)
+        {
+            return _connection
+                .QuerySingle<int>("dbo.User_Add", new
+                {
+                    user.FirstName,
+                    user.LastName,
+                    user.BirthDate,
+                    user.Login,
+                    user.Password,
+                    user.Phone,
+                    user.UserPic,
+                    user.Email,
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
-            return result;
         }
-
-        // should return affected rows' count, use 'Execute' method
-        public int UpdatePayment(PaymentDto payment)
+        public int UpdateUser(UserDto user)
         {
-            var result = _connection
-                .Execute("dbo.Course_Update",
-                new
+            return _connection
+                .Execute("dbo.User_Update", new
                 {
-
-                    payment.Amount,
-                    payment.Date,
-                    payment.Period,
-                    payment.IsPaid
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
+                    user.FirstName,
+                    user.LastName,
+                    user.BirthDate,
+                    user.Login,
+                    user.Password,
+                    user.Phone,
+                    user.UserPic,
+                    user.Email
+                }, commandType: System.Data.CommandType.StoredProcedure);
         }
-
-        // should return affected rows' count, use 'Execute' method
-        public int DeletePayment(int id)
+        public int DeleteUser(int id)
         {
-            var result = _connection
-                .Execute("dbo.Payment_Delete",
-                new
-                {
-                    id
-                },
+            return _connection
+                .Execute("dbo.User_Delete", new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
-            return result;
         }
-    
 
+        public int AddRoleToUser(UserRoleDto userRole)
+        {
+            return _connection
+               .QuerySingle<int>("dbo.RoleToUser_Add",
+               new { userRole.UserId, userRole.RoleId },
+               commandType: System.Data.CommandType.StoredProcedure);
+        }
 
+        public int DeleteRoleToUser(int id)
+        {
+            return _connection
+                .Execute("dbo.RoleToUser_Delete", new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public List<RoleDto> GetRoles()
+        {
+            return _connection
+                 .Query<RoleDto>("dbo.Role_SelectAll", commandType: CommandType.StoredProcedure)
+                 .ToList();
+        }
+        public RoleDto GetRoleById(int id)
+        {
+            return _connection
+                .Query<RoleDto>("dbo.Role_SelectById", new { id },
+                commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+        }
+        public int AddRole(RoleDto role)
+        {
+            return _connection
+                .QuerySingle<int>("dbo.Role_Add",
+                new { role.Name },
+                commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public int UpdateRole(RoleDto role)
+        {
+            return _connection
+                .Execute("dbo.Role_Update",
+                new { role.Id, role.Name },
+                commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public int DeleteRole(int id)
+        {
+            return _connection
+                .Execute("dbo.Role_Delete",
+                new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
+        }
     }
-
 }

@@ -15,5 +15,9 @@ namespace EducationSystem.Data.Models
                    Id == dto.Id &&
                    Name == dto.Name;
         }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

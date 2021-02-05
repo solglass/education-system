@@ -5,10 +5,7 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Models.InputModels
 {
-    public class ThemeInputModel
+    public class UserInputModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-       
     }
 }
