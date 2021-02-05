@@ -1,5 +1,6 @@
 ﻿using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
@@ -18,19 +19,19 @@ namespace EducationSystem.API.Controllers
     public class MaterialContoller : ControllerBase
     {
         private readonly ILogger<WeatherForecastController> _logger;
-        private MaterialRepository _repo;
+        private MaterialService _service;
         private MaterialMapper _mapper;
 
         public MaterialContoller()
         {
             _mapper = new MaterialMapper();
-            _repo = new MaterialRepository();
+            _service = new MaterialService();
         }
 
         [HttpGet]
         public ActionResult GetMaterials()
         {
-            var courses = _repo.GetMaterials();
+            var courses = _service.GetMaterials();
             var result = _mapper.FromDtos(courses);
             return Ok(result);
         }
@@ -39,7 +40,7 @@ namespace EducationSystem.API.Controllers
         [HttpGet("{id}")]
         public ActionResult GetMaterialById(int id)
         {
-            var course = _repo.GetMaterialById(id);
+            var course = _service.GetMaterialById(id);
             var result = _mapper.FromDto(course);
             return Ok(result);
         }
@@ -48,7 +49,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
             var newMaterial = _mapper.ToDto(materialInputModel);
-            _repo.AddMaterial(newMaterial);
+            _service.AddMaterial(newMaterial);
             return Ok("Материалы добавлены");
         }
 
@@ -56,7 +57,7 @@ namespace EducationSystem.API.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
-            _repo.UpdateMaterial(id, _mapper.ToDto(material));
+            _service.UpdateMaterial(id, _mapper.ToDto(material));
             return Ok("success");
         }
 
@@ -64,7 +65,7 @@ namespace EducationSystem.API.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteMaterial(int id)
         {
-            _repo.DeleteMaterialById(id);
+            _service.DeleteMaterialById(id);
             return Ok("success");
         }
     }
