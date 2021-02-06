@@ -135,7 +135,7 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem("Ошибка! Не получилось убрать тему из курса!");
         }
-
+        //__________________________________________________________
 
         [HttpGet("themes")]
         public ActionResult GetThemes()
