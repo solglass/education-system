@@ -33,7 +33,6 @@ namespace EducationSystem.Business
                 return -1;
             if (course.Themes != null && course.Themes.Count > 0)
             {
-               
                 foreach (var theme in course.Themes)
                 {
                     if (_courseRepo.AddCourse_Theme(index, theme.Id) <= 0) //если такая запись уже имеется??
@@ -42,7 +41,6 @@ namespace EducationSystem.Business
                         return -2;
                     }
                 }
-               
             }
             return 0;
         }
@@ -67,8 +65,19 @@ namespace EducationSystem.Business
 
         public int RemoveCourse(int id)
         {
-           return _courseRepo.DeleteCourse(id);
-             
+           return _courseRepo.DeleteCourse(id); 
         }
+
+        public int AddThemeToCourse(int courseId, int themeId)
+        {
+            return _courseRepo.AddCourse_Theme(courseId, themeId);
+        }
+
+        public int RemoveThemeFromCourse(int courseId, int themeId)
+        {
+           return _courseRepo.DeleteCourse_Theme(courseId, themeId);
+        }
+
+
     }
 }
