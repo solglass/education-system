@@ -316,5 +316,12 @@ namespace EducationSystem.Data
                     commandType: System.Data.CommandType.StoredProcedure);
             }
         }
+
+        public List<GroupReportDto> GenerateReport()
+        {
+            return _connection
+            .Query<GroupReportDto>("dbo.Create_Report", commandType: System.Data.CommandType.StoredProcedure)
+            .ToList();
+        }
     }
 }

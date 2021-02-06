@@ -236,6 +236,14 @@ namespace EducationSystem.Controllers
             var addGroup = _repo.AddTutorToGroup(tutorGroup);
             return Ok(addGroup);
         }
+
+        // https://localhost:44365/api/group/report
+        [HttpGet("report")]
+        public ActionResult GetReport()
+        {
+            var report = _repo.GenerateReport();
+            return Ok(report);
+        }
     }
     
 }
