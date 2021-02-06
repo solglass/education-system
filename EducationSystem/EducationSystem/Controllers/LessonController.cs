@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.Business;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +17,14 @@ namespace EducationSystem.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private LessonRepository _repo;
         private LessonMapper _lessonMapper;
+        private LessonService _lessonService;
 
         public LessonController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
             _repo = new LessonRepository();
             _lessonMapper = new LessonMapper();
+            _lessonService = new LessonService();
         }
 
         // https://localhost:50221/api/lesson/
@@ -49,7 +49,7 @@ namespace EducationSystem.Controllers
         [HttpGet]
         public ActionResult GetLessons()
         {
-            var result = _repo.GetLessons();
+            var result = _lessonService.GetLessons();
             return Ok(result);
         }
 
@@ -57,7 +57,7 @@ namespace EducationSystem.Controllers
         [HttpGet("{id}")]
         public ActionResult GetLessonById(int id)
         {
-            var result = _repo.GetLessonById(id);
+            var result = _lessonService.GetLessonById(id);
             return Ok(result);
         }
 
@@ -65,11 +65,11 @@ namespace EducationSystem.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteLesson(int id)
         {
-            _repo.DeleteLesson(id);
+            _lessonService.DeleteLesson(id);
             return Ok("Урок удалён");
         }
         // https://localhost:50221/api/lesson/5
-        [HttpPost("{id}")]
+        [HttpPut("{id}")]
         public ActionResult UpdateLesson(int id,[FromBody]LessonDto lessonDto)
         {
             _repo.UpdateLesson(lessonDto);
@@ -80,7 +80,7 @@ namespace EducationSystem.Controllers
         [HttpGet]
         public ActionResult GetFeedbacks()
         {
-            var result = _repo.GetFeedbacks();
+            var result = _lessonService.GetFeedbacks();
             return Ok(result);
         }
 
@@ -88,7 +88,7 @@ namespace EducationSystem.Controllers
         [HttpGet("{id}")]
         public ActionResult GetFeedbackById(int id)
         {
-            var result = _repo.GetFeedbackById(id);
+            var result = _lessonService.GetFeedbackById(id);
             return Ok(result);
         }
 
@@ -101,7 +101,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/feedback/5
-        [HttpPost("{id}")]
+        [HttpPut("{id}")]
         public ActionResult UpdateFeedback(int id,[FromBody]FeedbackDto feedbackDto)
         {
             _repo.UpdateFeedback(feedbackDto);
@@ -112,7 +112,7 @@ namespace EducationSystem.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteFeedback(int id)
         {
-            _repo.DeleteFeedback(id);
+            _lessonService.DeleteFeedback(id);
             return Ok("Отзыв удалён");
         }
 
@@ -120,7 +120,7 @@ namespace EducationSystem.Controllers
         [HttpGet]
         public ActionResult GetUnderstandingLevels()
         {
-            var result = _repo.GetUnderstandingLevels();
+            var result = _lessonService.GetUnderstandingLevels();
             return Ok(result);
         }
 
@@ -128,7 +128,7 @@ namespace EducationSystem.Controllers
         [HttpGet("{id}")]
         public ActionResult GetUnderstandingLevelById(int id)
         {
-            var result = _repo.GetUnderstandingLevelById(id);
+            var result = _lessonService.GetUnderstandingLevelById(id);
             return Ok(result);
         }
 
@@ -141,7 +141,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/understandingLevel/5
-        [HttpPost("{id}")]
+        [HttpPut("{id}")]
         public ActionResult UpdateUnderstandingLevel(int id,[FromBody]UnderstandingLevelDto understandingLevelDto)
         {
             _repo.UpdateUnderstandingLevel(understandingLevelDto);
@@ -152,7 +152,7 @@ namespace EducationSystem.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteUnderstandingLevel(int id)
         {
-            _repo.DeleteUnderstandingLevel(id);
+            _lessonService.DeleteUnderstandingLevel(id);
             return Ok("Сложность удалена");
         }
 
@@ -160,7 +160,7 @@ namespace EducationSystem.Controllers
         [HttpGet]
         public ActionResult GetAttendances()
         {
-            var result = _repo.GetAttendances();
+            var result =_lessonService.GetAttendances();
             return Ok(result);
         }
 
@@ -168,7 +168,7 @@ namespace EducationSystem.Controllers
         [HttpGet("{id}")]
         public ActionResult GetAttendanceById(int id)
         {
-            var result = _repo.GetAttendanceById(id);
+            var result = _lessonService.GetAttendanceById(id);
             return Ok(result);
         }
 
@@ -181,7 +181,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/attendance/5
-        [HttpPost("{id}")]
+        [HttpPut("{id}")]
         public ActionResult UpdateAttendance(int id,[FromBody]AttendanceDto attendance)
         {
             _repo.UpdateAttendance(attendance);
@@ -192,7 +192,7 @@ namespace EducationSystem.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteAttendance(int id)
         {
-            _repo.DeleteAttendance(id);
+            _lessonService.DeleteAttendance(id);
             return Ok("Посещаемость удалена");
         }
 
@@ -200,7 +200,7 @@ namespace EducationSystem.Controllers
         [HttpGet]
         public ActionResult GetLessonTheme()
         {
-            var result = _repo.GetLessonThemes();
+            var result = _lessonService.GetLessonThemes();
             return Ok(result);
         }
 
@@ -208,7 +208,7 @@ namespace EducationSystem.Controllers
         [HttpGet("{id}")]
         public ActionResult GetLessonThemeById(int id)
         {
-            var result = _repo.GetLessonThemeById(id);
+            var result = _lessonService.GetLessonThemeById(id);
             return Ok(result);
         }
 
@@ -221,7 +221,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/lesson-theme/3
-        [HttpPost("{id}")]
+        [HttpPut("{id}")]
         public ActionResult UpdateLessonTheme(int id,[FromBody]LessonThemeDto lessonTheme)
         {
             _repo.UpdateLessonTheme(lessonTheme);
@@ -232,7 +232,7 @@ namespace EducationSystem.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteLessonTheme(int id)
         {
-            _repo.DeleteAttendance(id);
+            _lessonService.DeleteAttendance(id);
             return Ok("Тема урока удалена");
         }
     }
