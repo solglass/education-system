@@ -131,6 +131,34 @@ namespace EducationSystem.Data
 
         }
 
+        public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
+        {
+            int attachmentId = AddAttachment(attachmentDto);
+            HomeworkRepository homeworkrepo = new HomeworkRepository();
+            Comment_AttachmentDto comment_AttachmentDto = new Comment_AttachmentDto
+            {
+                AttachmentId = attachmentId,
+                CommentId = commentId
+            };
+            homeworkrepo.AddComment_Attachment(comment_AttachmentDto);
+            return attachmentId;
+
+        }
+
+        public int AddAttachmentToHomeworkAttempt (AttachmentDto attachmentDto, int homeworkAttemptId)
+        {
+            int attachmentId = AddAttachment(attachmentDto);
+            HomeworkAttemptRepository homeworkAttRepo = new HomeworkAttemptRepository();
+            HomeworkAttempt_AttachmentDto homework_AttachmentDto = new HomeworkAttempt_AttachmentDto
+            {
+                AttachmentId = attachmentId,
+                HomeworkAttemptId = homeworkAttemptId
+            };
+            homeworkAttRepo.AddHomeworkAttempt_Attachment(homework_AttachmentDto);
+            return attachmentId;
+
+        }
+
 
 
     }

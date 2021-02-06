@@ -26,6 +26,14 @@ namespace EducationSystem.Business
         public int ModifyAttachmentType(int id, string name) { return _attachmentRepository.ModifyAttachmentType(id, name); }
         public int AddAttachmentType(string name) { return _attachmentRepository.AddAttachmentType(name); }
         public int DeleteAttachmentTypeById(int id) { return _attachmentRepository.DeleteAttachmentTypeById(id); }
+        public int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId)
+        {
+            return _attachmentRepository.AddAttachmentToHomeworkAttempt(attachmentDto, homeworkAttemptId);
+        }
+        public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
+        {
+            return _attachmentRepository.AddAttachmentToComment(attachmentDto, commentId);
+        }
 
     }
 }

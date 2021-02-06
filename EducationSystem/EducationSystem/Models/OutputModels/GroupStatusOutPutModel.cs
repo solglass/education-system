@@ -1,6 +1,6 @@
-﻿namespace EducationSystem.API.Models
+﻿namespace EducationSystem.API.Models.OutputModels
 {
-    public class CroupStatusOutputModel
+    public class GroupStatusOutputModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

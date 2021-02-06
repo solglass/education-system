@@ -79,6 +79,7 @@
     <Folder Include="StoredProcedures\Student_Group" />
     <Folder Include="StoredProcedures\TeacherGroup" />
     <Folder Include="Scripts" />
+    <Folder Include="StoredProcedures\Tutor_Group" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -140,18 +141,18 @@
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Delete.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Select all.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Select by id.sql" />
-    <Build Include="StoredProcedures\Group\Group_Add.sql" />
-    <Build Include="StoredProcedures\Group\Group_Delete.sql" />
-    <Build Include="StoredProcedures\Group\Group_SelectAll.sql" />
-    <Build Include="StoredProcedures\Group\Group_SelectById.sql" />
-    <Build Include="StoredProcedures\Group\Group_Update.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_Add.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_Delete.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_SelectAll.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_SelectById.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_Update.sql" />
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Add.sql" />
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Delete.sql" />
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_SelectAll.sql" />
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_SelectById.sql" />
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Update.sql" />
-    <Build Include="StoredProcedures\Group_Material\Group_Material_Add.sql" />
-    <Build Include="StoredProcedures\Group_Material\Group_Material_Delete.sql" />
+    <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Add.sql" />
+    <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\Material_Add.sql" />
     <Build Include="StoredProcedures\Material\Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
@@ -187,8 +188,10 @@
     <Build Include="Tables\dbo.Comment_Attachment.sql" />
     <Build Include="Tables\dbo.Group.sql" />
     <Build Include="Tables\dbo.Group_Material.sql" />
-    <PostDeploy Include="Scripts\ForeignKeys.sql" />
+    <None Include="Scripts\ForeignKeys.sql" />
     <Build Include="Tables\dbo.GroupStatus.sql" />
     <Build Include="Tables\dbo.Payment.sql" />
+    <PostDeploy Include="Scripts\Create_Report.sql" />
+    <Build Include="StoredProcedures\Attachment\Attachment_SelectByCommentId.sql" />
   </ItemGroup>
 </Project>
