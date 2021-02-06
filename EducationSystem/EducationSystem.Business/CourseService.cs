@@ -17,19 +17,58 @@ namespace EducationSystem.Business
         }
 
         public List<CourseDto> GetCourses()
-        {
-            var courses = _courseRepo.GetCourses();
-            if(courses!=null)
-            {
-                foreach (var course in courses)
-                {
-                    course.Themes = _courseRepo.GetThemesByCourseId(course.Id);
-                    course.Groups = _groupRepo.GetGroupsByCourseId(course.Id);
-                }
-            }
-            return courses;
+        { 
+            return _courseRepo.GetCourses();
         }
 
+        public CourseDto GetCourseById(int id)
+        {
+            return _courseRepo.GetCourseById(id);
+        }
 
+        public int UpdateCourse (CourseDto course)
+        {
+            int index=_courseRepo.UpdateCourse(course);
+            if (index <= 0)
+                return -1;
+            if (course.Themes != null && course.Themes.Count > 0)
+            {
+               
+                foreach (var theme in course.Themes)
+                {
+                    if (_courseRepo.AddCourse_Theme(index, theme.Id) <= 0) //если такая запись уже имеется??
+                    {
+                        //метод для удаления тем из списка курса        
+                        return -2;
+                    }
+                }
+               
+            }
+            return 0;
+        }
+        public int AddCourse(CourseDto course)
+        {
+            int index = _courseRepo.AddCourse(course);
+            if (index <= 0)
+                return -1;
+            if(course.Themes!=null && course.Themes.Count>0)
+            {
+                foreach(var theme in course.Themes)
+                {
+                    if (_courseRepo.AddCourse_Theme(index, theme.Id) <= 0)
+                    {
+                        //метод для удаления тем из списка курса
+                        return -2;
+                    }
+                }
+            }
+            return index;
+        }
+
+        public int RemoveCourse(int id)
+        {
+           return _courseRepo.DeleteCourse(id);
+             
+        }
     }
 }

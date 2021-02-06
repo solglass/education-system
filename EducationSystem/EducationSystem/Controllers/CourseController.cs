@@ -20,7 +20,7 @@ namespace EducationSystem.API.Controllers
     [Route("api/[controller]")]
     public class CourseController : ControllerBase
     {
-        /* private readonly ILogger<CourseController> _logger;
+        private readonly ILogger<CourseController> _logger;
         private CourseRepository _repo;
         private CourseMapper _courseMapper;
         private ThemeMapper _themeMapper;
@@ -36,7 +36,6 @@ namespace EducationSystem.API.Controllers
         [HttpGet]
         public ActionResult GetCourses()
         {
-            //var courses =_courseMapper.FromDtos( _repo.GetCourses());
             List<CourseOutputModel> courses;
             try
             {
@@ -50,7 +49,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpGet("{id}")]
-       public ActionResult GetCourse(int id)       //TODO list of groupids and themeids
+       public ActionResult GetCourse(int id)       
         {
             CourseOutputModel course;
             try
@@ -66,9 +65,8 @@ namespace EducationSystem.API.Controllers
 
 
         [HttpPost]
-        public ActionResult CreateCourse([FromBody] CourseInputModel course)    //TODO mapper and exceptions
+        public ActionResult CreateCourse([FromBody] CourseInputModel course)    
         {
-            // CourseDto courseDto = _courseMapper.ToDto(course);
             int result;
             try
             {
@@ -78,16 +76,17 @@ namespace EducationSystem.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            if (result>0)
+            if (result > 0)
                 return Ok($"Курс №{result} добавлен!");
+            else if (result == -1)
+                return Problem("Ошибка! Не получилось добавить курс!");
             else
-                return Problem("о-ё-ё-й");
+                return Problem($"Ошибка! К созданному курсу не удалось привязать темы!") ;
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)    //TODO mapper and exceptions
+        public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
         {
-            // CourseDto courseDto = _courseMapper.ToDto(course);
             int result;
             try
             {
@@ -97,32 +96,33 @@ namespace EducationSystem.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            if (result > 0)
+            if (result == 0)
                 return Ok("Курс обновлен!");
+            else if (result == -1)
+                return Problem("Ошибка! Не получилось обновить курс!");
             else
-                return Problem("о-ё-ё-й");
+                return Problem($"Ошибка! К обновленному курсу не удалось привязать темы!"); 
         }
 
-        //-------------------------------------------------------------
         [HttpDelete("{id}")]
         public ActionResult RemoveCourseInfo(int id)
         {
             var result = _courseService.RemoveCourse(id);
-            if (result > 0)
+            if (result ==1)
                 return Ok("Курс удален!");
             else
-                return Problem("о-ё-ё-й");
+                return Problem("Ошибка! Не получилось удалить выбранный курс!");
         }
 
         // https://localhost:XXXXX/api/course/3/theme/8
         [HttpPost("{courseId}/theme/{themeId}")]
         public ActionResult AddThemeToCourse(int courseId, int themeId)
         {
-            var result = _repo.AddCourse_Theme(courseId, themeId);
+            int result = _courseService.AddThemeToCourse(courseId, themeId);
             if (result > 0) 
                 return Ok(result);
             else 
-                return Problem("о-ё-ё-й");
+                return Problem("Ошибка! Не получилось добавить к курсу тему!");
         }
 
         // https://localhost:XXXXX/api/course/3/theme/8
@@ -198,7 +198,7 @@ namespace EducationSystem.API.Controllers
                 return Ok("Тема удалена!");
             else
                 return Problem("Тема не обнаружена!");
-        }*/
+        }
     
     }
 }
