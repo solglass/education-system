@@ -378,7 +378,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatus()
+        public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatuses()
         {
             var result = _connection
                  .Query<HomeworkAttemptStatusDto>("dbo.HomeworkAttemptStatus_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
