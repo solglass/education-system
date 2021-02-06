@@ -422,10 +422,10 @@ namespace EducationSystem.Data
                 .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public Comment_AttachmentDto AddComment_Attachment(Comment_AttachmentDto NewObject)
+        public int AddComment_Attachment(Comment_AttachmentDto NewObject)
         {
             var data = _connection
-                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Add",
+                .QuerySingleOrDefault<int>("dbo.Comment_Attachment_Add",
                 new
                 {
                     commentId = NewObject.CommentId,
