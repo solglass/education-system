@@ -64,7 +64,7 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
-                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.Data},
+                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.LessonDate},
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -80,7 +80,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.Data, lessonDto.IsDeleted },
+                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.LessonDate, lessonDto.IsDeleted },
                 commandType: CommandType.StoredProcedure);
         }
 

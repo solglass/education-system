@@ -14,7 +14,7 @@ namespace EducationSystem.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        /*private readonly ILogger<WeatherForecastController> _logger;
         private UserRepository _repo;
 
         public UserController(ILogger<WeatherForecastController> logger)
@@ -27,7 +27,7 @@ namespace EducationSystem.Controllers
         [HttpPost("register")]
         public ActionResult Register([FromBody] dynamic user)
         {
-            _repo.AddUser(/*user*/);
+            _repo.AddUser();
             return Ok("пользователь зарегистрирован");
         }
 
@@ -59,7 +59,7 @@ namespace EducationSystem.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateUserInfo(int id, [FromBody] dynamic data)
         {
-            _repo.UpdateUser(/*userData*/);
+            _repo.UpdateUser();
             return Ok("success");
         }
 
@@ -67,7 +67,7 @@ namespace EducationSystem.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteUser(int id)
         {
-            _repo.DeleteUser(/*userData*/);
+            _repo.DeleteUser();
             return Ok("success");
         }
         // https://localhost:50221/api/user/payment/payment/name
@@ -110,7 +110,7 @@ namespace EducationSystem.Controllers
             _repo.DeletePayment(id);
             return Ok("success");
         }
-
+        */
 
 
 

@@ -20,7 +20,7 @@ namespace EducationSystem.API.Controllers
     [Route("api/[controller]")]
     public class CourseController : ControllerBase
     {
-        private readonly ILogger<CourseController> _logger;
+        /* private readonly ILogger<CourseController> _logger;
         private CourseRepository _repo;
         private CourseMapper _courseMapper;
         private ThemeMapper _themeMapper;
@@ -34,7 +34,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetCourses()            
+        public ActionResult GetCourses()
         {
             //var courses =_courseMapper.FromDtos( _repo.GetCourses());
             List<CourseOutputModel> courses;
@@ -50,7 +50,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetCourse(int id)       //TODO list of groupids and themeids
+       public ActionResult GetCourse(int id)       //TODO list of groupids and themeids
         {
             CourseOutputModel course;
             try
@@ -198,6 +198,7 @@ namespace EducationSystem.API.Controllers
                 return Ok("Тема удалена!");
             else
                 return Problem("Тема не обнаружена!");
-        }
+        }*/
+    
     }
 }
