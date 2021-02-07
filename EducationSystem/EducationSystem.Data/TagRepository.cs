@@ -153,5 +153,12 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+        public List<ThemeTagDto> GetThemeTagByThemeId(int Id)
+        {
+            var result = _connection
+                .Query<ThemeTagDto>("dbo.Theme_Tag_SelectByThemeId", new { Id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
     }
 }
