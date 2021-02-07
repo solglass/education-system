@@ -109,6 +109,12 @@ namespace EducationSystem.Data
                 .Execute("dbo.Theme_Tag_Delete", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+        public int ThemeTagDelete(int themeId, int tagId)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_Tag_DeleteByTagIdAndThemeId", new { themeId=themeId, tagId=tagId }, commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
         public int ThemeTagAdd(ThemeTagDto Tag)
         {
             var result = _connection
@@ -145,6 +151,13 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .QuerySingle<int>("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public List<ThemeTagDto> GetThemeTagByThemeId(int Id)
+        {
+            var result = _connection
+                .Query<ThemeTagDto>("dbo.Theme_Tag_SelectByThemeId", new { Id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
             return result;
         }
     }

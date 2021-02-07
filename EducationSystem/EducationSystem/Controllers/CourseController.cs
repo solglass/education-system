@@ -6,6 +6,7 @@ using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,6 +19,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:50221/api/course/
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CourseController : ControllerBase
     {
         private readonly ILogger<CourseController> _logger;
@@ -48,7 +50,7 @@ namespace EducationSystem.API.Controllers
             return Ok(courses);
         }
 
-        [HttpGet("{id}")]
+       [HttpGet("{id}")]
        public ActionResult GetCourse(int id)       
         {
             CourseOutputModel course;
@@ -65,6 +67,7 @@ namespace EducationSystem.API.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles ="Админ, Менеджер, Методист")]
         public ActionResult CreateCourse([FromBody] CourseInputModel course)    
         {
             int result;
@@ -85,6 +88,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
         {
             int result;
@@ -105,6 +109,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult RemoveCourseInfo(int id)
         {
             var result = _courseService.RemoveCourse(id);
@@ -116,6 +121,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:XXXXX/api/course/3/theme/8
         [HttpPost("{courseId}/theme/{themeId}")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult AddThemeToCourse(int courseId, int themeId)
         {
             int result = _courseService.AddThemeToCourse(courseId, themeId);
@@ -127,6 +133,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:XXXXX/api/course/3/theme/8
         [HttpDelete("{courseId}/theme/{themeId}")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult RemoveThemeFromCourse(int courseId, int themeId)
         {
             var result = _courseService.RemoveThemeFromCourse(courseId, themeId);
@@ -135,7 +142,7 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem("Ошибка! Не получилось убрать тему из курса!");
         }
-        //__________________________________________________________
+       
 
         [HttpGet("themes")]
         public ActionResult GetThemes()
@@ -143,7 +150,7 @@ namespace EducationSystem.API.Controllers
             List<ThemeOutputModel> themes;
             try
             {
-                themes = _themeMapper.FromDtos(_repo.GetThemes());
+                themes = _themeMapper.FromDtos(_courseService.GetThemes());
             }
             catch (Exception ex)
             {
@@ -152,14 +159,14 @@ namespace EducationSystem.API.Controllers
             return Ok(themes);
         }
 
-
+       
         [HttpGet("theme/{id}")]
         public ActionResult GetTheme(int id)
         {
             ThemeOutputModel theme;
             try
             {
-                theme = _themeMapper.FromDto(_repo.GetThemeById(id));
+                theme = _themeMapper.FromDto(_courseService.GetThemeById(id));
             }
             catch (Exception ex)
             {
@@ -168,37 +175,62 @@ namespace EducationSystem.API.Controllers
             return Ok(theme);
 
         }
-
+        
         [HttpPost("theme")]
+        [Authorize(Roles = "Админ, Методист")]
         public ActionResult CreateTheme([FromBody] ThemeInputModel inputModel)
         {
-            ThemeDto themeDto;
+            int result;
             try
             {
-               themeDto  = _themeMapper.ToDto(inputModel);
+               result = _courseService.AddTheme(_themeMapper.ToDto(inputModel));
             }
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
-            var result = _repo.AddTheme(themeDto.Name);
             if (result > 0)
-                return Ok("Тема добавлена!");
+                return Ok($"Тема №{result} добавлена!");
+            else if (result == -1)
+                return Problem("Ошибка! Не получилось добавить тему!");
             else
-                return Problem("о-ё-ё-й!");
+                return Problem("Ошибка! К созданной теме не удалось привязать теги!");
+        }
+        [HttpPost("theme/{themeId}/tag/{tagId}")]
+        [Authorize(Roles = "Админ, Методист")]
+        public ActionResult AddTagToTheme(int themeId, int tagId)
+        {
+            var result = _courseService.AddTagToTheme(themeId, tagId);
+            if (result > 0)
+                return Ok("Тег добавлен к теме!");
+            else
+                return Problem("Ошибка! Не получилось добавить тег к теме!");
         }
 
+        [HttpDelete("theme/{themeId}/tag/{tagId}")]
+        [Authorize(Roles = "Админ, Методист")]
+        public ActionResult RemoveTagFromTheme(int themeId, int tagId)
+        {
+            var result = _courseService.RemoveTagFromTheme(themeId, tagId);
+            if (result > 0)
+                return Ok("Тег отвязан от темы!");
+            else
+                return Problem("Ошибка! Не получилось отвязать тег от темы!");
+        }
+
+        //__________________________________________________________
 
         [HttpDelete("theme/{id}")]
+        [Authorize(Roles = "Админ, Методист")]
         public ActionResult RemoveTheme(int id)
         {
-            var result = _repo.DeleteTheme(id);
+            var result = _courseService.DeleteTheme(id);
             if (result > 0)
                 return Ok("Тема удалена!");
             else
-                return Problem("Тема не обнаружена!");
+                return Problem("Ошибка! Не получилось удалить тему!");
         }
-    
+
+     
     }
 }
