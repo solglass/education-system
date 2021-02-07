@@ -21,17 +21,6 @@ namespace EducationSystem.Data.Models
             {
                 return false;
             }
-            if (courseObj.Groups == null || Groups == null || courseObj.Groups.Count != Groups.Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < Groups.Count; i++)
-            {
-                if (courseObj.Groups[i].StartDate != Groups[i].StartDate)
-                {
-                    return false;
-                }
-            }
             if (courseObj.Themes == null || Themes == null || courseObj.Themes.Count != Themes.Count)
             {
                 return false;

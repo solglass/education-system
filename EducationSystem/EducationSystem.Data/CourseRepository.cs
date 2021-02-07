@@ -49,13 +49,13 @@ namespace EducationSystem.Data
 
         public CourseDto GetCourseById(int id)
         {
-            var groupDictionary = new Dictionary<int, GroupDto>();
+            //var groupDictionary = new Dictionary<int, GroupDto>();
             var themeDictionary = new Dictionary<int, ThemeDto>();
             var courseEntry = new CourseDto();
             var course = _connection
-                .Query<CourseDto, ThemeDto, GroupDto, GroupStatusDto, CourseDto>(
+                .Query<CourseDto, ThemeDto, /*GroupDto, GroupStatusDto,*/ CourseDto>(
                     "dbo.Course_SelectById",
-                    (course, theme, group, groupStatus) =>
+                    (course, theme/*, group, groupStatus*/) =>
                     {
                         if (courseEntry.Id == 0)
                         {
@@ -70,13 +70,13 @@ namespace EducationSystem.Data
                             themeDictionary.Add(themeEntry.Id, themeEntry);
                         }
                         
-                        if (group != null && groupStatus != null && !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
-                        {
-                            groupEntry = group;
-                            group.GroupStatus = groupStatus;
-                            courseEntry.Groups.Add(group);
-                            groupDictionary.Add(groupEntry.Id, groupEntry);
-                        }
+                        //if (group != null && groupStatus != null && !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
+                        //{
+                        //    groupEntry = group;
+                        //    group.GroupStatus = groupStatus;
+                        //    courseEntry.Groups.Add(group);
+                        //    groupDictionary.Add(groupEntry.Id, groupEntry);
+                        //}
                         return courseEntry;
                     },
                     new { id },
@@ -131,7 +131,17 @@ namespace EducationSystem.Data
             return result;
         }
 
-
+        public int DeleteCourseHard (int id)
+        {
+            var result = _connection
+                .Execute("dbo.Course_CompleteDelete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
 
         public List<ThemeDto> GetThemes()
         {
