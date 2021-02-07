@@ -68,6 +68,20 @@ namespace EducationSystem.Data
             return users;
         }
 
+        public int ChangeUserPassword (int id, string oldPassword, string newPassword)
+        {
+
+            return _connection
+               .Execute("dbo.User_Change_Password", new
+               {
+                   id,
+                   oldPassword,
+                   newPassword
+
+               }, commandType: System.Data.CommandType.StoredProcedure);
+
+        }
+
         public int AddUser(UserDto user)
         {
             return _connection
@@ -89,6 +103,7 @@ namespace EducationSystem.Data
             return _connection
                 .Execute("dbo.User_Update", new
                 {
+                    user.Id,
                     user.FirstName,
                     user.LastName,
                     user.BirthDate,
