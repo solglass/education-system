@@ -209,6 +209,27 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem("Ошибка! Не получилось удалить тему!");
         }
-    
+
+        [HttpPost("theme/{themeId}/tag/{tagId}")]
+        [Authorize(Roles = "Админ, Методист")]
+        public ActionResult AddTagToTheme(int themeId, int tagId)
+        {
+            var result = _courseService.AddTagToTheme(themeId, tagId);
+            if (result > 0)
+                return Ok("Тег добавлен к теме!");
+            else
+                return Problem("Ошибка! Не получилось добавить тег к теме!");
+        }
+
+        [HttpDelete("theme/{themeId}/tag/{tagId}")]
+        [Authorize(Roles = "Админ, Методист")]
+        public ActionResult RemoveTagFromTheme(int themeId, int tagId)
+        {
+            var result = _courseService.RemoveTagFromTheme(themeId, tagId);
+            if (result > 0)
+                return Ok("Тег отвязан от темы!");
+            else
+                return Problem("Ошибка! Не получилось отвязать тег от темы!");
+        }
     }
 }

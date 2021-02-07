@@ -112,6 +112,15 @@ namespace EducationSystem.Business
             return index;
         }
 
+        public int AddTagToTheme(int themeId, int tagId)
+        {
+            return _tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = themeId, TagId = tagId });
+        }
+
+        public int RemoveTagFromTheme(int themeId, int tagId)
+        {
+            return _tagRepo.ThemeTagDelete(themeId, tagId );
+        }
         public int DeleteTheme(int id)
         {
            return _courseRepo.DeleteTheme(id);
