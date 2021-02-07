@@ -81,6 +81,9 @@
     <Folder Include="Scripts" />
     <Folder Include="StoredProcedures\Tutor_Group" />
     <Folder Include="StoredProcedures\Theme_Tag" />
+    <Folder Include="StoredProcedures\Tag" />
+    <Folder Include="StoredProcedures\Material_Tag" />
+    <Folder Include="StoredProcedures\Homework_Tag" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -205,6 +208,21 @@
     <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_Delete.sql" />
     <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_SelectAll.sql" />
     <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_SelectById.sql" />
+    <Build Include="StoredProcedures\Tag\dbo.Tag_Add.sql" />
+    <Build Include="StoredProcedures\Tag\dbo.Tag_Delete.sql" />
+    <Build Include="StoredProcedures\Tag\dbo.Tag_SelectAll.sql" />
+    <Build Include="StoredProcedures\Tag\dbo.Tag_SelectById.sql" />
+    <Build Include="StoredProcedures\Tag\dbo.Tag_Update.sql" />
+    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Add.sql" />
+    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Delete.sql" />
+    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_SelectAll.sql" />
+    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_SelectById.sql" />
+    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Update.sql" />
+    <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Add.sql" />
+    <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Delete.sql" />
+    <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectAll.sql" />
+    <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectById.sql" />
+    <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Update.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_DeleteByTagIdAndThemeId.sql" />
