@@ -20,12 +20,21 @@ namespace EducationSystem.API.Mappers
                 throw new Exception("Ошибка! Не было передано значение Description!");
             if (inputModel.Duration<1)
                 throw new Exception("Ошибка! Неверное значение Duration!");
+            List<ThemeDto> themes = new List<ThemeDto>();
+            if(inputModel.ThemeIds!=null && inputModel.ThemeIds.Count>0)
+            {
+                foreach(var id in inputModel.ThemeIds)
+                {
+                    themes.Add(new ThemeDto { Id = id });
+                }
+            }
             return new CourseDto
             {
                 Id=inputModel.Id,
                 Name = inputModel.Name,
                 Description=inputModel.Description,
-                Duration=inputModel.Duration                //TODO list of theme ids 
+                Duration=inputModel.Duration,                //TODO list of theme ids 
+                Themes = themes
             };
         }
 
@@ -53,17 +62,12 @@ namespace EducationSystem.API.Mappers
                 throw new Exception("Ошибка! Курс не найден!");
             }
             var themeMapper = new ThemeMapper();
-            var groupMapper = new GroupMapper();
             var themes = new List<ThemeOutputModel>();
-            var groups = new List<GroupOutputModel>();
             if(courseDto.Themes!=null && courseDto.Themes.Count>0)
             {
                 themes = themeMapper.FromDtos(courseDto.Themes);
             }
-            if (courseDto.Groups != null && courseDto.Groups.Count > 0)
-            {
-                groups = groupMapper.FromDtos(courseDto.Groups);
-            }
+           
             return new CourseOutputModel()
             {
                 Id = courseDto.Id,
@@ -71,7 +75,6 @@ namespace EducationSystem.API.Mappers
                 Description = courseDto.Description,
                 Duration = courseDto.Duration,
                 Themes = themes,
-                Groups = groups
             };
         }
 

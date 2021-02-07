@@ -265,6 +265,20 @@ namespace EducationSystem.Data
             return result;
         }
 
+        public int AddComment(CommentDto comment)
+        {
+            var result = _connection
+                .QuerySingle<int>("dbo.Comment_Add",
+                new
+                {
+                    message = comment.Message,
+                    author = comment.Author,
+                    attempt = comment.HomeworkAttempt
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
         public List<CommentDto> GetComments()
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
@@ -378,7 +392,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatus()
+        public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatuses()
         {
             var result = _connection
                  .Query<HomeworkAttemptStatusDto>("dbo.HomeworkAttemptStatus_SelectAll", commandType: System.Data.CommandType.StoredProcedure)

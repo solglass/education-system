@@ -16,10 +16,19 @@ namespace EducationSystem.API.Mappers
             {
                 throw new Exception("Ошибка! Не было передано значение Name!");
             }
+            List<TagDto> tags = new List<TagDto>();
+            if (inputModel.TagIds != null && inputModel.TagIds.Count > 0)
+            {
+                foreach (var id in inputModel.TagIds)
+                {
+                    tags.Add(new TagDto { Id = id });
+                }
+            }
             return new ThemeDto()
             {
                 Id=inputModel.Id,
-                Name=inputModel.Name
+                Name=inputModel.Name,
+                Tags=tags
             };
         }
 
@@ -40,14 +49,22 @@ namespace EducationSystem.API.Mappers
 
         public ThemeOutputModel FromDto(ThemeDto themeDto)
         {
+            var tagMapper = new TagMapper();
+
             if(themeDto==null)
             {
                 throw new Exception("Ошибка! Тема не найдена!");
             }
+            var tags = new List<TagOutputModel>();
+            if (themeDto.Tags != null && themeDto.Tags.Count > 0)
+            {
+                tags = tagMapper.FromDtos(themeDto.Tags);
+            }
             return new ThemeOutputModel()
             {
                 Id=themeDto.Id,
-                Name=themeDto.Name
+                Name=themeDto.Name,
+                Tags=tags
             };
         }
 

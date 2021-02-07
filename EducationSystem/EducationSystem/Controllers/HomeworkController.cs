@@ -34,10 +34,10 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework
         [HttpPost]
-        public ActionResult Register([FromBody] HomeworkDto homework)
+        public ActionResult AddHomework([FromBody] HomeworkDto homework)
         {
             _repo.AddHomework(homework);
-            return Ok("success");
+            return Ok("Задание добавлено");
         }
 
         // https://localhost:44365/api/homework
@@ -50,13 +50,13 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/42
         [HttpGet("{id}")]
-        public dynamic GetHomeworkById(int id)
+        public ActionResult GetHomeworkById(int id)
         {
             var results = _repo.GetHomeworkById(id);
             return Ok(results);
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public ActionResult GetHomeworkAttemptsByHomeworkId(int id)
         {
             var outputModel = _homeworkAttemptMapper.FromDtos(_repo.GetHomeworkAttemptsByHomeworkId(id));
@@ -101,7 +101,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpGet("homeworkAttempts/{id}")]
-        public dynamic GetHomeworkAttemptsById(int id)
+        public ActionResult GetHomeworkAttemptById(int id)
         {
             var results = _repo.GetHomeworkAttemptById(id);
             return Ok(results);
@@ -109,7 +109,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpPut("homeworkAttempts/{id}")]
-        public ActionResult UpdateHomeworkAttempt(int id, [FromBody] HomeworkAttemptInputModel inputModel) 
+        public ActionResult UpdateHomeworkAttempt(int id, [FromBody] HomeworkAttemptInputModel inputModel)
         {
             HomeworkAttemptDto attempt = _homeworkAttemptMapper.ToDto(inputModel);
             _repo.UpdateHomeworkAttempt(attempt);
@@ -117,11 +117,19 @@ namespace EducationSystem.API.Controllers
         }
 
         // https://localhost:44365/api/homework/homeworkAttempts/42
-        [HttpGet("homeworkAttempts/{id}")]
+        [HttpDelete("homeworkAttempts/{id}")]
         public ActionResult DeleteHomeworkAttempt(int id)
         {
-            var results = _repo.DeleteHomeworkAttempt(id);
+            _repo.DeleteHomeworkAttempt(id);
             return Ok("Задание удалено");
+        }
+
+        //https://localhost:44365/api/homework/comment
+        [HttpPost]
+        public ActionResult AddComment([FromBody] CommentDto comment)
+        {
+            _repo.AddComment(comment);
+            return Ok("Комментарий добавлен!");
         }
 
         // https://localhost:44365/api/homework/comments
@@ -134,15 +142,15 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/comments/42
         [HttpGet("comments/{id}")]
-        public dynamic GetCommentById(int id)
+        public ActionResult GetCommentById(int id)
         {
             var results = _repo.GetCommentById(id);
             return Ok(results);
         }
 
         // https://localhost:44365/api/homework/homework_Theme/42
-        [HttpGet("homeworkTheme/{id}")]
-        public dynamic DeleteHomework_Theme(int id)
+        [HttpDelete("homeworkTheme/{id}")]
+        public ActionResult DeleteHomework_Theme(int id)
         {
             var results = _repo.DeleteHomework_Theme(id);
             return Ok(results);
@@ -150,15 +158,15 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/HomeworkAttemptStatus
         [HttpGet("HomeworkAttemptStatus")]
-        public ActionResult GetHomeworkAttemptStatus()
+        public ActionResult GetHomeworkAttemptStatuses()
         {
-            var results = _repo.GetHomeworkAttemptStatus();
+            var results = _repo.GetHomeworkAttemptStatuses();
             return Ok(results);
         }
 
         // https://localhost:44365/api/homework/HomeworkAttemptStatus/42
-        [HttpGet("HomeworkAttemptStatus/{id}")]
-        public dynamic DeleteHomeworkAttemptStatus(int id)
+        [HttpDelete("HomeworkAttemptStatus/{id}")]
+        public ActionResult DeleteHomeworkAttemptStatus(int id)
         {
             var results = _repo.DeleteHomeworkAttemptStatus(id);
             return Ok(results);
