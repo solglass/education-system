@@ -25,8 +25,11 @@ namespace EducationSystem.Business
         {
             _lessonRepository.DeleteLesson(id);
         }
-       /* public AddLesson
-        * public UpdateLesson
+        public void AddLesson(LessonDto lesson)
+        {
+            _lessonRepository.AddLesson(lesson);
+        }
+        /* public UpdateLesson
         */
        public List<FeedbackDto> GetFeedbacks()
         {

@@ -20,9 +20,6 @@ namespace EducationSystem.API.Mappers
                 Messege = inputModel.Messege,
                 LessonID = inputModel.LessonID,
                 UnderstandingLevelID = inputModel.UnderstandingLevelID,
-                Lesson = new LessonDto {ID = inputModel.Lesson.ID },
-                User = new UserDto { Id = inputModel.UserID},
-                UnderstandingLevel = new UnderstandingLevelDto {ID = inputModel.UnderstandingLevel.ID }
             };
         }
 
