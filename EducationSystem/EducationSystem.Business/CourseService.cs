@@ -9,11 +9,16 @@ namespace EducationSystem.Business
    public class CourseService
     {
         private CourseRepository _courseRepo;
-        private GroupRepository _groupRepo;
+        private TagRepository _tagRepo;
+        private LessonRepository _lessonRepo;
+        private HomeworkRepository _homeworkRepo;
+
         public CourseService()
         {
             _courseRepo = new CourseRepository();
-            _groupRepo = new GroupRepository();
+            _tagRepo = new TagRepository();
+            _homeworkRepo = new HomeworkRepository();
+            _lessonRepo = new LessonRepository();
         }
 
         public List<CourseDto> GetCourses()
@@ -31,17 +36,6 @@ namespace EducationSystem.Business
             int index=_courseRepo.UpdateCourse(course);
             if (index <= 0)
                 return -1;
-            if (course.Themes != null && course.Themes.Count > 0)
-            {
-                foreach (var theme in course.Themes)
-                {
-                    if (_courseRepo.AddCourse_Theme(index, theme.Id) <= 0) //если такая запись уже имеется??
-                    {
-                        //метод для удаления тем из списка курса        
-                        return -2;
-                    }
-                }
-            }
             return 0;
         }
         public int AddCourse(CourseDto course)
@@ -55,8 +49,8 @@ namespace EducationSystem.Business
                 {
                     if (_courseRepo.AddCourse_Theme(index, theme.Id) <= 0)
                     {
-                        //метод для удаления тем из списка курса
-                        return -2;
+                        RemoveAllCourseThemesbyCourseId(index, course.Themes);
+                        return -2-index;
                     }
                 }
             }
@@ -78,6 +72,109 @@ namespace EducationSystem.Business
            return _courseRepo.DeleteCourse_Theme(courseId, themeId);
         }
 
+        public List<ThemeDto> GetThemes()
+        {
+            return _courseRepo.GetThemes();
+        }
 
+        public ThemeDto GetThemeById(int id)
+        {
+            return _courseRepo.GetThemeById(id);
+        }
+
+        public int AddTheme(ThemeDto theme)
+        {
+            int index = _courseRepo.AddTheme(theme.Name);
+            if (index <= 0)
+                return -1;
+            if (theme.Tags != null && theme.Tags.Count > 0)
+            {
+                foreach (var tag in theme.Tags)
+                {
+                    if (_tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = index, TagId = tag.Id }) <= 0)
+                    {
+                        RemoveAllThemeTagbyThemeId(index, theme.Tags);
+                        return -2-index;
+                    }
+                }
+            }
+            return index;
+        }
+
+        public int AddTagToTheme(int themeId, int tagId)
+        {
+            return _tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = themeId, TagId = tagId });
+        }
+
+        public int RemoveTagFromTheme(int themeId, int tagId)
+        {
+            return _tagRepo.ThemeTagDelete(themeId, tagId );
+        }
+
+
+        public int DeleteTheme(int id)  //  should remove all connections many-to-many
+        {
+            List<Course_Theme_MaterialDto> courseThemeMaterials = _courseRepo.GetCourseThemeMaterialByThemeId(id);
+            if(courseThemeMaterials!=null && courseThemeMaterials.Count>0)
+            {
+                foreach(var item in courseThemeMaterials)
+                {
+                    _courseRepo.DeleteCourse_Theme_Material(item.Id);
+                }
+            }
+            List<Course_ThemeDto> courseThemes = _courseRepo.GetCourseThemeByThemeId(id);
+            if (courseThemes != null && courseThemes.Count > 0)
+            {
+                foreach (var item in courseThemes)
+                {
+                    _courseRepo.DeleteCourse_Theme(item.CourseID, item.ThemeID);
+                }
+            }
+            List<ThemeTagDto> themeTags = _tagRepo.GetThemeTagByThemeId(id);
+            if (themeTags != null && themeTags.Count > 0)
+            {
+                foreach (var item in themeTags)
+                {
+                    _tagRepo.ThemeTagDelete(item.ThemeId, item.TagId);
+                }
+            }
+
+            List<Homework_ThemeDto> homeworkThemes = _homeworkRepo.GetHomeworkThemesByThemeId(id);
+            if(homeworkThemes!=null && homeworkThemes.Count>0)
+            {
+                foreach (var item in homeworkThemes)
+                {
+                    _homeworkRepo.DeleteHomework_Theme(item.Id);
+                }
+            }
+            List<LessonThemeDto> lessonThemes = _lessonRepo.GetLessonThemesByThemeId(id);
+            if (lessonThemes != null && lessonThemes.Count > 0)
+            {
+                foreach (var item in lessonThemes)
+                {
+                    _lessonRepo.DeleteLessonTheme(item.ID);
+                }
+            }
+            return _courseRepo.DeleteTheme(id);
+        }
+
+        public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
+        {
+            return _courseRepo.GetUncoveredThemesByGroupId(id);
+        }
+        private void RemoveAllCourseThemesbyCourseId(int courseId, List<ThemeDto> themes)
+        {
+            foreach(var theme in themes)
+            {
+                _courseRepo.DeleteCourse_Theme(courseId, theme.Id);
+            }
+        }
+        private void RemoveAllThemeTagbyThemeId(int themeId, List<TagDto> tags)
+        {
+            foreach (var tag in tags)
+            {
+                _tagRepo.ThemeTagDelete(themeId, tag.Id);
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace EducationSystem.Data.Models
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
-        public List<GroupDto> Groups { get; set; }
+
 
         public override bool Equals(object obj)
         {
@@ -20,17 +20,6 @@ namespace EducationSystem.Data.Models
             if(!courseObj.Description.Equals(Description) || !courseObj.Name.Equals(Name) || courseObj.Duration!=Duration)
             {
                 return false;
-            }
-            if (courseObj.Groups == null || Groups == null || courseObj.Groups.Count != Groups.Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < Groups.Count; i++)
-            {
-                if (courseObj.Groups[i].StartDate != Groups[i].StartDate)
-                {
-                    return false;
-                }
             }
             if (courseObj.Themes == null || Themes == null || courseObj.Themes.Count != Themes.Count)
             {

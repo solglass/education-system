@@ -46,7 +46,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/tag/3
         [HttpGet("{id}")]
-        public dynamic GetTag(int id)
+        public ActionResult GetTag(int id)
         {
             var tag = _repo.GetTagById(id);
             return Ok(tag);
@@ -66,6 +66,13 @@ namespace EducationSystem.Controllers
         {
             _repo.TagDelete(id);
             return Ok("Tag удалён");
+        }
+        // https://localhost:50221/api/tag/4
+        [HttpGet("{id}")]
+        public dynamic GetThemeTagById(int id)
+        {
+            var tag = _repo.GetThemeTagById(id);
+            return Ok(tag);
         }
     }
 }
