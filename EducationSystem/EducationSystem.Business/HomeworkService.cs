@@ -13,9 +13,64 @@ namespace EducationSystem.Business
             _homeworkRepository = new HomeworkRepository();
         }
 
-        public List<HomeworkAttemptDto> GetHomeworkAttemptsAll()
+        public List<HomeworkDto> GetHomeworks()
         {
-            var dtos = _homeworkRepository.GetHomeworkAttempts();
+            return _homeworkRepository.GetHomeworks();
+        }
+
+        public HomeworkDto GetHomeworkById(int id)
+        {
+            return _homeworkRepository.GetHomeworkById(id);
+        }
+
+        public int UpdateHomework(HomeworkDto homeworkDto)
+        {
+            return _homeworkRepository.UpdateHomework(homeworkDto);
+        }
+
+        public int AddHomework(HomeworkDto homeworkDto)
+        {
+            return _homeworkRepository.AddHomework(homeworkDto);
+        }
+        public int DeleteHomework(int id)
+        {
+            return _homeworkRepository.DeleteHomework(id);
+        }
+
+        public int AddHomework_Theme(HomeworkThemeDto homeworkThemeDto)
+        {
+            return _homeworkRepository.AddHomework_Theme(homeworkThemeDto);
+        }
+
+        public int DeleteHomework_Theme(int id)
+        {
+            return _homeworkRepository.DeleteHomework_Theme(id);
+        }
+        public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatuses()
+        {
+            return _homeworkRepository.GetHomeworkAttemptStatuses();
+        }
+
+        public int DeleteHomeworkAttemptStatus(int id)
+        {
+            return _homeworkRepository.DeleteHomeworkAttemptStatus(id);
+        }
+
+        public List<CommentDto> GetComments()
+        {
+            return _homeworkRepository.GetComments();
+        }
+
+        public CommentDto GetCommentById(int id)
+        {
+            return _homeworkRepository.GetCommentById(id);
+        }
+
+
+
+        public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
+        {
+            var dtos = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(id);
 
             foreach (var item in dtos)
             {
@@ -33,9 +88,10 @@ namespace EducationSystem.Business
             return dtos;
         }
 
-        public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
+
+        public List<HomeworkAttemptDto> GetHomeworkAttemptsAll()
         {
-            var dtos = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(id);
+            var dtos = _homeworkRepository.GetHomeworkAttempts();
 
             foreach (var item in dtos)
             {
