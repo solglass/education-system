@@ -125,7 +125,53 @@ namespace EducationSystem.Business
 
         public int DeleteTheme(int id)  //  should remove all connections many-to-many
         {
-           return _courseRepo.DeleteTheme(id);
+            List<Course_Theme_MaterialDto> courseThemeMaterials = _courseRepo.GetCourseThemeMaterialByThemeId(id);
+            if(courseThemeMaterials!=null && courseThemeMaterials.Count>0)
+            {
+                foreach(var item in courseThemeMaterials)
+                {
+                    _courseRepo.DeleteCourse_Theme_Material(item.Id);
+                }
+            }
+            List<Course_ThemeDto> courseThemes = _courseRepo.GetCourseThemeByThemeId(id);
+            if (courseThemes != null && courseThemes.Count > 0)
+            {
+                foreach (var item in courseThemes)
+                {
+                    _courseRepo.DeleteCourse_Theme(item.CourseID, item.ThemeID);
+                }
+            }
+            List<ThemeTagDto> themeTags = _tagRepo.GetThemeTagByThemeId(id);
+            if (themeTags != null && themeTags.Count > 0)
+            {
+                foreach (var item in themeTags)
+                {
+                    _tagRepo.ThemeTagDelete(item.ThemeId, item.TagId);
+                }
+            }
+
+            List<Homework_ThemeDto> homeworkThemes = _homeworkRepo.GetHomeworkThemesByThemeId(id);
+            if(homeworkThemes!=null && homeworkThemes.Count>0)
+            {
+                foreach (var item in homeworkThemes)
+                {
+                    _homeworkRepo.DeleteHomework_Theme(item.Id);
+                }
+            }
+            List<LessonThemeDto> lessonThemes = _lessonRepo.GetLessonThemesByThemeId(id);
+            if (lessonThemes != null && lessonThemes.Count > 0)
+            {
+                foreach (var item in lessonThemes)
+                {
+                    _lessonRepo.DeleteLessonTheme(item.ID);
+                }
+            }
+            return _courseRepo.DeleteTheme(id);
+        }
+
+        public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
+        {
+            return _courseRepo.GetUncoveredThemesByGroupId(id);
         }
     }
 }

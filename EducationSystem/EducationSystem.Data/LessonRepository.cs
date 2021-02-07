@@ -274,5 +274,14 @@ namespace EducationSystem.Data
             return lessonTheme;
         }
 
+        public List<LessonThemeDto> GetLessonThemesByThemeId(int id)
+        {
+            var result = _connection.
+               Query<LessonThemeDto>("dbo.Lesson_Theme_SelectAllByThemeId",
+               new { id }, commandType: System.Data.CommandType.StoredProcedure)
+               .Distinct()
+               .ToList();
+            return result;
+        }
     }
 }
