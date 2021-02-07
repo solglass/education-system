@@ -3,6 +3,10 @@ as
 begin
 select 
 	t.Id,
-	t.Name
+	t.Name,
+	tg.Id,
+	tg.Name
 from dbo.Theme t 
+	left join dbo.Theme_Tag tt on tt.ThemeId=t.Id
+	left join dbo.Tag tg on tg.Id=tt.TagId
 end
