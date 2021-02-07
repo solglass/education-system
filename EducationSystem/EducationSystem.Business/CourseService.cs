@@ -36,17 +36,6 @@ namespace EducationSystem.Business
             int index=_courseRepo.UpdateCourse(course);
             if (index <= 0)
                 return -1;
-            if (course.Themes != null && course.Themes.Count > 0)
-            {
-                foreach (var theme in course.Themes)
-                {
-                    if (_courseRepo.AddCourse_Theme(index, theme.Id) <= 0) //если такая запись уже имеется??
-                    {
-                        //метод для удаления тем из списка курса        
-                        return -2;
-                    }
-                }
-            }
             return 0;
         }
         public int AddCourse(CourseDto course)
@@ -60,8 +49,8 @@ namespace EducationSystem.Business
                 {
                     if (_courseRepo.AddCourse_Theme(index, theme.Id) <= 0)
                     {
-                        //метод для удаления тем из списка курса
-                        return -2;
+                        RemoveAllCourseThemesbyCourseId(index, course.Themes);
+                        return -2-index;
                     }
                 }
             }
@@ -104,8 +93,8 @@ namespace EducationSystem.Business
                 {
                     if (_tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = index, TagId = tag.Id }) <= 0)
                     {
-                        //метод для удаления тэгов из списка темы
-                        return -2;
+                        RemoveAllThemeTagbyThemeId(index, theme.Tags);
+                        return -2-index;
                     }
                 }
             }
@@ -172,6 +161,20 @@ namespace EducationSystem.Business
         public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
         {
             return _courseRepo.GetUncoveredThemesByGroupId(id);
+        }
+        private void RemoveAllCourseThemesbyCourseId(int courseId, List<ThemeDto> themes)
+        {
+            foreach(var theme in themes)
+            {
+                _courseRepo.DeleteCourse_Theme(courseId, theme.Id);
+            }
+        }
+        private void RemoveAllThemeTagbyThemeId(int themeId, List<TagDto> tags)
+        {
+            foreach (var tag in tags)
+            {
+                _tagRepo.ThemeTagDelete(themeId, tag.Id);
+            }
         }
     }
 }
