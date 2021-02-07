@@ -196,20 +196,6 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem("Ошибка! К созданной теме не удалось привязать теги!");
         }
-
-        //__________________________________________________________
-
-        [HttpDelete("theme/{id}")]
-        [Authorize(Roles = "Админ, Методист")]
-        public ActionResult RemoveTheme(int id)
-        {
-            var result = _courseService.DeleteTheme(id);
-            if (result > 0)
-                return Ok("Тема удалена!");
-            else
-                return Problem("Ошибка! Не получилось удалить тему!");
-        }
-
         [HttpPost("theme/{themeId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Методист")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
@@ -231,5 +217,20 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem("Ошибка! Не получилось отвязать тег от темы!");
         }
+
+        //__________________________________________________________
+
+        [HttpDelete("theme/{id}")]
+        [Authorize(Roles = "Админ, Методист")]
+        public ActionResult RemoveTheme(int id)
+        {
+            var result = _courseService.DeleteTheme(id);
+            if (result > 0)
+                return Ok("Тема удалена!");
+            else
+                return Problem("Ошибка! Не получилось удалить тему!");
+        }
+
+     
     }
 }

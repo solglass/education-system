@@ -121,7 +121,9 @@ namespace EducationSystem.Business
         {
             return _tagRepo.ThemeTagDelete(themeId, tagId );
         }
-        public int DeleteTheme(int id)
+
+
+        public int DeleteTheme(int id)  //  should remove all connections many-to-many
         {
            return _courseRepo.DeleteTheme(id);
         }
