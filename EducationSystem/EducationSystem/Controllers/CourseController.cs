@@ -84,7 +84,7 @@ namespace EducationSystem.API.Controllers
             else if (result == -1)
                 return Problem("Ошибка! Не получилось добавить курс!");
             else
-                return Problem($"Ошибка! К созданному курсу не удалось привязать темы!") ;
+                return Problem($"Ошибка! К созданному курсу #{-(result+2)} не удалось привязать темы! ") ;
         }
 
         [HttpPut("{id}")]
@@ -102,10 +102,8 @@ namespace EducationSystem.API.Controllers
             }
             if (result == 0)
                 return Ok("Курс обновлен!");
-            else if (result == -1)
+            else 
                 return Problem("Ошибка! Не получилось обновить курс!");
-            else
-                return Problem($"Ошибка! К обновленному курсу не удалось привязать темы!"); 
         }
 
         [HttpDelete("{id}")]
@@ -191,10 +189,8 @@ namespace EducationSystem.API.Controllers
             }
             if (result > 0)
                 return Ok($"Тема №{result} добавлена!");
-            else if (result == -1)
-                return Problem("Ошибка! Не получилось добавить тему!");
             else
-                return Problem("Ошибка! К созданной теме не удалось привязать теги!");
+                return Problem($"Ошибка! К созданной теме #{-(result + 2)} не удалось привязать теги! ");
         }
         [HttpPost("theme/{themeId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Методист")]
