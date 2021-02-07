@@ -12,9 +12,7 @@ namespace EducationSystem.Test
     public class CourseTests
     {
         private CourseRepository _courseRepo;
-       // private GroupRepository _groupRepo;
         private int _courseId;
-       // private List<int> _groupIdList;
         private List<int> _themeIdList;
         private CourseDto _expectedCourse;
         private List<CourseDto> _coursesFromDb;
@@ -23,13 +21,10 @@ namespace EducationSystem.Test
         public void SetUpTest()
         {
             _courseRepo = new CourseRepository();
-          //  _groupRepo = new GroupRepository();
             _coursesFromDb = new List<CourseDto>();
-          //  _groupIdList = new List<int>();
             _themeIdList = new List<int>();
             _expectedCourse = GetCourseMock(1);
             _expectedCourse.Themes = GetThemeMock(3);
-           // _expectedCourse.Groups = GetGroupMock(3);
             foreach (var theme in _expectedCourse.Themes)
             {
                 _themeIdList.Add(_courseRepo.AddTheme(theme.Name));
@@ -43,11 +38,6 @@ namespace EducationSystem.Test
         {
             CourseDto course = GetCourseMock(courseMock);
             _courseId = _courseRepo.AddCourse(_expectedCourse);
-            //foreach (var group in _expectedCourse.Groups)
-            //{
-            //    group.Course.Id = _courseId;
-            //    _groupIdList.Add(_groupRepo.AddGroup(group));
-            //}
             foreach (var id in _themeIdList)
             {
                _courseRepo.AddCourse_Theme(_courseId, id);
@@ -81,11 +71,6 @@ namespace EducationSystem.Test
                 if (_courseRepo.DeleteTheme(themeId) != 1)
                     throw new System.Exception("Theme delete went wrong, the amount of affected rows is not 1");
             }
-            //foreach (var groupId in _groupIdList)
-            //{
-            //    if (_groupRepo.DeleteGroup(groupId) != 1)
-            //        throw new System.Exception("Group delete went wrong, the amount of affected rows is not 1");
-            //}
             if (_courseRepo.DeleteCourse(_courseId) != 1)
             {
                 Assert.Fail("Course delete went wrong, the amount of affected rows is not 1");
@@ -116,32 +101,9 @@ namespace EducationSystem.Test
                 _courseRepo.DeleteCourse_Theme(_courseId, themeId);
                 _courseRepo.DeleteTheme(themeId);
             }
-            //foreach (int groupId in _groupIdList)
-            //{
-            //  _groupRepo.DeleteGroup(groupId);
-            //}
             _courseRepo.DeleteCourseHard(_courseId);
         }
 
-        //public List<GroupDto>  GetGroupMock(int n)
-        //{
-        //    List<GroupDto> groups = new List<GroupDto>() ;
-        //    switch (n)
-        //    {
-        //        case 1:
-        //            return groups;
-        //        case 2:
-        //            groups.Add(new GroupDto {GroupStatus = new GroupStatusDto() { Id = 1 }, Course = new CourseDto(), StartDate = new System.DateTime(2020, 10, 12) });
-        //            return groups;
-        //        case 3:
-        //            groups.Add(new GroupDto {GroupStatus = new GroupStatusDto() { Id = 1 }, Course = new CourseDto(), StartDate = new System.DateTime(2020, 10, 12) });
-        //            groups.Add(new GroupDto {GroupStatus = new GroupStatusDto() { Id = 1 }, Course = new CourseDto(), StartDate = new System.DateTime(2021, 10, 12) });
-                  
-        //            return groups;
-        //        default:
-        //            return groups;
-        //    }
-        //}
         public List<ThemeDto> GetThemeMock(int n)
         {
             List<ThemeDto> themes = new List<ThemeDto>();
