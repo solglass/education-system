@@ -454,12 +454,28 @@ namespace EducationSystem.Data
         // method doesn't work =(
         public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
         {
+            var hwAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
             var homeworkAttempts = _connection
-                .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .Query<HomeworkAttemptDto, UserDto, HomeworkAttemptStatusDto, HomeworkAttemptDto>(
+                "dbo.HomeworkAttempt_SelectByHomeworkId",
+                (attempt, user, status) =>
+                {
+                    if (!hwAttemptDictionary.TryGetValue(attempt.Id, out HomeworkAttemptDto attemptEntry))
+                    {
+                        attemptEntry = attempt;
+                        attemptEntry.Author = user;
+                        attemptEntry.HomeworkAttemptStatus = status;
+                        hwAttemptDictionary.Add(attemptEntry.Id, attemptEntry);
+                    }
+                    return attemptEntry;
+                },
+                new {id },
+                splitOn: "id", 
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return homeworkAttempts;
         }
-
+        
         public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
         {
             var comments = _connection
@@ -470,8 +486,23 @@ namespace EducationSystem.Data
 
         public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
         {
+            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
             var comments = _connection
-                .Query<AttachmentDto>("dbo.Attachment_SelectByHomeworkAttemptId", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>
+                ("dbo.Attachment_SelectByHomeworkAttemptId",
+                (attachment, type)=> 
+                {
+                    if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
+                    {
+                        attachmentEntry = attachment;
+                        attachmentEntry.AttachmentType = type;
+                        attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
+                    }
+                    return attachmentEntry;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return comments;
         }

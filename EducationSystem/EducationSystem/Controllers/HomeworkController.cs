@@ -1,8 +1,10 @@
 ﻿using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,6 +17,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:44365/api/homework
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class HomeworkController : ControllerBase
     {
 
@@ -22,6 +25,7 @@ namespace EducationSystem.API.Controllers
         private HomeworkRepository _repo;
         private HomeworkMapper _homeworkMapper;
         private HomeworkAttemptMapper _homeworkAttemptMapper;
+        private HomeworkService _homeworkService;
 
         public HomeworkController(ILogger<WeatherForecastController> logger)
         {
@@ -29,11 +33,13 @@ namespace EducationSystem.API.Controllers
             _repo = new HomeworkRepository();
             _homeworkMapper = new HomeworkMapper();
             _homeworkAttemptMapper = new HomeworkAttemptMapper();
+            _homeworkService = new HomeworkService();
         }
 
 
         // https://localhost:44365/api/homework
         [HttpPost]
+        [Authorize(Roles ="Админ, Методист, Преподаватель")]
         public ActionResult AddHomework([FromBody] HomeworkDto homework)
         {
             _repo.AddHomework(homework);
@@ -65,6 +71,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/42
         [HttpPut("{id}")]
+        
         public ActionResult UpdateHomework(int id, [FromBody] HomeworkDto homework)
         {
             _repo.UpdateHomework(homework);
@@ -83,10 +90,10 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/homeworkAttempts
         [HttpPost]
+        [Authorize(Roles ="Админ, Студент")]
         public ActionResult CreateAttempt([FromBody] HomeworkAttemptInputModel inputModel)
         {
-            HomeworkAttemptDto attempt = _homeworkAttemptMapper.ToDto(inputModel);
-            _repo.AddHomeworkAttempt(attempt);
+            int result = _homeworkService.AddHomeworkAttempt(_homeworkAttemptMapper.ToDto(inputModel));
             return Ok("Задание отправлено на проверку");
         }
 
@@ -95,7 +102,7 @@ namespace EducationSystem.API.Controllers
         [HttpGet("homeworkAttempts")]
         public ActionResult GetHomeworkAttempts()
         {
-            var results = _repo.GetHomeworkAttempts();
+            var results = _homeworkService.GetHomeworkAttemptsAll();
             return Ok(results);
         }
 
@@ -109,19 +116,20 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpPut("homeworkAttempts/{id}")]
+        [Authorize(Roles = "Админ, Студент")]
         public ActionResult UpdateHomeworkAttempt(int id, [FromBody] HomeworkAttemptInputModel inputModel)
         {
-            HomeworkAttemptDto attempt = _homeworkAttemptMapper.ToDto(inputModel);
-            _repo.UpdateHomeworkAttempt(attempt);
+            _homeworkService.UpdateHomeworkAttempt(_homeworkAttemptMapper.ToDto(inputModel));
             return Ok("Изменения сохранены");
         }
 
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpDelete("homeworkAttempts/{id}")]
+        [Authorize(Roles = "Админ, Студент, Преподаватель")]
         public ActionResult DeleteHomeworkAttempt(int id)
         {
-            _repo.DeleteHomeworkAttempt(id);
-            return Ok("Задание удалено");
+            _homeworkService.DeleteHomeworkAttempt(id);
+            return Ok("Решение удалено");
         }
 
         //https://localhost:44365/api/homework/comment
