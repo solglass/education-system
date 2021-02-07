@@ -12,8 +12,6 @@ namespace EducationSystem.API.Models.InputModels
         public string Messege { get; set; }
         public int LessonID { get; set; }
         public int UnderstandingLevelID { get; set; }
-        public LessonInputModel Lesson { get; set; }
-        public UserInputModel User { get; set; }
-        public UnderstandingLevelInputModel UnderstandingLevel { get; set; }
+        
     }
 }
