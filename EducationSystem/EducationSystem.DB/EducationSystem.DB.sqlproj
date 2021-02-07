@@ -79,6 +79,8 @@
     <Folder Include="StoredProcedures\Student_Group" />
     <Folder Include="StoredProcedures\TeacherGroup" />
     <Folder Include="Scripts" />
+    <Folder Include="StoredProcedures\Tutor_Group" />
+    <Folder Include="StoredProcedures\Theme_Tag" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -191,5 +193,20 @@
     <Build Include="Tables\dbo.GroupStatus.sql" />
     <Build Include="Tables\dbo.Payment.sql" />
     <PostDeploy Include="Scripts\Create_Report.sql" />
+    <Build Include="StoredProcedures\Attachment\dbo.Attachment_SelectByCommentId.sql" />
+    <Build Include="StoredProcedures\Attachment\dbo.Attachment_SelectByHomeworkAttemptId.sql" />
+    <Build Include="StoredProcedures\Theme\dbo.Theme_SelectAllByCourseId.sql" />
+    <Build Include="StoredProcedures\Theme\dbo.Theme_SelectAllByGroupId.sql" />
+    <Build Include="StoredProcedures\Theme\dbo.Theme_SelectAllLearntByGroupId.sql" />
+    <Build Include="StoredProcedures\Theme\dbo.Theme_SelectAllUncoveredByGroupId.sql" />
+    <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_DeleteByCourseIdAndThemeId.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_SelectAllByCourseId.sql" />
+    <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_Add.sql" />
+    <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_Delete.sql" />
+    <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_SelectAll.sql" />
+    <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_SelectById.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_DeleteByTagIdAndThemeId.sql" />
   </ItemGroup>
 </Project>

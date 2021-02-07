@@ -7,5 +7,10 @@ namespace EducationSystem.API.Models.InputModels
 {
     public class LessonInputModel
     {
+        public int ID { get; set; }
+        public int GroupID { get; set; }
+        public string Comment { get; set; }
+        public string LessonDate { get; set; }
+        public List<ThemeInputModel> Themes { get; set; }
     }
 }

@@ -152,7 +152,25 @@ namespace EducationSystem.API.Controllers
             _service.DeleteAttachmentTypeById(id);
             return Ok("Успех");
         }
-        
+        //  https://localhost:44365/api/attachment/comment/4
+        [HttpPost("comment/{commentId}")]
+        public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
+        {
+            var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
+            var result = _service.AddAttachmentToComment(attachmentDto, commentId);
+            return Ok($"Вложение #{result} добавлено к комментарию #{commentId}");
+        }
+
+       // https://localhost:44365/api/attachment/homeworkAttempt/4
+        [HttpPost("homeworkAttempt/{homeworkAttemptId}")]
+        public ActionResult AddAttachmentToHomeworkAttempt([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
+        {
+            var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
+            var result = _service.AddAttachmentToHomeworkAttempt(attachmentDto, 
+                homeworkAttemptId);
+            return Ok($"Вложение #{result} добавлено к попытке сдачи #{homeworkAttemptId}");
+        }
+
 
 
     }

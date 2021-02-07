@@ -9,9 +9,6 @@ namespace EducationSystem.API.Models.InputModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<TagInputModel> Tags { get; set; }
-        public List<HomeworkInputModel> Homeworks { get; set; }
-        public List<LessonInputModel> Lessons { get; set; }
-        public List<CommentInputModel> Courses { get; set; }
+       public List<int> TagIds { get; set; }
     }
 }
