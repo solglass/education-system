@@ -27,7 +27,7 @@ namespace EducationSystem.Test
             _expectedCourse.Themes = GetThemeMock(3);
             foreach (var theme in _expectedCourse.Themes)
             {
-                _themeIdList.Add(_courseRepo.AddTheme(theme.Name));
+                _themeIdList.Add(_courseRepo.AddTheme(theme));
             }
             _coursesFromDb.AddRange(_courseRepo.GetCourses());
         }
