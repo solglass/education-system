@@ -17,13 +17,12 @@ namespace EducationSystem.Controllers
     [Route("api/[controller]")]
     public class TagController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
         private TagRepository _repo;
         private TagMapper _tagMapper;
 
-        public TagController(ILogger<WeatherForecastController> logger)
+        public TagController()
         {
-            _logger = logger;
+
             _repo = new TagRepository();
         }
 
