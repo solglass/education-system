@@ -14,17 +14,17 @@ namespace EducationSystem.API.Controllers
     // https://localhost:44365/api/attachment/
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AttachmentController : ControllerBase
     {
 
-        private readonly ILogger<WeatherForecastController> _logger;
+       
         private AttachmentService _service;
         private AttachmentMapper _attachmentMapper;
         private AttachmentTypeMapper _attachmentTypeMapper;
 
-        public AttachmentController(ILogger<WeatherForecastController> logger)
+        public AttachmentController()
         {
-            _logger = logger;
             _service = new AttachmentService();
             _attachmentMapper = new AttachmentMapper();
             _attachmentTypeMapper = new AttachmentTypeMapper();
