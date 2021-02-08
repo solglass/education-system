@@ -105,6 +105,12 @@ namespace EducationSystem.Data
                 .Execute("dbo.User_Delete", new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
+        public int HardDeleteUser(int id)
+        {
+            return _connection
+                .Execute("dbo.User_HardDelete", new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
+        }
 
         public int AddRoleToUser(UserRoleDto userRole)
         {

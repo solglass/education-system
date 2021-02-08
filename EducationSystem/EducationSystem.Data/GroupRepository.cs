@@ -137,6 +137,17 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+        public int HardDeleteGroup(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Group_HardDelete", 
+                new 
+                { 
+                    id 
+                }, 
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
 
         public int AddGroup_Material(int groupId, int materialId)
         {

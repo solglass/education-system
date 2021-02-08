@@ -223,6 +223,12 @@
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectAll.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectById.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Update.sql" />
+    <Build Include="StoredProcedures\Course\Course_HardDelete.sql" />
+    <Build Include="StoredProcedures\Group\Group_HardDelete.sql" />
+    <Build Include="StoredProcedures\Homework\Homework_HardDelete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_HardDelete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\HomeworkAttemptStatus_HardDelete.sql" />
+    <Build Include="StoredProcedures\Comment\Comment_HardDelete.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_DeleteByTagIdAndThemeId.sql" />
