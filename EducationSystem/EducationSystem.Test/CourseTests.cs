@@ -141,10 +141,5 @@ namespace EducationSystem.Test
                     return course;
             }
         }
-
-
-
-
-
     }
 }
