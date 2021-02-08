@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace EducationSystem.API.Controllers
             _service = new AuthenticationService();
         }
         [HttpPost]
-        public ActionResult Login(AuthenticationInputModel login)
+        public ActionResult Login([FromBody] AuthenticationInputModel login)
         {
             //Hash function
             var user = _service.GetAuthentificatedUser(login.Login, login.Password);
@@ -28,7 +28,7 @@ namespace EducationSystem.API.Controllers
                 var token = _service.GenerateToken(user);
                 return Ok(token);
             }
-            return Ok("Работай пожалуйста");
+            return Ok("");
         }
     }
 }
