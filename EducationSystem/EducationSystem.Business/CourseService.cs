@@ -84,7 +84,7 @@ namespace EducationSystem.Business
 
         public int AddTheme(ThemeDto theme)
         {
-            int index = _courseRepo.AddTheme(theme.Name);
+            int index = _courseRepo.AddTheme(theme);
             if (index <= 0)
                 return -1;
             if (theme.Tags != null && theme.Tags.Count > 0)
