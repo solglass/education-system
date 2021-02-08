@@ -22,14 +22,11 @@ namespace EducationSystem.API.Controllers
     [Authorize]
     public class CourseController : ControllerBase
     {
-        private readonly ILogger<CourseController> _logger;
-        private CourseRepository _repo;
         private CourseMapper _courseMapper;
         private ThemeMapper _themeMapper;
         private CourseService _courseService;
         public CourseController()
         {
-            _repo = new CourseRepository();
             _courseMapper = new CourseMapper();
             _themeMapper = new ThemeMapper();
             _courseService = new CourseService();
@@ -143,6 +140,7 @@ namespace EducationSystem.API.Controllers
        
 
         [HttpGet("themes")]
+        [Authorize(Roles = "Админ")]
         public ActionResult GetThemes()
         {
             List<ThemeOutputModel> themes;
@@ -159,6 +157,7 @@ namespace EducationSystem.API.Controllers
 
        
         [HttpGet("theme/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetTheme(int id)
         {
             ThemeOutputModel theme;
@@ -175,7 +174,7 @@ namespace EducationSystem.API.Controllers
         }
         
         [HttpPost("theme")]
-        [Authorize(Roles = "Админ, Методист")]
+        [Authorize(Roles = "Админ, Методист, Преподаватель")]
         public ActionResult CreateTheme([FromBody] ThemeInputModel inputModel)
         {
             int result;
@@ -193,7 +192,7 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! К созданной теме #{-(result + 2)} не удалось привязать теги! ");
         }
         [HttpPost("theme/{themeId}/tag/{tagId}")]
-        [Authorize(Roles = "Админ, Методист")]
+        [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
         {
             var result = _courseService.AddTagToTheme(themeId, tagId);
@@ -204,7 +203,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpDelete("theme/{themeId}/tag/{tagId}")]
-        [Authorize(Roles = "Админ, Методист")]
+        [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult RemoveTagFromTheme(int themeId, int tagId)
         {
             var result = _courseService.RemoveTagFromTheme(themeId, tagId);

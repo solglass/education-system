@@ -4,6 +4,7 @@ using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,9 +17,10 @@ namespace EducationSystem.API.Controllers
     // https://localhost:50221/api/material/
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class MaterialContoller : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+
         private MaterialService _service;
         private MaterialMapper _mapper;
 
@@ -29,6 +31,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult GetMaterials()
         {
             var courses = _service.GetMaterials();
@@ -38,6 +41,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:50221/api/material/2
         [HttpGet("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialById(int id)
         {
             var course = _service.GetMaterialById(id);
@@ -46,6 +50,7 @@ namespace EducationSystem.API.Controllers
         }
 
         [HttpPost("new-material")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
             var newMaterial = _mapper.ToDto(materialInputModel);
@@ -55,6 +60,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:50221/material/2
         [HttpPut("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
             _service.UpdateMaterial(id, _mapper.ToDto(material));
@@ -63,6 +69,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:50221/api/material/2
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteMaterial(int id)
         {
             _service.DeleteMaterialById(id);
