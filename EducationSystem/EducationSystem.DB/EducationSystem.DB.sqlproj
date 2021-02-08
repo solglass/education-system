@@ -194,5 +194,8 @@
     <PostDeploy Include="Scripts\Create_Report.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_SelectByCommentId.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_SelectByHomeworkAttemptId.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_SelectAllByCourseId.sql" />
+    <Build Include="StoredProcedures\Group\dbo.GroupPrograms_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_SelectWithoutTutors.sql" />
   </ItemGroup>
 </Project>
