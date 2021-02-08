@@ -17,36 +17,28 @@ namespace EducationSystem.Data
         public List<CourseDto> GetCourses()
         {
             var courseDictionary = new Dictionary<int, CourseDto>();
-            //var groupDictionary = new Dictionary<int, GroupDto>();
-            //var themeDictionary = new Dictionary<int, ThemeDto>();
+            var themeDictionary = new Dictionary<int, ThemeDto>();
             var courses = _connection
-                .Query<CourseDto/*, ThemeDto, GroupDto, GroupStatusDto, CourseDto*/>(
+                .Query<CourseDto, ThemeDto, CourseDto>(
                     "dbo.Course_SelectAll",
-                    //(course, theme, group, groupStatus) =>
-                    //{
-                    //    if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
-                    //    {
-                    //        courseEntry = course;
-                    //        courseEntry.Themes = new List<ThemeDto>();
-                    //        courseEntry.Groups = new List<GroupDto>();
-                    //        courseDictionary.Add(courseEntry.Id, courseEntry);
-                    //    }
-                    //    if(group!=null && groupStatus!=null&& !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
-                    //    {
-                    //        groupEntry = group;
-                    //        groupEntry.GroupStatus = groupStatus;
-                    //        courseEntry.Groups.Add(groupEntry);
-                    //        groupDictionary.Add(groupEntry.Id, groupEntry);
-                    //    }
-                    //    if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                    //    {
-                    //        themeEntry = theme;
-                    //        courseEntry.Themes.Add(themeEntry);
-                    //        themeDictionary.Add(themeEntry.Id, themeEntry);
-                    //    }
-                    //    return courseEntry;
-                    //},
-                    //splitOn: "Id",
+                    (course, theme) =>
+                    {
+                        if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
+                        {
+                            courseEntry = course;
+                            courseEntry.Themes = new List<ThemeDto>();
+                            courseDictionary.Add(courseEntry.Id, courseEntry);
+                        }
+                        
+                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
+                        {
+                            themeEntry = theme;
+                            courseEntry.Themes.Add(themeEntry);
+                            themeDictionary.Add(themeEntry.Id, themeEntry);
+                        }
+                        return courseEntry;
+                    },
+                    splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
@@ -55,33 +47,23 @@ namespace EducationSystem.Data
 
         public CourseDto GetCourseById(int id)
         {
-            var groupDictionary = new Dictionary<int, GroupDto>();
             var themeDictionary = new Dictionary<int, ThemeDto>();
             var courseEntry = new CourseDto();
             var course = _connection
-                .Query<CourseDto, ThemeDto, GroupDto, GroupStatusDto, CourseDto>(
+                .Query<CourseDto, ThemeDto,CourseDto>(
                     "dbo.Course_SelectById",
-                    (course, theme, group, groupStatus) =>
+                    (course, theme) =>
                     {
                         if (courseEntry.Id == 0)
                         {
                             courseEntry = course;
                             courseEntry.Themes = new List<ThemeDto>();
-                            courseEntry.Groups = new List<GroupDto>();
                         }
                         if(theme!=null && !themeDictionary.TryGetValue(theme.Id, out  ThemeDto themeEntry))
                         {
                             themeEntry = theme;
                             courseEntry.Themes.Add(theme);
                             themeDictionary.Add(themeEntry.Id, themeEntry);
-                        }
-                        
-                        if (group != null && groupStatus != null && !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
-                        {
-                            groupEntry = group;
-                            group.GroupStatus = groupStatus;
-                            courseEntry.Groups.Add(group);
-                            groupDictionary.Add(groupEntry.Id, groupEntry);
                         }
                         return courseEntry;
                     },
@@ -92,7 +74,6 @@ namespace EducationSystem.Data
             return course;
         }
 
-        // should return id of inserted entity, use 'QuerySingle' method
         public int AddCourse(CourseDto course)
         {
             var result = _connection
@@ -107,7 +88,6 @@ namespace EducationSystem.Data
             return result;
         }
 
-        // should return affected rows' count, use 'Execute' method
         public int UpdateCourse( CourseDto course)
         {
             var result = _connection
@@ -124,7 +104,6 @@ namespace EducationSystem.Data
             return result;
         }
 
-        // should return affected rows' count, use 'Execute' method
         public int DeleteCourse(int id)
         {
             var result = _connection
@@ -137,22 +116,73 @@ namespace EducationSystem.Data
             return result;
         }
 
-
+        public int DeleteCourseHard (int id)
+        {
+            var result = _connection
+                .Execute("dbo.Course_CompleteDelete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
 
         public List<ThemeDto> GetThemes()
         {
+            var themeDictionary = new Dictionary<int, ThemeDto>();
+            var tagDictionary = new Dictionary<int, TagDto>();
+
             var themes = _connection
-                .Query<ThemeDto>("dbo.Theme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
+                .Query<ThemeDto, TagDto, ThemeDto>("dbo.Theme_SelectAll",                (theme, tag) =>                {
+
+                    if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
+                    {
+                        themeEntry = theme;
+                        themeEntry.Tags = new List<TagDto>();
+                        themeDictionary.Add(themeEntry.Id, themeEntry);
+                    }
+
+                    if (tag != null && !tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
+                    {
+                        tagEntry = tag;
+                        themeEntry.Tags.Add(tagEntry);
+                        tagDictionary.Add(tagEntry.Id, tagEntry);
+                    }
+                    return themeEntry;
+                },                splitOn: "Id",                commandType: System.Data.CommandType.StoredProcedure)                .Distinct()
                 .ToList();
             return themes;
         }
+
+
         public ThemeDto GetThemeById(int id)
-        {
-           
-            var theme = _connection
-                .QuerySingleOrDefault<ThemeDto>("dbo.Theme_SelectById",
-                new { id }, 
-                commandType: System.Data.CommandType.StoredProcedure);
+        {
+            var tagDictionary = new Dictionary<int, TagDto>();
+            var themeEntry = new ThemeDto();
+
+            var theme = _connection
+                .Query<ThemeDto,TagDto, ThemeDto>(
+                "dbo.Theme_SelectById",
+                (theme, tag) =>
+                {
+                    if (themeEntry.Id == 0)
+                    {
+                        themeEntry = theme;
+                        themeEntry.Tags = new List<TagDto>();
+                    }
+                    if (tag != null && !tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
+                    {
+                        tagEntry = tag;
+                        themeEntry.Tags.Add(tag);
+                        tagDictionary.Add(tagEntry.Id, tagEntry);
+                    }
+                    return themeEntry;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
             return theme;
         }
         public int AddTheme(string name)
@@ -260,6 +290,25 @@ namespace EducationSystem.Data
                 new { courseId = id }, commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return themes;
+        }
+
+        public List<Course_Theme_MaterialDto> GetCourseThemeMaterialByThemeId(int id)
+        {
+            var result = _connection.
+               Query<Course_Theme_MaterialDto>("dbo.Course_Theme_Material_SelectAllByThemeId",
+               new { id }, commandType: System.Data.CommandType.StoredProcedure)
+               .Distinct()
+               .ToList();
+            return result;
+        }
+        public List<Course_ThemeDto> GetCourseThemeByThemeId(int id)
+        {
+            var result = _connection.
+               Query<Course_ThemeDto>("dbo.Course_Theme_SelectAllByThemeId",
+               new { id }, commandType: System.Data.CommandType.StoredProcedure)
+               .Distinct()
+               .ToList();
+            return result;
         }
     }
 }

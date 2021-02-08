@@ -64,7 +64,7 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
-                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.LessonDate},
+                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.LessonDate, lessonDto.Themes},
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -80,7 +80,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.LessonDate, lessonDto.IsDeleted },
+                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.LessonDate,lessonDto.Themes },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -274,5 +274,14 @@ namespace EducationSystem.Data
             return lessonTheme;
         }
 
+        public List<LessonThemeDto> GetLessonThemesByThemeId(int id)
+        {
+            var result = _connection.
+               Query<LessonThemeDto>("dbo.Lesson_Theme_SelectAllByThemeId",
+               new { id }, commandType: System.Data.CommandType.StoredProcedure)
+               .Distinct()
+               .ToList();
+            return result;
+        }
     }
 }

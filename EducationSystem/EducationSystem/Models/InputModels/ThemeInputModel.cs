@@ -9,6 +9,6 @@ namespace EducationSystem.API.Models.InputModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
-       
+       public List<int> TagIds { get; set; }
     }
 }

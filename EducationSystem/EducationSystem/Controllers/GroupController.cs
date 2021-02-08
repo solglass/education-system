@@ -21,6 +21,8 @@ namespace EducationSystem.Controllers
         private GroupRepository _repo;
         private GroupMapper _groupMapper;
         private GroupService _service;
+        private ThemeMapper _themeMapper;
+        private CourseService _courseService;
 
         public GroupController(ILogger<WeatherForecastController> logger)
         {
@@ -28,6 +30,8 @@ namespace EducationSystem.Controllers
             _repo = new GroupRepository();
             _groupMapper = new GroupMapper();
             _service = new GroupService();
+            _courseService = new CourseService();
+            _themeMapper = new ThemeMapper();
         }
 
         // https://localhost:44365/api/group/
@@ -243,6 +247,12 @@ namespace EducationSystem.Controllers
         {
             var report = _repo.GenerateReport();
             return Ok(report);
+        }
+        [HttpGet("uncovered-themes")]
+        public ActionResult GetUncoveredThemesByGroupId(int id)
+        {
+            var result = _themeMapper.FromDtos(_courseService.GetUncoveredThemesByGroupId(id));
+                 return Ok(result);
         }
     }
     
