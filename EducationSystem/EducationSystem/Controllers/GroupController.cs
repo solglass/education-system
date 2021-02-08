@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
+using System;
 
 namespace EducationSystem.Controllers
 {
@@ -23,7 +24,7 @@ namespace EducationSystem.Controllers
         private GroupService _service;
         private ThemeMapper _themeMapper;
         private CourseService _courseService;
-
+        private GroupReportMapper _reportMapper;
         public GroupController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
@@ -32,6 +33,7 @@ namespace EducationSystem.Controllers
             _service = new GroupService();
             _courseService = new CourseService();
             _themeMapper = new ThemeMapper();
+            _reportMapper = new GroupReportMapper();
         }
 
         // https://localhost:44365/api/group/
@@ -58,11 +60,11 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
-        // https://localhost:44365/api/group/3/program-for-group
-        [HttpGet("{Id}/program-for-group")]
-        public ActionResult GetGroupByProgram(int id)
+        // https://localhost:44365/api/group/3/programs-group
+        [HttpGet("{Id}/programs-group")]
+        public ActionResult GetGroupProgramsByGroupId(int id)
         {
-            GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupByProgram(id));
+            GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupProgramsByGroupId(id));
             return Ok(result);
         }
 
@@ -245,7 +247,16 @@ namespace EducationSystem.Controllers
         [HttpGet("report")]
         public ActionResult GetReport()
         {
-            var report = _repo.GenerateReport();
+            List<GroupReportOutputModel> report ;
+
+            try
+            {
+                report = _reportMapper.FromDtos(_repo.GenerateReport());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(report);
         }
         [HttpGet("uncovered-themes")]
