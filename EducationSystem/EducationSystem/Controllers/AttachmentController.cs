@@ -42,6 +42,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult GetAttachments()
         {
             List<AttachmentOutputModel> attachments;
@@ -59,6 +60,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/42
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public dynamic GetAttachment(int id)
         {
            var attachment = new AttachmentOutputModel();
@@ -112,7 +114,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/attachmentType
         [HttpGet("attachmentType")]
-        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
+        [AllowAnonymous]
         public ActionResult GetAttachmentTypes()
         {
             List<AttachmentTypeOutputModel> attachmentTypes;
@@ -129,6 +131,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/attachmentType/42
         [HttpGet("attachmentType/{id}")]
+        [AllowAnonymous]
 
         public dynamic GetAttachmentType(int id)
         {
