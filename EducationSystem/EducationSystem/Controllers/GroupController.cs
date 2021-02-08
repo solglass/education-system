@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
+using System;
 
 namespace EducationSystem.Controllers
 {
@@ -23,7 +24,7 @@ namespace EducationSystem.Controllers
         private GroupService _service;
         private ThemeMapper _themeMapper;
         private CourseService _courseService;
-
+        private GroupReportMapper _reportMapper;
         public GroupController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
@@ -32,6 +33,7 @@ namespace EducationSystem.Controllers
             _service = new GroupService();
             _courseService = new CourseService();
             _themeMapper = new ThemeMapper();
+            _reportMapper = new GroupReportMapper();
         }
 
         // https://localhost:44365/api/group/
@@ -245,7 +247,16 @@ namespace EducationSystem.Controllers
         [HttpGet("report")]
         public ActionResult GetReport()
         {
-            var report = _repo.GenerateReport();
+            List<GroupReportOutputModel> report ;
+
+            try
+            {
+                report = _reportMapper.FromDtos(_repo.GenerateReport());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(report);
         }
         [HttpGet("uncovered-themes")]
