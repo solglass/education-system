@@ -291,5 +291,24 @@ namespace EducationSystem.Data
                 .ToList();
             return themes;
         }
+
+        public List<Course_Theme_MaterialDto> GetCourseThemeMaterialByThemeId(int id)
+        {
+            var result = _connection.
+               Query<Course_Theme_MaterialDto>("dbo.Course_Theme_Material_SelectAllByThemeId",
+               new { id }, commandType: System.Data.CommandType.StoredProcedure)
+               .Distinct()
+               .ToList();
+            return result;
+        }
+        public List<Course_ThemeDto> GetCourseThemeByThemeId(int id)
+        {
+            var result = _connection.
+               Query<Course_ThemeDto>("dbo.Course_Theme_SelectAllByThemeId",
+               new { id }, commandType: System.Data.CommandType.StoredProcedure)
+               .Distinct()
+               .ToList();
+            return result;
+        }
     }
 }

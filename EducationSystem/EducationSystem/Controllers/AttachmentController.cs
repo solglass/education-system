@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EducationSystem.API.Controllers
 {
@@ -31,6 +32,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/
         [HttpPost]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
         {
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
@@ -73,6 +75,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/42
         [HttpPut("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel)
         {
             try
@@ -89,6 +92,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/42
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult DeleteAttachment(int id)
         {
             _service.DeleteAttachmentById(id);
@@ -97,6 +101,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/attachmentType/
         [HttpPost("attachmentType/{name}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachmentType(string name)
         {
             var result = _service.AddAttachmentType(name);
@@ -107,6 +112,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/attachmentType
         [HttpGet("attachmentType")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult GetAttachmentTypes()
         {
             List<AttachmentTypeOutputModel> attachmentTypes;
@@ -123,6 +129,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/attachmentType/42
         [HttpGet("attachmentType/{id}")]
+
         public dynamic GetAttachmentType(int id)
         {
             var attachmentType = new AttachmentTypeOutputModel();
@@ -139,6 +146,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/attachmentType/42/IMAGE
         [HttpPut("attachmentType/{id}/{name}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult UpdateAttachmentType(int id, string name)
         {
             _service.ModifyAttachmentType(id, name);
@@ -147,6 +155,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/attachmentType/42
         [HttpDelete("attachmentType/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult DeleteAttachmentType(int id)
         {
             _service.DeleteAttachmentTypeById(id);
@@ -154,6 +163,7 @@ namespace EducationSystem.API.Controllers
         }
         //  https://localhost:44365/api/attachment/comment/4
         [HttpPost("comment/{commentId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
         {
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
@@ -163,6 +173,7 @@ namespace EducationSystem.API.Controllers
 
        // https://localhost:44365/api/attachment/homeworkAttempt/4
         [HttpPost("homeworkAttempt/{homeworkAttemptId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachmentToHomeworkAttempt([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
         {
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);

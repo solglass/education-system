@@ -15,7 +15,13 @@ namespace EducationSystem.Data.Models
         {
             GroupDto groupDto = (GroupDto)obj;
 
-            if (groupDto.StartDate == StartDate && groupDto.Course.Equals(Course) && groupDto.GroupStatus.Equals(GroupStatus))
+            if (
+                groupDto.StartDate == StartDate && 
+                groupDto.Course.Name.Equals(Course.Name) && 
+                groupDto.Course.Description.Equals(Course.Description) &&
+                groupDto.Course.Duration.Equals(Course.Duration) &&
+                groupDto.GroupStatus.Equals(GroupStatus)
+                )
             {
                 return true;
             }
