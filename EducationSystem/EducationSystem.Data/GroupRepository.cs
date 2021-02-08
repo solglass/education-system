@@ -53,7 +53,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public GroupDto GetGroupByProgram(int id)
+        public GroupDto GetGroupProgramsByGroupId(int id)
         {
             var groupEntry = new GroupDto();
             var courseEntry = new CourseDto();
