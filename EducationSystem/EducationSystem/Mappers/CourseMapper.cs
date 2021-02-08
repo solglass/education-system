@@ -33,7 +33,7 @@ namespace EducationSystem.API.Mappers
                 Id=inputModel.Id,
                 Name = inputModel.Name,
                 Description=inputModel.Description,
-                Duration=inputModel.Duration,                //TODO list of theme ids 
+                Duration=inputModel.Duration,                
                 Themes = themes
             };
         }
