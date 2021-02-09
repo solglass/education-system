@@ -48,32 +48,43 @@ namespace EducationSystem.Data.Tests
         [Test, Order(1)]
         public void TestAddHomework()
         {
-            _homeworkFromDb = _homeworkRepo.GetHomeworks();
-            HomeworkDto homework;
-            for (int i = 2; i < 4; ++i)
+            for(int i =0; i < 5; ++i)
             {
-                homework= GetHomeworkMock(i);
-                _homeworkIdList.Add(_homeworkRepo.AddHomework(homework));
-                homework.Id = _homeworkIdList[_homeworkIdList.Count - 1];
-                _homeworkFromDb.Add(homework);
+                UserDto user = GetUserMock(4);
+                user.Login += i.ToString();
+                user.Email+= i.ToString();
+                _userRepo.AddUser(user);
             }
-
-            int lastIndex = 0;
-
-            for(int i = _homeworkFromDb.Count - _homeworkIdList.Count; i < _homeworkFromDb.Count; ++i)
-            {
-                HomeworkDto homeworkFromDb = _homeworkRepo.GetHomeworkById(_homeworkIdList[lastIndex]);
-                if (!_homeworkFromDb[i].Equals(homeworkFromDb))
-                {
-                    Assert.Fail();
-                }
-                ++lastIndex;
-
-
-            }
-            Assert.Pass();
-
         }
+        //[Test, Order(1)]
+        //public void TestAddHomework()
+        //{
+        //    _homeworkFromDb = _homeworkRepo.GetHomeworks();
+        //    HomeworkDto homework;
+        //    for (int i = 2; i < 4; ++i)
+        //    {
+        //        homework= GetHomeworkMock(i);
+        //        _homeworkIdList.Add(_homeworkRepo.AddHomework(homework));
+        //        homework.Id = _homeworkIdList[_homeworkIdList.Count - 1];
+        //        _homeworkFromDb.Add(homework);
+        //    }
+
+        //    int lastIndex = 0;
+
+        //    for(int i = _homeworkFromDb.Count - _homeworkIdList.Count; i < _homeworkFromDb.Count; ++i)
+        //    {
+        //        HomeworkDto homeworkFromDb = _homeworkRepo.GetHomeworkById(_homeworkIdList[lastIndex]);
+        //        if (!_homeworkFromDb[i].Equals(homeworkFromDb))
+        //        {
+        //            Assert.Fail();
+        //        }
+        //        ++lastIndex;
+
+
+        //    }
+        //    Assert.Pass();
+
+        //}
 
         [Test, Order(2)]
         public void TestUpdateHomework()
@@ -358,14 +369,14 @@ namespace EducationSystem.Data.Tests
 
                     result = (new UserDto
                     {
-                        FirstName = "Максим",
-                        LastName = "Максимов",
+                        FirstName = "Пользователь",
+                        LastName = "Студент",
                         BirthDate = new DateTime(1982, 1, 11),
-                        Login = "Max01",
+                        Login = "Student01",
                         Password = "qqq123",
                         Phone = "8982552535",
                         UserPic = "ddsa",
-                        Email = "Max.Maximov@mail.ru",
+                        Email = "Student@mail.ru",
                         IsDeleted = false
                     });
                     return result;
