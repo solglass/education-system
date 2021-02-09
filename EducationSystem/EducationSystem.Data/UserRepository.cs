@@ -67,9 +67,10 @@ namespace EducationSystem.Data
             .FirstOrDefault();
             return users;
         }
-        public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
-        {
-            var UserDictionary = new Dictionary<int, UserDto>();
+        //public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
+        //{
+        //    var UserDictionary = new Dictionary<int, UserDto>();
+        //}
 
         public int ChangeUserPassword (int id, string oldPassword, string newPassword)
         {
