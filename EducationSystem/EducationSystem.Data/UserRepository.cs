@@ -43,7 +43,7 @@ namespace EducationSystem.Data
             return users;
 
         }
-        public List<UserDto> PassedStudentsAttempt_SelectByGroupId (int groupId)
+        public List<UserDto> GetPassedStudentsAttempt_SelectByGroupId (int groupId)
         {
             var UserDictionary = new Dictionary<int, UserDto>();
 
