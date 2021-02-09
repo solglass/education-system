@@ -4,6 +4,7 @@ using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,16 +13,15 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/lesson/
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class LessonController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
         private LessonRepository _repo;
         private LessonMapper _lessonMapper;
         private LessonService _lessonService;
 
-        public LessonController(ILogger<WeatherForecastController> logger)
+        public LessonController()
         {
-            _logger = logger;
             _repo = new LessonRepository();
             _lessonMapper = new LessonMapper();
             _lessonService = new LessonService();
@@ -29,6 +29,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson/
         [HttpPost]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult AddNewLesson([FromBody] LessonInputModel inputModel)
         {
             LessonDto lesson;
@@ -47,6 +48,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson/
         [HttpGet]
+        [Authorize(Roles = "Админ")]
         public ActionResult GetLessons()
         {
             var result = _lessonService.GetLessons();
@@ -55,6 +57,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson/3
         [HttpGet("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент")]
         public ActionResult GetLessonById(int id)
         {
             var result = _lessonService.GetLessonById(id);
@@ -63,6 +66,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson/3
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteLesson(int id)
         {
             _lessonService.DeleteLesson(id);
@@ -70,6 +74,7 @@ namespace EducationSystem.Controllers
         }
         // https://localhost:50221/api/lesson/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult UpdateLesson(int id,[FromBody]LessonDto lessonDto)
         {
             _repo.UpdateLesson(lessonDto);
@@ -78,6 +83,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/feedback/
         [HttpGet]
+        [Authorize(Roles = "Админ")]
         public ActionResult GetFeedbacks()
         {
             var result = _lessonService.GetFeedbacks();
@@ -86,6 +92,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/feedback/3
         [HttpGet("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult GetFeedbackById(int id)
         {
             var result = _lessonService.GetFeedbackById(id);
@@ -94,6 +101,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/feedback/
         [HttpPost]
+        [Authorize(Roles = "Админ, Студент")]
         public ActionResult AddNewFeedback(FeedbackDto feedbackDto)
         {
             _repo.AddFeedback(feedbackDto);
@@ -102,6 +110,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/feedback/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Админ, Студент")]
         public ActionResult UpdateFeedback(int id,[FromBody]FeedbackDto feedbackDto)
         {
             _repo.UpdateFeedback(feedbackDto);
@@ -110,6 +119,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/feedback/3
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Студент")]
         public ActionResult DeleteFeedback(int id)
         {
             _lessonService.DeleteFeedback(id);
@@ -118,6 +128,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/understandingLevel/
         [HttpGet]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult GetUnderstandingLevels()
         {
             var result = _lessonService.GetUnderstandingLevels();
@@ -126,6 +137,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/understandingLevel/3
         [HttpGet("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult GetUnderstandingLevelById(int id)
         {
             var result = _lessonService.GetUnderstandingLevelById(id);
@@ -134,6 +146,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/understandingLevel/
         [HttpPost]
+        [Authorize(Roles = "Админ, Студент")]
         public ActionResult AddNewUnderstandingLevel(UnderstandingLevelDto understandingLevel)
         {
             _repo.AddUnderstandingLevel(understandingLevel);
@@ -142,6 +155,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/understandingLevel/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Админ, Студент")]
         public ActionResult UpdateUnderstandingLevel(int id,[FromBody]UnderstandingLevelDto understandingLevelDto)
         {
             _repo.UpdateUnderstandingLevel(understandingLevelDto);
@@ -150,6 +164,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/UnderstandingLevel/3
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Студент")]
         public ActionResult DeleteUnderstandingLevel(int id)
         {
             _lessonService.DeleteUnderstandingLevel(id);
@@ -158,6 +173,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/attendance/
         [HttpGet]
+        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult GetAttendances()
         {
             var result =_lessonService.GetAttendances();
@@ -166,6 +182,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/attendance/3
         [HttpGet("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult GetAttendanceById(int id)
         {
             var result = _lessonService.GetAttendanceById(id);
@@ -174,6 +191,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/attendance/
         [HttpPost]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult AddNewAttendance(AttendanceDto attendance)
         {
             _repo.AddAttendance(attendance);
@@ -182,6 +200,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/attendance/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult UpdateAttendance(int id,[FromBody]AttendanceDto attendance)
         {
             _repo.UpdateAttendance(attendance);
@@ -190,6 +209,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/attendance/3
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteAttendance(int id)
         {
             _lessonService.DeleteAttendance(id);
@@ -198,6 +218,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson-theme/
         [HttpGet]
+        [Authorize(Roles = "Админ")]
         public ActionResult GetLessonTheme()
         {
             var result = _lessonService.GetLessonThemes();
@@ -206,6 +227,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpGet("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult GetLessonThemeById(int id)
         {
             var result = _lessonService.GetLessonThemeById(id);
@@ -214,6 +236,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson-theme/
         [HttpPost]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult AddNewLessonTheme(LessonThemeDto lessontheme)
         {
             _repo.AddLessonTheme(lessontheme);
@@ -222,6 +245,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpPut("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult UpdateLessonTheme(int id,[FromBody]LessonThemeDto lessonTheme)
         {
             _repo.UpdateLessonTheme(lessonTheme);
@@ -230,6 +254,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteLessonTheme(int id)
         {
             _lessonService.DeleteAttendance(id);

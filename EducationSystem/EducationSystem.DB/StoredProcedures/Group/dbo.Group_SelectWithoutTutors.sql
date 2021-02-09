@@ -6,7 +6,6 @@ begin
 		g.CourseID,
 		g.StatusId,
 		g.StartDate
-from dbo.[Group] g left join dbo.Tutor_Group tg on tg.GroupID != g.Id
-	
+from dbo.[Group] g left join dbo.Tutor_Group tg on tg.GroupID = g.Id
+	where tg.GroupID is null
 end
-

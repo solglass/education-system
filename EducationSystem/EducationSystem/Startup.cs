@@ -48,7 +48,7 @@ namespace EducationSystem
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseRouting();
 
             app.UseAuthorization();

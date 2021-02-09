@@ -3,16 +3,16 @@ using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
-using EducationSystem.Controllers;
-using EducationSystem.Data;
-using EducationSystem.Data.Models;
+//using EducationSystem.Controllers;
+//using EducationSystem.Data;
+//using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+//using System.Linq;
+//using System.Threading.Tasks;
 
 namespace EducationSystem.API.Controllers
 {
@@ -22,14 +22,11 @@ namespace EducationSystem.API.Controllers
     [Authorize]
     public class CourseController : ControllerBase
     {
-        private readonly ILogger<CourseController> _logger;
-        private CourseRepository _repo;
         private CourseMapper _courseMapper;
         private ThemeMapper _themeMapper;
         private CourseService _courseService;
         public CourseController()
         {
-            _repo = new CourseRepository();
             _courseMapper = new CourseMapper();
             _themeMapper = new ThemeMapper();
             _courseService = new CourseService();
@@ -101,9 +98,9 @@ namespace EducationSystem.API.Controllers
                 return BadRequest(ex.Message);
             }
             if (result == 0)
-                return Ok("Курс обновлен!");
+                return Ok($"Курс #{id} обновлен!");
             else 
-                return Problem("Ошибка! Не получилось обновить курс!");
+                return Problem($"Ошибка! Не получилось обновить курс #{id}!");
         }
 
         [HttpDelete("{id}")]
@@ -111,10 +108,10 @@ namespace EducationSystem.API.Controllers
         public ActionResult RemoveCourseInfo(int id)
         {
             var result = _courseService.RemoveCourse(id);
-            if (result ==1)
-                return Ok("Курс удален!");
+            if (result == 1)
+                return Ok($"Курс #{id} удален!");
             else
-                return Problem("Ошибка! Не получилось удалить выбранный курс!");
+                return Problem($"Ошибка! Не получилось удалить курс #{id}!") ;
         }
 
         // https://localhost:XXXXX/api/course/3/theme/8
@@ -124,9 +121,9 @@ namespace EducationSystem.API.Controllers
         {
             int result = _courseService.AddThemeToCourse(courseId, themeId);
             if (result > 0) 
-                return Ok(result);
+                return Ok($"Тема {themeId} добавлена к курсу #{courseId}");
             else 
-                return Problem("Ошибка! Не получилось добавить к курсу тему!");
+                return Problem($"Ошибка! Не получилось добавить к курсу #{courseId} тему #{themeId}!");
         }
 
         // https://localhost:XXXXX/api/course/3/theme/8
@@ -136,13 +133,14 @@ namespace EducationSystem.API.Controllers
         {
             var result = _courseService.RemoveThemeFromCourse(courseId, themeId);
             if (result== 0)
-                return Ok(result);
+                return Ok($"Тема {themeId} отвязана от курса #{courseId}");
             else
-                return Problem("Ошибка! Не получилось убрать тему из курса!");
+                return Problem($"Ошибка! Не получилось отвязать тему #{themeId} от курса #{courseId}!");
         }
        
 
         [HttpGet("themes")]
+        [Authorize(Roles = "Админ")]
         public ActionResult GetThemes()
         {
             List<ThemeOutputModel> themes;
@@ -159,6 +157,7 @@ namespace EducationSystem.API.Controllers
 
        
         [HttpGet("theme/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetTheme(int id)
         {
             ThemeOutputModel theme;
@@ -175,7 +174,7 @@ namespace EducationSystem.API.Controllers
         }
         
         [HttpPost("theme")]
-        [Authorize(Roles = "Админ, Методист")]
+        [Authorize(Roles = "Админ, Методист, Преподаватель")]
         public ActionResult CreateTheme([FromBody] ThemeInputModel inputModel)
         {
             int result;
@@ -193,28 +192,27 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! К созданной теме #{-(result + 2)} не удалось привязать теги! ");
         }
         [HttpPost("theme/{themeId}/tag/{tagId}")]
-        [Authorize(Roles = "Админ, Методист")]
+        [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
         {
             var result = _courseService.AddTagToTheme(themeId, tagId);
             if (result > 0)
-                return Ok("Тег добавлен к теме!");
+                return Ok($"Тег #{tagId} добавлен к теме #{themeId}!");
             else
-                return Problem("Ошибка! Не получилось добавить тег к теме!");
+                return Problem($"Ошибка! Не получилось добавить тег  #{tagId} к теме #{themeId}!");
         }
 
         [HttpDelete("theme/{themeId}/tag/{tagId}")]
-        [Authorize(Roles = "Админ, Методист")]
+        [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult RemoveTagFromTheme(int themeId, int tagId)
         {
             var result = _courseService.RemoveTagFromTheme(themeId, tagId);
             if (result > 0)
-                return Ok("Тег отвязан от темы!");
+                return Ok($"Тег #{tagId} отвязан от темы #{themeId}!");
             else
-                return Problem("Ошибка! Не получилось отвязать тег от темы!");
+                return Problem($"Ошибка! Не получилось отвязать тег #{tagId} от темы #{themeId}!");
         }
 
-        //__________________________________________________________
 
         [HttpDelete("theme/{id}")]
         [Authorize(Roles = "Админ, Методист")]
@@ -222,9 +220,9 @@ namespace EducationSystem.API.Controllers
         {
             var result = _courseService.DeleteTheme(id);
             if (result > 0)
-                return Ok("Тема удалена!");
+                return Ok($"Тема удалена #{id}!");
             else
-                return Problem("Ошибка! Не получилось удалить тему!");
+                return Problem($"Ошибка! Не получилось удалить тему #{id}!");
         }
 
      

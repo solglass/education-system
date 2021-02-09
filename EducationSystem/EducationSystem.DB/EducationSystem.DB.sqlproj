@@ -240,6 +240,9 @@
     <Build Include="StoredProcedures\User_Role\dbo.User_Role_Delete.sql" />
     <Build Include="StoredProcedures\User_Role\dbo.User_Role_SelectAll.sql" />
     <Build Include="StoredProcedures\User_Role\dbo.User_Role_SelectById.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_SelectAllByCourseId.sql" />
+    <Build Include="StoredProcedures\Group\dbo.GroupPrograms_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Group\dbo.Group_SelectWithoutTutors.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_DeleteByTagIdAndThemeId.sql" />
