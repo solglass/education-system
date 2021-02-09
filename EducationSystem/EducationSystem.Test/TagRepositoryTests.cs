@@ -5,7 +5,7 @@ using EducationSystem.Data.Models;
 using EducationSystem.Data;
 using System.Collections.Generic;
 
-namespace NUnitTestProject
+namespace EducationSystem.Data.Tests
 {
     public class TagsTests
     {
