@@ -65,36 +65,43 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return payment;
         }
-
+        public List<UserDto> GetStudentsByIsPaidInPeriod(string period)
+        {
+            var result = _connection
+               .Query<UserDto>("dbo.Student_SelectByPeriodAndIsPaid", new { period },
+               commandType: System.Data.CommandType.StoredProcedure).ToList();
+            return result;
+        }
         // should return id of inserted entity, use 'QuerySingle' method
-        public int AddPayment(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid)
+        public int AddPayment(PaymentDto payment)
         {
             var result = _connection
                 .QuerySingle<int>("dbo.Payment_Add",
                 new
                 {
-                   contractNumber,
-                   amount,
-                   date,
-                   period,
-                   IsPaid
+                   payment.ContractNumber,
+                    payment.Amount,
+                    payment.Date,
+                    payment.Period,
+                    payment.IsPaid
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
         // should return affected rows' count, use 'Execute' method
-        public int UpdatePayment(int contractNumber, decimal amount, DateTime date, string period, bool IsPaid)
+        public int UpdatePayment(int id,PaymentDto payment)
         {
+            payment.Id = id;
             var result = _connection
                 .Execute("dbo.Course_Update",
                 new
                 {
-                    contractNumber,
-                    amount,
-                    date,
-                    period,
-                    IsPaid
+                    payment.ContractNumber,
+                    payment.Amount,
+                    payment.Date,
+                    payment.Period,
+                    payment.IsPaid
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;

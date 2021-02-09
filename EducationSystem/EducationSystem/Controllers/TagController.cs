@@ -60,7 +60,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateTag(int id, [FromBody] TagDto data)
         {
-            _repo.TagUpdate(data);
+            _repo.TagUpdate(id,data);
             return Ok("Tag обновлён");
         }
 
