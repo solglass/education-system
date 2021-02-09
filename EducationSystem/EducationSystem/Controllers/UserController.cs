@@ -20,7 +20,7 @@ namespace EducationSystem.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private UserRepository _repo;
+       
         private PaymentRepository _prepo;
         private PaymentMapper _mapper;
         private UserMapper _userMapper;
@@ -29,7 +29,6 @@ namespace EducationSystem.Controllers
         public UserController()
 
         {
-            _repo = new UserRepository();
             _userMapper = new UserMapper();
             _roleMapper = new RoleMapper();
             _userService = new UserService();
@@ -42,7 +41,11 @@ namespace EducationSystem.Controllers
         {
             UserDto userDto;
             userDto = _userMapper.ToDto(inputModel);
-            _repo.AddUser(userDto);
+            if (String.IsNullOrEmpty(inputModel.Password) && String.IsNullOrEmpty(inputModel.Login))
+            {
+                return Problem("Не заполнены поля Password и Login ");
+            }
+            _userService.AddUser(userDto);
             return Ok("пользователь зарегистрирован");
         }
 
@@ -51,7 +54,11 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult ChangePassword(int id, string oldPassword, string newPassword)
         {
-            _repo.ChangeUserPassword(id, oldPassword, newPassword);
+           if(_userService.GetUserById(id) == null)
+            {
+                return Problem("Не найден пользователь");
+            }
+            _userService.ChangePassword(id, oldPassword,newPassword);
             return Ok("Пороль обновлён");
         }
 
@@ -60,7 +67,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult GetUsers()
         {
-            var users = _repo.GetUsers();
+            var users = _userService.GetUsers();
             return Ok(users);
         }
 
@@ -69,7 +76,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult GetUser(int id)
         {
-            var user = _repo.GetUserById(id);
+            var user = _userService.GetUserById(id);
             return Ok(user);
         }
 
@@ -80,7 +87,11 @@ namespace EducationSystem.Controllers
         {
             UserDto userDto;
             userDto = _userMapper.ToDto(inputModel);
-            _repo.UpdateUser(userDto);
+            if (_userService.GetUserById(userDto.Id) == null)
+            {
+                return Problem("Не найден пользователь");
+            }
+            _userService.UpdateUser(userDto);
             return Ok("Обновлено");
         }
 
@@ -89,7 +100,11 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ")]
         public ActionResult DeleteUser(int id)
         {
-            _repo.DeleteUser(id);
+            if (_userService.GetUserById(id) == null)
+            {
+                return Problem("Не найден пользователь");
+            }
+            _userService.DeleteUser(id);
             return Ok("Удалено");
         }
 
@@ -100,7 +115,7 @@ namespace EducationSystem.Controllers
         {
             RoleDto roleDto;
             roleDto = _roleMapper.ToDto(inputModel);
-            _repo.AddRole(roleDto);
+            _userService.AddRole(roleDto);
             return Ok("Роль добавлена");
         }
 
@@ -109,7 +124,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult GetURoles()
         {
-            var roles = _repo.GetRoles();
+            var roles = _userService.GetRoles();
             return Ok(roles);
         }
 
@@ -118,7 +133,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult GetRoleById(int id)
         {
-            var user = _repo.GetRoleById(id);
+            var user = _userService.GetRole(id);
             return Ok(user);
         }
 
@@ -129,7 +144,11 @@ namespace EducationSystem.Controllers
         {
             RoleDto roleDto;
             roleDto = _roleMapper.ToDto(inputModel);
-            _repo.UpdateRole(roleDto);
+            if (_userService.GetRole(roleDto.Id) == null)
+            {
+                return Problem("Роль не найдена");
+            }
+            _userService.UpdateRole(roleDto);
             return Ok("Обновлено");
         }
 
@@ -138,7 +157,11 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ")]
         public ActionResult DeleteRole(int id)
         {
-            _repo.DeleteRole(id);
+            if (_userService.GetRole(id) == null)
+            {
+                return Problem("Роль не найдена");
+            }
+            _userService.DeleteRole(id);
             return Ok("Удалено");
         }
 

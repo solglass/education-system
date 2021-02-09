@@ -9,6 +9,7 @@ namespace EducationSystem.Business
     public class UserService
     {
         private UserRepository _userRepository;
+
         public UserService()
         {
             _userRepository = new UserRepository();
@@ -26,17 +27,41 @@ namespace EducationSystem.Business
             return _userRepository.UpdateUser(userDto); 
         }
         public int AddUser(UserDto userDto) 
-        { 
+        {
+            userDto.Password = new SecurityService().GetHash(userDto.Password);
             return _userRepository.AddUser(userDto); 
         }
         public int DeleteUser(int id)
         {
             return _userRepository.DeleteUser(id);
         }
-        //public string ChangePassword(string login, string password)
-        //{
-        //    return _userRepository.CheckUser ();
-        //}
-        // TODO: Role 
+
+        public int ChangePassword(int id,string oldPassword, string password)
+        {
+            oldPassword = new SecurityService().GetHash(oldPassword);
+            password = new SecurityService().GetHash(password);
+            return _userRepository.ChangeUserPassword(id, oldPassword, password);
+        }
+
+        public int AddRole(RoleDto roleDto)
+        {
+            return _userRepository.AddRole(roleDto);
+        }
+        public int UpdateRole(RoleDto roleDto)
+        {
+            return _userRepository.UpdateRole(roleDto);
+        }
+        public int DeleteRole(int id)
+        {
+            return _userRepository.DeleteRole(id);
+        }
+        public RoleDto GetRole(int id)
+        {
+            return _userRepository.GetRoleById(id);
+        }
+        public List<RoleDto> GetRoles()
+        {
+            return _userRepository.GetRoles();
+        }
     }
 }
