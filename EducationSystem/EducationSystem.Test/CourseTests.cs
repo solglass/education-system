@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace EducationSystem.Test
+namespace EducationSystem.Data.Tests
 {
     [TestFixture]
     public class CourseTests
@@ -46,7 +46,7 @@ namespace EducationSystem.Test
             Assert.AreEqual(_expectedCourse, actualCourse);
         }
 
-        [TestCase(3), Order(2)]
+        [TestCase(2), Order(2)]
         public void TestUpdateCourse(int courseMock)
         {
             CourseDto tempCourse = GetCourseMock(courseMock);
@@ -133,9 +133,6 @@ namespace EducationSystem.Test
                     return course;
                 case 2:
                     course = new CourseDto() { Name = "TestCourseCase 2", Description = "Test case 2", Duration = 2 };
-                    return course;
-                case 3:
-                    course = new CourseDto() { Name = "TestCourseCase 3", Description = "Test case 3", Duration = 3 };
                     return course;
                 default:
                     return course;

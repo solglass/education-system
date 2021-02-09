@@ -5,7 +5,7 @@ using EducationSystem.Data;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace NUnitTestProject
+namespace EducationSystem.Data.Tests
 {
     public class UserTests
     {

@@ -9,6 +9,7 @@ using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EducationSystem.Controllers
 {
@@ -17,18 +18,18 @@ namespace EducationSystem.Controllers
     [Route("api/[controller]")]
     public class TagController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
         private TagRepository _repo;
         private TagMapper _tagMapper;
 
-        public TagController(ILogger<WeatherForecastController> logger)
+        public TagController()
         {
-            _logger = logger;
+
             _repo = new TagRepository();
         }
 
         // https://localhost:50221/api/tag/
         [HttpPost]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddNewTag([FromBody] TagInputModel tag)
         {
             var tagDto = _tagMapper.ToDto(tag);
@@ -38,6 +39,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/tag
         [HttpGet]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public ActionResult GetTags()
         {
             var tags = _repo.GetTags();
@@ -46,6 +48,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/tag/3
         [HttpGet("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public ActionResult GetTag(int id)
         {
             var tag = _repo.GetTagById(id);
@@ -54,6 +57,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/tag/3
         [HttpPut("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateTag(int id, [FromBody] TagDto data)
         {
             _repo.TagUpdate(data);
@@ -62,6 +66,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/tag/3
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteTag(int id)
         {
             _repo.TagDelete(id);
@@ -69,6 +74,7 @@ namespace EducationSystem.Controllers
         }
         // https://localhost:50221/api/tag/4
         [HttpGet("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public dynamic GetThemeTagById(int id)
         {
             var tag = _repo.GetThemeTagById(id);
