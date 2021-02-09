@@ -26,6 +26,10 @@ namespace EducationSystem.Business
         {
             return _userRepository.GetUserById(id);
         }
+        public List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
+        {
+            return _userRepository.GetPassedStudentsAttempt_SelectByGroupId(groupId);
+        }
         public int UpdateUser (UserDto userDto) 
         { 
             return _userRepository.UpdateUser(userDto); 

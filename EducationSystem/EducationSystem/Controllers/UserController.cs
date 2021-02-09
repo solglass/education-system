@@ -80,6 +80,15 @@ namespace EducationSystem.Controllers
             return Ok(user);
         }
 
+        // https://localhost:50221/api/user/passed-homework/group/42
+        [HttpGet("/passed-homework/group/{groupId}")]
+        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
+        public ActionResult GetPassedStudentsAttempt_SelectByGroupId(int groupId)
+        {
+            var user = _userService.GetPassedStudentsAttempt_SelectByGroupId(groupId);
+            return Ok(user);
+        }
+
         // https://localhost:50221/api/user/42
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
