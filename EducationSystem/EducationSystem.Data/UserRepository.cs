@@ -207,7 +207,7 @@ namespace EducationSystem.Data
                 new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
-        public UserDto CheckUser(string login, string password)
+        public UserDto CheckUser(string login)
         {         
             var userEntry = new UserDto();
             var result = _connection.
@@ -223,7 +223,7 @@ namespace EducationSystem.Data
                     userEntry.Roles.Add(role);
                     return userEntry;
                 },
-                new { login, password },
+                new { login },
                 splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();

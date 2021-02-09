@@ -5,7 +5,7 @@ using BCrypt.Net;
 
 namespace EducationSystem.Business
 {
-    class SecurityService
+    public class SecurityService
     {
 
         private const string _secret = "O560@A5r6AJfqW$VOTp2nh0F";

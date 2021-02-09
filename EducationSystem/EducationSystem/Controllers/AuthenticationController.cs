@@ -14,16 +14,17 @@ namespace EducationSystem.API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private AuthenticationService _service;
+        private SecurityService _securityService;
         public AuthenticationController()
         {
             _service = new AuthenticationService();
+            _securityService = new SecurityService();
         }
         [HttpPost]
-        public ActionResult Login([FromBody] AuthenticationInputModel login)
-        {
-            //Hash function
-            var user = _service.GetAuthentificatedUser(login.Login, login.Password);
-            if( user != null)
+        public ActionResult Authentificate([FromBody] AuthenticationInputModel login)
+        {           
+            var user = _service.GetAuthentificatedUser(login.Login);          
+            if( user != null && _securityService.VerifyHashAndPassword(user.Password, login.Password))
             {
                 var token = _service.GenerateToken(user);
                 return Ok(token);
