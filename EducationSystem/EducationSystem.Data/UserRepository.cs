@@ -71,30 +71,20 @@ namespace EducationSystem.Data
         {
             var UserDictionary = new Dictionary<int, UserDto>();
 
+        public int ChangeUserPassword (int id, string oldPassword, string newPassword)
+        {
 
-            var users = _connection.
-                Query<UserDto, RoleDto, UserDto>(
-                "dbo.PassedStudentsAttempt_SelectByGroupId",
-                (user, role) =>
-                {
+            return _connection
+               .Execute("dbo.User_Change_Password", new
+               {
+                   id,
+                   oldPassword,
+                   newPassword
 
-
-                    if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
-                    {
-                        userEntry = user;
-                        userEntry.Roles = new List<RoleDto>();
-                        UserDictionary.Add(userEntry.Id, userEntry);
-                    }
-
-                    userEntry.Roles.Add(role);
-                    return userEntry;
-                },
-                new { groupId},
-                splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
-            .ToList();
-            return users;
+               }, commandType: System.Data.CommandType.StoredProcedure);
 
         }
+
         public int AddUser(UserDto user)
         {
             return _connection
@@ -116,6 +106,7 @@ namespace EducationSystem.Data
             return _connection
                 .Execute("dbo.User_Update", new
                 {
+                    user.Id,
                     user.FirstName,
                     user.LastName,
                     user.BirthDate,

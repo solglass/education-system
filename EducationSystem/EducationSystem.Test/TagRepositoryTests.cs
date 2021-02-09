@@ -63,7 +63,7 @@ namespace EducationSystem.Data.Tests
                 int newId = _tagId[_tagId.Count - 1];
                 expected.Name = "B_TESTCASE1";
                 expected.Id = newId;
-                _tRepo.TagUpdate(expected);
+                _tRepo.TagUpdate(expected.Id,expected);
                 TagDto actual = _tRepo.GetTagById(newId);
                 Assert.AreEqual(expected, actual);
             }
