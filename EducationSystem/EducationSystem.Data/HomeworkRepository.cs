@@ -421,7 +421,7 @@ namespace EducationSystem.Data
         public int AddHomeworkAttemptStatus(HomeworkAttemptStatusDto homeworkAttemptStatus)
         {
             var result = _connection
-                .Execute("dbo.HomeworkAttemptStatus_Add",
+                .QuerySingle<int>("dbo.HomeworkAttemptStatus_Add",
                 new
                 {
                     homeworkAttemptStatus.Name
