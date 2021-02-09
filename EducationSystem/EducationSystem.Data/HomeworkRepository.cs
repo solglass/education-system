@@ -23,13 +23,14 @@ namespace EducationSystem.Data
             var themeDictionary = new Dictionary<int, ThemeDto>();
 
             var homeworks = _connection
-                .Query<HomeworkDto, GroupDto, TagDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, UserDto, ThemeDto, HomeworkDto>(
+                .Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
                     "dbo.Homework_SelectById",
-                    (homework, group, tag, homeworkAttempt, homeworkAttemptStatus, user, theme) =>
+                    (homework, group, tag, theme) =>
                     {
                         if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
                         {
                             homeworkEntry = homework;
+                            homeworkEntry.Group = group;
                             homeworkEntry.Tags = new List<TagDto>();
                             homeworkEntry.Themes = new List<ThemeDto>();
                             homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
@@ -41,15 +42,6 @@ namespace EducationSystem.Data
                             tagEntry = tag;
                             homeworkEntry.Tags.Add(tagEntry);
                             tagDictionary.Add(tagEntry.Id, tagEntry);
-                        }
-
-                        if (homeworkAttempt != null && homeworkAttemptStatus != null && user != null && !HomeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
-                        {
-                            homeworkAttemptEntry = homeworkAttempt;
-                            homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = homeworkAttemptStatus;
-                            homeworkEntry.HomeworkAttempts.Add(homeworkAttemptEntry);
-                            HomeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
                         }
 
                         if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
@@ -120,10 +112,10 @@ namespace EducationSystem.Data
                 {
 
                     description = homework.Description,
-                    StartDate = homework.StartDate,
-                    DeadlineDate = homework.StartDate,
-                    GroupId = homework.Group.Id,
-                    IsOptional = homework.IsOptional
+                    startDate = homework.StartDate,
+                    deadlineDate = homework.DeadlineDate,
+                    groupId = homework.Group.Id,
+                    isOptional = homework.IsOptional
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -138,11 +130,10 @@ namespace EducationSystem.Data
                 {
                     id = homework.Id,
                     description = homework.Description,
-                    StartDate = homework.StartDate,
-                    DeadlineDate = homework.DeadlineDate,
-                    Group = homework.Group,
-                    IsOptional = homework.IsOptional,
-                    isDeleted = homework.IsDeleted
+                    startDate = homework.StartDate,
+                    deadlineDate = homework.DeadlineDate,
+                    groupId = homework.Group.Id,
+                    isOptional = homework.IsOptional
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -238,9 +229,9 @@ namespace EducationSystem.Data
                 new
                 {
                     comment = homeworkAttempt.Comment,
-                    author = homeworkAttempt.Author,
-                    homework = homeworkAttempt.Homework,
-                    homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus
+                    userId = homeworkAttempt.Author.Id,
+                    homeworkId = homeworkAttempt.Homework.Id,
+                    statusId = homeworkAttempt.HomeworkAttemptStatus.Id
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -254,9 +245,9 @@ namespace EducationSystem.Data
                  {
                      id = homeworkAttempt.Id,
                      comment = homeworkAttempt.Comment,
-                     author = homeworkAttempt.Author,
-                     homework = homeworkAttempt.Homework,
-                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus
+                     author = homeworkAttempt.Author.Id,
+                     homework = homeworkAttempt.Homework.Id,
+                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus.Id
                  },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -434,7 +425,7 @@ namespace EducationSystem.Data
                 new
                 {
                     homeworkAttemptStatus.Name
-                },
+                }, 
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }

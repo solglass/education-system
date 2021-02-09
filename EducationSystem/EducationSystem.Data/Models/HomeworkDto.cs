@@ -23,7 +23,7 @@ namespace EducationSystem.Data.Models
             {
                 return false;
             }
-            if (!Group.Equals(homeworkObj.Group))
+            if (Group ==null || homeworkObj.Group == null || !Group.Id.Equals(homeworkObj.Group.Id))
             {
                 return false;
             }
@@ -33,21 +33,21 @@ namespace EducationSystem.Data.Models
             }
             for(int i = 0; i < Tags.Count; ++i)
             {
-                if (Tags[i].Equals(homeworkObj.Tags[i]))
+                if (Tags[i].Id.Equals(homeworkObj.Tags[i].Id))
                 {
                     return false;
                 }
             }
             for(int i = 0; i < HomeworkAttempts.Count; ++i)
             {
-                if (HomeworkAttempts[i].Equals(homeworkObj.HomeworkAttempts[i]))
+                if (HomeworkAttempts[i].Id.Equals(homeworkObj.HomeworkAttempts[i].Id))
                 {
                     return false;
                 }
             }
             for(int i = 0; i < Themes.Count; ++i)
             {
-                if (Themes[i].Equals(homeworkObj.Themes[i]))
+                if (Themes[i].Id.Equals(homeworkObj.Themes[i].Id))
                 {
                     return false;
                 }
