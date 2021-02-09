@@ -16,4 +16,5 @@
            ,[IsOptional]
            ,[IsDeleted])
 	values (@description, @startDate, @deadlineDate, @groupId, @isOptional, @isDeleted)
+	select SCOPE_IDENTITY()
  end

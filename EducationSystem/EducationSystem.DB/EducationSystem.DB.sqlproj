@@ -84,6 +84,8 @@
     <Folder Include="StoredProcedures\Tag" />
     <Folder Include="StoredProcedures\Material_Tag" />
     <Folder Include="StoredProcedures\Homework_Tag" />
+    <Folder Include="StoredProcedures\User_Role" />
+    <Folder Include="StoredProcedures\User" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
@@ -226,9 +228,27 @@
     <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectAllByThemeId.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_Update.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_Add.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_Delete.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_HardDelete.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_Change_Password.sql" />
+    <Build Include="StoredProcedures\User_Role\dbo.User_Role_Update.sql" />
+    <Build Include="StoredProcedures\User_Role\dbo.User_Role_Add.sql" />
+    <Build Include="StoredProcedures\User_Role\dbo.User_Role_Delete.sql" />
+    <Build Include="StoredProcedures\User_Role\dbo.User_Role_SelectAll.sql" />
+    <Build Include="StoredProcedures\User_Role\dbo.User_Role_SelectById.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_SelectAllByCourseId.sql" />
     <Build Include="StoredProcedures\Group\dbo.GroupPrograms_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_SelectWithoutTutors.sql" />
+    <Build Include="StoredProcedures\Course\Course_HardDelete.sql" />
+    <Build Include="StoredProcedures\Group\Group_HardDelete.sql" />
+    <Build Include="StoredProcedures\Homework\Homework_HardDelete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_HardDelete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttemptStatus\HomeworkAttemptStatus_HardDelete.sql" />
+    <Build Include="StoredProcedures\Comment\Comment_HardDelete.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_DeleteByTagIdAndThemeId.sql" />

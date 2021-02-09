@@ -1,5 +1,6 @@
 ﻿using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
@@ -24,12 +25,14 @@ namespace EducationSystem.API.Controllers
         private HomeworkRepository _repo;
         private HomeworkMapper _homeworkMapper;
         private HomeworkAttemptMapper _homeworkAttemptMapper;
+        private HomeworkService _homeworkService;
 
         public HomeworkController()
         {
             _repo = new HomeworkRepository();
             _homeworkMapper = new HomeworkMapper();
             _homeworkAttemptMapper = new HomeworkAttemptMapper();
+            _homeworkService = new HomeworkService();
         }
 
 
@@ -93,8 +96,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Студент")]
         public ActionResult CreateAttempt([FromBody] HomeworkAttemptInputModel inputModel)
         {
-            HomeworkAttemptDto attempt = _homeworkAttemptMapper.ToDto(inputModel);
-            _repo.AddHomeworkAttempt(attempt);
+            int result = _homeworkService.AddHomeworkAttempt(_homeworkAttemptMapper.ToDto(inputModel));
             return Ok("Задание отправлено на проверку");
         }
 
@@ -104,7 +106,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ")]
         public ActionResult GetHomeworkAttempts()
         {
-            var results = _repo.GetHomeworkAttempts();
+            var results = _homeworkService.GetHomeworkAttemptsAll();
             return Ok(results);
         }
 
@@ -122,8 +124,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult UpdateHomeworkAttempt(int id, [FromBody] HomeworkAttemptInputModel inputModel)
         {
-            HomeworkAttemptDto attempt = _homeworkAttemptMapper.ToDto(inputModel);
-            _repo.UpdateHomeworkAttempt(attempt);
+            _homeworkService.UpdateHomeworkAttempt(_homeworkAttemptMapper.ToDto(inputModel));
             return Ok("Изменения сохранены");
         }
 
@@ -132,8 +133,8 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ")]
         public ActionResult DeleteHomeworkAttempt(int id)
         {
-            _repo.DeleteHomeworkAttempt(id);
-            return Ok("Задание удалено");
+            _homeworkService.DeleteHomeworkAttempt(id);
+            return Ok("Решение удалено");
         }
 
         //https://localhost:44365/api/homework/comment

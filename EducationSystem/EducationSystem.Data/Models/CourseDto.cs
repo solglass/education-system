@@ -17,7 +17,15 @@ namespace EducationSystem.Data.Models
         public override bool Equals(object obj)
         {
             CourseDto courseObj = (CourseDto)obj;
-            if(!courseObj.Description.Equals(Description) || !courseObj.Name.Equals(Name) || courseObj.Duration!=Duration)
+            if (object.ReferenceEquals(courseObj, null) && object.ReferenceEquals(this, null))
+            {
+                return true;
+            }
+            if (object.ReferenceEquals(courseObj, null))
+            {
+                return false;
+            }
+            if (!courseObj.Description.Equals(Description) || !courseObj.Name.Equals(Name) || courseObj.Duration!=Duration)
             {
                 return false;
             }
