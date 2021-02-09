@@ -17,9 +17,9 @@ namespace EducationSystem.Business
         {
             _repo = new UserRepository();
         }
-        public UserDto GetAuthentificatedUser(string login, string password)
+        public UserDto GetAuthentificatedUser(string login)
         {         
-             return _repo.CheckUser(login, password);       
+             return _repo.CheckUser(login);       
         }
         public string GenerateToken(UserDto user)
         {
