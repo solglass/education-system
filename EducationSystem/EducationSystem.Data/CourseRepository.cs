@@ -185,25 +185,25 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return theme;
         }
-        public int AddTheme(string name)
+        public int AddTheme(ThemeDto theme)
         {
             int result = _connection
                 .QuerySingle<int>("dbo.Theme_Add",
                 new
                 {
-                    name
+                    theme.Name
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int UpdateTheme(int id, string name)
+        public int UpdateTheme(ThemeDto theme)
         {
             var result = _connection
                 .Execute("dbo.Theme_Update",
                 new
                 {
-                    id,
-                    name
+                    theme.Id,
+                    theme.Name
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;

@@ -67,6 +67,9 @@ namespace EducationSystem.Data
             .FirstOrDefault();
             return users;
         }
+        public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
+        {
+            var UserDictionary = new Dictionary<int, UserDto>();
 
         public int ChangeUserPassword (int id, string oldPassword, string newPassword)
         {
@@ -91,7 +94,7 @@ namespace EducationSystem.Data
                     user.LastName,
                     user.BirthDate,
                     user.Login,
-                    user.Password,
+                    user.Password,  
                     user.Phone,
                     user.UserPic,
                     user.Email,
@@ -118,6 +121,12 @@ namespace EducationSystem.Data
         {
             return _connection
                 .Execute("dbo.User_Delete", new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public int HardDeleteUser(int id)
+        {
+            return _connection
+                .Execute("dbo.User_HardDelete", new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 

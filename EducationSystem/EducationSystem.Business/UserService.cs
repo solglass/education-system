@@ -18,6 +18,10 @@ namespace EducationSystem.Business
         {
             return _userRepository.GetUsers();
         }
+        public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
+        {
+            return _repo.PassedStudentsAttempt_SelectByGroupId(groupId);
+        }
         public UserDto GetUserById(int id)
         {
             return _userRepository.GetUserById(id);

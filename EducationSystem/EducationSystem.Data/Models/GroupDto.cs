@@ -15,15 +15,24 @@ namespace EducationSystem.Data.Models
         {
             GroupDto groupDto = (GroupDto)obj;
 
-            if (
-                groupDto.StartDate == StartDate && 
-                groupDto.Course.Name.Equals(Course.Name) && 
-                groupDto.Course.Description.Equals(Course.Description) &&
-                groupDto.Course.Duration.Equals(Course.Duration) &&
-                groupDto.GroupStatus.Equals(GroupStatus)
-                )
+            if(object.ReferenceEquals(groupDto, null) && object.ReferenceEquals(this, null))
             {
                 return true;
+            }
+            if(object.ReferenceEquals(groupDto, null))
+            {
+                return false;   
+            }
+            if (groupDto.StartDate == StartDate)
+            {
+                if (groupDto.Course.Equals(Course))
+                {
+                    if (groupDto.GroupStatus.Equals(GroupStatus))
+                    {
+
+                        return true;
+                    }
+                }
             }
 
             return false;
