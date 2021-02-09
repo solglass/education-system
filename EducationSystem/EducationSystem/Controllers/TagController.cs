@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
+using EducationSystem.Business;
 
 namespace EducationSystem.Controllers
 {
@@ -20,6 +21,7 @@ namespace EducationSystem.Controllers
     {
         private TagRepository _repo;
         private TagMapper _tagMapper;
+        private TagService _tagService;
 
         public TagController()
         {
@@ -33,7 +35,7 @@ namespace EducationSystem.Controllers
         public ActionResult AddNewTag([FromBody] TagInputModel tag)
         {
             var tagDto = _tagMapper.ToDto(tag);
-            var result=_repo.TagAdd(tagDto);
+            var result= _tagService.AddTag(tagDto);
             return Ok($"Тег№{result} добавлен");
         }
 
@@ -42,7 +44,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public ActionResult GetTags()
         {
-            var tags = _repo.GetTags();
+            var tags = _tagService.GetTags();
             return Ok(tags);
         }
 
@@ -51,7 +53,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public ActionResult GetTag(int id)
         {
-            var tag = _repo.GetTagById(id);
+            var tag = _tagService.GetTagById(id);
             return Ok(tag);
         }
 
@@ -60,7 +62,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateTag(int id, [FromBody] TagDto data)
         {
-            _repo.TagUpdate(data);
+            _tagService.UpdateTag(id,data);
             return Ok("Tag обновлён");
         }
 
@@ -69,7 +71,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteTag(int id)
         {
-            _repo.TagDelete(id);
+            _tagService.DeleteTag(id);
             return Ok("Tag удалён");
         }
         // https://localhost:50221/api/tag/4

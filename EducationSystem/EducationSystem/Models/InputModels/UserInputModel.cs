@@ -16,6 +16,6 @@ namespace EducationSystem.API.Models.InputModels
         public string Phone { get; set; }
         public string UserPic { get; set; }
         public string Email { get; set; }
-        public List<RoleDto> Roles { get; set; }
+        public List<int> RoleIds { get; set; }
     }
 }

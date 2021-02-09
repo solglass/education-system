@@ -8,22 +8,64 @@ namespace EducationSystem.Business
 {
     public class UserService
     {
-        private UserRepository _repo;
+        private UserRepository _userRepository;
+
         public UserService()
         {
-            _repo = new UserRepository();
+            _userRepository = new UserRepository();
         }
         public List<UserDto> GetUsers()
         {
-            return _repo.GetUsers();
+            return _userRepository.GetUsers();
         }
-        public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
-        {
-            return _repo.PassedStudentsAttempt_SelectByGroupId(groupId);
-        }
+        //public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
+        //{
+        //    return _repo.PassedStudentsAttempt_SelectByGroupId(groupId);
+        //}
         public UserDto GetUserById(int id)
         {
-            return _repo.GetUserById(id);
+            return _userRepository.GetUserById(id);
+        }
+        public int UpdateUser (UserDto userDto) 
+        { 
+            return _userRepository.UpdateUser(userDto); 
+        }
+        public int AddUser(UserDto userDto) 
+        {
+            userDto.Password = new SecurityService().GetHash(userDto.Password);
+            return _userRepository.AddUser(userDto); 
+        }
+        public int DeleteUser(int id)
+        {
+            return _userRepository.DeleteUser(id);
+        }
+
+        public int ChangePassword(int id,string oldPassword, string password)
+        {
+            oldPassword = new SecurityService().GetHash(oldPassword);
+            password = new SecurityService().GetHash(password);
+            return _userRepository.ChangeUserPassword(id, oldPassword, password);
+        }
+
+        public int AddRole(RoleDto roleDto)
+        {
+            return _userRepository.AddRole(roleDto);
+        }
+        public int UpdateRole(RoleDto roleDto)
+        {
+            return _userRepository.UpdateRole(roleDto);
+        }
+        public int DeleteRole(int id)
+        {
+            return _userRepository.DeleteRole(id);
+        }
+        public RoleDto GetRole(int id)
+        {
+            return _userRepository.GetRoleById(id);
+        }
+        public List<RoleDto> GetRoles()
+        {
+            return _userRepository.GetRoles();
         }
     }
 }

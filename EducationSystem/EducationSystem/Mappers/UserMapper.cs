@@ -40,10 +40,6 @@ namespace EducationSystem.API.Mappers
         public List<UserDto> ToDtos(List<UserInputModel> inputModels)
         {
             List<UserDto> result = new List<UserDto>();
-            if (inputModels == null || inputModels.Count == 0)
-            {
-                throw new Exception("Пользователи не найдены!");
-            }
             foreach (UserInputModel inputModel in inputModels)
             {
                 result.Add(ToDto(inputModel));
