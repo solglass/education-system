@@ -105,7 +105,20 @@ namespace EducationSystem.Data.Tests
             }
 
 
-            Assert.AreEqual(_homeworkAttemptFromDb, _homeworkRepo.GetHomeworkAttempts());
+
+            int lastIndex = 0;
+
+            for (int i = _homeworkAttemptFromDb.Count - _homeworkAttemptIdList.Count; i < _homeworkAttemptFromDb.Count; ++i)
+            {
+                HomeworkAttemptDto homeworkAttemptFromDb = _homeworkRepo.GetHomeworkAttemptById(_homeworkAttemptIdList[lastIndex]);
+                if (!_homeworkAttemptFromDb[i].Equals(homeworkAttemptFromDb))
+                {
+                    Assert.Fail();
+                }
+                ++lastIndex;
+
+
+            }
 
         }
 
@@ -138,7 +151,7 @@ namespace EducationSystem.Data.Tests
                 deleted = _homeworkRepo.GetHomeworkAttemptById(homeworkAttemptId);
                 List < HomeworkAttemptDto > newHomeworkAttemptFromDb = _homeworkRepo.GetHomeworkAttempts();
 
-                if (_homeworkAttemptFromDb.Count != newHomeworkAttemptFromDb.Count)
+                if (_homeworkAttemptFromDb.Count == newHomeworkAttemptFromDb.Count)
                 {
 
                     Assert.Fail("Nothing was deleted");
@@ -166,7 +179,7 @@ namespace EducationSystem.Data.Tests
                 _homeworkRepo.DeleteHomework(homeworkId);
                 deleted = _homeworkRepo.GetHomeworkById(homeworkId);
                 List<HomeworkDto> newHomeworkFromDb = _homeworkRepo.GetHomeworks();
-                if (_homeworkFromDb.Count != newHomeworkFromDb.Count)
+                if (_homeworkFromDb.Count == newHomeworkFromDb.Count)
                 {
                     Assert.Fail("Nothing was deleted");
                 }
@@ -266,8 +279,11 @@ namespace EducationSystem.Data.Tests
                     result.Homework.Id = _homeworkIdList[_homeworkIdList.Count - 1];
 
                     HomeworkAttemptStatusDto homeworkAttemptStatus = GetHomeworkAttemptStatusMock(n);
+
                     homeworkAttemptStatus.Name += _homeworkAttemptStatusIdList.Count.ToString();
+
                     _homeworkAttemptStatusIdList.Add(_homeworkRepo.AddHomeworkAttemptStatus(homeworkAttemptStatus));
+
                     result.HomeworkAttemptStatus = homeworkAttemptStatus;
                     result.HomeworkAttemptStatus.Id = _homeworkAttemptStatusIdList[_homeworkAttemptStatusIdList.Count - 1];
 
@@ -276,7 +292,7 @@ namespace EducationSystem.Data.Tests
                     result = (new HomeworkAttemptDto
                     {
                         Comment = "Test comment 1",
-                        HomeworkAttemptStatus = new HomeworkAttemptStatusDto { Id = 1, Name = "Test status 1" },
+                        HomeworkAttemptStatus = new HomeworkAttemptStatusDto { Id = 1, Name = "Test status 2" },
                         IsDeleted = false
                     });
                     author = GetUserMock(n);
