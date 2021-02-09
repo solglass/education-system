@@ -14,7 +14,7 @@ namespace EducationSystem.Data
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<HomeworkDto> GetHomeworks()
+        public HomeworkDto GetHomeworkById(int id)
         {
             var homeworkDictionary = new Dictionary<int, HomeworkDto>();
             var groupDictionary = new Dictionary<int, GroupDto>();
@@ -23,13 +23,14 @@ namespace EducationSystem.Data
             var themeDictionary = new Dictionary<int, ThemeDto>();
 
             var homeworks = _connection
-                .Query<HomeworkDto, GroupDto, TagDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, UserDto, ThemeDto, HomeworkDto>(
+                .Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
                     "dbo.Homework_SelectById",
-                    (homework, group, tag, homeworkAttempt, homeworkAttemptStatus, user, theme) =>
+                    (homework, group, tag, theme) =>
                     {
                         if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
                         {
                             homeworkEntry = homework;
+                            homeworkEntry.Group = group;
                             homeworkEntry.Tags = new List<TagDto>();
                             homeworkEntry.Themes = new List<ThemeDto>();
                             homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
@@ -43,13 +44,43 @@ namespace EducationSystem.Data
                             tagDictionary.Add(tagEntry.Id, tagEntry);
                         }
 
-                        if (homeworkAttempt != null && homeworkAttemptStatus != null && user != null && !HomeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
+                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                         {
-                            homeworkAttemptEntry = homeworkAttempt;
-                            homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = homeworkAttemptStatus;
-                            homeworkEntry.HomeworkAttempts.Add(homeworkAttemptEntry);
-                            HomeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
+                            themeEntry = theme;
+                            homeworkEntry.Themes.Add(themeEntry);
+                            themeDictionary.Add(themeEntry.Id, themeEntry);
+                        }
+                        return homeworkEntry;
+                    },
+                    new
+                    {
+                        id
+                    },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .FirstOrDefault();
+            return homeworks;
+        }
+
+        public List<HomeworkDto> GetHomeworks()
+        {
+            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
+            var tagDictionary = new Dictionary<int, TagDto>();
+            var themeDictionary = new Dictionary<int, ThemeDto>();
+
+            var homework = _connection
+                .Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
+                    "dbo.Homework_SelectAll",
+                    (homework, group, tag, theme) =>
+                    {
+                        if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
+                        {
+                            homeworkEntry = homework;
+                            homeworkEntry.Group = group;
+                            homeworkEntry.Tags = new List<TagDto>();
+                            homeworkEntry.Themes = new List<ThemeDto>();
+                            homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
+                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
                         }
 
                         if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
@@ -57,6 +88,12 @@ namespace EducationSystem.Data
                             themeEntry = theme;
                             homeworkEntry.Themes.Add(themeEntry);
                             themeDictionary.Add(themeEntry.Id, themeEntry);
+                        }
+                        if (tag != null && !tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
+                        {
+                            tagEntry = tag;
+                            homeworkEntry.Tags.Add(tagEntry);
+                            tagDictionary.Add(tagEntry.Id, tagEntry);
                         }
                         return homeworkEntry;
                     },
@@ -64,57 +101,6 @@ namespace EducationSystem.Data
                     commandType: System.Data.CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
-            return homeworks;
-        }
-
-        public HomeworkDto GetHomeworkById(int id)
-        {
-            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
-            var tagDictionary = new Dictionary<int, TagDto>();
-            var homeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
-            var themeDictionary = new Dictionary<int, ThemeDto>();
-
-            var homework = _connection
-                .Query<HomeworkDto, TagDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, UserDto, ThemeDto, HomeworkDto>(
-                    "dbo.Homework_SelectById",
-                    (homework, tag, homeworkAttempt, homeworkAttemptStatus, user, theme) =>
-                    {
-                        if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
-                        {
-                            homeworkEntry = homework;
-                            homeworkEntry.Tags = new List<TagDto>();
-                            homeworkEntry.Themes = new List<ThemeDto>();
-                            homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
-                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
-                        }
-
-                        if (tag != null && !tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
-                        {
-                            tagEntry = tag;
-                            homeworkEntry.Tags.Add(tagEntry);
-                            tagDictionary.Add(tagEntry.Id, tagEntry);
-                        }
-
-                        if (homeworkAttempt != null && homeworkAttemptStatus != null && user != null && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
-                        {
-                            homeworkAttemptEntry = homeworkAttempt;
-                            homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = homeworkAttemptStatus;
-                            homeworkEntry.HomeworkAttempts.Add(homeworkAttemptEntry);
-                            homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
-                        }
-
-                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                        {
-                            themeEntry = theme;
-                            homeworkEntry.Themes.Add(themeEntry);
-                            themeDictionary.Add(themeEntry.Id, themeEntry);
-                        }
-                        return homeworkEntry;
-                    },
-                    splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
             return homework;
         }
 
@@ -126,10 +112,10 @@ namespace EducationSystem.Data
                 {
 
                     description = homework.Description,
-                    StartDate = homework.StartDate,
-                    DeadlineDate = homework.StartDate,
-                    Group = homework.Group,
-                    IsOptional = homework.IsOptional
+                    startDate = homework.StartDate,
+                    deadlineDate = homework.DeadlineDate,
+                    groupId = homework.Group.Id,
+                    isOptional = homework.IsOptional
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -144,11 +130,10 @@ namespace EducationSystem.Data
                 {
                     id = homework.Id,
                     description = homework.Description,
-                    StartDate = homework.StartDate,
-                    DeadlineDate = homework.DeadlineDate,
-                    Group = homework.Group,
-                    IsOptional = homework.IsOptional,
-                    isDeleted = homework.IsDeleted
+                    startDate = homework.StartDate,
+                    deadlineDate = homework.DeadlineDate,
+                    groupId = homework.Group.Id,
+                    isOptional = homework.IsOptional
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -158,6 +143,18 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .Execute("dbo.Homework_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        
+        public int HardDeleteHomework(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Homework_HardDelete",
                 new
                 {
                     id
@@ -232,9 +229,9 @@ namespace EducationSystem.Data
                 new
                 {
                     comment = homeworkAttempt.Comment,
-                    author = homeworkAttempt.Author,
-                    homework = homeworkAttempt.Homework,
-                    homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus
+                    userId = homeworkAttempt.Author.Id,
+                    homeworkId = homeworkAttempt.Homework.Id,
+                    statusId = homeworkAttempt.HomeworkAttemptStatus.Id
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -248,9 +245,9 @@ namespace EducationSystem.Data
                  {
                      id = homeworkAttempt.Id,
                      comment = homeworkAttempt.Comment,
-                     author = homeworkAttempt.Author,
-                     homework = homeworkAttempt.Homework,
-                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus
+                     author = homeworkAttempt.Author.Id,
+                     homework = homeworkAttempt.Homework.Id,
+                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus.Id
                  },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -260,6 +257,14 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .Execute("dbo.HomeworkAttempt_Delete",
+                new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int HardDeleteHomeworkAttempt(int id)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttempt_HardDelete",
                 new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -276,6 +281,28 @@ namespace EducationSystem.Data
                     attempt = comment.HomeworkAttempt
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int DeleteComment(int id)
+        {
+            var result = _connection
+                 .Execute("dbo.Comment_Delete",
+                 new
+                 {
+                     id
+                 },
+                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int HardDeleteComment(int id)
+        {
+            var result = _connection
+                 .Execute("dbo.Comment_HardDelete",
+                 new
+                 {
+                     id
+                 },
+                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
@@ -391,7 +418,17 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-
+        public int AddHomeworkAttemptStatus(HomeworkAttemptStatusDto homeworkAttemptStatus)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttemptStatus_Add",
+                new
+                {
+                    homeworkAttemptStatus.Name
+                }, 
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
         public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatuses()
         {
             var result = _connection
@@ -404,6 +441,17 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .Execute("dbo.HomeworkAttemptStatus_Delete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int HardDeleteHomeworkAttemptStatus(int id)
+        {
+            var result = _connection
+                .Execute("dbo.HomeworkAttemptStatus_HardDelete",
                 new
                 {
                     id
@@ -454,12 +502,28 @@ namespace EducationSystem.Data
         // method doesn't work =(
         public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
         {
+            var hwAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
             var homeworkAttempts = _connection
-                .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .Query<HomeworkAttemptDto, UserDto, HomeworkAttemptStatusDto, HomeworkAttemptDto>(
+                "dbo.HomeworkAttempt_SelectByHomeworkId",
+                (attempt, user, status) =>
+                {
+                    if (!hwAttemptDictionary.TryGetValue(attempt.Id, out HomeworkAttemptDto attemptEntry))
+                    {
+                        attemptEntry = attempt;
+                        attemptEntry.Author = user;
+                        attemptEntry.HomeworkAttemptStatus = status;
+                        hwAttemptDictionary.Add(attemptEntry.Id, attemptEntry);
+                    }
+                    return attemptEntry;
+                },
+                new {id },
+                splitOn: "id", 
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return homeworkAttempts;
         }
-
+        
         public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
         {
             var comments = _connection
@@ -470,8 +534,23 @@ namespace EducationSystem.Data
 
         public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
         {
+            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
             var comments = _connection
-                .Query<AttachmentDto>("dbo.Attachment_SelectByHomeworkAttemptId", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>
+                ("dbo.Attachment_SelectByHomeworkAttemptId",
+                (attachment, type)=> 
+                {
+                    if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
+                    {
+                        attachmentEntry = attachment;
+                        attachmentEntry.AttachmentType = type;
+                        attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
+                    }
+                    return attachmentEntry;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return comments;
         }

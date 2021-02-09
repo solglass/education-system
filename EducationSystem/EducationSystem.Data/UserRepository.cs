@@ -67,7 +67,34 @@ namespace EducationSystem.Data
             .FirstOrDefault();
             return users;
         }
+        public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
+        {
+            var UserDictionary = new Dictionary<int, UserDto>();
 
+
+            var users = _connection.
+                Query<UserDto, RoleDto, UserDto>(
+                "dbo.PassedStudentsAttempt_SelectByGroupId",
+                (user, role) =>
+                {
+
+
+                    if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                    {
+                        userEntry = user;
+                        userEntry.Roles = new List<RoleDto>();
+                        UserDictionary.Add(userEntry.Id, userEntry);
+                    }
+
+                    userEntry.Roles.Add(role);
+                    return userEntry;
+                },
+                new { groupId},
+                splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+            .ToList();
+            return users;
+
+        }
         public int AddUser(UserDto user)
         {
             return _connection
@@ -77,7 +104,7 @@ namespace EducationSystem.Data
                     user.LastName,
                     user.BirthDate,
                     user.Login,
-                    user.Password,
+                    user.Password,  
                     user.Phone,
                     user.UserPic,
                     user.Email,
@@ -103,6 +130,12 @@ namespace EducationSystem.Data
         {
             return _connection
                 .Execute("dbo.User_Delete", new { id },
+                commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public int HardDeleteUser(int id)
+        {
+            return _connection
+                .Execute("dbo.User_HardDelete", new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 
