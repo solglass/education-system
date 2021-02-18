@@ -57,7 +57,6 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="StoredProcedures" />
-    <Folder Include="StoredProcedures\Course_Theme_Material" />
     <Folder Include="StoredProcedures\Attendance" />
     <Folder Include="StoredProcedures\Homework_Theme" />
     <Folder Include="StoredProcedures\Theme" />
@@ -89,10 +88,6 @@
     <Folder Include="StoredProcedures\User" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Add.sql" />
-    <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_Delete.sql" />
-    <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_SelectAll.sql" />
-    <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_SelectById.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectAll.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectById.sql" />
@@ -103,7 +98,6 @@
     <Build Include="StoredProcedures\Theme\dbo.Theme_Update.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Add.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Delete.sql" />
-    <Build Include="StoredProcedures\Comment\dbo.Comment_SelectAll.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_SelectById.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Update.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_SelectById.sql" />
@@ -113,7 +107,6 @@
     <Build Include="StoredProcedures\Course\dbo.Course_Update.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Add.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Delete.sql" />
-    <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAll.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Add.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Delete.sql" />
@@ -181,7 +174,6 @@
     <Build Include="Tables\dbo.Comment.sql" />
     <Build Include="Tables\dbo.Course.sql" />
     <Build Include="Tables\dbo.Course_Theme.sql" />
-    <Build Include="Tables\dbo.Course_Theme_Material.sql" />
     <Build Include="Tables\dbo.Homework.sql" />
     <Build Include="Tables\dbo.Homework_Attempt.sql" />
     <Build Include="Tables\dbo.Homework_Theme.sql" />
@@ -221,7 +213,6 @@
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectAll.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectById.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Update.sql" />
-    <Build Include="StoredProcedures\Course_Theme_Material\dbo.Course_Theme_Material_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Update.sql" />
