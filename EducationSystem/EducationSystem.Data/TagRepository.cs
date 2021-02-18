@@ -52,26 +52,14 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public List<MaterialTagDto> GetMaterialTag()
-        {
-            var result = _connection
-                .Query<MaterialTagDto>("dbo.Material_Tag_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return result;
-        }
+       
         public MaterialTagDto GetMaterialTagById(int Id)
         {
             var result = _connection
                 .QuerySingleOrDefault<MaterialTagDto>("dbo.Material_Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int MaterialTagUpdate(MaterialTagDto Tag)
-        {
-            var result = _connection
-                .Execute("dbo.Material_Tag_Update", new { Tag.Id, Tag.TagId, Tag.MaterialId }, commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-
-        }
+      
         public int MaterialTagDelete(int Id)
         {
             var result = _connection
