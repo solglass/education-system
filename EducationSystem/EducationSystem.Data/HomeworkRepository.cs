@@ -393,6 +393,29 @@ namespace EducationSystem.Data
             return comment;
         }
 
+        public List<CommentDto> Comment_SelectByHomeworkId (int id)
+        {
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var result = _connection.Query<CommentDto, UserDto, HomeworkAttemptDto, CommentDto>(
+                "dbo.Comment_SelectByHomeworkId",
+                (comment, user, attempt) =>
+                {
+                    if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
+                    {
+                        commentEntry = comment;
+                        commentEntry.Author = user;
+                        comment.HomeworkAttempt = attempt;
+                        commentDictionary.Add(commentEntry.Id, commentEntry);
+                    }
+                    return commentEntry;
+                },
+                new {id},
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+
 
         public int AddHomework_Theme(int homeworkId, int themeId)
         {
