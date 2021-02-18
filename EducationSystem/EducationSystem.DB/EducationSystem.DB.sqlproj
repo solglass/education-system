@@ -58,7 +58,7 @@
     <Folder Include="Properties" />
     <Folder Include="StoredProcedures" />
     <Folder Include="StoredProcedures\Course_Theme_Material" />
-	<Folder Include="StoredProcedures\Attendance" />
+    <Folder Include="StoredProcedures\Attendance" />
     <Folder Include="StoredProcedures\Homework_Theme" />
     <Folder Include="StoredProcedures\Theme" />
     <Folder Include="StoredProcedures\Comment" />
@@ -208,7 +208,6 @@
     <Build Include="StoredProcedures\Group\dbo.Group_SelectAllByCourseId.sql" />
     <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_Add.sql" />
     <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_Delete.sql" />
-    <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_SelectAll.sql" />
     <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_SelectById.sql" />
     <Build Include="StoredProcedures\Tag\dbo.Tag_Add.sql" />
     <Build Include="StoredProcedures\Tag\dbo.Tag_Delete.sql" />
@@ -217,9 +216,7 @@
     <Build Include="StoredProcedures\Tag\dbo.Tag_Update.sql" />
     <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Add.sql" />
     <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Delete.sql" />
-    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_SelectAll.sql" />
     <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_SelectById.sql" />
-    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Update.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Add.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Delete.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectAll.sql" />
@@ -249,8 +246,5 @@
     <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_HardDelete.sql" />
     <Build Include="StoredProcedures\HomeworkAttemptStatus\HomeworkAttemptStatus_HardDelete.sql" />
     <Build Include="StoredProcedures\Comment\Comment_HardDelete.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_DeleteByTagIdAndThemeId.sql" />
   </ItemGroup>
 </Project>
