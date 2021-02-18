@@ -10,3 +10,6 @@ GO
 ALTER TABLE [dbo].[Homework_Theme]
 ADD CONSTRAINT UC_HomeworkId_ThemeId UNIQUE(homeworkId, themeId)
 GO
+ALTER TABLE [dbo].[User_Role]
+ADD CONSTRAINT UC_UserId_RoleId UNIQUE (userId, roleId)
+GO
