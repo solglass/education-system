@@ -4,7 +4,7 @@ create  proc [dbo].[Attachment_SelectById] (
 	select 
 		a.Id, 
 		a.Path,
-		a.AttachmentTypeID,
+		at.Id,
 		at.Name
 
 from [dbo].[Attachment] a
