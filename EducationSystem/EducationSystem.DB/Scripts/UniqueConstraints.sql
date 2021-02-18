@@ -1,8 +1,8 @@
 ﻿ALTER TABLE [dbo].[Material_Tag] 
-ADD CONSTRAINT UC_MaterialId_TagId UNIQUE(materialId, tagId)
+ADD CONSTRAINT UC_MaterialId_TagId UNIQUE(MaterialId, TagId)
 GO
 ALTER TABLE [dbo].[Theme_Tag] 
-ADD CONSTRAINT UC_TagId_ThemeId UNIQUE(tagId, themeId)
+ADD CONSTRAINT UC_TagId_ThemeId UNIQUE(TagId, ThemeId)
 GO
 ALTER TABLE [dbo].[Attendance]
 ADD CONSTRAINT UC_LessonId_UserId UNIQUE(lessonId, userId)
@@ -21,4 +21,8 @@ ADD CONSTRAINT UC_GroupID_MaterialID UNIQUE(GroupID,MaterialID)
 GO
 ALTER TABLE [dbo].[Teacher_Group] 
 ADD CONSTRAINT UC_UserID_GroupID UNIQUE(UserID,GroupID)
+GO
+
+ALTER TABLE [dbo].[Homework_Tag] 
+ADD CONSTRAINT UC_HomeworkId_TagId UNIQUE(HomeworkId, TagId)
 GO
