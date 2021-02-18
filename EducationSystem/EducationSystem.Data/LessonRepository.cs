@@ -11,6 +11,10 @@ namespace EducationSystem.Data
 {
     public class LessonRepository : BaseRepository
     {
+        public LessonRepository()
+        {
+            _connection = new SqlConnection(_connectionString);
+        }
         public List<LessonDto> GetLessons()
         {
             var lessonDictionary = new Dictionary<int, LessonDto>();
@@ -205,7 +209,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Attendance_Update",
-                new {attendance.ID,attendance.LessonID,attendance.UserID,attendance.IsAbsent},
+                new {attendance.Id, attendance.IsAbsent},
                 commandType: CommandType.StoredProcedure);
         }
         public List<AttendanceDto> GetAttendances()

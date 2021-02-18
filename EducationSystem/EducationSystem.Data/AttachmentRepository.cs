@@ -19,25 +19,6 @@ namespace EducationSystem.Data
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<AttachmentDto> GetAttachments()
-        {
-            
-            var data = _connection
-                .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>(
-                    "dbo.Attachment_SelectAll",
-                    (attachment, attachmentType) =>
-                    {                       
-                        attachment.AttachmentType = attachmentType;
-                        return attachment;
-                    },
-                    splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                    .Distinct()
-                    .ToList();
-            return data;
-
-        }
-
         public AttachmentDto GetAttachmentById(int id)
         {
             var data = _connection

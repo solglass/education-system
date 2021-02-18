@@ -198,13 +198,16 @@ namespace EducationSystem.Controllers
             return Ok("Посещаемость добавлена");
         }
 
-        // https://localhost:50221/api/attendance/5
-        [HttpPut("{id}")]
+        // https://localhost:50221/api/lesson/attendance/
+        [HttpPut("Attendance")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult UpdateAttendance(int id,[FromBody]AttendanceDto attendance)
-        {
-            _repo.UpdateAttendance(attendance);
-            return Ok("Посещаемость обновлена");
+        public ActionResult UpdateAttendance([FromBody]AttendanceUpdateInputModel attendance)
+        {            
+            return Ok(_lessonService.UpdateAttendance(new AttendanceDto()
+            {
+                Id = attendance.Id,
+                IsAbsent = attendance.IsAbsent
+            }));
         }
 
         // https://localhost:50221/api/attendance/3
