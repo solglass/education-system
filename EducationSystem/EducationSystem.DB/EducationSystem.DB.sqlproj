@@ -175,7 +175,7 @@
     <Build Include="Tables\dbo.Course.sql" />
     <Build Include="Tables\dbo.Course_Theme.sql" />
     <Build Include="Tables\dbo.Homework.sql" />
-    <Build Include="Tables\dbo.Homework_Attempt.sql" />
+    <Build Include="Tables\dbo.HomeworkAttempt.sql" />
     <Build Include="Tables\dbo.Homework_Theme.sql" />
     <Build Include="Tables\dbo.HomeworkAttemptStatus.sql" />
     <Build Include="Tables\dbo.Theme.sql" />
@@ -236,5 +236,22 @@
     <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_HardDelete.sql" />
     <Build Include="StoredProcedures\HomeworkAttemptStatus\HomeworkAttemptStatus_HardDelete.sql" />
     <Build Include="StoredProcedures\Comment\Comment_HardDelete.sql" />
+    <Build Include="Tables\dbo.Attendance.sql" />
+    <Build Include="Tables\dbo.Feedback.sql" />
+    <Build Include="Tables\dbo.Homework_Tag.sql" />
+    <Build Include="Tables\dbo.HomeworkAttempt_Attachment.sql" />
+    <Build Include="Tables\dbo.Lesson.sql" />
+    <Build Include="Tables\dbo.Lesson_Theme.sql" />
+    <Build Include="Tables\dbo.Material.sql" />
+    <Build Include="Tables\dbo.Material_Tag.sql" />
+    <Build Include="Tables\dbo.Role.sql" />
+    <Build Include="Tables\dbo.Student_Group.sql" />
+    <Build Include="Tables\dbo.Tag.sql" />
+    <Build Include="Tables\dbo.Teacher_Group.sql" />
+    <Build Include="Tables\dbo.Theme_Tag.sql" />
+    <Build Include="Tables\dbo.Tutor_Group.sql" />
+    <Build Include="Tables\dbo.UnderstandingLevel.sql" />
+    <Build Include="Tables\User.sql" />
+    <Build Include="Tables\dbo.User_Role.sql" />
   </ItemGroup>
 </Project>
