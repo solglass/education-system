@@ -251,5 +251,6 @@
     <Build Include="Tables\dbo.UnderstandingLevel.sql" />
     <Build Include="Tables\User.sql" />
     <Build Include="Tables\dbo.User_Role.sql" />
+    <Build Include="StoredProcedures\Attendance\dbo_Attendance_Add.sql" />
   </ItemGroup>
 </Project>
