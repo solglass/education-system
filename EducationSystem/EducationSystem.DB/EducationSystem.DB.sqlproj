@@ -130,7 +130,6 @@
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_update.sql" />
     <Build Include="StoredProcedures\Attachment\dbo_Attachment_add.sql" />
     <Build Include="StoredProcedures\Attachment\dbo_Attachment_delete .sql" />
-    <Build Include="StoredProcedures\Attachment\dbo_Attachment_select by id.sql" />
     <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Add.sql" />
     <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Delete.sql" />
     <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Select all.sql" />
@@ -234,5 +233,6 @@
     <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_HardDelete.sql" />
     <Build Include="StoredProcedures\HomeworkAttemptStatus\HomeworkAttemptStatus_HardDelete.sql" />
     <Build Include="StoredProcedures\Comment\Comment_HardDelete.sql" />
+    <Build Include="StoredProcedures\Attachment\dbo.Attachment_SelectById.sql" />
   </ItemGroup>
 </Project>
