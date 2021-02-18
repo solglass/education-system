@@ -116,7 +116,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int DeleteCourseHard (int id)
+        public int HardDeleteCourse (int id)
         {
             var result = _connection
                 .Execute("dbo.Course_HardDelete",

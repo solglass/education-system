@@ -101,7 +101,7 @@ namespace EducationSystem.Data.Tests
                 _courseRepo.DeleteCourse_Theme(_courseId, themeId);
                 _courseRepo.DeleteTheme(themeId);
             }
-            _courseRepo.DeleteCourseHard(_courseId);
+            _courseRepo.HardDeleteCourse(_courseId);
         }
 
         public List<ThemeDto> GetThemeMock(int n)
