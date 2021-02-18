@@ -119,7 +119,7 @@ namespace EducationSystem.Data
         public int DeleteCourseHard (int id)
         {
             var result = _connection
-                .Execute("dbo.Course_CompleteDelete",
+                .Execute("dbo.Course_HardDelete",
                 new
                 {
                     id
