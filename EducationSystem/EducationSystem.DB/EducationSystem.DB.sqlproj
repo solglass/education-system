@@ -136,7 +136,6 @@
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_update.sql" />
     <Build Include="StoredProcedures\Attachment\dbo_Attachment_add.sql" />
     <Build Include="StoredProcedures\Attachment\dbo_Attachment_delete .sql" />
-    <Build Include="StoredProcedures\Attachment\dbo_Attachment_select_all.sql" />
     <Build Include="StoredProcedures\Attachment\dbo_Attachment_select by id.sql" />
     <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Add.sql" />
     <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Delete.sql" />
@@ -217,7 +216,9 @@
     <Build Include="StoredProcedures\Tag\dbo.Tag_Update.sql" />
     <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Add.sql" />
     <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Delete.sql" />
+    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_SelectAll.sql" />
     <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_SelectById.sql" />
+    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Update.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Add.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Delete.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectAll.sql" />

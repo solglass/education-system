@@ -40,24 +40,7 @@ namespace EducationSystem.API.Controllers
             return Ok($"Вложение #{result} добавлено");
         }
 
-        // https://localhost:44365/api/attachment/
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult GetAttachments()
-        {
-            List<AttachmentOutputModel> attachments;
-            try
-            {
-               attachments = _attachmentMapper.FromDtos(_service.GetAttachments());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok(attachments);
-
-        }
-
+        
         // https://localhost:44365/api/attachment/42
         [HttpGet("{id}")]
         [AllowAnonymous]
