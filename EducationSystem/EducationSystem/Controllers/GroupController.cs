@@ -200,16 +200,7 @@ namespace EducationSystem.Controllers
         {
             var addGroup = _repo.AddTeacherGroup(teacherGroup);
             return Ok(addGroup);
-        }
-        // https://localhost:50221/api/group/student-groups
-        [HttpGet("student-groups")]
-        [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult GetStudentGroups()
-        {
-            var groups = _repo.GetStudentGroups();
-            return Ok(groups);
-        }
-        // https://localhost:50221/api/group/student-group/1
+        }      
         [HttpGet("student-group/{id}")]
         //[Authorize(Roles = "Админ, Менеджер, Преподаватель, Тьютор")]
         public ActionResult GetStudentGroupById(int id)

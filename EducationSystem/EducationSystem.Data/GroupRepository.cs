@@ -251,16 +251,7 @@ namespace EducationSystem.Data
                     groupID = tutorGroup.GroupID,
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
-        }
-        public List<StudentGroupDto> GetStudentGroups()
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                return connection
-                    .Query<StudentGroupDto>("dbo.Student_Group_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                    .ToList();
-            }
-        }
+        }      
         public StudentGroupDto GetStudentGroupById(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
