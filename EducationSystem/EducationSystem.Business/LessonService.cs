@@ -88,8 +88,13 @@ namespace EducationSystem.Business
         {
             _lessonRepository.DeleteLessonTheme(id);
         }
+
+        public int UpdateAttendance(AttendanceDto attendance)
+        {
+            return _lessonRepository.UpdateAttendance(attendance);
+        }
         /* public AddLessonTheme
-        *  public UpdateLessonTheme
-        */
+*  public UpdateLessonTheme
+*/
     }
 }
