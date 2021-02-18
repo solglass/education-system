@@ -119,10 +119,10 @@ namespace EducationSystem.Data
                 .Execute("dbo.Homework_Tag_Update", new { Tag.Id, Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int HomeworkTagDelete(int Id)
+        public int HomeworkTagDelete(int homeworkId, int tagId)
         {
             var result = _connection
-                .Execute("dbo.Homework_Tag_Delete", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Homework_Tag_Delete", new { homeworkId, tagId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
         public int HomeworkTagAdd(HomeworkTagDto Tag)
