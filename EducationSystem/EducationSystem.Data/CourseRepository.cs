@@ -251,29 +251,7 @@ namespace EducationSystem.Data
         }
 
 
-        public int AddCourse_Theme_Material(int courseThemeID, int materialID)
-        {
-            var result = _connection
-                .Execute("dbo.Course_Theme_Material_Add",
-                new
-                {
-                    courseThemeID,
-                    materialID
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-        public int DeleteCourse_Theme_Material(int id)
-        {
-            var result = _connection
-                .Execute("dbo.Course_Theme_Material_Delete",
-                new
-                {
-                    id
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
+       
 
         public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
         {
@@ -292,15 +270,7 @@ namespace EducationSystem.Data
             return themes;
         }
 
-        public List<Course_Theme_MaterialDto> GetCourseThemeMaterialByThemeId(int id)
-        {
-            var result = _connection.
-               Query<Course_Theme_MaterialDto>("dbo.Course_Theme_Material_SelectAllByThemeId",
-               new { id }, commandType: System.Data.CommandType.StoredProcedure)
-               .Distinct()
-               .ToList();
-            return result;
-        }
+       
         public List<Course_ThemeDto> GetCourseThemeByThemeId(int id)
         {
             var result = _connection.

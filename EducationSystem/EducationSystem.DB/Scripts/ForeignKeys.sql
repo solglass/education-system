@@ -21,23 +21,6 @@ GO
 ALTER TABLE [dbo].[Comment] CHECK CONSTRAINT [Comment_fk1]
 
 
-ALTER TABLE [dbo].[Course_Theme_Material]  WITH CHECK ADD  CONSTRAINT [Course_Theme_Material_fk0] FOREIGN KEY([CourseThemeID])
-REFERENCES [dbo].[Course_Theme] ([Id])
-ON UPDATE CASCADE
-GO
-
-ALTER TABLE [dbo].[Course_Theme_Material] CHECK CONSTRAINT [Course_Theme_Material_fk0]
-GO
-
-ALTER TABLE [dbo].[Course_Theme_Material]  WITH CHECK ADD  CONSTRAINT [Course_Theme_Material_fk1] FOREIGN KEY([MaterialID])
-REFERENCES [dbo].[Material] ([Id])
-ON UPDATE CASCADE
-GO
-
-ALTER TABLE [dbo].[Course_Theme_Material] CHECK CONSTRAINT [Course_Theme_Material_fk1]
-GO
-
-
 ALTER TABLE [dbo].[HomeworkAttempt]  WITH CHECK ADD  CONSTRAINT [HomeworkAttempt_fk0] FOREIGN KEY([UserId])
 REFERENCES [dbo].[User] ([Id])
 ON UPDATE CASCADE
