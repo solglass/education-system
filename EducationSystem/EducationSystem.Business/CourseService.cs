@@ -93,7 +93,7 @@ namespace EducationSystem.Business
                 {
                     if (_tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = index, TagId = tag.Id }) <= 0)
                     {
-                        RemoveAllThemeTagbyThemeId(index, theme.Tags);
+                       
                         return -2-index;
                     }
                 }
@@ -106,11 +106,7 @@ namespace EducationSystem.Business
             return _tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = themeId, TagId = tagId });
         }
 
-        public int RemoveTagFromTheme(int themeId, int tagId)
-        {
-            return _tagRepo.ThemeTagDelete(themeId, tagId );
-        }
-
+       
 
         public int DeleteTheme(int id)  //  should remove all connections many-to-many
         {
@@ -130,14 +126,7 @@ namespace EducationSystem.Business
                     _courseRepo.DeleteCourse_Theme(item.CourseID, item.ThemeID);
                 }
             }
-            List<ThemeTagDto> themeTags = _tagRepo.GetThemeTagByThemeId(id);
-            if (themeTags != null && themeTags.Count > 0)
-            {
-                foreach (var item in themeTags)
-                {
-                    _tagRepo.ThemeTagDelete(item.ThemeId, item.TagId);
-                }
-            }
+          
 
             List<Homework_ThemeDto> homeworkThemes = _homeworkRepo.GetHomeworkThemesByThemeId(id);
             if(homeworkThemes!=null && homeworkThemes.Count>0)
@@ -169,12 +158,6 @@ namespace EducationSystem.Business
                 _courseRepo.DeleteCourse_Theme(courseId, theme.Id);
             }
         }
-        private void RemoveAllThemeTagbyThemeId(int themeId, List<TagDto> tags)
-        {
-            foreach (var tag in tags)
-            {
-                _tagRepo.ThemeTagDelete(themeId, tag.Id);
-            }
-        }
+       
     }
 }
