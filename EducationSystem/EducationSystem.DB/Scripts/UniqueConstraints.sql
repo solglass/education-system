@@ -17,8 +17,12 @@ ALTER TABLE [dbo].[Tag]
 ADD CONSTRAINT UC_Name UNIQUE(Name)
 GO
 ALTER TABLE [dbo].[Group_Material] 
-ADD CONSTRAINT UC_Name UNIQUE(GroupID,MaterialID)
+ADD CONSTRAINT UC_GroupID_MaterialID UNIQUE(GroupID,MaterialID)
 GO
+ALTER TABLE [dbo].[Teacher_Group] 
+ADD CONSTRAINT UC_UserID_GroupID UNIQUE(UserID,GroupID)
+GO
+
 ALTER TABLE [dbo].[Homework_Tag] 
 ADD CONSTRAINT UC_HomeworkId_TagId UNIQUE(HomeworkId, TagId)
 GO
