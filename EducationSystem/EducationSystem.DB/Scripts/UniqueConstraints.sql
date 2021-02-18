@@ -16,3 +16,6 @@ GO
 ALTER TABLE [dbo].[Tag] 
 ADD CONSTRAINT UC_Name UNIQUE(Name)
 GO
+ALTER TABLE [dbo].[Group_Material] 
+ADD CONSTRAINT UC_Name UNIQUE(GroupID,MaterialID)
+GO
