@@ -202,16 +202,7 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! Не получилось добавить тег  #{tagId} к теме #{themeId}!");
         }
 
-        [HttpDelete("theme/{themeId}/tag/{tagId}")]
-        [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
-        public ActionResult RemoveTagFromTheme(int themeId, int tagId)
-        {
-            var result = _courseService.RemoveTagFromTheme(themeId, tagId);
-            if (result > 0)
-                return Ok($"Тег #{tagId} отвязан от темы #{themeId}!");
-            else
-                return Problem($"Ошибка! Не получилось отвязать тег #{tagId} от темы #{themeId}!");
-        }
+       
 
 
         [HttpDelete("theme/{id}")]
