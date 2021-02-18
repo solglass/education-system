@@ -16,7 +16,6 @@ namespace EducationSystem.Business
             _attachmentRepository = new AttachmentRepository();
         }
 
-        public List<AttachmentDto> GetAttachments() { return _attachmentRepository.GetAttachments(); }
         public AttachmentDto GetAttachmentById(int id) { return _attachmentRepository.GetAttachmentById(id); }
         public int ModifyAttachment(AttachmentDto attachmentDto) { return _attachmentRepository.ModifyAttachment(attachmentDto); }
         public int AddAttachment(AttachmentDto attachmentDto) { return _attachmentRepository.AddAttachment(attachmentDto); }
