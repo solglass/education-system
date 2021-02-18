@@ -240,7 +240,7 @@ namespace EducationSystem.Data
         public int DeleteCourse_Theme(int courseId, int themeId)
         {
             var result = _connection
-                .Execute("dbo.Course_Theme_DeleteByCourseIdAndThemeId",
+                .Execute("dbo.Course_Theme_Delete",
                 new
                 {
                     courseId,
