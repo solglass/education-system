@@ -110,14 +110,7 @@ namespace EducationSystem.Business
 
         public int DeleteTheme(int id)  //  should remove all connections many-to-many
         {
-            List<Course_Theme_MaterialDto> courseThemeMaterials = _courseRepo.GetCourseThemeMaterialByThemeId(id);
-            if(courseThemeMaterials!=null && courseThemeMaterials.Count>0)
-            {
-                foreach(var item in courseThemeMaterials)
-                {
-                    _courseRepo.DeleteCourse_Theme_Material(item.Id);
-                }
-            }
+           
             List<Course_ThemeDto> courseThemes = _courseRepo.GetCourseThemeByThemeId(id);
             if (courseThemes != null && courseThemes.Count > 0)
             {
