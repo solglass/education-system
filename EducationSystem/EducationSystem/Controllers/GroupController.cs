@@ -169,14 +169,7 @@ namespace EducationSystem.Controllers
             _repo.DeleteGroupStatus(id);
             return Ok("success");
         }
-        // https://localhost:50221/api/group/teacher-groups
-        [HttpGet("teacher-groups")]
-        [Authorize(Roles = "Админ, Менеджер, Преподаватель")]
-        public ActionResult GetTeacherGroups()
-        {
-            var groups = _repo.GetTeacherGroups();
-            return Ok(groups);
-        }
+        
         // https://localhost:50221/api/group/teacher-group/1
         [HttpGet("teacher-group/{id}")]
         [Authorize(Roles = "Админ, Менеджер, Преподаватель")]
