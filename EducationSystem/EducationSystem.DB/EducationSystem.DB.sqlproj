@@ -293,5 +293,6 @@
     <Build Include="StoredProcedures\dbo_Payment_SelectById.sql" />
     <Build Include="StoredProcedures\dbo_Payment_Update.sql" />
     <Build Include="StoredProcedures\User_Change_Password.sql" />
+    <Build Include="StoredProcedures\Comment\dboComment_SelectByHomeworkId.sql" />
   </ItemGroup>
 </Project>
