@@ -5,10 +5,10 @@ ALTER TABLE [dbo].[Theme_Tag]
 ADD CONSTRAINT UC_TagId_ThemeId UNIQUE(TagId, ThemeId)
 GO
 ALTER TABLE [dbo].[Attendance]
-ADD CONSTRAINT UC_LessonId_UserId UNIQUE(lessonId, userId)
+ADD CONSTRAINT UC_LessonId_UserId UNIQUE(LessonId, UserId)
 GO
 ALTER TABLE [dbo].[Homework_Theme]
-ADD CONSTRAINT UC_HomeworkId_ThemeId UNIQUE(homeworkId, themeId)
+ADD CONSTRAINT UC_HomeworkId_ThemeId UNIQUE(HomeworkId, ThemeId)
 GO
 ALTER TABLE [dbo].[Theme] 
 ADD CONSTRAINT UC_Name UNIQUE(Name)

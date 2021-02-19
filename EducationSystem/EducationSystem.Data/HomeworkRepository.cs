@@ -555,14 +555,6 @@ namespace EducationSystem.Data
             return comments;
         }
 
-        public List<Homework_ThemeDto> GetHomeworkThemesByThemeId(int id)
-        {
-            var result = _connection.
-               Query<Homework_ThemeDto>("dbo.Homework_Theme_SelectAllByThemeId",
-               new { id }, commandType: System.Data.CommandType.StoredProcedure)
-               .Distinct()
-               .ToList();
-            return result;
-        }
+        
     }
 }

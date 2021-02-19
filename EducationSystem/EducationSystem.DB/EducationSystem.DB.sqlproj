@@ -89,7 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
-    <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectAll.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Add.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Delete.sql" />
@@ -213,7 +212,6 @@
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectById.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Update.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAllByThemeId.sql" />
-    <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Update.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Add.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Delete.sql" />
@@ -252,5 +250,6 @@
     <Build Include="Tables\User.sql" />
     <Build Include="Tables\dbo.User_Role.sql" />
     <Build Include="StoredProcedures\Attendance\dbo_Attendance_Add.sql" />
+    <Build Include="Scripts\UniqueConstraints.sql" />
   </ItemGroup>
 </Project>
