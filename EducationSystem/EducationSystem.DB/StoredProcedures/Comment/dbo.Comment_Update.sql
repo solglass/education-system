@@ -1,12 +1,8 @@
 ﻿CREATE proc [dbo].[Comment_Update]
-(@id int, @userId int, @homeworkAttemptId int, @message nvarchar(max), @isDeleted bit)
+(@id int,  @message nvarchar(max))
 as
 begin
 	update dbo.Comment 
-	set
-		UserID=@userId,
-		HomeworkAttemptId=@homeworkAttemptId,
-		Message=@message,
-		IsDeleted=@isDeleted
+	set Message = @message
 	where Id=@id
 end

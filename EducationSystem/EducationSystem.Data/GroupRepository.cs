@@ -261,11 +261,11 @@ namespace EducationSystem.Data
             }
 
         }
-        public int DeleteStudentGroupById(int id)
+        public int DeleteStudentGroupById(int userId, int groupId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                return connection.Execute("dbo.Student_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                return connection.Execute("dbo.Student_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
         public int AddStudentGroup(StudentGroupDto studentGroup)
@@ -283,14 +283,6 @@ namespace EducationSystem.Data
             }
         }
 
-        public List<TeacherGroupDto> GetTeacherGroups()
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                return connection.Query<TeacherGroupDto>("dbo.Teacher_Group_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            }
-        }
         public TeacherGroupDto GetTeacherGroupById(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -298,11 +290,11 @@ namespace EducationSystem.Data
                 return connection.QuerySingleOrDefault<TeacherGroupDto>("dbo.Teacher_Group_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
-        public int DeleteTeacherGroup(int id)
+        public int DeleteTeacherGroup(int userId, int groupId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                return connection.Execute("dbo.Teacher_Group_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                return connection.Execute("dbo.Teacher_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
         public int AddTeacherGroup(TeacherGroupDto teacherGroup)

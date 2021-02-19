@@ -6,4 +6,5 @@ begin
 
 	insert into [dbo].[Comment_Attachment] (CommentID, AttachmentID) 
 	values (@commentID, @attachmentID)
+	select SCOPE_IDENTITY()
 end 
