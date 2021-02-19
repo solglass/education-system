@@ -60,14 +60,7 @@ namespace EducationSystem.Data.Models
             return result;
         }
 
-        public List<HomeworkAttempt_AttachmentDto> GetHomeworkAttempt_Attachments()
-        {
-            var data = _connection.
-                Query<HomeworkAttempt_AttachmentDto>(
-                "dbo.HomeworkAttempt_Attachment_SelectAll",
-                commandType: System.Data.CommandType.StoredProcedure).ToList();
-            return data;
-        }
+        
         public HomeworkAttempt_AttachmentDto GetHomeworkAttempt_AttachmentById(int id)
         {
             var data = _connection.

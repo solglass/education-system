@@ -128,7 +128,6 @@
     <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo.HomeworkAttemptStatus_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Delete.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Add.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectAll.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectById.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_update.sql" />
     <Build Include="StoredProcedures\Attachment\dbo_Attachment_add.sql" />
@@ -172,7 +171,6 @@
     <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_Add.sql" />
     <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_Delete.sql" />
     <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_SelectById.sql" />
-    <Build Include="StoredProcedures\TeacherGroup\Teacher_Group_SelectAll.sql" />
     <Build Include="Tables\dbo.Comment.sql" />
     <Build Include="Tables\dbo.Course.sql" />
     <Build Include="Tables\dbo.Course_Theme.sql" />
