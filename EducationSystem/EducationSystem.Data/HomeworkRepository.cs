@@ -2,6 +2,7 @@
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -280,7 +281,7 @@ namespace EducationSystem.Data
                     author = comment.Author,
                     attempt = comment.HomeworkAttempt
                 },
-                commandType: System.Data.CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure);
             return result;
         }
         public int DeleteComment(int id)
@@ -393,6 +394,13 @@ namespace EducationSystem.Data
             return comment;
         }
 
+        public int UpdateComment(CommentDto commentDto)
+        {
+            return _connection.Execute(
+                "dbo.Comment_Update",
+                new { commentDto.Id, commentDto.Message },
+                commandType: CommandType.StoredProcedure);
+        }
 
         public int AddHomework_Theme(int homeworkId, int themeId)
         {

@@ -3,7 +3,6 @@
 @description nvarchar(Max),
 @startDate datetime2,
 @deadlineDate datetime2,
-@groupId int,
 @isOptional bit
 )
 as
@@ -13,7 +12,6 @@ begin
 		description = @description,
 		startDate  = @startDate,
 		deadlineDate = @deadlineDate,
-		groupId = @groupId,
 		isOptional  = @isOptional 
 	where Id = @id
 end
