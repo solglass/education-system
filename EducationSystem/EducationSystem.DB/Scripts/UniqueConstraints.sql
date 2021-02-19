@@ -30,3 +30,6 @@ GO
 ALTER TABLE [dbo].[HomeworkAttempt]
 ADD CONSTRAINT UC_HomeworkId_UserId UNIQUE(HomeworkId, UserId)
 GO
+ALTER TABLE [dbo].[Feedback]
+ADD CONSTRAINT UC_LessonId_UserId UNIQUE(LessonId, UserId)
+GO
