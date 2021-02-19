@@ -36,3 +36,7 @@ GO
 ALTER TABLE [dbo].[Course_Theme]
 ADD CONSTRAINT UC_CourseId_ThemeId UNIQUE(CourseId, ThemeId)
 GO
+
+ALTER TABLE [dbo].[Student_Group]
+ADD CONSTRAINT UC_UserId_GroupId UNIQUE(UserId, GroupId)
+GO
