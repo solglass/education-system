@@ -31,12 +31,16 @@ ALTER TABLE [dbo].[HomeworkAttempt]
 ADD CONSTRAINT UC_HomeworkId_UserId UNIQUE(HomeworkId, UserId)
 GO
 ALTER TABLE [dbo].[Feedback]
-ADD CONSTRAINT UC_LessonId_UserId UNIQUE(LessonId, UserId)
+ADD CONSTRAINT UC_Feedback_LessonId_UserId UNIQUE(LessonId, UserId)
 GO
 ALTER TABLE [dbo].[Course_Theme]
-ADD CONSTRAINT UC_CourseId_ThemeId UNIQUE(CourseId, ThemeId)
+ADD CONSTRAINT UC_CourseTheme_CourseId_ThemeId UNIQUE(CourseId, ThemeId)
 GO
 
 ALTER TABLE [dbo].[Student_Group]
-ADD CONSTRAINT UC_UserId_GroupId UNIQUE(UserId, GroupId)
+ADD CONSTRAINT UC_StudentGroup_UserId_GroupId UNIQUE(UserId, GroupId)
+GO
+
+ALTER TABLE [dbo].[Comment_Attachment]
+ADD CONSTRAINT UC_CommentId_AttachmentId UNIQUE(CommentId, AttachmentId)
 GO
