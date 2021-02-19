@@ -208,9 +208,7 @@
     <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_SelectById.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Add.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Delete.sql" />
-    <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectAll.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectById.sql" />
-    <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Update.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Update.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Add.sql" />
