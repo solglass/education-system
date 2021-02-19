@@ -5,4 +5,5 @@ create proc dbo.Group_Material_Add (
 begin
 	insert into dbo.Group_Material (GroupID, MaterialID)
 	values (@groupID, @materialID)
+	select SCOPE_IDENTITY()
 end
