@@ -219,14 +219,7 @@ namespace EducationSystem.Controllers
             return Ok("Посещаемость удалена");
         }
 
-        // https://localhost:50221/api/lesson-theme/
-        [HttpGet]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetLessonTheme()
-        {
-            var result = _lessonService.GetLessonThemes();
-            return Ok(result);
-        }
+        
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpGet("{id}")]
@@ -246,14 +239,7 @@ namespace EducationSystem.Controllers
             return Ok("Тема урока добавлена");
         }
 
-        // https://localhost:50221/api/lesson-theme/3
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult UpdateLessonTheme(int id,[FromBody]LessonThemeDto lessonTheme)
-        {
-            _repo.UpdateLessonTheme(lessonTheme);
-            return Ok("Тема урока обновлена");
-        }
+        
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpDelete("{id}")]

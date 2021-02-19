@@ -256,20 +256,8 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateLessonTheme(LessonThemeDto lessonTheme)
-        {
-            _connection.Execute(
-                "dbo.LessonTheme_Update",
-                new {lessonTheme.ID,lessonTheme.ThemeID,lessonTheme.LessonID },
-                commandType: CommandType.StoredProcedure);
-        }
-        public List<LessonThemeDto> GetLessonThemes()
-        {
-            var lessonTheme = _connection
-                .Query<LessonThemeDto>("dbo.LessonTheme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return lessonTheme;
-        }
+       
+       
         public LessonThemeDto GetLessonThemeById(int id)
         {
             var lessonTheme = _connection
