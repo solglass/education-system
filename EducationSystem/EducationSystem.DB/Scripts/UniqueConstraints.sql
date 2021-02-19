@@ -33,3 +33,6 @@ GO
 ALTER TABLE [dbo].[Feedback]
 ADD CONSTRAINT UC_LessonId_UserId UNIQUE(LessonId, UserId)
 GO
+ALTER TABLE [dbo].[Course_Theme]
+ADD CONSTRAINT UC_CourseId_ThemeId UNIQUE(CourseId, ThemeId)
+GO
