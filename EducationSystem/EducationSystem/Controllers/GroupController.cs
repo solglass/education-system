@@ -188,9 +188,9 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/group/teacher-group/2
         [HttpDelete("teacher-group/{id}")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult DeleteTeacherGroup(int id)
+        public ActionResult DeleteTeacherGroup(int userId, int groupId)
         {
-            var deletedGroup = _repo.DeleteTeacherGroup(id);
+            var deletedGroup = _repo.DeleteTeacherGroup(userId, groupId);
             return Ok(deletedGroup);
         }
         // https://localhost:50221/api/group/teacher-group
@@ -211,9 +211,9 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/group/student-group/1
         [HttpDelete("student-group{id}")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult DeleteStudentGroup(int id)
+        public ActionResult DeleteStudentGroup(int userId, int groupId)
         {
-            var deletedGroup = _repo.DeleteStudentGroupById(id);
+            var deletedGroup = _repo.DeleteStudentGroupById(userId, groupId);
             return Ok(deletedGroup);
         }
         // https://localhost:50221/api/group/student-group
