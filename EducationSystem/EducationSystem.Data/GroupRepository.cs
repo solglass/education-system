@@ -283,14 +283,6 @@ namespace EducationSystem.Data
             }
         }
 
-        public List<TeacherGroupDto> GetTeacherGroups()
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                return connection.Query<TeacherGroupDto>("dbo.Teacher_Group_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            }
-        }
         public TeacherGroupDto GetTeacherGroupById(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
