@@ -68,7 +68,6 @@
     <Folder Include="StoredProcedures\HomeworkAttemptStatus" />
     <Folder Include="StoredProcedures\HomeworkAttempt_Attachment" />
     <Folder Include="StoredProcedures\Attachment" />
-    <Folder Include="StoredProcedures\AttachmentType" />
     <Folder Include="StoredProcedures\CommentAttachment" />
     <Folder Include="StoredProcedures\Group" />
     <Folder Include="StoredProcedures\GroupStatus" />
@@ -130,11 +129,6 @@
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_update.sql" />
     <Build Include="StoredProcedures\Attachment\dbo_Attachment_add.sql" />
     <Build Include="StoredProcedures\Attachment\dbo_Attachment_delete .sql" />
-    <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Add.sql" />
-    <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Delete.sql" />
-    <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Select all.sql" />
-    <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Select by id.sql" />
-    <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Update.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Add.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Delete.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Select all.sql" />
@@ -188,7 +182,6 @@
     <None Include="Scripts\ForeignKeys.sql" />
     <Build Include="Tables\dbo.GroupStatus.sql" />
     <Build Include="Tables\dbo.Payment.sql" />
-    <PostDeploy Include="Scripts\Create_Report.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_SelectByCommentId.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_SelectByHomeworkAttemptId.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_SelectAllByCourseId.sql" />
@@ -252,5 +245,6 @@
     <Build Include="Tables\User.sql" />
     <Build Include="Tables\dbo.User_Role.sql" />
     <Build Include="StoredProcedures\Attendance\dbo_Attendance_Add.sql" />
+    <PostDeploy Include="StoredProcedures\Create_Report.sql" />
   </ItemGroup>
 </Project>

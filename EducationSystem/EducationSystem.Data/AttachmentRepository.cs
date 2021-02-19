@@ -68,49 +68,8 @@ namespace EducationSystem.Data
             return value;
 
         }
-        public List<AttachmentTypeDto> GetAttachmentTypes()
-        {
-            var data = _connection
-                .Query<AttachmentTypeDto>("dbo.AttachmentType_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return data;
 
 
-        }
-
-        public AttachmentTypeDto GetAttachmentTypeById(int id)
-        {
-            var data = _connection
-                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-
-        public int ModifyAttachmentType(int id, string name)
-        {
-            var data = _connection
-                .Execute("dbo.AttachmentType_Update", new { id, name }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-
-        public int DeleteAttachmentTypeById(int id)
-        {
-            var data = _connection
-                .Execute("dbo.AttachmentType_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-
-
-        public int AddAttachmentType(string name)
-        {          
-            var firstRow = _connection
-                .QuerySingleOrDefault("dbo.AttachmentType_Add",
-                new { name = name },
-                commandType: System.Data.CommandType.StoredProcedure);
-            var data = (IDictionary<string, object>)firstRow;
-            int value = Convert.ToInt32(data["LastId"]);
-            return value;
-
-        }
 
         public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
         {
