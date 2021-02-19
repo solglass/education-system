@@ -122,14 +122,7 @@ namespace EducationSystem.Business
           
 
            
-            List<LessonThemeDto> lessonThemes = _lessonRepo.GetLessonThemesByThemeId(id);
-            if (lessonThemes != null && lessonThemes.Count > 0)
-            {
-                foreach (var item in lessonThemes)
-                {
-                    _lessonRepo.DeleteLessonTheme(item.ID);
-                }
-            }
+            
             return _courseRepo.DeleteTheme(id);
         }
 

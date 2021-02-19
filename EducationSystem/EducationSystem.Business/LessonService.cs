@@ -76,10 +76,7 @@ namespace EducationSystem.Business
         /* public AddUnderstandingLevel
         *  public UpdateUnderstandingLevel
         */
-        public List<LessonThemeDto> GetLessonThemes()
-        {
-            return _lessonRepository.GetLessonThemes();
-        }
+        
         public LessonThemeDto GetLessonThemeById(int id)
         {
             return _lessonRepository.GetLessonThemeById(id);
