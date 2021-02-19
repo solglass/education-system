@@ -1,3 +1,4 @@
+using EducationSystem.API.Middleware;
 using EducationSystem.Core.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -64,11 +65,12 @@ namespace EducationSystem
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }
