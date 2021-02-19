@@ -26,3 +26,7 @@ GO
 ALTER TABLE [dbo].[Homework_Tag] 
 ADD CONSTRAINT UC_HomeworkId_TagId UNIQUE(HomeworkId, TagId)
 GO
+
+ALTER TABLE [dbo].[HomeworkAttempt]
+ADD CONSTRAINT UC_HomeworkId_UserId UNIQUE(HomeworkId, UserId)
+GO
