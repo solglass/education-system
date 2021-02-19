@@ -263,9 +263,7 @@
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Add.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Delete.sql" />
-    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_SelectAll.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_SelectByID.sql" />
-    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Update.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Add.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Delete.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_SelectAll.sql" />
