@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Linq;
 
 namespace EducationSystem
 {
@@ -37,6 +39,12 @@ namespace EducationSystem
                         };
                     });
             services.AddControllers();
+            services.AddSwaggerGen(swagger =>
+            {
+                swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "EducationSystem" });
+                swagger.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            });
+            services.AddSwaggerGenNewtonsoftSupport();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,7 +54,11 @@ namespace EducationSystem
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("v1/swagger.json", "EducationSystem");
+            });
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseRouting();

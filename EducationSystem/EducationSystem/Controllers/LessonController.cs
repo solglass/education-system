@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
@@ -49,7 +50,7 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/lesson/
         [HttpGet]
         [Authorize(Roles = "Админ")]
-        public ActionResult GetLessons()
+        public ActionResult<List<LessonDto>> GetLessons()
         {
             var result = _lessonService.GetLessons();
             return Ok(result);
@@ -82,7 +83,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/feedback/
-        [HttpGet]
+        [HttpGet("feedback")]
         [Authorize(Roles = "Админ")]
         public ActionResult GetFeedbacks()
         {
