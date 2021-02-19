@@ -178,10 +178,10 @@ namespace EducationSystem.Controllers
             var group = _repo.GetTeacherGroupById(id);
             return Ok(group);
         }
-        // https://localhost:50221/api/group/teacher-group/2
-        [HttpDelete("teacher-group/{id}")]
+        // https://localhost:50221/api/group/2/teacher/3
+        [HttpDelete("{groupId}/teacher/{userId}")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult DeleteTeacherGroup(int userId, int groupId)
+        public ActionResult DeleteTeacherGroup(int groupId, int userId)
         {
             var deletedGroup = _repo.DeleteTeacherGroup(userId, groupId);
             return Ok(deletedGroup);
