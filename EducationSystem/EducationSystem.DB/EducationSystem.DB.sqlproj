@@ -279,5 +279,19 @@
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectAll.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectByID.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Update.sql" />
+    <Build Include="StoredProcedures\dbo.GroupStatus_Add.sql" />
+    <Build Include="StoredProcedures\dbo.GroupStatus_Delete.sql" />
+    <Build Include="StoredProcedures\dbo.GroupStatus_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo.GroupStatus_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo.GroupStatus_Update.sql" />
+    <Build Include="StoredProcedures\dbo.Payment_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo_Payment_Add.sql" />
+    <Build Include="StoredProcedures\dbo_Payment_Delete.sql" />
+    <Build Include="StoredProcedures\dbo_Payment_SelectAll.sql" />
+    <Build Include="StoredProcedures\dbo_Payment_SelectByContractNumber.sql" />
+    <Build Include="StoredProcedures\dbo_Payment_SelectById.sql" />
+    <Build Include="StoredProcedures\dbo_Payment_Update.sql" />
+    <Build Include="StoredProcedures\User_Change_Password.sql" />
+    <Build Include="StoredProcedures\Comment\dbo_Comment_SelectByHomeworkId.sql" />
   </ItemGroup>
 </Project>
