@@ -6,4 +6,5 @@ as
 begin
 	insert into dbo.Student_Group (UserID, GroupID, ContractNumber) 
 	values(@userID, @groupID, @contractNumber)
+select SCOPE_IDENTITY()
 end
