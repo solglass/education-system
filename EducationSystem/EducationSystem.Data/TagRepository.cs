@@ -99,13 +99,7 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Theme_Tag_Add", new { Tag.TagId, Tag.ThemeId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public List<HomeworkTagDto> GetHomeworkTag()
-        {
-            var result = _connection
-                .Query<HomeworkTagDto>("dbo.Homework_Tag_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return result;
-        }
+        
         public List<HomeworkTagDto> GetHomeworkTagById(int Id)
         {
             var result = _connection
@@ -113,12 +107,7 @@ namespace EducationSystem.Data
                 .ToList();
             return result;
         }
-        public int HomeworkTagUpdate(HomeworkTagDto Tag)
-        {
-            var result = _connection
-                .Execute("dbo.Homework_Tag_Update", new { Tag.Id, Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
+      
         public int HomeworkTagDelete(int homeworkId, int tagId)
         {
             var result = _connection
