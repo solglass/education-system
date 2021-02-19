@@ -140,7 +140,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Feedback_Update",
-                new {feedbackDto.ID, feedbackDto.UserID, feedbackDto.Messege, feedbackDto.LessonID, feedbackDto.UnderstandingLevelID},
+                new {feedbackDto.ID, feedbackDto.Messege, feedbackDto.UnderstandingLevelID},
                 commandType: CommandType.StoredProcedure);
         }
 
