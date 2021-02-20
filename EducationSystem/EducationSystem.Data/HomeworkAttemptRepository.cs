@@ -42,11 +42,11 @@ namespace EducationSystem.Data.Models
             return result;
         }
 
-        public int UpdateHomeworkAttempt(int id, string comment, int userId, int homeworkId, int statusId)
+        public int UpdateHomeworkAttempt(int id, string comment, int statusId)
         {
             var result = _connection
                 .Execute("dbo.HomeworkAttempt_Update",
-                new { id, comment, userId, homeworkId, statusId },
+                new { id, comment, statusId },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
