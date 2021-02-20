@@ -249,5 +249,6 @@
     <Build Include="Tables\User.sql" />
     <Build Include="Tables\dbo.User_Role.sql" />
     <Build Include="StoredProcedures\Attendance\dbo_Attendance_Add.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByHomeworkId.sql" />
   </ItemGroup>
 </Project>
