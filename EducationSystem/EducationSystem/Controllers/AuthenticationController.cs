@@ -22,7 +22,8 @@ namespace EducationSystem.API.Controllers
         }
         [HttpPost]
         public ActionResult Authentificate([FromBody] AuthenticationInputModel login)
-        {           
+        {
+            //throw new Exception("Тобi жопа");    
             var user = _service.GetAuthentificatedUser(login.Login);          
             if( user != null && _securityService.VerifyHashAndPassword(user.Password, login.Password))
             {

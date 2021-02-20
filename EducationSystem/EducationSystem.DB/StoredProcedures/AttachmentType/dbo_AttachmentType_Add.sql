@@ -4,5 +4,6 @@ CREATE proc [dbo].[AttachmentType_Add] (
 begin
 	insert into [dbo].[AttachmentType] (name) 
 	values (@name)
+	select SCOPE_IDENTITY() as LastId
 end
  

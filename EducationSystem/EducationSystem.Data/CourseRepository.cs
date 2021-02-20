@@ -97,8 +97,7 @@ namespace EducationSystem.Data
                     id = course.Id,
                     name = course.Name,
                     description = course.Description,
-                    duration = course.Duration,
-                    isDeleted = course.IsDeleted
+                    duration = course.Duration
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -116,10 +115,10 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int DeleteCourseHard (int id)
+        public int HardDeleteCourse (int id)
         {
             var result = _connection
-                .Execute("dbo.Course_CompleteDelete",
+                .Execute("dbo.Course_HardDelete",
                 new
                 {
                     id
@@ -134,7 +133,9 @@ namespace EducationSystem.Data
             var tagDictionary = new Dictionary<int, TagDto>();
 
             var themes = _connection
-                .Query<ThemeDto, TagDto, ThemeDto>("dbo.Theme_SelectAll",                (theme, tag) =>                {
+                .Query<ThemeDto, TagDto, ThemeDto>("dbo.Theme_SelectAll",
+                (theme, tag) =>
+                {
 
                     if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                     {
@@ -150,7 +151,10 @@ namespace EducationSystem.Data
                         tagDictionary.Add(tagEntry.Id, tagEntry);
                     }
                     return themeEntry;
-                },                splitOn: "Id",                commandType: System.Data.CommandType.StoredProcedure)                .Distinct()
+                },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
             return themes;
         }
@@ -240,7 +244,7 @@ namespace EducationSystem.Data
         public int DeleteCourse_Theme(int courseId, int themeId)
         {
             var result = _connection
-                .Execute("dbo.Course_Theme_DeleteByCourseIdAndThemeId",
+                .Execute("dbo.Course_Theme_Delete",
                 new
                 {
                     courseId,
@@ -251,29 +255,7 @@ namespace EducationSystem.Data
         }
 
 
-        public int AddCourse_Theme_Material(int courseThemeID, int materialID)
-        {
-            var result = _connection
-                .Execute("dbo.Course_Theme_Material_Add",
-                new
-                {
-                    courseThemeID,
-                    materialID
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-        public int DeleteCourse_Theme_Material(int id)
-        {
-            var result = _connection
-                .Execute("dbo.Course_Theme_Material_Delete",
-                new
-                {
-                    id
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
+       
 
         public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
         {
@@ -292,15 +274,7 @@ namespace EducationSystem.Data
             return themes;
         }
 
-        public List<Course_Theme_MaterialDto> GetCourseThemeMaterialByThemeId(int id)
-        {
-            var result = _connection.
-               Query<Course_Theme_MaterialDto>("dbo.Course_Theme_Material_SelectAllByThemeId",
-               new { id }, commandType: System.Data.CommandType.StoredProcedure)
-               .Distinct()
-               .ToList();
-            return result;
-        }
+       
         public List<Course_ThemeDto> GetCourseThemeByThemeId(int id)
         {
             var result = _connection.

@@ -1,10 +1,10 @@
-create  proc [dbo].[Attachment_SelectById] (
+﻿CREATE proc [dbo].[Attachment_SelectById] (
 @id int
 ) as begin
 	select 
 		a.Id, 
 		a.Path,
-		a.AttachmentTypeID,
+		at.Id,
 		at.Name
 
 from [dbo].[Attachment] a

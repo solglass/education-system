@@ -5,4 +5,5 @@
 begin
 	insert into dbo.Theme_Tag(TagId,ThemeId)
 	values (@TagId,@ThemeId)
+	select SCOPE_IDENTITY()
 end
