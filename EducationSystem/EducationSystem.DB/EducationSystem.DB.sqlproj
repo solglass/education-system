@@ -135,9 +135,9 @@
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Delete.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Add.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectById.sql" />
-    <Build Include="StoredProcedures\Attachment\dbo.Attachment_update.sql" />
-    <Build Include="StoredProcedures\Attachment\dbo.Attachment_add.sql" />
-    <Build Include="StoredProcedures\Attachment\dbo_Attachment_delete .sql" />
+    <Build Include="StoredProcedures\Attachment\dbo.Attachment_Update.sql" />
+    <Build Include="StoredProcedures\Attachment\dbo.Attachment_Add.sql" />
+    <Build Include="StoredProcedures\Attachment\dbo_Attachment_Delete .sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Add.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Delete.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Select by id.sql" />
@@ -249,5 +249,34 @@
     <Build Include="Tables\User.sql" />
     <Build Include="Tables\dbo.User_Role.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByHomeworkId.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Add.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Delete.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectAll.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByID.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
+    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Add.sql" />
+    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Delete.sql" />
+    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_SelectByID.sql" />
+    <Build Include="StoredProcedures\Feedback\dbo.Feedback_Add.sql" />
+    <Build Include="StoredProcedures\Feedback\dbo.Feedback_Delete.sql" />
+    <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectAll.sql" />
+    <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectByID.sql" />
+    <Build Include="StoredProcedures\Feedback\dbo.Feedback_Update.sql" />
+    <Build Include="StoredProcedures\Attachment\dbo.Attachment.GetAttachmentTypeIdByEnum.sql" />
+    <Build Include="StoredProcedures\Attendance\dbo.Attendance_Add.sql" />
+    <Build Include="StoredProcedures\Attendance\dbo.Attendance_Delete.sql" />
+    <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectAll.sql" />
+    <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByID.sql" />
+    <Build Include="StoredProcedures\Attendance\dbo.Attendance_Update.sql" />
+    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_Add.sql" />
+    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_Delete.sql" />
+    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_SelectAll.sql" />
+    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_SelectByID.sql" />
+    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_Update.sql" />
+    <Build Include="StoredProcedures\Role\dbo.Role_Add.sql" />
+    <Build Include="StoredProcedures\Role\dbo.Role_Delete.sql" />
+    <Build Include="StoredProcedures\Role\dbo.Role_SelectAll.sql" />
+    <Build Include="StoredProcedures\Role\dbo.Role_SelectById.sql" />
+    <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
   </ItemGroup>
 </Project>
