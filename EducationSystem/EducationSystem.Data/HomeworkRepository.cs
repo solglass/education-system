@@ -509,10 +509,10 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public void DeleteComment_AttachmentById(int id)
+        public void DeleteComment_AttachmentById(int commentId, int attachmentId)
         {
             var data = _connection
-                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { commentId, attachmentId }, commandType: System.Data.CommandType.StoredProcedure);
         }
 
         public int AddComment_Attachment(Comment_AttachmentDto NewObject)
