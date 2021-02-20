@@ -60,10 +60,10 @@ namespace EducationSystem.Data
             return result;
         }
       
-        public int MaterialTagDelete(int Id)
+        public int MaterialTagDelete(int materialId, int tagId)
         {
             var result = _connection
-                .Execute("dbo.Material_Tag_Delete", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Material_Tag_Delete", new { materialId, tagId}, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
         public int MaterialTagAdd(MaterialTagDto Tag)
