@@ -1,5 +1,6 @@
 
-﻿using System;
+using EducationSystem.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,12 +10,12 @@ namespace EducationSystem.Data.Models
     {
         public int Id { get; set; }
         public string Path { get; set; }
-        public AttachmentTypeDto AttachmentType { get; set; }
+        public AttachmentType AttachmentType { get; set; }
 
         public override bool Equals(object obj)
         {
             AttachmentDto attDto = (AttachmentDto)obj;
-
+            
             if (attDto.Path == Path&& attDto.AttachmentType.Equals(AttachmentType))
             {
                 return true;

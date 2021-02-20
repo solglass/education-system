@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutoMapper;
+using EducationSystem.API;
 using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
@@ -20,12 +22,14 @@ namespace EducationSystem.Controllers
         private LessonRepository _repo;
         private LessonMapper _lessonMapper;
         private LessonService _lessonService;
+        private IMapper _mapper;
 
-        public LessonController()
+        public LessonController(IMapper mapper)
         {
             _repo = new LessonRepository();
             _lessonMapper = new LessonMapper();
             _lessonService = new LessonService();
+            _mapper = mapper;
         }
 
         // https://localhost:50221/api/lesson/
@@ -199,16 +203,19 @@ namespace EducationSystem.Controllers
             return Ok("Посещаемость добавлена");
         }
 
-        // https://localhost:50221/api/lesson/attendance/
-        [HttpPut("Attendance")]
+        // https://localhost:50221/api/lesson/2/attendance/2
+        /// <summary>
+        /// Update Attendance.
+        /// </summary>
+        /// <param name="lessonId">Which lesson the attendance belongs to.</param>
+        /// <param name="attendanceId">Attendance changed Id</param>
+        /// <param name="attendance">From body attendance object with parameter isAbsent</param>
+        /// <returns>Updated rows.</returns>
+        [HttpPut("{lessonId}/Attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult UpdateAttendance([FromBody]AttendanceUpdateInputModel attendance)
+        public ActionResult<int> UpdateAttendance(int lessonId, int attendanceId, [FromBody]AttendanceUpdateInputModel attendance)
         {            
-            return Ok(_lessonService.UpdateAttendance(new AttendanceDto()
-            {
-                Id = attendance.Id,
-                IsAbsent = attendance.IsAbsent
-            }));
+            return Ok(_lessonService.UpdateAttendance(_mapper.Map<AttendanceDto>(attendance)));
         }
 
         // https://localhost:50221/api/attendance/3

@@ -394,34 +394,6 @@ namespace EducationSystem.Data
             return comment;
         }
 
-        public List<CommentAttemptDto> Comment_SelectByHomeworkAttemptId(int id)
-        {
-            var commentDictionary = new Dictionary<int, CommentAttemptDto>();
-            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, AttachmentTypeDto, CommentAttemptDto>(
-                "dbo.Comment_SelectByHomeworkAttemptId",
-                (comment, user, attachment, attachmentType) =>
-                {
-                    if (!commentDictionary.TryGetValue(comment.Id, out var commentEntry))
-                    {
-                        commentEntry = comment;
-                        commentEntry.Author = user;
-                        commentEntry.Attachments = new List<AttachmentDto>();
-                        commentDictionary.Add(commentEntry.Id, commentEntry);
-                    }
-                    if (attachment != null)
-                    {
-                        attachment.AttachmentType = attachmentType;
-                        commentEntry.Attachments.Add(attachment);
-                    }
-                    return commentEntry;
-                },
-                new { AttemptId = id },
-                splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return result;
-        }
-
         public List<CommentDto> Comment_SelectByHomeworkId (int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
@@ -537,10 +509,10 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public void DeleteComment_AttachmentById(int id)
+        public void DeleteComment_AttachmentById(int commentId, int attachmentId)
         {
             var data = _connection
-                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { commentId, attachmentId }, commandType: System.Data.CommandType.StoredProcedure);
         }
 
         public int AddComment_Attachment(Comment_AttachmentDto NewObject)
@@ -583,12 +555,32 @@ namespace EducationSystem.Data
             return homeworkAttempts;
         }
         
-        public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
+        public List<CommentAttemptDto> GetCommentsByHomeworkAttemptId(int id)
         {
-            var comments = _connection
-                .Query<CommentDto>("dbo.Comment_SelectByHomeworkAttemptId", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+            var commentDictionary = new Dictionary<int, CommentAttemptDto>();
+            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, AttachmentTypeDto, CommentAttemptDto>(
+                "dbo.Comment_SelectByHomeworkAttemptId",
+                (comment, user, attachment, attachmentType) =>
+                {
+                    if (!commentDictionary.TryGetValue(comment.Id, out var commentEntry))
+                    {
+                        commentEntry = comment;
+                        commentEntry.Author = user;
+                        commentEntry.Attachments = new List<AttachmentDto>();
+                        commentDictionary.Add(commentEntry.Id, commentEntry);
+                    }
+                    if (attachment != null)
+                    {
+                        attachment.AttachmentType = attachmentType;
+                        commentEntry.Attachments.Add(attachment);
+                    }
+                    return commentEntry;
+                },
+                new { AttemptId = id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
-            return comments;
+            return result;
         }
 
         public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
@@ -602,7 +594,7 @@ namespace EducationSystem.Data
                     if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
                     {
                         attachmentEntry = attachment;
-                        attachmentEntry.AttachmentType = type;
+                        attachmentEntry.AttachmentType = type.AttachmentType;
                         attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
                     }
                     return attachmentEntry;
