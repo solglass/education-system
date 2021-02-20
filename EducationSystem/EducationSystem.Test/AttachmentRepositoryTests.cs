@@ -95,7 +95,7 @@ namespace EducationSystem.Data.Tests
                     AttachmentTypeDto attachmentTypeDto = new AttachmentTypeDto();
                     attachmentTypeDto.Name = "File";
                     attachmentTypeDto.AttachmentType = AttachmentType.File;
-                    attachmentDto.AttachmentType = attachmentTypeDto;
+                    attachmentDto.AttachmentType = attachmentTypeDto.AttachmentType;
                     return attachmentDto;
                 default:
                     throw new Exception();

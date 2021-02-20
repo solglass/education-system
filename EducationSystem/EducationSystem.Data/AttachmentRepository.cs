@@ -26,7 +26,7 @@ namespace EducationSystem.Data
                     "dbo.Attachment_SelectById",
                     (attachment, attachmentType) =>
                     {                                             
-                        attachment.AttachmentType = attachmentType;                       
+                        attachment.AttachmentType = attachmentType.AttachmentType;                       
                         return attachment;
                     },
                     new { id },
@@ -40,7 +40,7 @@ namespace EducationSystem.Data
         {
             int id = attachmentDto.Id;
             string path = attachmentDto.Path;
-            int attachmentTypeID = attachmentDto.AttachmentType.Id;
+            int attachmentTypeID = (int)attachmentDto.AttachmentType;
             var data = _connection
                 .Execute("dbo.Attachment_Update", new { id, path, attachmentTypeID }, commandType: System.Data.CommandType.StoredProcedure);
             return data;
@@ -62,7 +62,7 @@ namespace EducationSystem.Data
                 new
                 {
                     path = attachmentDto.Path,
-                    attachmentTypeId = attachmentDto.AttachmentType.Id
+                    attachmentTypeId = (int)attachmentDto.AttachmentType
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return value;
