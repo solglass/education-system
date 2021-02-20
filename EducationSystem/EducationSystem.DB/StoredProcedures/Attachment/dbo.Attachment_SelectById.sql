@@ -4,9 +4,8 @@
 	select 
 		a.Id, 
 		a.Path,
-		at.Id,
-		at.Name,
-		at.AttachmentType
+		at.Id as AttachmentType,
+		at.Name
 
 from [dbo].[Attachment] a
 	inner join [dbo].[AttachmentType] at 
