@@ -139,8 +139,6 @@ namespace EducationSystem.Data
                     user.FirstName,
                     user.LastName,
                     user.BirthDate,
-                    user.Login,
-                    user.Password,
                     user.Phone,
                     user.UserPic,
                     user.Email

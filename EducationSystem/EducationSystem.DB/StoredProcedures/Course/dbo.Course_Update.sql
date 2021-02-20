@@ -2,8 +2,7 @@
 @id int,
 @name nvarchar(50),
 @description nvarchar(MAX),
-@duration int,
-@isDeleted bit
+@duration int
 )
 as
 begin 
@@ -11,7 +10,6 @@ begin
 		set
 		Name = @name,
 		Description = @description,
-		Duration = @duration,
-		IsDeleted = @isDeleted
+		Duration = @duration
 		where Id=@id
 end
