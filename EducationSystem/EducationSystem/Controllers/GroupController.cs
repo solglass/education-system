@@ -127,49 +127,6 @@ namespace EducationSystem.Controllers
                 return Problem("Ошибка!");
         }
 
-        // https://localhost:44365/api/group/group-status/name
-        [HttpPost("group-status/name")]
-        [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult AddGroupStatus(string name)
-        {
-            _repo.AddGroupStatus(name);
-            return Ok("Cтатус обновлен");
-        }
-
-        // https://localhost:44365/api/group/group-status
-        [HttpGet("group-status")]
-        public ActionResult GetGroupStatus()
-        {
-            var groupStatuses = _repo.GetGroupStatus();
-            return Ok(groupStatuses);
-        }
-
-        // https://localhost:44365/api/group/group-status/3
-        [HttpGet("group-status/{id}")]
-        public dynamic GetGroupStatus(int id)
-        {
-            var groupStatus = _repo.GetGroupStatusById(id);
-            return Ok(groupStatus);
-        }
-
-        // https://localhost:44365/api/group/group-status/3
-        [HttpPut("group-status/{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult UpdateGroupStatus(int id, [FromBody] GroupStatusDto groupStatus)
-        {
-            _repo.UpdateGroupStatus(groupStatus);
-            return Ok("success");
-        }
-
-        // https://localhost:50221/api/group/group-status/3
-        [HttpDelete("group-status/{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult DeleteGroupStatus(int id)
-        {
-            _repo.DeleteGroupStatus(id);
-            return Ok("success");
-        }
-        
         // https://localhost:50221/api/group/teacher-group/1
         [HttpGet("teacher-group/{id}")]
         [Authorize(Roles = "Админ, Менеджер, Преподаватель")]

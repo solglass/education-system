@@ -10,7 +10,6 @@ namespace EducationSystem.Data.Tests
     {
         private GroupRepository _groupRepo;
         private CourseRepository _courseRepo;
-        private GroupStatusRepository _groupStatusRepo;
         private CourseDto _courseDto;
         private GroupStatusDto _groupStatusDto;
         private int _groupId;
@@ -22,7 +21,6 @@ namespace EducationSystem.Data.Tests
         {
             _groupRepo = new GroupRepository();
             _courseRepo = new CourseRepository();
-            _groupStatusRepo = new GroupStatusRepository();
             _groupId = 0;
             _courseId = 0;
             _groupStatusId = 0;

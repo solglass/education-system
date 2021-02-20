@@ -100,8 +100,8 @@ namespace EducationSystem.Data
         }
 
         public string GetFriendlyAttachmentTypeName( AttachmentType attachmentType)
-        { 
-            switch (attachmentType) 
+        {
+            switch (attachmentType)
             {
                 case AttachmentType.File:
                     {

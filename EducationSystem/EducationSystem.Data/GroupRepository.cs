@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -175,48 +176,6 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<GroupStatusDto> GetGroupStatus()
-        {
-            var groupStatus = _connection
-                                .Query<GroupStatusDto>("dbo.GroupStatus_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                                .ToList();
-            return groupStatus;
-        }
-
-        public GroupStatusDto GetGroupStatusById(int id)
-        {
-            var groupStatus = _connection
-            .QuerySingleOrDefault<GroupStatusDto>("dbo.GroupStatus_SelectAll", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return groupStatus;
-        }
-
-        public int AddGroupStatus(string Name)
-        {
-            var result = _connection
-              .Execute("dbo.GroupStatuses_Add",
-              new { Name },
-              commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-
-        }
-        public int UpdateGroupStatus(GroupStatusDto groupStatus)
-        {
-            var result = _connection
-                .Execute("dbo.GroupStatus_Update",
-                new { groupStatus.Id, groupStatus.Name },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-
-        public int DeleteGroupStatus(int id)
-        {
-            var result = _connection
-                .Execute("dbo.GroupStatus_Delete",
-                new { id },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-
         public List<GroupDto> GetGroupsByCourseId(int id)
         {
             var groups = _connection.
@@ -316,6 +275,33 @@ namespace EducationSystem.Data
             return _connection
             .Query<GroupReportDto>("dbo.Create_Report", commandType: System.Data.CommandType.StoredProcedure)
             .ToList();
+        }
+        public string GetFriendlyGroupStatusName(GroupStatus groupStatus)
+        {
+            switch (groupStatus)
+            {
+                case GroupStatus.Recruitment:
+                    {
+                        return "Ведётся набор";
+                    }
+                case GroupStatus.ReadyToStart:
+                    {
+                        return "Ждёт начала обучения";
+                    }
+                case GroupStatus.InProgress:
+                    {
+                        return "Идёт обучение";
+                    }
+                case GroupStatus.Finished:
+                    {
+                        return "Завершила обучение";
+                    }
+                default:
+                    {
+                        return "Статус группы не найден";
+                    }
+            }
+
         }
     }
 }
