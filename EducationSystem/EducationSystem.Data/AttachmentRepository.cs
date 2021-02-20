@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-
+using EducationSystem.Core.Enums;
 
 namespace EducationSystem.Data
 {
@@ -96,6 +96,26 @@ namespace EducationSystem.Data
             };
             homeworkAttRepo.AddHomeworkAttempt_Attachment(homework_AttachmentDto);
             return attachmentId;
+
+        }
+
+        public string GetFriendlyAttachmentTypeName( AttachmentType attachmentType)
+        { 
+            switch (attachmentType) 
+            {
+                case AttachmentType.File:
+                    {
+                        return "Файл";
+                    }
+                case AttachmentType.Link:
+                    {
+                        return "Ссылка";
+                    }
+                default: 
+                    {
+                        return "Некорректный тип файла"; 
+                    }
+            }
 
         }
 
