@@ -130,7 +130,7 @@
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Add.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectById.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_update.sql" />
-    <Build Include="StoredProcedures\Attachment\dbo_Attachment_add.sql" />
+    <Build Include="StoredProcedures\Attachment\dbo.Attachment_add.sql" />
     <Build Include="StoredProcedures\Attachment\dbo_Attachment_delete .sql" />
     <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Add.sql" />
     <Build Include="StoredProcedures\AttachmentType\dbo_AttachmentType_Delete.sql" />
