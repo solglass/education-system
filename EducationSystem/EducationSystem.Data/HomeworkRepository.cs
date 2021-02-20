@@ -394,6 +394,56 @@ namespace EducationSystem.Data
             return comment;
         }
 
+        public List<CommentAttemptDto> Comment_SelectByHomeworkAttemptId(int id)
+        {
+            var commentDictionary = new Dictionary<int, CommentAttemptDto>();
+            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, AttachmentTypeDto, CommentAttemptDto>(
+                "dbo.Comment_SelectByHomeworkAttemptId",
+                (comment, user, attachment, attachmentType) =>
+                {
+                    if (!commentDictionary.TryGetValue(comment.Id, out var commentEntry))
+                    {
+                        commentEntry = comment;
+                        commentEntry.Author = user;
+                        commentEntry.Attachments = new List<AttachmentDto>();
+                        commentDictionary.Add(commentEntry.Id, commentEntry);
+                    }
+                    if (attachment != null)
+                    {
+                        attachment.AttachmentType = attachmentType;
+                        commentEntry.Attachments.Add(attachment);
+                    }
+                    return commentEntry;
+                },
+                new { AttemptId = id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+
+        public List<CommentDto> Comment_SelectByHomeworkId (int id)
+        {
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var result = _connection.Query<CommentDto, UserDto, HomeworkAttemptDto, CommentDto>(
+                "dbo.Comment_SelectByHomeworkId",
+                (comment, user, attempt) =>
+                {
+                    if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
+                    {
+                        commentEntry = comment;
+                        commentEntry.Author = user;
+                        comment.HomeworkAttempt = attempt;
+                        commentDictionary.Add(commentEntry.Id, commentEntry);
+                    }
+                    return commentEntry;
+                },
+                new {id},
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
         public int UpdateComment(CommentDto commentDto)
         {
             return _connection.Execute(
@@ -401,6 +451,7 @@ namespace EducationSystem.Data
                 new { commentDto.Id, commentDto.Message },
                 commandType: CommandType.StoredProcedure);
         }
+
 
         public int AddHomework_Theme(int homeworkId, int themeId)
         {
