@@ -13,7 +13,7 @@ namespace EducationSystem.Data.Models
         public HomeworkDto Homework { get; set; }
         public HomeworkAttemptStatusDto HomeworkAttemptStatus { get; set; }
         public List<AttachmentDto> Attachments { get; set; }
-        public List<CommentDto> Comments { get; set; }
+        public List<CommentAttemptDto> Comments { get; set; }
 
 
 
