@@ -97,8 +97,7 @@ namespace EducationSystem.Data
                     id = course.Id,
                     name = course.Name,
                     description = course.Description,
-                    duration = course.Duration,
-                    isDeleted = course.IsDeleted
+                    duration = course.Duration
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -134,7 +133,9 @@ namespace EducationSystem.Data
             var tagDictionary = new Dictionary<int, TagDto>();
 
             var themes = _connection
-                .Query<ThemeDto, TagDto, ThemeDto>("dbo.Theme_SelectAll",                (theme, tag) =>                {
+                .Query<ThemeDto, TagDto, ThemeDto>("dbo.Theme_SelectAll",
+                (theme, tag) =>
+                {
 
                     if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                     {
@@ -150,7 +151,10 @@ namespace EducationSystem.Data
                         tagDictionary.Add(tagEntry.Id, tagEntry);
                     }
                     return themeEntry;
-                },                splitOn: "Id",                commandType: System.Data.CommandType.StoredProcedure)                .Distinct()
+                },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
             return themes;
         }

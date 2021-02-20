@@ -1,4 +1,4 @@
-﻿CREATE proc dbo.Comment_SelectByHomeworkId (
+﻿CREATE proc [dbo].[Comment_SelectByHomeworkId] (
 @homeworkId int)
 as
 begin
@@ -17,4 +17,3 @@ begin
 		inner join dbo.Homework hw on hwa.HomeworkId = hw.Id
 	where c.IsDeleted = 0 and hw.Id = @homeworkId
 end
-
