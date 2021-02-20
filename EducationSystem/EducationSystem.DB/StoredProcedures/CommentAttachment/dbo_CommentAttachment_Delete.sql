@@ -1,7 +1,6 @@
-create proc [dbo].[Comment_Attachment_Delete] (
-@id int
-) as
-begin
+create proc [dbo].[Comment_Attachment_Delete]
+@commentId int,
+@attachmentId int
+as
 	delete from [dbo].[Comment_Attachment] 
-	where Id = @id
-end 
+	where CommentId = @commentId and AttachmentId = @attachmentId
