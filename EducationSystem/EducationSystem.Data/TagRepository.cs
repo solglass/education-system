@@ -86,10 +86,10 @@ namespace EducationSystem.Data
                 .Execute("dbo.Theme_Tag_Update", new { Tag.Id, Tag.TagId, Tag.ThemeId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int ThemeTagDelete(int Id)
+        public int ThemeTagDelete(int themeId, int tagId)
         {
             var result = _connection
-                .Execute("dbo.Theme_Tag_Delete", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Theme_Tag_Delete", new { themeId, tagId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
         

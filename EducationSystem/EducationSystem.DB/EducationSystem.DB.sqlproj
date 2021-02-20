@@ -58,7 +58,6 @@
     <Folder Include="Properties" />
     <Folder Include="StoredProcedures" />
     <Folder Include="StoredProcedures\Attachment" />
-    <Folder Include="StoredProcedures\AttachmentType" />
     <Folder Include="StoredProcedures\Attendance" />
     <Folder Include="StoredProcedures\Comment" />
     <Folder Include="StoredProcedures\CommentAttachment" />
