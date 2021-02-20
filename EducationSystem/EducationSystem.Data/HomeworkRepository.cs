@@ -394,34 +394,6 @@ namespace EducationSystem.Data
             return comment;
         }
 
-        public List<CommentAttemptDto> Comment_SelectByHomeworkAttemptId(int id)
-        {
-            var commentDictionary = new Dictionary<int, CommentAttemptDto>();
-            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, AttachmentTypeDto, CommentAttemptDto>(
-                "dbo.Comment_SelectByHomeworkAttemptId",
-                (comment, user, attachment, attachmentType) =>
-                {
-                    if (!commentDictionary.TryGetValue(comment.Id, out var commentEntry))
-                    {
-                        commentEntry = comment;
-                        commentEntry.Author = user;
-                        commentEntry.Attachments = new List<AttachmentDto>();
-                        commentDictionary.Add(commentEntry.Id, commentEntry);
-                    }
-                    if (attachment != null)
-                    {
-                        attachment.AttachmentType = attachmentType;
-                        commentEntry.Attachments.Add(attachment);
-                    }
-                    return commentEntry;
-                },
-                new { AttemptId = id },
-                splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return result;
-        }
-
         public List<CommentDto> Comment_SelectByHomeworkId (int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
@@ -583,12 +555,32 @@ namespace EducationSystem.Data
             return homeworkAttempts;
         }
         
-        public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
+        public List<CommentAttemptDto> GetCommentsByHomeworkAttemptId(int id)
         {
-            var comments = _connection
-                .Query<CommentDto>("dbo.Comment_SelectByHomeworkAttemptId", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+            var commentDictionary = new Dictionary<int, CommentAttemptDto>();
+            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, AttachmentTypeDto, CommentAttemptDto>(
+                "dbo.Comment_SelectByHomeworkAttemptId",
+                (comment, user, attachment, attachmentType) =>
+                {
+                    if (!commentDictionary.TryGetValue(comment.Id, out var commentEntry))
+                    {
+                        commentEntry = comment;
+                        commentEntry.Author = user;
+                        commentEntry.Attachments = new List<AttachmentDto>();
+                        commentDictionary.Add(commentEntry.Id, commentEntry);
+                    }
+                    if (attachment != null)
+                    {
+                        attachment.AttachmentType = attachmentType;
+                        commentEntry.Attachments.Add(attachment);
+                    }
+                    return commentEntry;
+                },
+                new { AttemptId = id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
-            return comments;
+            return result;
         }
 
         public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
