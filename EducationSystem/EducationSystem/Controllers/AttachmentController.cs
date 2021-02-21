@@ -21,13 +21,11 @@ namespace EducationSystem.API.Controllers
        
         private AttachmentService _service;
         private AttachmentMapper _attachmentMapper;
-        private AttachmentTypeMapper _attachmentTypeMapper;
 
         public AttachmentController()
         {
             _service = new AttachmentService();
             _attachmentMapper = new AttachmentMapper();
-            _attachmentTypeMapper = new AttachmentTypeMapper();
         }
 
         // https://localhost:44365/api/attachment/

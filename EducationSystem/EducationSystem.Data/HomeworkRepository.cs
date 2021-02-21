@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -558,7 +559,7 @@ namespace EducationSystem.Data
         public List<CommentAttemptDto> GetCommentsByHomeworkAttemptId(int id)
         {
             var commentDictionary = new Dictionary<int, CommentAttemptDto>();
-            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, AttachmentTypeDto, CommentAttemptDto>(
+            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, int, CommentAttemptDto>(
                 "dbo.Comment_SelectByHomeworkAttemptId",
                 (comment, user, attachment, attachmentType) =>
                 {
@@ -571,13 +572,13 @@ namespace EducationSystem.Data
                     }
                     if (attachment != null)
                     {
-                        attachment.AttachmentType = attachmentType;
+                        attachment.AttachmentType =(AttachmentType) attachmentType;
                         commentEntry.Attachments.Add(attachment);
                     }
                     return commentEntry;
                 },
                 new { AttemptId = id },
-                splitOn: "Id",
+                splitOn: "AttachmentType",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
@@ -587,20 +588,20 @@ namespace EducationSystem.Data
         {
             var attachmentDictionary = new Dictionary<int, AttachmentDto>();
             var comments = _connection
-                .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>
+                .Query<AttachmentDto, int, AttachmentDto>
                 ("dbo.Attachment_SelectByHomeworkAttemptId",
                 (attachment, type)=> 
                 {
                     if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
                     {
                         attachmentEntry = attachment;
-                        attachmentEntry.AttachmentType = type.AttachmentType;
+                        attachmentEntry.AttachmentType = (AttachmentType)type;
                         attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
                     }
                     return attachmentEntry;
                 },
                 new { id },
-                splitOn: "Id",
+                splitOn: "AttachmentType",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return comments;
