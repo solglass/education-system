@@ -117,7 +117,7 @@
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Add.sql" />
-    <Build Include="StoredProcedures\Homework\dbo.Homework_SoftDeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_Delete.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectAll.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Update.sql" />
@@ -278,5 +278,6 @@
     <Build Include="StoredProcedures\Material\dbo.Material_Update.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_Recover.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Recover.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_Recover.sql" />
   </ItemGroup>
 </Project>

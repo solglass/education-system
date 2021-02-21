@@ -80,15 +80,41 @@ namespace EducationSystem.API.Controllers
             return Ok("success");
         }
 
-        // https://localhost:44365/api/homework/42
-        [HttpDelete("homeworkAttempts/{id}")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        // https://localhost:44365/api/homework/id
+        [HttpDelete("homework/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteHomework(int id)
         {
-            _repo.DeleteHomework(id);
-            return Ok("success");
+            var result = _homeworkService.DeleteHomework(id);
+            if (result == 1)
+                return Ok($"Домашняя работа #{id} удалена!");
+            else
+                return Problem($"Ошибка! Не удалось удалить домашнюю работу #{id}!");
         }
 
+        // https://localhost:44365/api/homework/id/recovery
+        [HttpPut("homework/{id}/recovery")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult RecoverHomework(int id)
+        {
+            var result = _homeworkService.RecoverHomework(id);
+            if (result == 1)
+                return Ok($"Домашняя работа #{id} восстановлена!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить домашнюю работу #{id}!");
+        }
+
+        // https://localhost:44365/api/homework/id/wipe
+        [HttpDelete("homework/{id}/wipe")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult HardDeleteHomework(int id)
+        {
+            var result = _homeworkService.HardDeleteHomework(id);
+            if (result == 1)
+                return Ok($"Домашняя работа #{id} полностью удалена!");
+            else
+                return Problem($"Ошибка! Не удалось полностью удалить домашнюю работу #{id}!");
+        }
 
 
         // https://localhost:44365/api/homework/homeworkAttempts

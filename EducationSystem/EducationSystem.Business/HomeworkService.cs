@@ -32,9 +32,20 @@ namespace EducationSystem.Business
         {
             return _homeworkRepository.AddHomework(homeworkDto);
         }
+
         public int DeleteHomework(int id)
         {
             return _homeworkRepository.DeleteHomework(id);
+        }
+
+        public int RecoverHomework(int id)
+        {
+            return _homeworkRepository.RecoverHomework(id);
+        }
+
+        public int HardDeleteHomework(int id)
+        {
+            return _homeworkRepository.HardDeleteHomework(id);
         }
 
         //public int AddHomework_Theme(HomeworkThemeDto homeworkThemeDto)

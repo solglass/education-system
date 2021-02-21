@@ -152,7 +152,19 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        
+
+        public int RecoverHomework(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Homework_Recover",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
         public int HardDeleteHomework(int id)
         {
             var result = _connection
