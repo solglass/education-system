@@ -77,6 +77,20 @@ namespace EducationSystem.Business
             return _homeworkRepository.GetCommentById(id);
         }
 
+        public int DeleteComment(int id)
+        {
+            return _homeworkRepository.DeleteComment(id);
+        }
+
+        public int RecoverComment(int id)
+        {
+            return _homeworkRepository.RecoverComment(id);
+        }
+
+        public int HardDeleteComment(int id)
+        {
+            return _homeworkRepository.HardDeleteComment(id);
+        }
 
 
         public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)

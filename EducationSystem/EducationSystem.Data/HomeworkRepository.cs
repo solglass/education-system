@@ -307,6 +307,7 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
             return result;
         }
+
         public int DeleteComment(int id)
         {
             var result = _connection
@@ -318,6 +319,19 @@ namespace EducationSystem.Data
                  commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
+        public int RecoverComment(int id)
+        {
+            var result = _connection
+                 .Execute("dbo.Comment_Recover",
+                 new
+                 {
+                     id
+                 },
+                 commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
         public int HardDeleteComment(int id)
         {
             var result = _connection

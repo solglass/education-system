@@ -81,7 +81,7 @@ namespace EducationSystem.API.Controllers
         }
 
         // https://localhost:44365/api/homework/id
-        [HttpDelete("homework/{id}")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteHomework(int id)
         {
@@ -93,7 +93,7 @@ namespace EducationSystem.API.Controllers
         }
 
         // https://localhost:44365/api/homework/id/recovery
-        [HttpPut("homework/{id}/recovery")]
+        [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult RecoverHomework(int id)
         {
@@ -105,7 +105,7 @@ namespace EducationSystem.API.Controllers
         }
 
         // https://localhost:44365/api/homework/id/wipe
-        [HttpDelete("homework/{id}/wipe")]
+        [HttpDelete("{id}/wipe")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult HardDeleteHomework(int id)
         {
@@ -191,7 +191,7 @@ namespace EducationSystem.API.Controllers
         }
 
         //https://localhost:44365/api/homework/comment
-        [HttpPost]
+        [HttpPost("comments")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult AddComment([FromBody] CommentDto comment)
         {
@@ -215,6 +215,42 @@ namespace EducationSystem.API.Controllers
         {
             var results = _repo.GetCommentById(id);
             return Ok(results);
+        }
+
+        // https://localhost:44365/api/comments/id
+        [HttpDelete("comments/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult DeleteComment(int id)
+        {
+            var result = _homeworkService.DeleteComment(id);
+            if (result == 1)
+                return Ok($"Комментарий #{id} удален!");
+            else
+                return Problem($"Ошибка! Не удалось удалить комментарий #{id}!");
+        }
+
+        // https://localhost:44365/api/comments/id/recovery
+        [HttpPut("comments/{id}/recovery")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult RecoverComment(int id)
+        {
+            var result = _homeworkService.RecoverComment(id);
+            if (result == 1)
+                return Ok($"Комментарий #{id} восстановлен!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить комментарий #{id}!");
+        }
+
+        // https://localhost:44365/api/comments/id/wipe
+        [HttpDelete("comments/{id}/wipe")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult HardDeleteComment(int id)
+        {
+            var result = _homeworkService.HardDeleteComment(id);
+            if (result == 1)
+                return Ok($"Комментарий #{id} полностью удален!");
+            else
+                return Problem($"Ошибка! Не удалось полностью удалить комментарий #{id}!");
         }
 
         // https://localhost:44365/api/homework/homework_Theme/42

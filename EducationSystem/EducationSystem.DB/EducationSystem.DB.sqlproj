@@ -105,7 +105,7 @@
     <Build Include="StoredProcedures\Theme\dbo.Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Update.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Add.sql" />
-    <Build Include="StoredProcedures\Comment\dbo.Comment_SoftDeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\Comment\dbo.Comment_Delete.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_SelectById.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Update.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_SelectById.sql" />
@@ -279,5 +279,6 @@
     <Build Include="StoredProcedures\Course\dbo.Course_Recover.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Recover.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Recover.sql" />
+    <Build Include="StoredProcedures\Comment\dbo.Comment_Recover.sql" />
   </ItemGroup>
 </Project>
