@@ -22,15 +22,15 @@ namespace EducationSystem.Data
         public AttachmentDto GetAttachmentById(int id)
         {
             var data = _connection
-                .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>(
+                .Query<AttachmentDto, int, AttachmentDto>(
                     "dbo.Attachment_SelectById",
                     (attachment, attachmentType) =>
                     {                                             
-                        attachment.AttachmentType = attachmentType.AttachmentType;                       
+                        attachment.AttachmentType = (AttachmentType)attachmentType;                       
                         return attachment;
                     },
                     new { id },
-                    splitOn: "Id",
+                    splitOn: "AttachmentType",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return data;
@@ -96,26 +96,6 @@ namespace EducationSystem.Data
             };
             homeworkAttRepo.AddHomeworkAttempt_Attachment(homework_AttachmentDto);
             return attachmentId;
-
-        }
-
-        public string GetFriendlyAttachmentTypeName( AttachmentType attachmentType)
-        { 
-            switch (attachmentType) 
-            {
-                case AttachmentType.File:
-                    {
-                        return "Файл";
-                    }
-                case AttachmentType.Link:
-                    {
-                        return "Ссылка";
-                    }
-                default: 
-                    {
-                        return "Некорректный тип файла"; 
-                    }
-            }
 
         }
 

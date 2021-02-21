@@ -136,7 +136,7 @@
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectById.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Update.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Add.sql" />
-    <Build Include="StoredProcedures\Attachment\dbo_Attachment_Delete .sql" />
+    <Build Include="StoredProcedures\Attachment\dbo.Attachment_Delete .sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Add.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Delete.sql" />
     <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Select by id.sql" />
@@ -261,7 +261,6 @@
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectAll.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectByID.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Update.sql" />
-    <Build Include="StoredProcedures\Attachment\dbo.Attachment.GetAttachmentTypeIdByEnum.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_Add.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_Delete.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectAll.sql" />
