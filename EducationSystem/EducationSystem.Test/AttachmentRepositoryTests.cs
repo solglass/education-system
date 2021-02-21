@@ -92,10 +92,8 @@ namespace EducationSystem.Data.Tests
                 case 1:
                     AttachmentDto attachmentDto = new AttachmentDto();
                     attachmentDto.Path = "C\\TESTCASE1";
-                    AttachmentTypeDto attachmentTypeDto = new AttachmentTypeDto();
-                    attachmentTypeDto.Name = "File";
-                    attachmentTypeDto.AttachmentType = AttachmentType.File;
-                    attachmentDto.AttachmentType = attachmentTypeDto.AttachmentType;
+                    AttachmentType attachmentType = AttachmentType.File;
+                    attachmentDto.AttachmentType = attachmentType;
                     return attachmentDto;
                 default:
                     throw new Exception();

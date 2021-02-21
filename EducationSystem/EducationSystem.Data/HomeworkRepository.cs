@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -587,20 +588,20 @@ namespace EducationSystem.Data
         {
             var attachmentDictionary = new Dictionary<int, AttachmentDto>();
             var comments = _connection
-                .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>
+                .Query<AttachmentDto, int, AttachmentDto>
                 ("dbo.Attachment_SelectByHomeworkAttemptId",
                 (attachment, type)=> 
                 {
                     if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
                     {
                         attachmentEntry = attachment;
-                        attachmentEntry.AttachmentType = type.AttachmentType;
+                        attachmentEntry.AttachmentType = (AttachmentType)type;
                         attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
                     }
                     return attachmentEntry;
                 },
                 new { id },
-                splitOn: "Id",
+                splitOn: "AttachmentType",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return comments;
