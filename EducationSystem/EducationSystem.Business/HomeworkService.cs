@@ -123,5 +123,15 @@ namespace EducationSystem.Business
         {
             return _homeworkRepository.DeleteHomeworkAttempt(id);
         }
+
+        public int RecoverHomeworkAttempt(int id)
+        {
+            return _homeworkRepository.RecoverHomeworkAttempt(id);
+        }
+
+        public int HardDeleteHomeworkAttempt(int id)
+        {
+            return _homeworkRepository.HardDeleteHomeworkAttempt(id);
+        }
     }
 }

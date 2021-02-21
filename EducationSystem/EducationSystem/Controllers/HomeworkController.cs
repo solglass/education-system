@@ -130,11 +130,38 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpDelete("homeworkAttempts/{id}")]
-        [Authorize(Roles = "Админ")]
+        [Authorize(Roles = "Админ, Студент")]
         public ActionResult DeleteHomeworkAttempt(int id)
         {
-            _homeworkService.DeleteHomeworkAttempt(id);
-            return Ok("Решение удалено");
+            var result = _homeworkService.DeleteHomeworkAttempt(id);
+            if (result == 1)
+                return Ok($"Решение #{id} удалено!");
+            else
+                return Problem($"Ошибка! Не удалось удалить решение #{id}!");
+        }
+
+        // https://localhost:44365/api/homework/homeworkAttempts/id/recovery
+        [HttpPut("homeworkAttempts/{id}/recovery")]
+        [Authorize(Roles = "Админ, Студент")]
+        public ActionResult RecoverHomeworkAttempt(int id)
+        {
+            var result = _homeworkService.RecoverHomeworkAttempt(id);
+            if (result == 1)
+                return Ok($"Решение #{id} восстановлено!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить решение #{id}!");
+        }
+
+        // https://localhost:44365/api/homework/homeworkAttempts/42/wipe
+        [HttpDelete("homeworkAttempts/{id}/wipe")]
+        [Authorize(Roles = "Админ, Студент")]
+        public ActionResult HardDeleteHomeworkAttempt(int id)
+        {
+            var result = _homeworkService.HardDeleteHomeworkAttempt(id);
+            if (result == 1)
+                return Ok($"Решение #{id} полностью удалено!");
+            else
+                return Problem($"Ошибка! Не удалось полностью удалить решение #{id}!");
         }
 
         //https://localhost:44365/api/homework/comment
