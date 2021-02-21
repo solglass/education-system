@@ -9,6 +9,7 @@ namespace EducationSystem.API.Utils
     public class Converters
     {
         private const string _dateFormat = "dd.MM.yyyy";
+        private const string _periodDateFormat = "MM.yyyy";
         public static (bool, DateTime) StrToDateTime(string strDate)
         {
             bool isDateParsed = DateTime
@@ -19,6 +20,11 @@ namespace EducationSystem.API.Utils
         public static string DateTimeToStr(DateTime date)
         {
             return date.ToString(_dateFormat);
+        }
+
+        public static string PeriodDateToStr(DateTime date)
+        {
+            return date.ToString(_periodDateFormat);
         }
     }
 }

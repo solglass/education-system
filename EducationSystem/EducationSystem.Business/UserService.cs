@@ -9,10 +9,12 @@ namespace EducationSystem.Business
     public class UserService
     {
         private UserRepository _userRepository;
+        private PaymentRepository _paymentRepository;
 
         public UserService()
         {
             _userRepository = new UserRepository();
+            _paymentRepository = new PaymentRepository();
         }
         public List<UserDto> GetUsers()
         {
@@ -70,6 +72,15 @@ namespace EducationSystem.Business
         public List<RoleDto> GetRoles()
         {
             return _userRepository.GetRoles();
+        }
+
+        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string periodTo)
+        {
+            return _paymentRepository.GetPaymentsByPeriod(periodFrom, periodTo);
+        }
+        public PaymentDto GetPaymentById(int id)
+        {
+            return _paymentRepository.GetPaymentById(id);
         }
     }
 }

@@ -46,8 +46,8 @@ namespace EducationSystem.API.Controllers
         }
 
         // https://localhost:44365/api/homework
-        [HttpGet]
-        [Authorize(Roles = "Админ")]
+        [HttpGet("AllHomeworks")]
+        //[Authorize(Roles = "Админ")]
         public ActionResult GetHomeworks()
         {
             var results = _repo.GetHomeworks();

@@ -11,13 +11,14 @@ using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using EducationSystem.API.Utils;
 
 namespace EducationSystem.Controllers
 {
     // https://localhost:50221/api/user/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
        
@@ -26,12 +27,14 @@ namespace EducationSystem.Controllers
         private UserMapper _userMapper;
         private RoleMapper _roleMapper;
         private UserService _userService;
+        private Converters _converter;
         public UserController()
 
         {
             _userMapper = new UserMapper();
             _roleMapper = new RoleMapper();
             _userService = new UserService();
+            _converter = new Converters();
         }
 
         // https://localhost:50221/api/user/register
@@ -179,26 +182,30 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Менеджер,Студент")]
         public ActionResult AddPayment([FromBody] PaymentInputModel payment)
         {
-            var result = _mapper.ToDto(payment);
+            var result = _mapper.ToDto(payment);    
             _prepo.AddPayment(result);
             return Ok("Платеж добавлен");
         }
 
         //https://localhost:50221/api/user/payment/payment
-         [HttpGet("payment")]
-        [Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult GetPayments()
+        [HttpGet("period")]
+        //[Authorize(Roles = "Админ,Менеджер")]
+        public ActionResult GetPayments(string periodFrom, string periodTo)
         {
-            var payments = _prepo.GetPayments();
+            DateTime perFrom = Converters.StrToDateTime(periodFrom).Item2;
+            DateTime perTo = Converters.StrToDateTime(periodTo).Item2;
+            periodFrom = Converters.PeriodDateToStr(perFrom);
+            periodTo = Converters.PeriodDateToStr(perTo);
+            var payments = _userService.GetPaymentsByPeriod(periodFrom, periodTo);
             return Ok(payments);
         }
 
         //https://localhost:50221/api/user/payment/payment/32
          [HttpGet("payment/{id}")]
-        [Authorize(Roles = "Админ,Менеджер")]
+        //[Authorize(Roles = "Админ,Менеджер")]
         public dynamic GetPayment(int id)
         {
-            var payment = _prepo.GetPaymentById(id);
+            var payment = _userService.GetPaymentById(id);
             return Ok(payment);
         }
         //https://localhost:50221/api/user/payment/payment/42

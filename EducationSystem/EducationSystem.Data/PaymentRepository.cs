@@ -19,16 +19,17 @@ namespace EducationSystem.Data
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<PaymentDto> GetPayments()
+        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo)
         {
             var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
-                    "dbo.Payment_SelectAll",
+                    "dbo.Payment_SelectByPeriod",
                     (payment, user) =>
                     {
                         payment.Student = user;
                         return payment;
                     },
-                            splitOn: "Id",
+                    new { periodFrom, PeriodTo },
+                    splitOn: "Id, Id",
                     commandType: System.Data.CommandType.StoredProcedure)               
                 .ToList();
             return payments;
@@ -44,7 +45,7 @@ namespace EducationSystem.Data
                         return payment;
                     },
                     new { id },
-                    splitOn: "Id",
+                    splitOn: "Id, Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return payment;
