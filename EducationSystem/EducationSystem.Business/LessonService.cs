@@ -21,10 +21,21 @@ namespace EducationSystem.Business
         {
            return _lessonRepository.GetLessonById(id);
         }
-        public void DeleteLesson(int id)
+
+        public int DeleteLesson(int id)
         {
-            _lessonRepository.DeleteLesson(id);
+            return _lessonRepository.DeleteLesson(id);
         }
+        public int RecoverLesson(int id)
+        {
+            return _lessonRepository.RecoverLesson(id);
+        }
+
+        public int HardDeleteLesson(int id)
+        {
+            return _lessonRepository.HardDeleteLesson(id);
+        }
+
         public void AddLesson(LessonDto lesson)
         {
             _lessonRepository.AddLesson(lesson);

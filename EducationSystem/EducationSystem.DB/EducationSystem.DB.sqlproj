@@ -242,7 +242,7 @@
     <Build Include="Tables\dbo.User_Role.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByHomeworkId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Add.sql" />
-    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SoftDeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Delete.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectAll.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByID.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
@@ -269,7 +269,7 @@
     <Build Include="StoredProcedures\Role\dbo.Role_SelectAll.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_SelectById.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
-    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Delete.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_HardDelete.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_Add.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_SelectAll.sql" />
@@ -280,5 +280,6 @@
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Recover.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Recover.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Recover.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Recover.sql" />
   </ItemGroup>
 </Project>

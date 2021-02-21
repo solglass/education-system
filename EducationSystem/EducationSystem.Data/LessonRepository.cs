@@ -80,6 +80,22 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
+        public int RecoverLesson(int id)
+        {
+            return _connection.Execute(
+                 "dbo.Lesson_Recover",
+                 new { id },
+                 commandType: CommandType.StoredProcedure);
+        }
+
+        public int HardDeleteLesson(int id)
+        {
+            return _connection.Execute(
+                 "dbo.Lesson_HardDelete",
+                 new { id },
+                 commandType: CommandType.StoredProcedure);
+        }
+
         public int UpdateLesson(LessonDto lessonDto)
         {
             return _connection.Execute(
