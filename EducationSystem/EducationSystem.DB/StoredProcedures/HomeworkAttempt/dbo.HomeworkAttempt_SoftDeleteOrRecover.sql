@@ -1,10 +1,11 @@
-﻿CREATE proc [dbo].[HomeworkAttempt_Delete] (
-@id int
+﻿CREATE proc [dbo].[HomeworkAttempt_SoftDeleteOrRecover] (
+	@id int,
+	@IsDeleted bit
 )
 as
 begin
 	update dbo.HomeworkAttempt
 	set
-		IsDeleted = 1
+		IsDeleted = @IsDeleted
 	where Id = @id
 end

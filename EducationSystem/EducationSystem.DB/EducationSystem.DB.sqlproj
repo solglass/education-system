@@ -122,7 +122,7 @@
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Add.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Delete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SoftDeleteOrRecover.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectAll.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectById.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Update.sql" />
@@ -153,7 +153,7 @@
     <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Add.sql" />
     <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\Material_Add.sql" />
-    <Build Include="StoredProcedures\Material\Material_Delete.sql" />
+    <Build Include="StoredProcedures\Material\Material_SoftDeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectById.sql" />
     <Build Include="StoredProcedures\Material\Material_Update.sql" />
@@ -223,11 +223,10 @@
     <Build Include="StoredProcedures\Group\dbo.Group_SelectAllByCourseId.sql" />
     <Build Include="StoredProcedures\Group\dbo.GroupPrograms_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_SelectWithoutTutors.sql" />
-    <Build Include="StoredProcedures\Course\Course_HardDelete.sql" />
+    <Build Include="StoredProcedures\Course\dbo.Course_HardDelete.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_HardDelete.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_HardDelete.sql" />
-    <Build Include="StoredProcedures\HomeworkAttemptStatus\HomeworkAttemptStatus_HardDelete.sql" />
-    <Build Include="StoredProcedures\Comment\Comment_HardDelete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_HardDelete.sql" />
+    <Build Include="StoredProcedures\Comment\dbo.Comment_HardDelete.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_SelectById.sql" />
     <Build Include="Tables\dbo.Attendance.sql" />
     <Build Include="Tables\dbo.Feedback.sql" />
@@ -248,7 +247,7 @@
     <Build Include="Tables\dbo.User_Role.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByHomeworkId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Add.sql" />
-    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Delete.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SoftDeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectAll.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByID.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
@@ -275,5 +274,7 @@
     <Build Include="StoredProcedures\Role\dbo.Role_SelectAll.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_SelectById.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Delete.sql" />
+    <Build Include="StoredProcedures\Material\Material_Delete.sql" />
   </ItemGroup>
 </Project>
