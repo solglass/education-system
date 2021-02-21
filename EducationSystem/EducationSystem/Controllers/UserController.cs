@@ -190,7 +190,7 @@ namespace EducationSystem.Controllers
         //https://localhost:50221/api/user/payment/payment
         [HttpGet("period")]
         //[Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult GetPayments(string periodFrom, string periodTo)
+        public ActionResult GetPaymentsByPeriod(string periodFrom, string periodTo)
         {
             DateTime perFrom = Converters.StrToDateTime(periodFrom).Item2;
             DateTime perTo = Converters.StrToDateTime(periodTo).Item2;
@@ -199,7 +199,11 @@ namespace EducationSystem.Controllers
             var payments = _userService.GetPaymentsByPeriod(periodFrom, periodTo);
             return Ok(payments);
         }
-
+        [HttpGet("UserId/{id}")]
+        public ActionResult GetPaymentsByUserId(int id)
+        {            
+            return Ok(_userService.GetPaymentsByUserId(id));
+        }
         //https://localhost:50221/api/user/payment/payment/32
          [HttpGet("payment/{id}")]
         //[Authorize(Roles = "Админ,Менеджер")]

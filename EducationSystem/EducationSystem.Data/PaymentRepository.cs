@@ -34,6 +34,21 @@ namespace EducationSystem.Data
                 .ToList();
             return payments;
         }
+        public List<PaymentDto> GetPaymentsByUserId(int id)
+        {
+            var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+                    "dbo.Payment_SelectByUserId",
+                    (payment, user) =>
+                    {
+                        payment.Student = user;
+                        return payment;
+                    },
+                    new { id },
+                    splitOn: "Id, UserId",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return payments;
+        }
 
         public PaymentDto GetPaymentById(int id)
         {

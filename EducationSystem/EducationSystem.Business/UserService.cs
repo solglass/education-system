@@ -82,5 +82,9 @@ namespace EducationSystem.Business
         {
             return _paymentRepository.GetPaymentById(id);
         }
+        public List<PaymentDto> GetPaymentsByUserId(int id)
+        {
+            return _paymentRepository.GetPaymentsByUserId(id);
+        }
     }
 }
