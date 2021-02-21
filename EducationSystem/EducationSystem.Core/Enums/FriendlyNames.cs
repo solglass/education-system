@@ -8,21 +8,14 @@ namespace EducationSystem.Core.Enums
     {
         public static string GetFriendlyAttachmentTypeName(AttachmentType attachmentType)
         {
-            switch (attachmentType)
+
+            String FriendlyName = attachmentType switch
             {
-                case AttachmentType.File:
-                    {
-                        return "Файл";
-                    }
-                case AttachmentType.Link:
-                    {
-                        return "Ссылка";
-                    }
-                default:
-                    {
-                        return "Некорректный тип файла";
-                    }
-            }
+                AttachmentType.File => "Файл",
+                AttachmentType.Link => "Ссылка",
+                _ => "Некорректный тип файла"
+            };
+            return FriendlyName;
 
         }
     }
