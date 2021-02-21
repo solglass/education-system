@@ -73,19 +73,17 @@ namespace EducationSystem.Data
         }
         public UserDto GetUserById(int id)
         {
-            var UserDictionary = new Dictionary<int, UserDto>();
+            var userEntry = new UserDto();
             var users = _connection.
                 Query<UserDto, RoleDto, UserDto>(
                 "dbo.User_SelectById",
                 (user, role) =>
                 {
-                    if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                    if(userEntry.Id == 0)
                     {
                         userEntry = user;
                         userEntry.Roles = new List<RoleDto>();
-                        UserDictionary.Add(userEntry.Id, userEntry);
-                    }
-
+                    }                                             
                     userEntry.Roles.Add(role);
                     return userEntry;
                 },

@@ -76,7 +76,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/user/42
         [HttpGet("{id}")]
-        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
+        //[Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult GetUser(int id)
         {
             var user = _userService.GetUserById(id);
@@ -132,7 +132,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/role
-        [HttpGet]
+        [HttpGet("role")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult GetURoles()
         {
@@ -141,7 +141,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/role/42
-        [HttpGet("{id}")]
+        [HttpGet("role/{id}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult GetRoleById(int id)
         {
