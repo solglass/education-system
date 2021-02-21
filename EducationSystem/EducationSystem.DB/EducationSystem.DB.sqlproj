@@ -152,11 +152,6 @@
     <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Update.sql" />
     <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Add.sql" />
     <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Delete.sql" />
-    <Build Include="StoredProcedures\Material\Material_Add.sql" />
-    <Build Include="StoredProcedures\Material\Material_SoftDeleteOrRecover.sql" />
-    <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
-    <Build Include="StoredProcedures\Material\Material_SelectById.sql" />
-    <Build Include="StoredProcedures\Material\Material_Update.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Add.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Delete.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectAll.sql" />
@@ -212,7 +207,7 @@
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Update.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Add.sql" />
-    <Build Include="StoredProcedures\User\dbo.User_Delete.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_SoftDeleteOrRecover.sql" />
     <Build Include="StoredProcedures\User\dbo.User_HardDelete.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
@@ -275,6 +270,11 @@
     <Build Include="StoredProcedures\Role\dbo.Role_SelectById.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Delete.sql" />
-    <Build Include="StoredProcedures\Material\Material_Delete.sql" />
+    <Build Include="StoredProcedures\Material\dbo.Material_Add.sql" />
+    <Build Include="StoredProcedures\Material\dbo.Material_Delete.sql" />
+    <Build Include="StoredProcedures\Material\dbo.Material_SelectAll.sql" />
+    <Build Include="StoredProcedures\Material\dbo.Material_SelectById.sql" />
+    <Build Include="StoredProcedures\Material\dbo.Material_SoftDeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\Material\dbo.Material_Update.sql" />
   </ItemGroup>
 </Project>
