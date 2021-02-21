@@ -26,7 +26,7 @@ namespace EducationSystem.Data
                     (group, course, groupStatus) =>
                     {
                         group.Course = course;
-                        group.GroupStatus = groupStatus;
+                        group.GroupStatus = groupStatus.groupStatus;
                         return group;
                     },
                     splitOn: "Id",
@@ -43,7 +43,7 @@ namespace EducationSystem.Data
                     (group, course, groupStatus) =>
                     {
                         group.Course = course;
-                        group.GroupStatus = groupStatus;
+                        group.GroupStatus = groupStatus.groupStatus;
                         return group;
                     },
                     new { id },
@@ -105,7 +105,7 @@ namespace EducationSystem.Data
                 new 
                 { 
                     CourseID = groupDto.Course.Id, 
-                    StatusId = groupDto.GroupStatus.Id, 
+                    StatusId = (int)groupDto.GroupStatus, 
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -120,7 +120,7 @@ namespace EducationSystem.Data
                 { 
                     Id = groupDto.Id, 
                     CourseID = groupDto.Course.Id, 
-                    StatusId = groupDto.GroupStatus.Id, 
+                    StatusId = groupDto.GroupStatus, 
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);

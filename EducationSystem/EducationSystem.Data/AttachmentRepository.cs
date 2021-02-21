@@ -99,7 +99,7 @@ namespace EducationSystem.Data
 
         }
 
-        public string GetFriendlyAttachmentTypeName( AttachmentType attachmentType)
+        public string GetFriendlyAttachmentTypeName(AttachmentType attachmentType)
         {
             switch (attachmentType)
             {
@@ -111,12 +111,12 @@ namespace EducationSystem.Data
                     {
                         return "Ссылка";
                     }
-                default: 
+                default:
                     {
-                        return "Некорректный тип файла"; 
+                        return "Некорректный тип файла";
                     }
             }
-
+        }
 
     }
 }
