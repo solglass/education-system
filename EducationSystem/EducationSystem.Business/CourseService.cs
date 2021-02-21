@@ -62,6 +62,11 @@ namespace EducationSystem.Business
            return _courseRepo.DeleteCourse(id); 
         }
 
+        public int RecoverCourse(int id)
+        {
+            return _courseRepo.RecoverSoftDeletedCourse(id);
+        }
+
         public int AddThemeToCourse(int courseId, int themeId)
         {
             return _courseRepo.AddCourse_Theme(courseId, themeId);

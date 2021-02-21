@@ -106,7 +106,19 @@ namespace EducationSystem.Data
         public int DeleteCourse(int id)
         {
             var result = _connection
-                .Execute("dbo.Course_Delete",
+                .Execute("dbo.Course_SoftDeleteOrRecover",
+                new
+                {
+                    id                    
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int RecoverSoftDeletedCourse(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Recover",
                 new
                 {
                     id

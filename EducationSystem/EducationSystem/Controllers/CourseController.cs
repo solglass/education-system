@@ -114,6 +114,17 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! Не получилось удалить курс #{id}!") ;
         }
 
+        [HttpPut("{id}/recovery")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        public ActionResult RecoverDeletedCourse(int id)
+        {
+            var result = _courseService.RecoverCourse(id);
+            if (result == 1)
+                return Ok($"Курс #{id} восстановлен!");
+            else
+                return Problem($"Ошибка! Не получилось восстановить курс #{id}!");
+        }
+
         // https://localhost:XXXXX/api/course/3/theme/8
         [HttpPost("{courseId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
