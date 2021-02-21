@@ -1,10 +1,10 @@
 ﻿CREATE proc [dbo].[Course_SoftDeleteOrRecover] (
 	@id int,
-	@IsDeleted bit
-) as
+	@IsDeleted bit)
+as
 begin
 	update dbo.Course
 	set
-		IsDeleted=@IsDeleted
+		IsDeleted = @IsDeleted
 	where Id = @id
 end

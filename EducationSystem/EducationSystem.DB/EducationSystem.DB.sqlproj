@@ -105,7 +105,7 @@
     <Build Include="StoredProcedures\Theme\dbo.Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Update.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Add.sql" />
-    <Build Include="StoredProcedures\Comment\dbo.Comment_Delete.sql" />
+    <Build Include="StoredProcedures\Comment\dbo.Comment_SoftDeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_SelectById.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Update.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_SelectById.sql" />
@@ -117,7 +117,7 @@
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Add.sql" />
-    <Build Include="StoredProcedures\Homework\dbo.Homework_Delete.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_SoftDeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectAll.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Update.sql" />
@@ -224,8 +224,7 @@
     <Build Include="StoredProcedures\Group\dbo.GroupPrograms_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_SelectWithoutTutors.sql" />
     <Build Include="StoredProcedures\Course\Course_HardDelete.sql" />
-    <Build Include="StoredProcedures\Group\Group_HardDelete.sql" />
-    <Build Include="StoredProcedures\Homework\Homework_HardDelete.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_HardDelete.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_HardDelete.sql" />
     <Build Include="StoredProcedures\HomeworkAttemptStatus\HomeworkAttemptStatus_HardDelete.sql" />
     <Build Include="StoredProcedures\Comment\Comment_HardDelete.sql" />
