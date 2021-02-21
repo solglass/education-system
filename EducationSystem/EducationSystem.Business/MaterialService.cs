@@ -17,8 +17,21 @@ namespace EducationSystem.Business
         public MaterialDto GetMaterialById(int id) { return _materialRepository.GetMaterialById(id); }
         public int AddMaterial(MaterialDto material) { return _materialRepository.AddMaterial(material); }
         public int UpdateMaterial(int id, MaterialDto material) { return _materialRepository.UpdateMaterial(id, material); }
-        public int DeleteMaterialById(int id) { return _materialRepository.DeleteMaterialById(id); }
 
+        public int DeleteMaterial(int id) 
+        { 
+            return _materialRepository.DeleteMaterial(id);
+        }
+
+        public int RecoverMaterial(int id)
+        {
+            return _materialRepository.RecoverMaterial(id);
+        }
+
+        public int HardDeleteMaterial(int id)
+        {
+            return _materialRepository.HardDeleteMaterial(id);
+        }
 
     }
 }
