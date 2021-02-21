@@ -3,6 +3,7 @@ using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -281,7 +282,7 @@ namespace EducationSystem.Data
                     author = comment.Author,
                     attempt = comment.HomeworkAttempt
                 },
-                commandType: System.Data.CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure);
             return result;
         }
         public int DeleteComment(int id)
@@ -394,6 +395,36 @@ namespace EducationSystem.Data
             return comment;
         }
 
+        public List<CommentDto> Comment_SelectByHomeworkId (int id)
+        {
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var result = _connection.Query<CommentDto, UserDto, HomeworkAttemptDto, CommentDto>(
+                "dbo.Comment_SelectByHomeworkId",
+                (comment, user, attempt) =>
+                {
+                    if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
+                    {
+                        commentEntry = comment;
+                        commentEntry.Author = user;
+                        comment.HomeworkAttempt = attempt;
+                        commentDictionary.Add(commentEntry.Id, commentEntry);
+                    }
+                    return commentEntry;
+                },
+                new {id},
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+        public int UpdateComment(CommentDto commentDto)
+        {
+            return _connection.Execute(
+                "dbo.Comment_Update",
+                new { commentDto.Id, commentDto.Message },
+                commandType: CommandType.StoredProcedure);
+        }
+
 
         public int AddHomework_Theme(int homeworkId, int themeId)
         {
@@ -479,10 +510,10 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public void DeleteComment_AttachmentById(int id)
+        public void DeleteComment_AttachmentById(int commentId, int attachmentId)
         {
             var data = _connection
-                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { commentId, attachmentId }, commandType: System.Data.CommandType.StoredProcedure);
         }
 
         public int AddComment_Attachment(Comment_AttachmentDto NewObject)
@@ -525,12 +556,32 @@ namespace EducationSystem.Data
             return homeworkAttempts;
         }
         
-        public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
+        public List<CommentAttemptDto> GetCommentsByHomeworkAttemptId(int id)
         {
-            var comments = _connection
-                .Query<CommentDto>("dbo.Comment_SelectByHomeworkAttemptId", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+            var commentDictionary = new Dictionary<int, CommentAttemptDto>();
+            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, AttachmentTypeDto, CommentAttemptDto>(
+                "dbo.Comment_SelectByHomeworkAttemptId",
+                (comment, user, attachment, attachmentType) =>
+                {
+                    if (!commentDictionary.TryGetValue(comment.Id, out var commentEntry))
+                    {
+                        commentEntry = comment;
+                        commentEntry.Author = user;
+                        commentEntry.Attachments = new List<AttachmentDto>();
+                        commentDictionary.Add(commentEntry.Id, commentEntry);
+                    }
+                    if (attachment != null)
+                    {
+                        attachment.AttachmentType = attachmentType;
+                        commentEntry.Attachments.Add(attachment);
+                    }
+                    return commentEntry;
+                },
+                new { AttemptId = id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
-            return comments;
+            return result;
         }
 
         public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
@@ -556,14 +607,6 @@ namespace EducationSystem.Data
             return comments;
         }
 
-        public List<Homework_ThemeDto> GetHomeworkThemesByThemeId(int id)
-        {
-            var result = _connection.
-               Query<Homework_ThemeDto>("dbo.Homework_Theme_SelectAllByThemeId",
-               new { id }, commandType: System.Data.CommandType.StoredProcedure)
-               .Distinct()
-               .ToList();
-            return result;
-        }
+        
     }
 }

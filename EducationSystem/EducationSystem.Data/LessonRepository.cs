@@ -140,7 +140,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Feedback_Update",
-                new {feedbackDto.ID, feedbackDto.UserID, feedbackDto.Messege, feedbackDto.LessonID, feedbackDto.UnderstandingLevelID},
+                new {feedbackDto.ID, feedbackDto.Messege, feedbackDto.UnderstandingLevelID},
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -244,36 +244,24 @@ namespace EducationSystem.Data
         {
            return _connection
                 .QuerySingleOrDefault<int>(
-                "dbo.LessonTheme_Add",
+                "dbo.Lesson_Theme_Add",
                 new {lessonTheme.ThemeID,lessonTheme.LessonID },
                 commandType: CommandType.StoredProcedure);
         }
-        public void DeleteLessonTheme(int id)
+        public void DeleteLessonTheme(int lessonId, int themeId)
         {
             _connection.Execute(
-                "dbo.LessonTheme_Delete",
-                new { id },
+                "dbo.Lesson_Theme_Delete",
+                new { lessonId, themeId },
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void UpdateLessonTheme(LessonThemeDto lessonTheme)
-        {
-            _connection.Execute(
-                "dbo.LessonTheme_Update",
-                new {lessonTheme.ID,lessonTheme.ThemeID,lessonTheme.LessonID },
-                commandType: CommandType.StoredProcedure);
-        }
-        public List<LessonThemeDto> GetLessonThemes()
-        {
-            var lessonTheme = _connection
-                .Query<LessonThemeDto>("dbo.LessonTheme_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return lessonTheme;
-        }
+       
+       
         public LessonThemeDto GetLessonThemeById(int id)
         {
             var lessonTheme = _connection
-                .Query<LessonThemeDto>("dbo.LessonTheme_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .Query<LessonThemeDto>("dbo.Lesson_Theme_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return lessonTheme;
         }

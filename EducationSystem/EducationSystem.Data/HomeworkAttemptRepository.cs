@@ -42,11 +42,11 @@ namespace EducationSystem.Data.Models
             return result;
         }
 
-        public int UpdateHomeworkAttempt(int id, string comment, int userId, int homeworkId, int statusId)
+        public int UpdateHomeworkAttempt(int id, string comment, int statusId)
         {
             var result = _connection
                 .Execute("dbo.HomeworkAttempt_Update",
-                new { id, comment, userId, homeworkId, statusId },
+                new { id, comment, statusId },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -60,14 +60,7 @@ namespace EducationSystem.Data.Models
             return result;
         }
 
-        public List<HomeworkAttempt_AttachmentDto> GetHomeworkAttempt_Attachments()
-        {
-            var data = _connection.
-                Query<HomeworkAttempt_AttachmentDto>(
-                "dbo.HomeworkAttempt_Attachment_SelectAll",
-                commandType: System.Data.CommandType.StoredProcedure).ToList();
-            return data;
-        }
+        
         public HomeworkAttempt_AttachmentDto GetHomeworkAttempt_AttachmentById(int id)
         {
             var data = _connection.
