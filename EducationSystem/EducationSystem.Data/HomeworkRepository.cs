@@ -559,7 +559,7 @@ namespace EducationSystem.Data
         public List<CommentAttemptDto> GetCommentsByHomeworkAttemptId(int id)
         {
             var commentDictionary = new Dictionary<int, CommentAttemptDto>();
-            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, AttachmentTypeDto, CommentAttemptDto>(
+            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, int, CommentAttemptDto>(
                 "dbo.Comment_SelectByHomeworkAttemptId",
                 (comment, user, attachment, attachmentType) =>
                 {
@@ -572,13 +572,13 @@ namespace EducationSystem.Data
                     }
                     if (attachment != null)
                     {
-                        attachment.AttachmentType = attachmentType;
+                        attachment.AttachmentType =(AttachmentType) attachmentType;
                         commentEntry.Attachments.Add(attachment);
                     }
                     return commentEntry;
                 },
                 new { AttemptId = id },
-                splitOn: "Id",
+                splitOn: "AttachmentType",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
