@@ -64,7 +64,28 @@ namespace EducationSystem.Data
             return homeworks;
         }
 
-        
+        public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
+        {           
+            return GetHomeworksByValue(new
+            {
+                groupId = groupId
+            });
+        }
+        public List<HomeworkDto> GetHomeworksByTagId(int tagId)
+        {
+            return GetHomeworksByValue(new
+            {
+                tagId = tagId
+            });
+        }
+        public List<HomeworkDto> GetHomeworksByThemeId(int themeId)
+        {
+            return GetHomeworksByValue(new
+            {
+                themeId = themeId
+            });
+        }
+
         public int AddHomework(HomeworkDto homework)
         {
             var result = _connection
@@ -148,7 +169,6 @@ namespace EducationSystem.Data
                 .ToList();
             return hwAttempts;
         }
-
 
         public HomeworkAttemptDto GetHomeworkAttemptById(int id)
         {
@@ -558,7 +578,54 @@ namespace EducationSystem.Data
                 .ToList();
             return comments;
         }
+        private List<HomeworkDto> GetHomeworksByValue(object value)
+        {
+            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
+            var tagDictionary = new Dictionary<int, TagDto>();
+            var themeDictionary = new Dictionary<int, ThemeDto>();
 
-        
+            var homework = _connection
+                .Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
+                    "dbo.Homework_Search",
+                    (homework, group, tag, theme) =>
+                    {
+                        if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
+                        {
+                            homeworkEntry = homework;
+                            homeworkEntry.Group = group;
+                            homeworkEntry.Tags = new List<TagDto>();
+                            homeworkEntry.Themes = new List<ThemeDto>();
+                            homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
+                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
+                        }
+
+                        if (theme != null)
+                        {
+                            if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
+                            {
+                                themeEntry = theme;
+                                themeDictionary.Add(themeEntry.Id, themeEntry);
+                            }
+                            homeworkEntry.Themes.Add(themeEntry);
+                        }
+                        if (tag != null)
+                        {
+                            if (!tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
+                            {
+                                tagEntry = tag;
+                                homeworkEntry.Tags.Add(tagEntry);
+                            }
+                            tagDictionary.Add(tagEntry.Id, tagEntry);
+                        }
+                        return homeworkEntry;
+                    },
+                    value,
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
+                .ToList();
+            return homework;
+        }
+
     }
 }
