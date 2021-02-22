@@ -7,10 +7,11 @@ namespace EducationSystem.Business
     public class HomeworkService
     {
         private HomeworkRepository _homeworkRepository;
-
+        private HomeworkAttemptRepository _homeworkAttemptRepository;
         public HomeworkService()
         {
             _homeworkRepository = new HomeworkRepository();
+            _homeworkAttemptRepository = new HomeworkAttemptRepository();
         }
 
         public List<HomeworkDto> GetHomeworks()
@@ -122,6 +123,10 @@ namespace EducationSystem.Business
         public int DeleteHomeworkAttempt(int id)
         {
             return _homeworkRepository.DeleteHomeworkAttempt(id);
+        }
+        public int DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
+        {
+            return _homeworkAttemptRepository.DeleteHomeworkAttempt_Attachment(homeworkAttemptId, attachmentId);
         }
     }
 }
