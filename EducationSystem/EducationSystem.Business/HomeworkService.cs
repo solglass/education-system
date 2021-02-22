@@ -53,9 +53,9 @@ namespace EducationSystem.Business
             return _homeworkRepository.AddHomework_Theme(homeworkId, themeId);
         }
 
-        public int DeleteHomework_Theme(int id)
+        public int DeleteHomework_Theme(int homeworkId, int themeId)
         {
-            return _homeworkRepository.DeleteHomework_Theme(id);
+            return _homeworkRepository.DeleteHomework_Theme(homeworkId, themeId);
         }
         public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatuses()
         {

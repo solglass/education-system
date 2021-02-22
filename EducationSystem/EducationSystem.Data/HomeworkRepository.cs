@@ -411,13 +411,14 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int DeleteHomework_Theme(int id)
+        public int DeleteHomework_Theme(int homeworkId, int themeId)
         {
             var result = _connection
                 .Execute("dbo.Homework_Theme_Delete",
                 new
                 {
-                    id
+                    homeworkId = homeworkId,
+                    themeId = themeId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
