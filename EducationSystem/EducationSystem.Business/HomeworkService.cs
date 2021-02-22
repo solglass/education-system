@@ -13,9 +13,19 @@ namespace EducationSystem.Business
             _homeworkRepository = new HomeworkRepository();
         }
 
-        public List<HomeworkDto> GetHomeworks()
+        public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
+        { 
+            return _homeworkRepository.GetHomeworksByGroupId(groupId); 
+        }
+
+        public List<HomeworkDto> GetHomeworksByTagId(int tagId)
         {
-            return _homeworkRepository.GetHomeworks();
+            return _homeworkRepository.GetHomeworksByTagId(tagId);
+        }
+
+        public List<HomeworkDto> GetHomeworksByThemeId(int themeId)
+        {
+            return _homeworkRepository.GetHomeworksByThemeId(themeId);
         }
 
         public HomeworkDto GetHomeworkById(int id)
