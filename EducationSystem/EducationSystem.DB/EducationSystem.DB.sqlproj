@@ -149,7 +149,6 @@
     <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\Material_Add.sql" />
     <Build Include="StoredProcedures\Material\Material_Delete.sql" />
-    <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectById.sql" />
     <Build Include="StoredProcedures\Material\Material_Update.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Add.sql" />
@@ -271,5 +270,6 @@
     <Build Include="StoredProcedures\Role\dbo.Role_SelectAll.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_SelectById.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
+    <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
   </ItemGroup>
 </Project>
