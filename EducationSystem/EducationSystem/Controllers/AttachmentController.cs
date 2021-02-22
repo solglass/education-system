@@ -82,7 +82,7 @@ namespace EducationSystem.API.Controllers
             return Ok("Успех");
         }
 
-
+        [HttpGet]
         public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
         {
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);

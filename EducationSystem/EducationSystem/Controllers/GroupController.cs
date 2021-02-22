@@ -65,8 +65,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/group/3/programs-group
-        [HttpGet("{Id}/programs-group")]
-        
+        [HttpGet("{Id}/programs-group")]        
         public ActionResult GetGroupProgramsByGroupId(int id)
         {
             GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupProgramsByGroupId(id));
