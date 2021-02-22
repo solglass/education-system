@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -509,10 +510,10 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public void DeleteComment_AttachmentById(int id)
+        public void DeleteComment_AttachmentById(int commentId, int attachmentId)
         {
             var data = _connection
-                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { commentId, attachmentId }, commandType: System.Data.CommandType.StoredProcedure);
         }
 
         public int AddComment_Attachment(Comment_AttachmentDto NewObject)
@@ -555,10 +556,10 @@ namespace EducationSystem.Data
             return homeworkAttempts;
         }
         
-        public List<CommentAttemptDto> GetCommentsByHomeworkAttemptId(int id)
+        public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
         {
-            var commentDictionary = new Dictionary<int, CommentAttemptDto>();
-            var result = _connection.Query<CommentAttemptDto, UserDto, AttachmentDto, AttachmentTypeDto, CommentAttemptDto>(
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var result = _connection.Query<CommentDto, UserDto, AttachmentDto, int, CommentDto>(
                 "dbo.Comment_SelectByHomeworkAttemptId",
                 (comment, user, attachment, attachmentType) =>
                 {
@@ -571,13 +572,13 @@ namespace EducationSystem.Data
                     }
                     if (attachment != null)
                     {
-                        attachment.AttachmentType = attachmentType;
+                        attachment.AttachmentType =(AttachmentType) attachmentType;
                         commentEntry.Attachments.Add(attachment);
                     }
                     return commentEntry;
                 },
                 new { AttemptId = id },
-                splitOn: "Id",
+                splitOn: "AttachmentType",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
@@ -587,20 +588,20 @@ namespace EducationSystem.Data
         {
             var attachmentDictionary = new Dictionary<int, AttachmentDto>();
             var comments = _connection
-                .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>
+                .Query<AttachmentDto, int, AttachmentDto>
                 ("dbo.Attachment_SelectByHomeworkAttemptId",
                 (attachment, type)=> 
                 {
                     if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
                     {
                         attachmentEntry = attachment;
-                        attachmentEntry.AttachmentType = type;
+                        attachmentEntry.AttachmentType = (AttachmentType)type;
                         attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
                     }
                     return attachmentEntry;
                 },
                 new { id },
-                splitOn: "Id",
+                splitOn: "AttachmentType",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return comments;

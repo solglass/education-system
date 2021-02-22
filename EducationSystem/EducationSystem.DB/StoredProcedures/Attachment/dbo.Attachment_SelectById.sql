@@ -4,7 +4,7 @@
 	select 
 		a.Id, 
 		a.Path,
-		at.Id,
+		at.Id as AttachmentType,
 		at.Name
 
 from [dbo].[Attachment] a

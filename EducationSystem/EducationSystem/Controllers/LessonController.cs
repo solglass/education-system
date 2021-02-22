@@ -204,9 +204,16 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/lesson/2/attendance/2
+        /// <summary>
+        /// Update Attendance.
+        /// </summary>
+        /// <param name="lessonId">Which lesson the attendance belongs to.</param>
+        /// <param name="attendanceId">Attendance changed Id</param>
+        /// <param name="attendance">From body attendance object with parameter isAbsent</param>
+        /// <returns>Updated rows.</returns>
         [HttpPut("{lessonId}/Attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult UpdateAttendance(int lessonId, int attendanceId, [FromBody]AttendanceUpdateInputModel attendance)
+        public ActionResult<int> UpdateAttendance(int lessonId, int attendanceId, [FromBody]AttendanceUpdateInputModel attendance)
         {            
             return Ok(_lessonService.UpdateAttendance(_mapper.Map<AttendanceDto>(attendance)));
         }

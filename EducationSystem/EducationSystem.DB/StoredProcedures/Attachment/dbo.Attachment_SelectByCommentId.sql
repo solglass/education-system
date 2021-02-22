@@ -5,10 +5,10 @@ begin
 	select 
 		a.Id, 
 		a.Path,
-		at.Id,
+		at.Id as AttachmentType,
 		at.Name
 	from [dbo].[Comment_Attachment] ca 
 		inner join [dbo].[Attachment] a on a.Id = ca.AttachmentID
 		inner join [dbo].[AttachmentType] at on a.AttachmentTypeID = at.Id
 	where ca.[CommentId] = @id
-end
+	end
