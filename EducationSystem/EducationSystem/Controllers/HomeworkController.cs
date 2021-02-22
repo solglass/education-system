@@ -45,15 +45,7 @@ namespace EducationSystem.API.Controllers
             return Ok("Задание добавлено");
         }
 
-        // https://localhost:44365/api/homework
-        [HttpGet]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetHomeworks()
-        {
-            var results = _repo.GetHomeworks();
-            return Ok(results);
-        }
-
+        
         // https://localhost:44365/api/homework/42
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]

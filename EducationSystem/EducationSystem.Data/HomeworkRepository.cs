@@ -64,48 +64,7 @@ namespace EducationSystem.Data
             return homeworks;
         }
 
-        public List<HomeworkDto> GetHomeworks()
-        {
-            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
-            var tagDictionary = new Dictionary<int, TagDto>();
-            var themeDictionary = new Dictionary<int, ThemeDto>();
-
-            var homework = _connection
-                .Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
-                    "dbo.Homework_SelectAll",
-                    (homework, group, tag, theme) =>
-                    {
-                        if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
-                        {
-                            homeworkEntry = homework;
-                            homeworkEntry.Group = group;
-                            homeworkEntry.Tags = new List<TagDto>();
-                            homeworkEntry.Themes = new List<ThemeDto>();
-                            homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
-                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
-                        }
-
-                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                        {
-                            themeEntry = theme;
-                            homeworkEntry.Themes.Add(themeEntry);
-                            themeDictionary.Add(themeEntry.Id, themeEntry);
-                        }
-                        if (tag != null && !tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
-                        {
-                            tagEntry = tag;
-                            homeworkEntry.Tags.Add(tagEntry);
-                            tagDictionary.Add(tagEntry.Id, tagEntry);
-                        }
-                        return homeworkEntry;
-                    },
-                    splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                .Distinct()
-                .ToList();
-            return homework;
-        }
-
+        
         public int AddHomework(HomeworkDto homework)
         {
             var result = _connection
@@ -190,13 +149,6 @@ namespace EducationSystem.Data
             return hwAttempts;
         }
 
-        //public HomeworkAttemptDto GetHomeworkAttemptById(int id)
-        //{
-        //    var homeworkAttempt = _connection
-        //        .Query<HomeworkAttemptDto>("dbo.HomeworkAttempt_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
-        //        .FirstOrDefault();
-        //    return homeworkAttempt;
-        //}
 
         public HomeworkAttemptDto GetHomeworkAttemptById(int id)
         {

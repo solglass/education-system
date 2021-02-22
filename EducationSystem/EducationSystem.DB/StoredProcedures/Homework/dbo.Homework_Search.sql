@@ -1,4 +1,7 @@
-﻿CREATE PROCEDURE [dbo].[Homework_SelectAll]
+﻿CREATE PROCEDURE [dbo].[Homework_Search]
+@groupId int = null,
+@themeId int = null,
+@tagId int = null
 as
 begin
 SELECT h.[Id]
@@ -6,7 +9,6 @@ SELECT h.[Id]
       ,h.[StartDate]
       ,h.[DeadlineDate]
       ,h.[IsOptional]
-      ,h.[IsDeleted]
       ,g.Id
       ,tg.Id
       ,tg.[Name]
@@ -18,6 +20,9 @@ SELECT h.[Id]
   left join dbo.Homework_Tag htg on h.id = htg.HomeworkId
   left join dbo.Tag tg on htg.TagId = tg.id
     inner join dbo.[Group] g on h.GroupID = g.id
-  where h.IsDeleted = 0
+  where h.IsDeleted = 0 and 
+  (@groupId is not null and g.Id = @groupId or @groupId is null) and
+  (@themeId is not null and th.Id = @themeId or @themeId is null) and
+  (@tagId is not null and tg.Id = @tagId or @tagId is null)
   
 end

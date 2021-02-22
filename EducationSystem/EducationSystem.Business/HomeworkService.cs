@@ -13,11 +13,6 @@ namespace EducationSystem.Business
             _homeworkRepository = new HomeworkRepository();
         }
 
-        public List<HomeworkDto> GetHomeworks()
-        {
-            return _homeworkRepository.GetHomeworks();
-        }
-
         public HomeworkDto GetHomeworkById(int id)
         {
             return _homeworkRepository.GetHomeworkById(id);
