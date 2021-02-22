@@ -1,7 +1,7 @@
 ﻿CREATE proc [dbo].[HomeworkAttempt_Attachment_Delete] (
-@id int)
+@homeworkAttemptID int, @attachmentID int)
 as
 begin
 	delete from [dbo].[HomeworkAttempt_Attachment]
-	where Id = @id
+	where HomeworkAttemptID=@homeworkAttemptID and AttachmentID=@attachmentID
 end

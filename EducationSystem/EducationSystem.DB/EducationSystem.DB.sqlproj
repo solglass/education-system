@@ -145,11 +145,6 @@
     <Build Include="StoredProcedures\Group\dbo.Group_SelectAll.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_SelectById.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_Update.sql" />
-    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Add.sql" />
-    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Delete.sql" />
-    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_SelectAll.sql" />
-    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_SelectById.sql" />
-    <Build Include="StoredProcedures\GroupStatus\dbo.GroupStatus_Update.sql" />
     <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Add.sql" />
     <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\Material_Add.sql" />

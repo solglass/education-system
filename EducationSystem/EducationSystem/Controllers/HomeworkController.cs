@@ -228,6 +228,14 @@ namespace EducationSystem.API.Controllers
             var results = _repo.DeleteHomeworkAttemptStatus(id);
             return Ok(results);
         }
+
+        // https://localhost:44365/api/homeworkAttempt/3/attachment/1
+        [HttpDelete("homeworkAttempt/{homeworkAttemptId}/attachment/{attachmentId}")]
+        public ActionResult DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
+        {
+            var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId,attachmentId);
+            return Ok(results);
+        }
     }
 
 }
