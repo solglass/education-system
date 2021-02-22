@@ -27,7 +27,7 @@ namespace EducationSystem.Data
         {
             return _connection
                     .Query<MaterialDto>("dbo.Material_SelectByTagId",
-                    new { id },
+                    new { tagId = id },
                     commandType: System.Data.CommandType.StoredProcedure)
                     .ToList();
         }
@@ -36,7 +36,7 @@ namespace EducationSystem.Data
         {
             return _connection
                     .Query<MaterialDto>("dbo.Material_SelectByGroupId",
-                    new { id },
+                    new { groupId = id },
                     commandType: System.Data.CommandType.StoredProcedure)
                     .ToList();
         }

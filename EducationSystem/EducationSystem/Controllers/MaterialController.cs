@@ -12,12 +12,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EducationSystem.API.Controllers
+namespace EducationSystem.Controllers
 {
-    // https://localhost:50221/api/material/
+    // https://localhost:44365/api/material/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class MaterialContoller : ControllerBase
     {
 
@@ -39,7 +39,16 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        // https://localhost:50221/api/material/2
+        // https://localhost:44365/api/material/340/tag
+        [HttpGet("{id}/tag")]
+        [AllowAnonymous]
+        public ActionResult GetmaterialsByTagId(int id)
+        {
+            var result =_mapper.FromDtos( _service.GetMaterialsByTagId(id));
+            return Ok(result);
+        }
+
+        // https://localhost:44365/api/material/2
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialById(int id)
