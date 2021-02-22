@@ -18,5 +18,18 @@ namespace EducationSystem.Core.Enums
             return FriendlyName;
 
         }
+        public static string GetFriendlyGroupStatusName(GroupStatus groupStatus)
+        {
+            String FriendlyName = groupStatus switch
+            {
+                GroupStatus.Recruitment => "Ведётся набор",
+                GroupStatus.ReadyToStart => "Ждёт начала обучения",
+                GroupStatus.InProgress => "Идёт обучение",
+                GroupStatus.Finished => "Завершила обучение",
+                _ => "Статус группы не найден"
+            };
+            return FriendlyName;
+
+        }
     }
 }

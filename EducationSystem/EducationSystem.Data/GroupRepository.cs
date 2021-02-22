@@ -276,32 +276,6 @@ namespace EducationSystem.Data
             .Query<GroupReportDto>("dbo.Create_Report", commandType: System.Data.CommandType.StoredProcedure)
             .ToList();
         }
-        public string GetFriendlyGroupStatusName(GroupStatus groupStatus)
-        {
-            switch (groupStatus)
-            {
-                case GroupStatus.Recruitment:
-                    {
-                        return "Ведётся набор";
-                    }
-                case GroupStatus.ReadyToStart:
-                    {
-                        return "Ждёт начала обучения";
-                    }
-                case GroupStatus.InProgress:
-                    {
-                        return "Идёт обучение";
-                    }
-                case GroupStatus.Finished:
-                    {
-                        return "Завершила обучение";
-                    }
-                default:
-                    {
-                        return "Статус группы не найден";
-                    }
-            }
-
-        }
+       
     }
 }
