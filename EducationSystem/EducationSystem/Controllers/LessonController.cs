@@ -4,6 +4,7 @@ using AutoMapper;
 using EducationSystem.API;
 using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
@@ -16,7 +17,7 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/lesson/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class LessonController : ControllerBase
     {
         private LessonRepository _repo;
@@ -226,7 +227,15 @@ namespace EducationSystem.Controllers
             _lessonService.DeleteAttendance(id);
             return Ok("Посещаемость удалена");
         }
-
+        // https://localhost:50221/api/lesson/theme/3/lessons
+        [HttpGet("Theme/{id}/lessons")]
+       // [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
+        public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int id)
+        {
+            var lessons = _mapper.Map<List<LessonOutputModel>>(_lessonService.GetLessonsByThemeId(id));
+            return Ok(lessons);
+              
+        }
         
 
         // https://localhost:50221/api/lesson-theme/3

@@ -24,6 +24,9 @@ namespace EducationSystem.API
             CreateMap<GroupDto, GroupOutputModel>();
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<ThemeDto, ThemeOutputModel>();
+            CreateMap<LessonInputModel,LessonDto>();
+            CreateMap<LessonDto, LessonOutputModel>()
+                .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src=>src.LessonDate.ToString(_dateFormat)));
         }
     }
 }
