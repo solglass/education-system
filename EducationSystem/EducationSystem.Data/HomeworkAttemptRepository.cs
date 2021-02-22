@@ -80,11 +80,12 @@ namespace EducationSystem.Data.Models
                 commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
-        public int DeleteHomeworkAttempt_AttachmentById(int id)
+        public int DeleteHomeworkAttempt_AttachmentById(int homeworkAttemptId, int attachmentId)
         {
             int rowsAffected = _connection.Execute(
                 "dbo.HomeworkAttempt_Attachment_Delete",
-                new { id },
+                new { homeworkAttemptID=homeworkAttemptId,
+                      attachmentID=attachmentId},
                 commandType: System.Data.CommandType.StoredProcedure);
             return rowsAffected;
         }
