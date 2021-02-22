@@ -236,6 +236,13 @@ namespace EducationSystem.API.Controllers
             var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId,attachmentId);
             return Ok(results);
         }
+        // https://localhost:44365/api/homework/3/theme/1
+        [HttpPost("homework/{homeworkId}/theme/{themeId}")]
+        public ActionResult AddHomeworkTheme(int homeworkId, int themeId)
+        {
+            var results = _homeworkService.AddHomework_Theme(homeworkId, themeId); 
+            return Ok(results);
+        }
     }
 
 }
