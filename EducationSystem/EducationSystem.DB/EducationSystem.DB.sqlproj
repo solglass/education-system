@@ -207,7 +207,7 @@
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Update.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Add.sql" />
-    <Build Include="StoredProcedures\User\dbo.User_SoftDeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_Delete.sql" />
     <Build Include="StoredProcedures\User\dbo.User_HardDelete.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
@@ -282,5 +282,6 @@
     <Build Include="StoredProcedures\Comment\dbo.Comment_Recover.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Recover.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_Recover.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_Recover.sql" />
   </ItemGroup>
 </Project>
