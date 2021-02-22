@@ -51,12 +51,12 @@ namespace EducationSystem.Controllers
             return Ok("Урок добавлен");
         }
 
-        // https://localhost:50221/api/lesson/
-        [HttpGet]
+        // https://localhost:50221/api/lesson/3
+        [HttpGet("{id}")]
         [Authorize(Roles = "Админ")]
-        public ActionResult<List<LessonDto>> GetLessons()
+        public ActionResult<List<LessonDto>> GetLessons(int id)
         {
-            var result = _lessonService.GetLessons();
+            var result = _lessonService.GetLessonsByGroupId(id);
             return Ok(result);
         }
 
