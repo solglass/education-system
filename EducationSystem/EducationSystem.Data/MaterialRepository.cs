@@ -32,6 +32,15 @@ namespace EducationSystem.Data
                     .ToList();
         }
 
+        public List<MaterialDto> GetMaterialsByGroupId(int id)
+        {
+            return _connection
+                    .Query<MaterialDto>("dbo.Material_SelectByGroupId",
+                    new { id },
+                    commandType: System.Data.CommandType.StoredProcedure)
+                    .ToList();
+        }
+
         public MaterialDto GetMaterialById(int id)
         {
             var material = _connection
