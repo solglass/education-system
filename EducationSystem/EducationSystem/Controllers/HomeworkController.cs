@@ -19,7 +19,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:44365/api/homework
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class HomeworkController : ControllerBase
     {
 
@@ -67,8 +67,9 @@ namespace EducationSystem.API.Controllers
             return Ok(outputModel);
         }
 
+        // https://localhost:44365/api/homework/group/2
         [HttpGet("group/{groupId}")]
-        //[Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkOutputModel>> GetHomewroksByGroupId(int groupId)
         {
             var result = new List<HomeworkOutputModel>();
@@ -77,6 +78,34 @@ namespace EducationSystem.API.Controllers
             {
                 result.Add(_mapper.Map<HomeworkOutputModel>(dto));
             }                
+            return Ok(result);
+        }
+
+        // https://localhost:44365/api/homework/tag/2
+        [HttpGet("tag/{tagId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByTagId(int tagId)
+        {
+            var result = new List<HomeworkOutputModel>();
+            var dtos = _homeworkService.GetHomeworksByTagId(tagId);
+            foreach (var dto in dtos)
+            {
+                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
+            }
+            return Ok(result);
+        }
+
+        // https://localhost:44365/api/homework/theme/2
+        [HttpGet("theme/{themeId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByThemeId(int themeId)
+        {
+            var result = new List<HomeworkOutputModel>();
+            var dtos = _homeworkService.GetHomeworksByThemeId(themeId);
+            foreach (var dto in dtos)
+            {
+                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
+            }
             return Ok(result);
         }
 
