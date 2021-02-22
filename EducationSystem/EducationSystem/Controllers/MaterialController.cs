@@ -18,13 +18,13 @@ namespace EducationSystem.Controllers
     [ApiController]
     [Route("api/[controller]")]
     //[Authorize]
-    public class MaterialContoller : ControllerBase
+    public class MaterialController : ControllerBase
     {
 
         private MaterialService _service;
         private MaterialMapper _mapper;
 
-        public MaterialContoller()
+        public MaterialController()
         {
             _mapper = new MaterialMapper();
             _service = new MaterialService();
