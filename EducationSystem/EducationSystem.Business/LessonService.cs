@@ -13,9 +13,9 @@ namespace EducationSystem.Business
         {
             _lessonRepository = new LessonRepository();
         }
-        public List<LessonDto> GetLessons()
+        public List<LessonDto> GetLessonsByGroupId(int id)
         {
-           return _lessonRepository.GetLessons();
+           return _lessonRepository.GetLessonsByGroupId(id);
         }
         public LessonDto GetLessonById(int id)
         {

@@ -15,11 +15,11 @@ namespace EducationSystem.Data
         {
             _connection = new SqlConnection(_connectionString);
         }
-        public List<LessonDto> GetLessons()
+        public List<LessonDto> GetLessonsByGroupId(int id)
         {
             var lessonDictionary = new Dictionary<int, LessonDto>();
             var lessons = _connection
-                .Query<LessonDto, ThemeDto, LessonDto>("dbo.Lesson_SelectAll",
+                .Query<LessonDto, ThemeDto, LessonDto>("dbo.Lesson_SelectByGroupId",
                (lesson, theme) =>
                {
 
@@ -33,6 +33,7 @@ namespace EducationSystem.Data
                    lessonEntry.Themes.Add(theme);
                    return lessonEntry;
                },
+               new { id },
                 splitOn: "ID",
                 commandType: CommandType.StoredProcedure)
                 .Distinct()
@@ -57,6 +58,7 @@ namespace EducationSystem.Data
                    lessonEntry.Themes.Add(theme);
                    return lessonEntry;
                },
+               new { id },
                 splitOn: "ID",
                 commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
