@@ -1,5 +1,7 @@
-﻿using EducationSystem.API.Mappers;
+﻿using AutoMapper;
+using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
@@ -26,13 +28,15 @@ namespace EducationSystem.API.Controllers
         private HomeworkMapper _homeworkMapper;
         private HomeworkAttemptMapper _homeworkAttemptMapper;
         private HomeworkService _homeworkService;
+        private IMapper _mapper;
 
-        public HomeworkController()
+        public HomeworkController(IMapper mapper)
         {
             _repo = new HomeworkRepository();
             _homeworkMapper = new HomeworkMapper();
             _homeworkAttemptMapper = new HomeworkAttemptMapper();
             _homeworkService = new HomeworkService();
+            _mapper = mapper;
         }
 
 
@@ -45,15 +49,7 @@ namespace EducationSystem.API.Controllers
             return Ok("Задание добавлено");
         }
 
-        // https://localhost:44365/api/homework
-        [HttpGet]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetHomeworks()
-        {
-            var results = _repo.GetHomeworks();
-            return Ok(results);
-        }
-
+        
         // https://localhost:44365/api/homework/42
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
@@ -69,6 +65,48 @@ namespace EducationSystem.API.Controllers
         {
             var outputModel = _homeworkAttemptMapper.FromDtos(_repo.GetHomeworkAttemptsByHomeworkId(id));
             return Ok(outputModel);
+        }
+
+        // https://localhost:44365/api/homework/group/2
+        [HttpGet("group/{groupId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByGroupId(int groupId)
+        {
+            var result = new List<HomeworkOutputModel>();
+            var dtos = _homeworkService.GetHomeworksByGroupId(groupId);
+            foreach(var dto in dtos)
+            {
+                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
+            }                
+            return Ok(result);
+        }
+
+        // https://localhost:44365/api/homework/tag/2
+        [HttpGet("tag/{tagId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByTagId(int tagId)
+        {
+            var result = new List<HomeworkOutputModel>();
+            var dtos = _homeworkService.GetHomeworksByTagId(tagId);
+            foreach (var dto in dtos)
+            {
+                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
+            }
+            return Ok(result);
+        }
+
+        // https://localhost:44365/api/homework/theme/2
+        [HttpGet("theme/{themeId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByThemeId(int themeId)
+        {
+            var result = new List<HomeworkOutputModel>();
+            var dtos = _homeworkService.GetHomeworksByThemeId(themeId);
+            foreach (var dto in dtos)
+            {
+                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
+            }
+            return Ok(result);
         }
 
         // https://localhost:44365/api/homework/42
@@ -164,12 +202,12 @@ namespace EducationSystem.API.Controllers
             return Ok(results);
         }
 
-        // https://localhost:44365/api/homework/homework_Theme/42
-        [HttpDelete("homeworkTheme/{id}")]
+        // https://localhost:44365/api/homework/3/theme/1
+        [HttpDelete("homework/{homeworkId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult DeleteHomework_Theme(int id)
+        public ActionResult DeleteHomework_Theme(int homeworkId, int themeId)
         {
-            var results = _repo.DeleteHomework_Theme(id);
+            var results = _homeworkService.DeleteHomework_Theme(homeworkId, themeId);
             return Ok(results);
         }
 
@@ -188,6 +226,21 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteHomeworkAttemptStatus(int id)
         {
             var results = _repo.DeleteHomeworkAttemptStatus(id);
+            return Ok(results);
+        }
+
+        // https://localhost:44365/api/homeworkAttempt/3/attachment/1
+        [HttpDelete("homeworkAttempt/{homeworkAttemptId}/attachment/{attachmentId}")]
+        public ActionResult DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
+        {
+            var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId,attachmentId);
+            return Ok(results);
+        }
+        // https://localhost:44365/api/homework/3/theme/1
+        [HttpPost("homework/{homeworkId}/theme/{themeId}")]
+        public ActionResult AddHomeworkTheme(int homeworkId, int themeId)
+        {
+            var results = _homeworkService.AddHomework_Theme(homeworkId, themeId); 
             return Ok(results);
         }
     }
