@@ -1,5 +1,7 @@
-﻿using EducationSystem.API.Mappers;
+﻿using AutoMapper;
+using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
@@ -17,7 +19,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:44365/api/homework
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class HomeworkController : ControllerBase
     {
 
@@ -26,13 +28,15 @@ namespace EducationSystem.API.Controllers
         private HomeworkMapper _homeworkMapper;
         private HomeworkAttemptMapper _homeworkAttemptMapper;
         private HomeworkService _homeworkService;
+        private IMapper _mapper;
 
-        public HomeworkController()
+        public HomeworkController(IMapper mapper)
         {
             _repo = new HomeworkRepository();
             _homeworkMapper = new HomeworkMapper();
             _homeworkAttemptMapper = new HomeworkAttemptMapper();
             _homeworkService = new HomeworkService();
+            _mapper = mapper;
         }
 
 
@@ -61,6 +65,19 @@ namespace EducationSystem.API.Controllers
         {
             var outputModel = _homeworkAttemptMapper.FromDtos(_repo.GetHomeworkAttemptsByHomeworkId(id));
             return Ok(outputModel);
+        }
+
+        [HttpGet("group/{groupId}")]
+        //[Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByGroupId(int groupId)
+        {
+            var result = new List<HomeworkOutputModel>();
+            var dtos = _homeworkService.GetHomeworksByGroupId(groupId);
+            foreach(var dto in dtos)
+            {
+                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
+            }                
+            return Ok(result);
         }
 
         // https://localhost:44365/api/homework/42

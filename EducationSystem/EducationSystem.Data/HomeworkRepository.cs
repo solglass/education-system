@@ -584,8 +584,7 @@ namespace EducationSystem.Data
             var tagDictionary = new Dictionary<int, TagDto>();
             var themeDictionary = new Dictionary<int, ThemeDto>();
 
-            var homework = _connection
-                .Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
+            _connection.Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
                     "dbo.Homework_Search",
                     (homework, group, tag, theme) =>
                     {
@@ -597,6 +596,8 @@ namespace EducationSystem.Data
                             homeworkEntry.Themes = new List<ThemeDto>();
                             homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
                             homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
+                            tagDictionary.Clear();
+                            themeDictionary.Clear();
                         }
 
                         if (theme != null)
@@ -604,18 +605,18 @@ namespace EducationSystem.Data
                             if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                             {
                                 themeEntry = theme;
+                                homeworkEntry.Themes.Add(themeEntry);
                                 themeDictionary.Add(themeEntry.Id, themeEntry);
                             }
-                            homeworkEntry.Themes.Add(themeEntry);
                         }
                         if (tag != null)
                         {
                             if (!tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
                             {
                                 tagEntry = tag;
+                                tagDictionary.Add(tagEntry.Id, tagEntry);
                                 homeworkEntry.Tags.Add(tagEntry);
                             }
-                            tagDictionary.Add(tagEntry.Id, tagEntry);
                         }
                         return homeworkEntry;
                     },
@@ -624,6 +625,8 @@ namespace EducationSystem.Data
                     commandType: System.Data.CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
+            var homework = new List<HomeworkDto>();
+            homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
             return homework;
         }
 
