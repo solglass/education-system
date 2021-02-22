@@ -12,29 +12,21 @@ namespace EducationSystem.API.Mappers
     {
         public GroupDto ToDto(GroupInputModel inputModel) 
         {
-            //var courseMapper = new CourseMapper();
             var groupStatusMapper = new GroupStatusMapper();
             return new GroupDto 
             {
                 StartDate =  DateTime.ParseExact(inputModel.StartDate, "dd.MM.yyyy", CultureInfo.InvariantCulture),
-                Course = new CourseDto { Id = inputModel.Course.Id },       // delete
-                //Course = courseMapper.ToDto(inputModel.Course),
-                GroupStatus = groupStatusMapper.ToDto(inputModel.GroupStatus)
+                GroupStatus = groupStatusMapper.ToDto(inputModel.GroupStatus).groupStatus
             };
         }
 
         public GroupOutputModel FromDto(GroupDto groupDto) 
         {
-            //var courseMapper = new CourseMapper();
-            //var groupStatusMapper = new GroupStatusMapper();
+           
             return new GroupOutputModel
             {
                 Id = groupDto.Id,
-                StartDate = (groupDto.StartDate).ToString(),
-                Course = groupDto.Course,                                    // delete
-                GroupStatus = groupDto.GroupStatus                           // delete
-                //Course = courseMapper.FromDto(groupDto.Course),
-                //GroupStatus = groupStatusMapper.FromDto(groupDto.GroupStatus)
+                StartDate = (groupDto.StartDate).ToString()
             };
 
         }
