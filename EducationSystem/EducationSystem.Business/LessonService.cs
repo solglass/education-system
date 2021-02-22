@@ -89,5 +89,9 @@ namespace EducationSystem.Business
         /* public AddLessonTheme
 *  public UpdateLessonTheme
 */
+        public List<LessonDto> GetLessonsByThemeId(int themeId)
+        {
+            return _lessonRepository.GetLessonsByThemeId(themeId);
+        }
     }
 }
