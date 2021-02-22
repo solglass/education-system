@@ -202,12 +202,12 @@ namespace EducationSystem.API.Controllers
             return Ok(results);
         }
 
-        // https://localhost:44365/api/homework/homework_Theme/42
-        [HttpDelete("homeworkTheme/{id}")]
+        // https://localhost:44365/api/homework/3/theme/1
+        [HttpDelete("homework/{homeworkId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult DeleteHomework_Theme(int id)
+        public ActionResult DeleteHomework_Theme(int homeworkId, int themeId)
         {
-            var results = _repo.DeleteHomework_Theme(id);
+            var results = _homeworkService.DeleteHomework_Theme(homeworkId, themeId);
             return Ok(results);
         }
 
@@ -234,6 +234,13 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
         {
             var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId,attachmentId);
+            return Ok(results);
+        }
+        // https://localhost:44365/api/homework/3/theme/1
+        [HttpPost("homework/{homeworkId}/theme/{themeId}")]
+        public ActionResult AddHomeworkTheme(int homeworkId, int themeId)
+        {
+            var results = _homeworkService.AddHomework_Theme(homeworkId, themeId); 
             return Ok(results);
         }
     }
