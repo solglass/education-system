@@ -253,7 +253,7 @@
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_SelectByID.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Add.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Delete.sql" />
-    <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectAll.sql" />
+    <Build Include="StoredProcedures\Feedback\dbo.Feedback_Search.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectByID.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Update.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_Add.sql" />
