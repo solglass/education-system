@@ -31,5 +31,22 @@ namespace EducationSystem.Core.Enums
             return FriendlyName;
 
         }
+
+        public static string GetFriendlyHomeworkAttemptStatusName(HomeworkAttemptStatus attemptStatus)
+        {
+
+            String FriendlyName = attemptStatus switch
+            {
+                HomeworkAttemptStatus.ToDo => "Назначено",
+                HomeworkAttemptStatus.Expired => "Просрочено",
+                HomeworkAttemptStatus.ToCheck => "Ждет проверки",
+                HomeworkAttemptStatus.Passed => "Ждет исправления",
+                HomeworkAttemptStatus.PassedLate=> "Сдано",
+                HomeworkAttemptStatus.ToFix => "Сдано с опозданием",
+                _ => "Некорректный статус"
+            };
+            return FriendlyName;
+
+        }
     }
 }
