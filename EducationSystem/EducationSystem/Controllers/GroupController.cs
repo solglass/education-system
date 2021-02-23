@@ -18,7 +18,7 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/group/
     [ApiController]
     [Route("api/[controller]")]
-   // [Authorize]
+    [Authorize]
     public class GroupController : ControllerBase
     {
 
@@ -60,7 +60,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:44365/api/group/groups-without-tutors
         [HttpGet("groups-without-tutors")]
-       // [Authorize(Roles = "Админ, Менеджер, Методист")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult<List<GroupOutputModel>> GetGroupsWithoutTutors()
         {
             var result = _mapper.Map<List<GroupOutputModel>>(_service.GetGroupsWithoutTutors());
