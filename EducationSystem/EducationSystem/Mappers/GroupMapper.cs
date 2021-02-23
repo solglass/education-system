@@ -22,11 +22,11 @@ namespace EducationSystem.API.Mappers
 
         public GroupOutputModel FromDto(GroupDto groupDto) 
         {
-           
             return new GroupOutputModel
             {
                 Id = groupDto.Id,
-                StartDate = (groupDto.StartDate).ToString()
+                StartDate = (groupDto.StartDate).ToString("dd.MM.yyyy"),
+
             };
 
         }
