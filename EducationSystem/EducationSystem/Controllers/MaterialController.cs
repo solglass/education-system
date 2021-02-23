@@ -17,7 +17,7 @@ namespace EducationSystem.Controllers
     // https://localhost:44365/api/material/
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class MaterialController : ControllerBase
     {
 
@@ -32,7 +32,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:44365/api/material/340/group
         [HttpGet("{id}/group")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetmaterialsByGroupId(int id)
         {
             var result = _mapper.FromDtos(_service.GetMaterialsByGroupId(id));
@@ -41,7 +41,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:44365/api/material/340/tag
         [HttpGet("{id}/tag")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetmaterialsByTagId(int id)
         {
             var result =_mapper.FromDtos( _service.GetMaterialsByTagId(id));
