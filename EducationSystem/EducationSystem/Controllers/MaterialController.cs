@@ -30,14 +30,7 @@ namespace EducationSystem.Controllers
             _service = new MaterialService();
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult GetMaterials()
-        {
-            var courses = _service.GetMaterials();
-            var result = _mapper.FromDtos(courses);
-            return Ok(result);
-        }
+        
 
         // https://localhost:44365/api/material/340/tag
         [HttpGet("{id}/tag")]

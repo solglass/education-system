@@ -13,7 +13,7 @@ namespace EducationSystem.Business
         {
             _materialRepository = new MaterialRepository();
         }
-        public List<MaterialDto> GetMaterials() { return _materialRepository.GetMaterials(); }
+       
         public List<MaterialDto> GetMaterialsByTagId(int id) { return _materialRepository.GetMaterialsByTagId(id); }
         public List<MaterialDto> GetMaterialsByGroupId(int id) { return _materialRepository.GetMaterialsByGroupId(id); }
 
