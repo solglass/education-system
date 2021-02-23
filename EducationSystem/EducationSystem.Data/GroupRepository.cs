@@ -91,9 +91,17 @@ namespace EducationSystem.Data
         }
 
         public List<GroupDto> GetGroupsWithoutTutors()
-        {
+        { 
             var result = _connection
-                .Query<GroupDto>("Group_SelectWithoutTutors", commandType: System.Data.CommandType.StoredProcedure)
+                .Query<GroupDto, GroupStatusDto, CourseDto, GroupDto>("dbo.Group_SelectWithoutTutors",
+                 (group, status, course) =>
+                 {
+                     group.Course = course;
+                     group.GroupStatus = status.groupStatus;
+                     return group;
+                 },
+                    splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
         }
