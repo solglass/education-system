@@ -87,12 +87,12 @@ namespace EducationSystem.Controllers
             return Ok("Урок обновлён");
         }
 
-        // https://localhost:50221/api/feedback/
-        [HttpGet("feedback")]
+        // https://localhost:50221/api/feedback/1/2/2
+        [HttpGet("feedback/{lessonId}/{groupId}/{courseId}")]
         [Authorize(Roles = "Админ")]
-        public ActionResult GetFeedbacks()
+        public ActionResult GetFeedbacks(int lessonId, int groupId, int courseId)
         {
-            var result = _lessonService.GetFeedbacks();
+            var result = _lessonService.GetFeedbacks(lessonId, groupId, courseId);
             return Ok(result);
         }
 
