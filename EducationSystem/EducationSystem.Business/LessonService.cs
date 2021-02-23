@@ -61,21 +61,6 @@ namespace EducationSystem.Business
         /* public AddAttendance
         *  public UpdateAttendance
         */
-        public List<UnderstandingLevelDto> GetUnderstandingLevels()
-        {
-            return _lessonRepository.GetUnderstandingLevels();
-        }
-        public UnderstandingLevelDto GetUnderstandingLevelById(int id)
-        {
-            return _lessonRepository.GetUnderstandingLevelById(id);
-        }
-        public void DeleteUnderstandingLevel(int id)
-        {
-            _lessonRepository.DeleteUnderstandingLevel(id);
-        }
-        /* public AddUnderstandingLevel
-        *  public UpdateUnderstandingLevel
-        */
         
         public LessonThemeDto GetLessonThemeById(int id)
         {

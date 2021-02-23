@@ -31,5 +31,18 @@ namespace EducationSystem.Core.Enums
             return FriendlyName;
 
         }
+
+        public static string GetFriendlyUnderstandingLevelName(UnderstandingLevel understandingLevel)
+        {
+            String FriendlyName = understandingLevel switch
+            {
+                UnderstandingLevel.Bad => "Плохо",
+                UnderstandingLevel.Medium => "Средне",
+                UnderstandingLevel.Good => "Хорошо",
+                _ => "Уровень понимания не найден"
+            };
+            return FriendlyName;
+
+        }
     }
 }

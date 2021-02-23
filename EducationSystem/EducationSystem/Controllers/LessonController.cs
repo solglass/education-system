@@ -132,51 +132,6 @@ namespace EducationSystem.Controllers
             return Ok("Отзыв удалён");
         }
 
-        // https://localhost:50221/api/understandingLevel/
-        [HttpGet]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult GetUnderstandingLevels()
-        {
-            var result = _lessonService.GetUnderstandingLevels();
-            return Ok(result);
-        }
-
-        // https://localhost:50221/api/understandingLevel/3
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult GetUnderstandingLevelById(int id)
-        {
-            var result = _lessonService.GetUnderstandingLevelById(id);
-            return Ok(result);
-        }
-
-        // https://localhost:50221/api/understandingLevel/
-        [HttpPost]
-        [Authorize(Roles = "Админ, Студент")]
-        public ActionResult AddNewUnderstandingLevel(UnderstandingLevelDto understandingLevel)
-        {
-            _repo.AddUnderstandingLevel(understandingLevel);
-            return Ok("Сложность добавлена");
-        }
-
-        // https://localhost:50221/api/understandingLevel/5
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Админ, Студент")]
-        public ActionResult UpdateUnderstandingLevel(int id,[FromBody]UnderstandingLevelDto understandingLevelDto)
-        {
-            _repo.UpdateUnderstandingLevel(understandingLevelDto);
-            return Ok("Сложность обновлена");
-        }
-
-        // https://localhost:50221/api/UnderstandingLevel/3
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Студент")]
-        public ActionResult DeleteUnderstandingLevel(int id)
-        {
-            _lessonService.DeleteUnderstandingLevel(id);
-            return Ok("Сложность удалена");
-        }
-
         // https://localhost:50221/api/attendance/
         [HttpGet]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
