@@ -30,7 +30,14 @@ namespace EducationSystem.Controllers
             _service = new MaterialService();
         }
 
-        
+        // https://localhost:44365/api/material/340/group
+        [HttpGet("{id}/group")]
+        [AllowAnonymous]
+        public ActionResult GetmaterialsByGroupId(int id)
+        {
+            var result = _mapper.FromDtos(_service.GetMaterialsByGroupId(id));
+            return Ok(result);
+        }
 
         // https://localhost:44365/api/material/340/tag
         [HttpGet("{id}/tag")]
