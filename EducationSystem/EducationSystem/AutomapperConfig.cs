@@ -21,12 +21,15 @@ namespace EducationSystem.API
             CreateMap<HomeworkDto, HomeworkOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)));
-            CreateMap<GroupDto, GroupOutputModel>();
+            CreateMap<GroupInputModel, GroupDto>();
+            CreateMap<GroupDto, GroupOutputModel>()
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)));
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<ThemeDto, ThemeOutputModel>();
             CreateMap<LessonInputModel,LessonDto>();
             CreateMap<LessonDto, LessonOutputModel>()
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src=>src.Date.ToString(_dateFormat)));
+            
         }
     }
 }
