@@ -199,7 +199,7 @@ namespace EducationSystem.Controllers
             var payments = _userService.GetPaymentsByPeriod(periodFrom, periodTo);
             return Ok(payments);
         }
-        [HttpGet("UserId/{id}")]
+        [HttpGet("payment/UserId/{id}")]
         public ActionResult GetPaymentsByUserId(int id)
         {            
             return Ok(_userService.GetPaymentsByUserId(id));
