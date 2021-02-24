@@ -2,6 +2,7 @@
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,8 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)));
             CreateMap<GroupInputModel, GroupDto>();
             CreateMap<GroupDto, GroupOutputModel>()
-                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)));
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<ThemeDto, ThemeOutputModel>();
             CreateMap<LessonInputModel,LessonDto>();
