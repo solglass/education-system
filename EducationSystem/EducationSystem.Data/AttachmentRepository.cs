@@ -30,7 +30,7 @@ namespace EducationSystem.Data
                         return attachment;
                     },
                     new { id },
-                    splitOn: "AttachmentType",
+                    splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return data;

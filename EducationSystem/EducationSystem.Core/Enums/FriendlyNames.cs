@@ -9,18 +9,18 @@ namespace EducationSystem.Core.Enums
         public static string GetFriendlyAttachmentTypeName(AttachmentType attachmentType)
         {
 
-            String FriendlyName = attachmentType switch
+            string friendlyName = attachmentType switch
             {
                 AttachmentType.File => "Файл",
                 AttachmentType.Link => "Ссылка",
                 _ => "Некорректный тип файла"
             };
-            return FriendlyName;
+            return friendlyName;
 
         }
         public static string GetFriendlyGroupStatusName(GroupStatus groupStatus)
         {
-            String FriendlyName = groupStatus switch
+            string friendlyName = groupStatus switch
             {
                 GroupStatus.Recruitment => "Ведётся набор",
                 GroupStatus.ReadyToStart => "Ждёт начала обучения",
@@ -28,7 +28,7 @@ namespace EducationSystem.Core.Enums
                 GroupStatus.Finished => "Завершила обучение",
                 _ => "Статус группы не найден"
             };
-            return FriendlyName;
+            return friendlyName;
 
         }
     }
