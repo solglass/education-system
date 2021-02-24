@@ -70,7 +70,7 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
-                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.LessonDate, lessonDto.Themes},
+                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.Date, lessonDto.Themes},
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -86,15 +86,15 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.LessonDate,lessonDto.Themes },
+                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.Date,lessonDto.Themes },
                 commandType: CommandType.StoredProcedure);
         }
 
-        public List<FeedbackDto> GetFeedbacks()
+        public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
         {
             return _connection
                 .Query<FeedbackDto, LessonDto, UnderstandingLevelDto, UserDto, FeedbackDto>(
-                    "dbo.Feedback_SelectAll",
+                    "dbo.Feedback_Search",
                     (feedback, lesson, understendinglevel, user) =>
                     {
                         feedback.Lesson = lesson;
@@ -102,6 +102,7 @@ namespace EducationSystem.Data
                         feedback.User = user;
                         return feedback;
                     },
+                    new { lessonId, groupId, courseId},
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
@@ -275,6 +276,17 @@ namespace EducationSystem.Data
                new { id }, commandType: System.Data.CommandType.StoredProcedure)
                .Distinct()
                .ToList();
+            return result;
+        }
+
+        public List<LessonDto> GetLessonsByThemeId(int themeId)
+        {
+            var result = _connection.
+              Query<LessonDto>("dbo.Lesson_SelectByThemeId",
+              new { themeId =themeId},
+              commandType: System.Data.CommandType.StoredProcedure)
+              .Distinct()
+              .ToList();
             return result;
         }
     }

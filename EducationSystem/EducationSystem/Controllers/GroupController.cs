@@ -11,6 +11,7 @@ using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace EducationSystem.Controllers
 {
@@ -27,7 +28,8 @@ namespace EducationSystem.Controllers
         private ThemeMapper _themeMapper;
         private CourseService _courseService;
         private GroupReportMapper _reportMapper;
-        public GroupController()
+        private IMapper _mapper;
+        public GroupController(IMapper mapper)
         {
             
             _repo = new GroupRepository();
@@ -36,6 +38,7 @@ namespace EducationSystem.Controllers
             _courseService = new CourseService();
             _themeMapper = new ThemeMapper();
             _reportMapper = new GroupReportMapper();
+            _mapper = mapper;
         }
 
         // https://localhost:44365/api/group/
@@ -58,15 +61,14 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/group/groups-without-tutors
         [HttpGet("groups-without-tutors")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult GetGroupsWithoutTutors()
+        public ActionResult<List<GroupOutputModel>> GetGroupsWithoutTutors()
         {
-            List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroupsWithoutTutors());
+            var result = _mapper.Map<List<GroupOutputModel>>(_service.GetGroupsWithoutTutors());
             return Ok(result);
         }
 
         // https://localhost:44365/api/group/3/programs-group
-        [HttpGet("{Id}/programs-group")]
-        
+        [HttpGet("{Id}/programs-group")]        
         public ActionResult GetGroupProgramsByGroupId(int id)
         {
             GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupProgramsByGroupId(id));
