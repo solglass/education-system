@@ -90,11 +90,11 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public List<FeedbackDto> GetFeedbacks()
+        public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
         {
             return _connection
                 .Query<FeedbackDto, LessonDto, UnderstandingLevelDto, UserDto, FeedbackDto>(
-                    "dbo.Feedback_SelectAll",
+                    "dbo.Feedback_Search",
                     (feedback, lesson, understendinglevel, user) =>
                     {
                         feedback.Lesson = lesson;
@@ -102,6 +102,7 @@ namespace EducationSystem.Data
                         feedback.User = user;
                         return feedback;
                     },
+                    new { lessonId, groupId, courseId},
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )

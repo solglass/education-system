@@ -148,7 +148,6 @@
     <Build Include="StoredProcedures\Group_Material\dbo.Group_Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\Material_Add.sql" />
     <Build Include="StoredProcedures\Material\Material_Delete.sql" />
-    <Build Include="StoredProcedures\Material\Material_SelectAll.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectById.sql" />
     <Build Include="StoredProcedures\Material\Material_Update.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_Add.sql" />
@@ -252,7 +251,7 @@
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_SelectByID.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Add.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Delete.sql" />
-    <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectAll.sql" />
+    <Build Include="StoredProcedures\Feedback\dbo.Feedback_Search.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_SelectByID.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Update.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_Add.sql" />
@@ -272,5 +271,7 @@
     <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_SelectByGroupIdAndStatusId.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
+    <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
   </ItemGroup>
 </Project>

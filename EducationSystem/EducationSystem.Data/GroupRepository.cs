@@ -93,11 +93,11 @@ namespace EducationSystem.Data
         public List<GroupDto> GetGroupsWithoutTutors()
         { 
             var result = _connection
-                .Query<GroupDto, GroupStatusDto, CourseDto, GroupDto>("dbo.Group_SelectWithoutTutors",
-                 (group, status, course) =>
+                .Query<GroupDto, int, CourseDto, GroupDto>("dbo.Group_SelectWithoutTutors",
+                 (group, groupStatus, course) =>
                  {
                      group.Course = course;
-                     group.GroupStatus = status.groupStatus;
+                     group.GroupStatus = (GroupStatus)groupStatus;
                      return group;
                  },
                     splitOn: "Id",

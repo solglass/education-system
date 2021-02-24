@@ -5,7 +5,7 @@ begin
 		g.Id,
 		g.StartDate,
 		gs.Id,
-		gs.Name,
+		gs.Id as GroupStatus,
 		c.Id,
 		c.Name,
 		c.Description,
