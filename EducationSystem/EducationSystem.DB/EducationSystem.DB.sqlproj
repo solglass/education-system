@@ -95,6 +95,7 @@
     <Folder Include="StoredProcedures\User_Role" />
     <Folder Include="Tables" />
     <Folder Include="Scripts" />
+    <Folder Include="StoredProcedures\Student" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
@@ -272,5 +273,6 @@
     <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Student\Student_SelectByPercentOfSkip.sql" />
   </ItemGroup>
 </Project>
