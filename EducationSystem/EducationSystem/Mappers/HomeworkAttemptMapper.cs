@@ -54,7 +54,34 @@ namespace EducationSystem.API.Mappers
             }
             return outputModels;
         }
+        public UserHomeworkAttemptsOutputModel FromDto(HomeworkAttemptByUserDto dto)
+        {
+          return new UserHomeworkAttemptsOutputModel
+          {
+            Id = dto.Id,
+            Comment = dto.Comment,
+            IsDeleted = dto.IsDeleted,
+            StatusId = dto.StatusId,
+            CountAttachments = dto.CountAttachments,
+            CountComments = dto.CountComments,
+            AttemptStatusId = dto.AttemptStatusId,
+            AttemptStatusName = dto.AttemptStatusName,
+            Homework = new HomeworkOutputModel { Id = dto.Homework.Id, Description = dto.Homework.Description, Group = new GroupOutputModel { Id = dto.Homework.Group.Id } },
+            Author = new AuthorOutputModel { Id = dto.Author.Id, FirstName = dto.Author.FirstName, LastName = dto.Author.LastName }
+            
+          };
+        }
+        
+        public List<UserHomeworkAttemptsOutputModel> FromDtos(List<HomeworkAttemptByUserDto> dtos)
+        {
+          var outputModels = new List<UserHomeworkAttemptsOutputModel>();
+        
+          foreach (var dto in dtos)
+          {
+            outputModels.Add(FromDto(dto));
+          }
+          return outputModels;
+        }
 
-
-    }
+  }
 }

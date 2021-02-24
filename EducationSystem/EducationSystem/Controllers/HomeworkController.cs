@@ -243,6 +243,21 @@ namespace EducationSystem.API.Controllers
             var results = _homeworkService.AddHomework_Theme(homeworkId, themeId); 
             return Ok(results);
         }
+        [HttpGet("byUser/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult GetHomeworkAttemptsByUserId(int id)
+        {
+          var outputModel = _homeworkAttemptMapper.FromDtos(_homeworkService.GetHomeworkAttemptsByUserId(id));
+          return Ok(outputModel);
+        }
+        
+        [HttpGet("byGroup/{statusId}/{groupId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult GetHomeworkAttemptByStatusIdAndGroupId(int statusId, int groupId)
+        {
+          var outputModel = _homeworkAttemptMapper.FromDtos(_homeworkService.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId));
+          return Ok(outputModel);
+        }
     }
 
 }

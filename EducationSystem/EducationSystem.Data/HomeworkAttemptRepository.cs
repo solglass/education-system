@@ -89,5 +89,35 @@ namespace EducationSystem.Data.Models
                 commandType: System.Data.CommandType.StoredProcedure);
             return rowsAffected;
         }
+        public List<HomeworkAttemptByUserDto> GetHomeworkAttemptsByUserId(int id)
+        {
+           var homeworkAttempt = _connection
+          .Query<HomeworkAttemptByUserDto, HomeworkDto,AuthorDto, HomeworkAttemptByUserDto>("dbo.HomeworkAttempt_SelectByUserId",
+          (homeworkAttempt, homework, author) =>
+          {
+            homeworkAttempt.Homework = homework;
+            homeworkAttempt.Author = author;
+            homework.Group = new GroupDto();
+            return homeworkAttempt;
+          },
+              new { id }, commandType: System.Data.CommandType.StoredProcedure)
+              .ToList();
+          return homeworkAttempt;
+        }
+        public List<HomeworkAttemptByUserDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
+        {
+          var homeworkAttempt = _connection
+          .Query<HomeworkAttemptByUserDto, HomeworkDto, AuthorDto, HomeworkAttemptByUserDto>("dbo.HomeworkAttempt_SelectByGroupIdAndStatusId",
+          (homeworkAttempt, homework, author) =>
+          {
+            homeworkAttempt.Homework = homework;
+            homeworkAttempt.Author = author;
+            homework.Group = new GroupDto();
+            return homeworkAttempt;
+          },
+              new { statusId, groupId }, commandType: System.Data.CommandType.StoredProcedure)
+              .ToList();
+          return homeworkAttempt;
+        }
     }
 }
