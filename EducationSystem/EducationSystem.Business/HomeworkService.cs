@@ -138,5 +138,17 @@ namespace EducationSystem.Business
         {
             return _homeworkAttemptRepository.DeleteHomeworkAttempt_Attachment(homeworkAttemptId, attachmentId);
         }
+        public List<HomeworkAttemptByUserDto> GetHomeworkAttemptsByUserId(int id)
+        {
+          var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByUserId(id);
+        
+          return dtos;
+        }
+        public List<HomeworkAttemptByUserDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
+        {
+          var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
+        
+          return dtos;
+        }
     }
 }
