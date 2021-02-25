@@ -27,7 +27,7 @@ namespace EducationSystem.API.Mappers
             {
                 Id = groupDto.Id,
                 StartDate = (groupDto.StartDate).ToString("dd.MM.yyyy"),
-                GroupStatus = groupDto.GroupStatus
+                GroupStatus = FriendlyNames.GetFriendlyGroupStatusName(groupDto.GroupStatus)
             };
 
         }
