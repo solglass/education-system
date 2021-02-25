@@ -11,6 +11,6 @@ namespace EducationSystem.API.Models.OutputModels
 
         public int Id { get; set; }
         public string Path { get; set; }
-        public AttachmentType AttachmentType { get; set; }
+        public string AttachmentType { get; set; }
     }
 }
