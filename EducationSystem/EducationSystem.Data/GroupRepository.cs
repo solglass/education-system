@@ -22,11 +22,11 @@ namespace EducationSystem.Data
         public List<GroupDto> GetGroups()
         {
             var result = _connection
-                .Query<GroupDto, CourseDto, GroupStatusDto, GroupDto>("dbo.Group_SelectAll",
+                .Query<GroupDto, CourseDto, int, GroupDto>("dbo.Group_SelectAll",
                     (group, course, groupStatus) =>
                     {
                         group.Course = course;
-                        group.GroupStatus = groupStatus.groupStatus;
+                        group.GroupStatus = (GroupStatus)groupStatus;
                         return group;
                     },
                     splitOn: "Id",
@@ -39,11 +39,11 @@ namespace EducationSystem.Data
         public GroupDto GetGroupById(int id)
         {
             var result = _connection
-                .Query<GroupDto, CourseDto, GroupStatusDto, GroupDto>("dbo.Group_SelectById",
+                .Query<GroupDto, CourseDto, int, GroupDto>("dbo.Group_SelectById",
                     (group, course, groupStatus) =>
                     {
                         group.Course = course;
-                        group.GroupStatus = groupStatus.groupStatus;
+                        group.GroupStatus = (GroupStatus)groupStatus;
                         return group;
                     },
                     new { id },
@@ -128,7 +128,7 @@ namespace EducationSystem.Data
                 { 
                     Id = groupDto.Id, 
                     CourseID = groupDto.Course.Id, 
-                    StatusId = groupDto.GroupStatus, 
+                    StatusId = (int)groupDto.GroupStatus, 
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
