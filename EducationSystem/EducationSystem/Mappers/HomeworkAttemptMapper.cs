@@ -40,7 +40,7 @@ namespace EducationSystem.API.Mappers
                 Id = dto.Id,
                 Author = new UserOutputModel { Id = dto.Author.Id},
                 Comment = dto.Comment,
-                HomeworkAttemptStatus = dto.HomeworkAttemptStatus 
+                HomeworkAttemptStatus = FriendlyNames.GetFriendlyHomeworkAttemptStatusName(dto.HomeworkAttemptStatus) 
             };
         }
 

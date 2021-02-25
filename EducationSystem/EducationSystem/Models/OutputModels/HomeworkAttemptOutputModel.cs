@@ -12,7 +12,7 @@ namespace EducationSystem.API.Models.OutputModels
         public string Comment { get; set; }
         public bool IsDeleted { get; set; }
         public UserOutputModel Author { get; set; }
-        public HomeworkAttemptStatus HomeworkAttemptStatus { get; set; }
+        public String HomeworkAttemptStatus { get; set; }
         public List<CommentOutputModel> Comments { get; set; }
         public List<AttachmentOutputModel> Attachments { get; set; }
     }
