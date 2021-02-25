@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EducationSystem.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,7 @@ namespace EducationSystem.Data.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public GroupStatus groupStatus { get; set; }
         public override bool Equals(object obj)
         {
             GroupStatusDto groupStatusDto = (GroupStatusDto)obj;

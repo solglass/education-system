@@ -1,139 +1,112 @@
-﻿using EducationSystem.Data.Models;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
+using EducationSystem.Data.Models;
+using EducationSystem.Data;
 using System.Collections.Generic;
-using System.Text;
+using EducationSystem.Core.Enums;
+using System.Globalization;
 
 namespace EducationSystem.Data.Tests
 {
     public class GroupRepositoryTests
     {
-        private GroupRepository _groupRepo;
-        private CourseRepository _courseRepo;
-        private GroupStatusRepository _groupStatusRepo;
-        private CourseDto _courseDto;
-        private GroupStatusDto _groupStatusDto;
-        private int _groupId;
-        private int _courseId;
-        private int _groupStatusId;
-
+        private List<int> _groupsId;
         [SetUp]
-        public void GroupTestsSetup()
+        public void GroupsTestsSetup()
         {
-            _groupRepo = new GroupRepository();
-            _courseRepo = new CourseRepository();
-            _groupStatusRepo = new GroupStatusRepository();
-            _groupId = 0;
-            _courseId = 0;
-            _groupStatusId = 0;
+            _groupsId = new List<int>();
+            GroupDto expected = GetMockGroup_Add(1);
+            GroupRepository gRepo = new GroupRepository();
+
+
         }
 
-        [TestCase()]
-        public void Group_Add()
+        [TestCase(1)]
+        public void Attachment_Add(int dtoMockNumber)
         {
-            _courseDto = GetMockCourse_Add();
-            _groupStatusDto = GetMockGroupStatus_Add();
-            _courseId = _courseRepo.AddCourse(_courseDto);
-            _groupStatusId = _groupStatusRepo.AddGroupStatus(_groupStatusDto.Name);
-            GroupDto expected = GetMockGroup_Add();
-            _groupId = _groupRepo.AddGroup(expected);
-
-            if (_groupId == 0 || _courseId == 0 || _groupStatusId == 0) 
-            { 
-                Assert.Fail("Group addition failed"); 
-            }
+            GroupDto expected = GetMockGroup_Add(dtoMockNumber);
+            GroupRepository gRepo = new GroupRepository();
+            _groupsId.Add(gRepo.AddGroup(expected));
+            expected.Id = _groupsId[_groupsId.Count - 1];
+            if (_groupsId.Count == 0) { Assert.Fail("Group addition failed"); }
             else
             {
-                GroupDto actual = _groupRepo.GetGroupById(_groupId);
+                GroupDto actual = gRepo.GetGroupById(expected.Id);
                 Assert.AreEqual(expected, actual);
             }
 
         }
 
-        [TestCase()]
-        public void Group_Update()
-        {
-            _courseDto = GetMockCourse_Add();
-            _groupStatusDto = GetMockGroupStatus_Add();
-            _courseId = _courseRepo.AddCourse(_courseDto);
-            _groupStatusId = _groupStatusRepo.AddGroupStatus(_groupStatusDto.Name);
-            GroupDto expected = GetMockGroup_Add();
-            _groupId = _groupRepo.AddGroup(expected);
 
-            if (_groupId == 0 || _courseId == 0 || _groupStatusId == 0)
-            {
-                Assert.Fail("Group addition failed");
-            }
+        [TestCase(1)]
+        public void Group_Delete(int dtoMockNumber)
+        {
+            GroupDto expected = GetMockGroup_Add(dtoMockNumber);
+            GroupRepository gRepo = new GroupRepository();
+            _groupsId.Add(gRepo.AddGroup(expected));
+            if (_groupsId.Count == 0) { Assert.Fail("Group addition failed"); }
             else
             {
-                expected.StartDate = new DateTime(2021, 02, 04);
-                _groupRepo.UpdateGroup(expected);
-                GroupDto actual = _groupRepo.GetGroupById(_groupId);
-                Assert.AreEqual(expected, actual);
+                int newId = _groupsId[_groupsId.Count - 1];
+                gRepo.DeleteGroup(newId);
+                GroupDto actual = gRepo.GetGroupById(newId);
+                if (actual == null) { Assert.Pass(); }
+                else Assert.Fail("Deletion went wrong");
             }
         }
 
-        [TestCase()]
-        public void Group_Delete()
+        [TestCase(1)]
+        public void Group_Update(int dtoMockNumber)
         {
-            _courseDto = GetMockCourse_Add();
-            _groupStatusDto = GetMockGroupStatus_Add();
-            _courseId = _courseRepo.AddCourse(_courseDto);
-            _groupStatusId = _groupStatusRepo.AddGroupStatus(_groupStatusDto.Name);
-            GroupDto expected = GetMockGroup_Add();
-            _groupId = _groupRepo.AddGroup(expected);
+            GroupDto expected = GetMockGroup_Add(dtoMockNumber);
+            GroupRepository gRepo = new GroupRepository();
+            _groupsId.Add(gRepo.AddGroup(expected));
+            if (_groupsId.Count == 0) { Assert.Fail("Group addition failed"); }
 
-            if (_groupId == 0 || _courseId == 0 || _groupStatusId == 0) 
-            {
-                Assert.Fail("Group addition failed"); 
-            }
-            else
-            {
-                _groupRepo.DeleteGroup(_groupId);
-                GroupDto actual = _groupRepo.GetGroupById(_groupId);
-                if (actual == null) 
-                {
-                    Assert.Pass(); 
-                }
-                else 
-                    Assert.Fail("Failed to delete group");
-            }
+            int newId = _groupsId[_groupsId.Count - 1];
+            GroupStatus groupStatusUpdate = GroupStatus.Finished;
+            expected.GroupStatus = groupStatusUpdate;
+            expected.Id = newId;
+            gRepo.UpdateGroup(expected);
+            GroupDto actual = gRepo.GetGroupById(newId);
+            Assert.AreEqual(expected, actual);
+
         }
+
+
 
         [TearDown]
-        public void GroupsTestsTearDown()
+        public void AttachmentsTestsTearDown()
         {
-            _groupRepo.DeleteGroup(_groupId);
-            _courseRepo.DeleteCourse(_courseId);
-            _groupStatusRepo.DeleteGroupStatus(_groupStatusId);
+            GroupRepository gRepo = new GroupRepository();
+            foreach (int elem in _groupsId)
+            {
+                gRepo.DeleteGroup(elem);
+            }
+
         }
 
-        public CourseDto GetMockCourse_Add()
+        public GroupDto GetMockGroup_Add(int n)
         {
-            return new CourseDto
+            switch (n)
             {
-                Name = "TestCourseCase 1", 
-                Description = "Test case 1", 
-                Duration = 1
-            };
+                case 1:
+                    GroupDto groupDto = new GroupDto();
+                    GroupStatus groupStatus = GroupStatus.InProgress;
+                    groupDto.GroupStatus = groupStatus;
+                    CourseDto courseDto = new CourseDto()
+                    {
+                        Id = 999,
+                        IsDeleted = false,
+                        Name="Test",
+                    };
+                    groupDto.Course = courseDto;
+                    groupDto.StartDate= DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    return groupDto;
+                default:
+                    throw new Exception();
+            }
         }
 
-        public GroupStatusDto GetMockGroupStatus_Add()
-        {
-            return new GroupStatusDto
-            {
-                Name = "333"
-            };
-        }
-
-        public GroupDto GetMockGroup_Add()
-        {
-            return new GroupDto
-            {
-                Course = _courseRepo.GetCourseById(_courseId),
-                GroupStatus = _groupStatusRepo.GetGroupStatusById(_groupStatusId),
-                StartDate = new DateTime(2021, 01, 01)
-            };
-        }
     }
 }
