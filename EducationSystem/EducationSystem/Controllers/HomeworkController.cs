@@ -139,15 +139,6 @@ namespace EducationSystem.API.Controllers
         }
 
 
-        // https://localhost:44365/api/homework/homeworkAttempts
-        [HttpGet("homeworkAttempts")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetHomeworkAttempts()
-        {
-            var results = _homeworkService.GetHomeworkAttemptsAll();
-            return Ok(results);
-        }
-
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpGet("homeworkAttempts/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
@@ -243,7 +234,7 @@ namespace EducationSystem.API.Controllers
             var results = _homeworkService.AddHomework_Theme(homeworkId, themeId); 
             return Ok(results);
         }
-        [HttpGet("byUser/{id}")]
+        [HttpGet("homework/attempts/by-user/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult GetHomeworkAttemptsByUserId(int id)
         {
@@ -251,7 +242,7 @@ namespace EducationSystem.API.Controllers
           return Ok(outputModel);
         }
         
-        [HttpGet("byGroup/{statusId}/{groupId}")]
+        [HttpGet("homework/attempts/by-grop/{statusId}/{groupId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult GetHomeworkAttemptByStatusIdAndGroupId(int statusId, int groupId)
         {

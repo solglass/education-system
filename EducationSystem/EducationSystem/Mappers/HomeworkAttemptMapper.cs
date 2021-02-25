@@ -54,27 +54,26 @@ namespace EducationSystem.API.Mappers
             }
             return outputModels;
         }
-        public UserHomeworkAttemptsOutputModel FromDto(HomeworkAttemptByUserDto dto)
+        public HomeworkAttemptWithCountOutputModel FromDto(HomeworkAttemptWithCountDto dto)
         {
-          return new UserHomeworkAttemptsOutputModel
+          return new HomeworkAttemptWithCountOutputModel
           {
             Id = dto.Id,
             Comment = dto.Comment,
             IsDeleted = dto.IsDeleted,
             StatusId = dto.StatusId,
-            CountAttachments = dto.CountAttachments,
             CountComments = dto.CountComments,
-            AttemptStatusId = dto.AttemptStatusId,
-            AttemptStatusName = dto.AttemptStatusName,
+            CountAttachments = dto.CountAttachments,
+            HomeworkAttemptStatus = new HomeworkAttemptStatusOutputModel { Id = dto.HomeworkAttemptStatus.Id, Name = dto.HomeworkAttemptStatus.Name },
             Homework = new HomeworkOutputModel { Id = dto.Homework.Id, Description = dto.Homework.Description, Group = new GroupOutputModel { Id = dto.Homework.Group.Id } },
-            Author = new AuthorOutputModel { Id = dto.Author.Id, FirstName = dto.Author.FirstName, LastName = dto.Author.LastName }
+            AuthorAttachment = new AuthorOutputModel { Id = dto.Author.Id, FirstName = dto.Author.FirstName, LastName = dto.Author.LastName, UserPic = dto.Author.UserPic }
             
           };
         }
         
-        public List<UserHomeworkAttemptsOutputModel> FromDtos(List<HomeworkAttemptByUserDto> dtos)
+        public List<HomeworkAttemptWithCountOutputModel> FromDtos(List<HomeworkAttemptWithCountDto> dtos)
         {
-          var outputModels = new List<UserHomeworkAttemptsOutputModel>();
+          var outputModels = new List<HomeworkAttemptWithCountOutputModel>();
         
           foreach (var dto in dtos)
           {

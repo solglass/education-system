@@ -100,26 +100,6 @@ namespace EducationSystem.Business
         }
 
 
-        public List<HomeworkAttemptDto> GetHomeworkAttemptsAll()
-        {
-            var dtos = _homeworkRepository.GetHomeworkAttempts();
-
-            foreach (var item in dtos)
-            {
-                item.Comments = _homeworkRepository.GetCommentsByHomeworkAttemptId(item.Id);
-
-                // check comments and then
-                foreach (var comment in item.Comments)
-                {
-                    //comment.Attachments = _homeworkRepository.GetAttachmentsByCommentId
-                }
-
-                item.Attachments = _homeworkRepository.GetAttachmentsByHomeworkAttemptId(item.Id);
-            }
-
-            return dtos;
-        }
-
         public int AddHomeworkAttempt(HomeworkAttemptDto homeworkAttempt)
         {
             return _homeworkRepository.AddHomeworkAttempt(homeworkAttempt);
@@ -138,13 +118,13 @@ namespace EducationSystem.Business
         {
             return _homeworkAttemptRepository.DeleteHomeworkAttempt_Attachment(homeworkAttemptId, attachmentId);
         }
-        public List<HomeworkAttemptByUserDto> GetHomeworkAttemptsByUserId(int id)
+        public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
         {
           var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByUserId(id);
         
           return dtos;
         }
-        public List<HomeworkAttemptByUserDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
+        public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
         {
           var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
         

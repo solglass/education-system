@@ -273,5 +273,6 @@
     <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_SelectByUserId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Group_Material\Group_Material_SelectById.sql" />
   </ItemGroup>
 </Project>
