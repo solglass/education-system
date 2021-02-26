@@ -274,7 +274,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:44365/api/lesson/attendance/0
         [HttpGet("attendance/{percent}")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult GetStudentsByPercentOfSkip(int percent)
         {
             return Ok(_lessonService.GetStudentByPercentOfSkip(percent));
