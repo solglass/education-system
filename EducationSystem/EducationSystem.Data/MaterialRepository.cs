@@ -8,7 +8,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class MaterialRepository : BaseRepository
+    public class MaterialRepository : BaseRepository, IMaterialRepository
     {
         public MaterialRepository()
         {
@@ -52,13 +52,13 @@ namespace EducationSystem.Data
         public int AddMaterial(MaterialDto material)
         {
             int rows = _connection
-                .Execute("dbo.Material_Add", 
-                new 
-                { 
+                .Execute("dbo.Material_Add",
+                new
+                {
                     material.Link,
                     material.Description,
                     material.IsDeleted
-                }, 
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return rows;
         }
@@ -66,13 +66,13 @@ namespace EducationSystem.Data
         public int UpdateMaterial(int id, MaterialDto material)
         {
             int rows = _connection
-                .Execute("dbo.Material_Update", 
-                new 
+                .Execute("dbo.Material_Update",
+                new
                 {
                     material.Id,
                     material.Link,
                     material.Description
-                }, 
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return rows;
         }

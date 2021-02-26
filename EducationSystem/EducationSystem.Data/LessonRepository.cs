@@ -10,7 +10,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class LessonRepository : BaseRepository
+    public class LessonRepository : BaseRepository, ILessonRepository
     {
         public LessonRepository()
         {
@@ -71,23 +71,23 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
-                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.Date, lessonDto.Themes},
+                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.Date, lessonDto.Themes },
                 commandType: CommandType.StoredProcedure);
         }
 
         public int DeleteLesson(int id)
         {
-           return _connection.Execute(
-                "dbo.Lesson_Delete",
-                new {id},
-                commandType: CommandType.StoredProcedure);
+            return _connection.Execute(
+                 "dbo.Lesson_Delete",
+                 new { id },
+                 commandType: CommandType.StoredProcedure);
         }
 
         public int UpdateLesson(LessonDto lessonDto)
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.Date,lessonDto.Themes },
+                new { lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.Date, lessonDto.Themes },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -99,11 +99,11 @@ namespace EducationSystem.Data
                     (feedback, lesson, understendinglevel, user) =>
                     {
                         feedback.Lesson = lesson;
-                        feedback.UnderstandingLevel = (UnderstandingLevel) understendinglevel;
+                        feedback.UnderstandingLevel = (UnderstandingLevel)understendinglevel;
                         feedback.User = user;
                         return feedback;
                     },
-                    new { lessonId, groupId, courseId},
+                    new { lessonId, groupId, courseId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
@@ -119,7 +119,7 @@ namespace EducationSystem.Data
                     (feedback, lesson, understendinglevel, user) =>
                     {
                         feedback.Lesson = lesson;
-                        feedback.UnderstandingLevel = (UnderstandingLevel) understendinglevel;
+                        feedback.UnderstandingLevel = (UnderstandingLevel)understendinglevel;
                         feedback.User = user;
                         return feedback;
                     },
@@ -136,7 +136,7 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Feedback_Add",
-                new {feedbackDto.UserID, feedbackDto.Messege, feedbackDto.LessonID, feedbackDto.UnderstandingLevelID},
+                new { feedbackDto.UserID, feedbackDto.Messege, feedbackDto.LessonID, feedbackDto.UnderstandingLevelID },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -144,7 +144,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Feedback_Update",
-                new {feedbackDto.ID, feedbackDto.Messege, feedbackDto.UnderstandingLevelID},
+                new { feedbackDto.ID, feedbackDto.Messege, feedbackDto.UnderstandingLevelID },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -152,18 +152,18 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Feedback_Delete",
-                new {id},
+                new { id },
                 commandType: CommandType.StoredProcedure);
         }
 
 
         public int AddAttendance(AttendanceDto attendance)
         {
-           return _connection
-                .QuerySingleOrDefault<int>(
-                "dbo.Attendance_Add",
-                new {attendance.LessonID,attendance.UserID,attendance.IsAbsent},
-                commandType: CommandType.StoredProcedure);
+            return _connection
+                 .QuerySingleOrDefault<int>(
+                 "dbo.Attendance_Add",
+                 new { attendance.LessonID, attendance.UserID, attendance.IsAbsent },
+                 commandType: CommandType.StoredProcedure);
         }
         public int DeleteAttendance(int id)
         {
@@ -177,7 +177,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Attendance_Update",
-                new {attendance.Id, attendance.IsAbsent},
+                new { attendance.Id, attendance.IsAbsent },
                 commandType: CommandType.StoredProcedure);
         }
         public List<AttendanceDto> GetAttendances()
@@ -210,11 +210,11 @@ namespace EducationSystem.Data
 
         public int AddLessonTheme(LessonThemeDto lessonTheme)
         {
-           return _connection
-                .QuerySingleOrDefault<int>(
-                "dbo.Lesson_Theme_Add",
-                new {lessonTheme.ThemeID,lessonTheme.LessonID },
-                commandType: CommandType.StoredProcedure);
+            return _connection
+                 .QuerySingleOrDefault<int>(
+                 "dbo.Lesson_Theme_Add",
+                 new { lessonTheme.ThemeID, lessonTheme.LessonID },
+                 commandType: CommandType.StoredProcedure);
         }
         public void DeleteLessonTheme(int lessonId, int themeId)
         {
@@ -224,8 +224,8 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-       
-       
+
+
         public LessonThemeDto GetLessonThemeById(int id)
         {
             var lessonTheme = _connection
@@ -248,7 +248,7 @@ namespace EducationSystem.Data
         {
             var result = _connection.
               Query<LessonDto>("dbo.Lesson_SelectByThemeId",
-              new { themeId =themeId},
+              new { themeId = themeId },
               commandType: System.Data.CommandType.StoredProcedure)
               .Distinct()
               .ToList();

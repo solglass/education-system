@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace EducationSystem.Data.Models
 {
-    public class HomeworkAttemptRepository
+    public class HomeworkAttemptRepository : IHomeworkAttemptRepository
     {
         private SqlConnection _connection;
 
@@ -54,13 +54,13 @@ namespace EducationSystem.Data.Models
         public int DeleteHomeworkAttempt(int id)
         {
             var result = _connection
-                .Execute("dbo.HomeworkAttempt_Delete", 
-                new { id }, 
+                .Execute("dbo.HomeworkAttempt_Delete",
+                new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
-        
+
         public HomeworkAttempt_AttachmentDto GetHomeworkAttempt_AttachmentById(int id)
         {
             var data = _connection.
@@ -84,42 +84,45 @@ namespace EducationSystem.Data.Models
         {
             int rowsAffected = _connection.Execute(
                 "dbo.HomeworkAttempt_Attachment_Delete",
-                new { homeworkAttemptID=homeworkAttemptId,
-                      attachmentID=attachmentId},
+                new
+                {
+                    homeworkAttemptID = homeworkAttemptId,
+                    attachmentID = attachmentId
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return rowsAffected;
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
         {
-           var homeworkAttempt = _connection
-          .Query<HomeworkAttemptWithCountDto, HomeworkAttemptStatusDto, HomeworkDto,UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByUserId",
-          (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
-          {
-            homeworkAttempt.HomeworkAttemptStatus = homeworkAttemptStatus;
-            homeworkAttempt.Homework = homework;
-            homeworkAttempt.Author = author;
-            homework.Group = new GroupDto();
+            var homeworkAttempt = _connection
+           .Query<HomeworkAttemptWithCountDto, HomeworkAttemptStatusDto, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByUserId",
+           (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
+           {
+               homeworkAttempt.HomeworkAttemptStatus = homeworkAttemptStatus;
+               homeworkAttempt.Homework = homework;
+               homeworkAttempt.Author = author;
+               homework.Group = new GroupDto();
+               return homeworkAttempt;
+           },
+               new { id }, commandType: System.Data.CommandType.StoredProcedure)
+               .ToList();
             return homeworkAttempt;
-          },
-              new { id }, commandType: System.Data.CommandType.StoredProcedure)
-              .ToList();
-          return homeworkAttempt;
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
         {
-          var homeworkAttempt = _connection
-          .Query<HomeworkAttemptWithCountDto, HomeworkAttemptStatusDto, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByGroupIdAndStatusId",
-          (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
-          {
-            homeworkAttempt.HomeworkAttemptStatus = homeworkAttemptStatus;
-            homeworkAttempt.Homework = homework;
-            homeworkAttempt.Author = author;
-            homework.Group = new GroupDto();
+            var homeworkAttempt = _connection
+            .Query<HomeworkAttemptWithCountDto, HomeworkAttemptStatusDto, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByGroupIdAndStatusId",
+            (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
+            {
+                homeworkAttempt.HomeworkAttemptStatus = homeworkAttemptStatus;
+                homeworkAttempt.Homework = homework;
+                homeworkAttempt.Author = author;
+                homework.Group = new GroupDto();
+                return homeworkAttempt;
+            },
+            new { statusId, groupId }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
             return homeworkAttempt;
-          },
-          new { statusId, groupId }, commandType: System.Data.CommandType.StoredProcedure)
-              .ToList();
-          return homeworkAttempt;
         }
     }
 }

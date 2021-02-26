@@ -9,7 +9,7 @@ using EducationSystem.Core.Enums;
 
 namespace EducationSystem.Data
 {
-    public class AttachmentRepository
+    public class AttachmentRepository : IAttachmentRepository
     {
         private SqlConnection _connection;
 
@@ -25,8 +25,8 @@ namespace EducationSystem.Data
                 .Query<AttachmentDto, int, AttachmentDto>(
                     "dbo.Attachment_SelectById",
                     (attachment, attachmentType) =>
-                    {                                             
-                        attachment.AttachmentType = (AttachmentType)attachmentType;                       
+                    {
+                        attachment.AttachmentType = (AttachmentType)attachmentType;
                         return attachment;
                     },
                     new { id },
@@ -85,7 +85,7 @@ namespace EducationSystem.Data
 
         }
 
-        public int AddAttachmentToHomeworkAttempt (AttachmentDto attachmentDto, int homeworkAttemptId)
+        public int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId)
         {
             int attachmentId = AddAttachment(attachmentDto);
             HomeworkAttemptRepository homeworkAttRepo = new HomeworkAttemptRepository();

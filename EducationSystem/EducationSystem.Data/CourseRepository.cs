@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class CourseRepository : BaseRepository
+    public class CourseRepository : BaseRepository, ICourseRepository
     {
 
         public CourseRepository()
@@ -29,7 +29,7 @@ namespace EducationSystem.Data
                             courseEntry.Themes = new List<ThemeDto>();
                             courseDictionary.Add(courseEntry.Id, courseEntry);
                         }
-                        
+
                         if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                         {
                             themeEntry = theme;
@@ -50,7 +50,7 @@ namespace EducationSystem.Data
             var themeDictionary = new Dictionary<int, ThemeDto>();
             var courseEntry = new CourseDto();
             var course = _connection
-                .Query<CourseDto, ThemeDto,CourseDto>(
+                .Query<CourseDto, ThemeDto, CourseDto>(
                     "dbo.Course_SelectById",
                     (course, theme) =>
                     {
@@ -59,7 +59,7 @@ namespace EducationSystem.Data
                             courseEntry = course;
                             courseEntry.Themes = new List<ThemeDto>();
                         }
-                        if(theme!=null && !themeDictionary.TryGetValue(theme.Id, out  ThemeDto themeEntry))
+                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                         {
                             themeEntry = theme;
                             courseEntry.Themes.Add(theme);
@@ -88,7 +88,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int UpdateCourse( CourseDto course)
+        public int UpdateCourse(CourseDto course)
         {
             var result = _connection
                 .Execute("dbo.Course_Update",
@@ -115,7 +115,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int HardDeleteCourse (int id)
+        public int HardDeleteCourse(int id)
         {
             var result = _connection
                 .Execute("dbo.Course_HardDelete",
@@ -166,7 +166,7 @@ namespace EducationSystem.Data
             var themeEntry = new ThemeDto();
 
             var theme = _connection
-                .Query<ThemeDto,TagDto, ThemeDto>(
+                .Query<ThemeDto, TagDto, ThemeDto>(
                 "dbo.Theme_SelectById",
                 (theme, tag) =>
                 {
@@ -255,7 +255,7 @@ namespace EducationSystem.Data
         }
 
 
-       
+
 
         public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
         {
@@ -274,7 +274,7 @@ namespace EducationSystem.Data
             return themes;
         }
 
-       
+
         public List<Course_ThemeDto> GetCourseThemeByThemeId(int id)
         {
             var result = _connection.

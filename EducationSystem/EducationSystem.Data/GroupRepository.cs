@@ -9,7 +9,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class GroupRepository
+    public class GroupRepository : IGroupRepository
     {
         private SqlConnection _connection;
 
@@ -91,7 +91,7 @@ namespace EducationSystem.Data
         }
 
         public List<GroupDto> GetGroupsWithoutTutors()
-        { 
+        {
             var result = _connection
                 .Query<GroupDto, int, CourseDto, GroupDto>("dbo.Group_SelectWithoutTutors",
                  (group, groupStatus, course) =>
@@ -109,13 +109,13 @@ namespace EducationSystem.Data
         public int AddGroup(GroupDto groupDto)
         {
             var result = _connection
-                .QuerySingle<int>("dbo.Group_Add", 
-                new 
-                { 
-                    CourseID = groupDto.Course.Id, 
-                    StatusId = (int)groupDto.GroupStatus, 
-                    StartDate = groupDto.StartDate 
-                }, 
+                .QuerySingle<int>("dbo.Group_Add",
+                new
+                {
+                    CourseID = groupDto.Course.Id,
+                    StatusId = (int)groupDto.GroupStatus,
+                    StartDate = groupDto.StartDate
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -123,14 +123,14 @@ namespace EducationSystem.Data
         public int UpdateGroup(GroupDto groupDto)
         {
             var result = _connection
-                .Execute("dbo.Group_Update", 
-                new 
-                { 
-                    Id = groupDto.Id, 
-                    CourseID = groupDto.Course.Id, 
-                    StatusId = (int)groupDto.GroupStatus, 
-                    StartDate = groupDto.StartDate 
-                }, 
+                .Execute("dbo.Group_Update",
+                new
+                {
+                    Id = groupDto.Id,
+                    CourseID = groupDto.Course.Id,
+                    StatusId = (int)groupDto.GroupStatus,
+                    StartDate = groupDto.StartDate
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -138,22 +138,22 @@ namespace EducationSystem.Data
         public int DeleteGroup(int id)
         {
             var result = _connection
-                .Execute("dbo.Group_Delete", 
-                new 
-                { 
-                    id 
-                }, 
+                .Execute("dbo.Group_Delete",
+                new
+                {
+                    id
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
         public int HardDeleteGroup(int id)
         {
             var result = _connection
-                .Execute("dbo.Group_HardDelete", 
-                new 
-                { 
-                    id 
-                }, 
+                .Execute("dbo.Group_HardDelete",
+                new
+                {
+                    id
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -161,12 +161,12 @@ namespace EducationSystem.Data
         public int AddGroup_Material(int groupId, int materialId)
         {
             var result = _connection
-                .QuerySingle<int>("dbo.Group_Material_Add", 
-                new 
+                .QuerySingle<int>("dbo.Group_Material_Add",
+                new
                 {
                     groupId,
                     materialId
-                }, 
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -174,12 +174,12 @@ namespace EducationSystem.Data
         public int DeleteGroup_Material(int groupId, int materialId)
         {
             var result = _connection
-                .Execute("dbo.Group_Material_Delete", 
-                new 
+                .Execute("dbo.Group_Material_Delete",
+                new
                 {
                     groupId,
                     materialId
-                }, 
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -218,7 +218,7 @@ namespace EducationSystem.Data
                     groupID = tutorGroup.GroupID,
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
-        }      
+        }
         public StudentGroupDto GetStudentGroupById(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -284,6 +284,6 @@ namespace EducationSystem.Data
             .Query<GroupReportDto>("dbo.Create_Report", commandType: System.Data.CommandType.StoredProcedure)
             .ToList();
         }
-       
+
     }
 }
