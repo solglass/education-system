@@ -17,10 +17,14 @@ namespace EducationSystem
 {
     public class Startup
     {
-        public Startup()
+        public Startup(IWebHostEnvironment env)
         {           
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json");
+            if (!env.IsProduction())
+            {
+                builder.AddJsonFile($"appsettings.{env.EnvironmentName}.json");
+            }
             Configuration = builder.Build();
         }
 
