@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private UserRepository _userRepository;
 
@@ -30,21 +30,21 @@ namespace EducationSystem.Business
         {
             return _userRepository.GetPassedStudentsAttempt_SelectByGroupId(groupId);
         }
-        public int UpdateUser (UserDto userDto) 
-        { 
-            return _userRepository.UpdateUser(userDto); 
+        public int UpdateUser(UserDto userDto)
+        {
+            return _userRepository.UpdateUser(userDto);
         }
-        public int AddUser(UserDto userDto) 
+        public int AddUser(UserDto userDto)
         {
             userDto.Password = new SecurityService().GetHash(userDto.Password);
-            return _userRepository.AddUser(userDto); 
+            return _userRepository.AddUser(userDto);
         }
         public int DeleteUser(int id)
         {
             return _userRepository.DeleteUser(id);
         }
 
-        public int ChangePassword(int id,string oldPassword, string password)
+        public int ChangePassword(int id, string oldPassword, string password)
         {
             oldPassword = new SecurityService().GetHash(oldPassword);
             password = new SecurityService().GetHash(password);

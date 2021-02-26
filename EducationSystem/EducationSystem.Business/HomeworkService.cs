@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EducationSystem.Business
 {
-    public class HomeworkService
+    public class HomeworkService : IHomeworkService
     {
         private HomeworkRepository _homeworkRepository;
         private HomeworkAttemptRepository _homeworkAttemptRepository;
@@ -15,8 +15,8 @@ namespace EducationSystem.Business
         }
 
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
-        { 
-            return _homeworkRepository.GetHomeworksByGroupId(groupId); 
+        {
+            return _homeworkRepository.GetHomeworksByGroupId(groupId);
         }
 
         public List<HomeworkDto> GetHomeworksByTagId(int tagId)
@@ -120,15 +120,15 @@ namespace EducationSystem.Business
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
         {
-          var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByUserId(id);
-        
-          return dtos;
+            var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByUserId(id);
+
+            return dtos;
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
         {
-          var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
-        
-          return dtos;
+            var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
+
+            return dtos;
         }
     }
 }

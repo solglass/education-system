@@ -6,9 +6,9 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-   public class ReportService
+    public class ReportService : IReportService
     {
-        private GroupRepository  _groupReportRepository;
+        private GroupRepository _groupReportRepository;
         private PaymentRepository _paymentReportRepository;
         public ReportService()
         {

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-   public class CourseService
+    public class CourseService : ICourseService
     {
         private CourseRepository _courseRepo;
         private TagRepository _tagRepo;
@@ -22,7 +22,7 @@ namespace EducationSystem.Business
         }
 
         public List<CourseDto> GetCourses()
-        { 
+        {
             return _courseRepo.GetCourses();
         }
 
@@ -31,9 +31,9 @@ namespace EducationSystem.Business
             return _courseRepo.GetCourseById(id);
         }
 
-        public int UpdateCourse (CourseDto course)
+        public int UpdateCourse(CourseDto course)
         {
-            int index=_courseRepo.UpdateCourse(course);
+            int index = _courseRepo.UpdateCourse(course);
             if (index <= 0)
                 return -1;
             return 0;
@@ -43,14 +43,14 @@ namespace EducationSystem.Business
             int index = _courseRepo.AddCourse(course);
             if (index <= 0)
                 return -1;
-            if(course.Themes!=null && course.Themes.Count>0)
+            if (course.Themes != null && course.Themes.Count > 0)
             {
-                foreach(var theme in course.Themes)
+                foreach (var theme in course.Themes)
                 {
                     if (_courseRepo.AddCourse_Theme(index, theme.Id) <= 0)
                     {
                         RemoveAllCourseThemesbyCourseId(index, course.Themes);
-                        return -2-index;
+                        return -2 - index;
                     }
                 }
             }
@@ -59,7 +59,7 @@ namespace EducationSystem.Business
 
         public int RemoveCourse(int id)
         {
-           return _courseRepo.DeleteCourse(id); 
+            return _courseRepo.DeleteCourse(id);
         }
 
         public int AddThemeToCourse(int courseId, int themeId)
@@ -69,7 +69,7 @@ namespace EducationSystem.Business
 
         public int RemoveThemeFromCourse(int courseId, int themeId)
         {
-           return _courseRepo.DeleteCourse_Theme(courseId, themeId);
+            return _courseRepo.DeleteCourse_Theme(courseId, themeId);
         }
 
         public List<ThemeDto> GetThemes()
@@ -93,8 +93,8 @@ namespace EducationSystem.Business
                 {
                     if (_tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = index, TagId = tag.Id }) <= 0)
                     {
-                       
-                        return -2-index;
+
+                        return -2 - index;
                     }
                 }
             }
@@ -106,11 +106,11 @@ namespace EducationSystem.Business
             return _tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = themeId, TagId = tagId });
         }
 
-       
+
 
         public int DeleteTheme(int id)  //  should remove all connections many-to-many
         {
-           
+
             List<Course_ThemeDto> courseThemes = _courseRepo.GetCourseThemeByThemeId(id);
             if (courseThemes != null && courseThemes.Count > 0)
             {
@@ -119,10 +119,10 @@ namespace EducationSystem.Business
                     _courseRepo.DeleteCourse_Theme(item.CourseID, item.ThemeID);
                 }
             }
-          
 
-           
-            
+
+
+
             return _courseRepo.DeleteTheme(id);
         }
 
@@ -132,11 +132,11 @@ namespace EducationSystem.Business
         }
         private void RemoveAllCourseThemesbyCourseId(int courseId, List<ThemeDto> themes)
         {
-            foreach(var theme in themes)
+            foreach (var theme in themes)
             {
                 _courseRepo.DeleteCourse_Theme(courseId, theme.Id);
             }
         }
-       
+
     }
 }

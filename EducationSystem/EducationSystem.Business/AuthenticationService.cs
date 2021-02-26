@@ -10,7 +10,7 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-    public class AuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
         private UserRepository _repo;
         public AuthenticationService()
@@ -18,13 +18,13 @@ namespace EducationSystem.Business
             _repo = new UserRepository();
         }
         public UserDto GetAuthentificatedUser(string login)
-        {         
-             return _repo.CheckUser(login);       
+        {
+            return _repo.CheckUser(login);
         }
         public string GenerateToken(UserDto user)
         {
             var identity = GetIdentity(user);
-            var now = DateTime.UtcNow;        
+            var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
@@ -45,9 +45,9 @@ namespace EducationSystem.Business
         {
             var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)               
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
                 };
-            foreach(RoleDto role in user.Roles)
+            foreach (RoleDto role in user.Roles)
             {
                 claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.Name));
             }

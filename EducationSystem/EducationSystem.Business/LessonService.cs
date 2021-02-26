@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-    public class LessonService
+    public class LessonService : ILessonService
     {
         private LessonRepository _lessonRepository;
         public LessonService()
@@ -15,11 +15,11 @@ namespace EducationSystem.Business
         }
         public List<LessonDto> GetLessonsByGroupId(int id)
         {
-           return _lessonRepository.GetLessonsByGroupId(id);
+            return _lessonRepository.GetLessonsByGroupId(id);
         }
         public LessonDto GetLessonById(int id)
         {
-           return _lessonRepository.GetLessonById(id);
+            return _lessonRepository.GetLessonById(id);
         }
         public void DeleteLesson(int id)
         {
@@ -31,7 +31,7 @@ namespace EducationSystem.Business
         }
         /* public UpdateLesson
         */
-       public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
+        public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
         {
             return _lessonRepository.GetFeedbacks(lessonId, groupId, courseId);
         }
@@ -61,12 +61,12 @@ namespace EducationSystem.Business
         /* public AddAttendance
         *  public UpdateAttendance
         */
-        
+
         public LessonThemeDto GetLessonThemeById(int id)
         {
             return _lessonRepository.GetLessonThemeById(id);
         }
-        
+
         public int UpdateAttendance(AttendanceDto attendance)
         {
             return _lessonRepository.UpdateAttendance(attendance);

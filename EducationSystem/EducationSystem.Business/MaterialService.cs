@@ -6,14 +6,14 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-    public class MaterialService
+    public class MaterialService : IMaterialService
     {
         private MaterialRepository _materialRepository;
         public MaterialService()
         {
             _materialRepository = new MaterialRepository();
         }
-       
+
         public List<MaterialDto> GetMaterialsByTagId(int id) { return _materialRepository.GetMaterialsByTagId(id); }
         public List<MaterialDto> GetMaterialsByGroupId(int id) { return _materialRepository.GetMaterialsByGroupId(id); }
 
