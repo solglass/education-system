@@ -1,7 +1,7 @@
 ﻿CREATE  proc [dbo].[Homework_Theme_Delete] (
-@Id int)
+@homeworkId int, @themeId int)
 as
 begin 
 	delete from dbo.Homework_Theme
-	where Id=@id
+	where HomeworkId=@homeworkId and ThemeId=@themeId
 end

@@ -404,20 +404,21 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Homework_Theme_Add",
                 new
                 {
-                    homeworkId,
-                    themeId
+                    homeworkId= homeworkId,
+                    themeId=themeId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
-        public int DeleteHomework_Theme(int id)
+        public int DeleteHomework_Theme(int homeworkId, int themeId)
         {
             var result = _connection
                 .Execute("dbo.Homework_Theme_Delete",
                 new
                 {
-                    id
+                    homeworkId = homeworkId,
+                    themeId = themeId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -629,6 +630,7 @@ namespace EducationSystem.Data
             homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
             return homework;
         }
+
 
     }
 }

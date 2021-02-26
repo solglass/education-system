@@ -13,9 +13,9 @@ namespace EducationSystem.Business
         {
             _lessonRepository = new LessonRepository();
         }
-        public List<LessonDto> GetLessons()
+        public List<LessonDto> GetLessonsByGroupId(int id)
         {
-           return _lessonRepository.GetLessons();
+           return _lessonRepository.GetLessonsByGroupId(id);
         }
         public LessonDto GetLessonById(int id)
         {
@@ -31,9 +31,9 @@ namespace EducationSystem.Business
         }
         /* public UpdateLesson
         */
-       public List<FeedbackDto> GetFeedbacks()
+       public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
         {
-            return _lessonRepository.GetFeedbacks();
+            return _lessonRepository.GetFeedbacks(lessonId, groupId, courseId);
         }
         public FeedbackDto GetFeedbackById(int id)
         {
@@ -89,5 +89,9 @@ namespace EducationSystem.Business
         /* public AddLessonTheme
 *  public UpdateLessonTheme
 */
+        public List<LessonDto> GetLessonsByThemeId(int themeId)
+        {
+            return _lessonRepository.GetLessonsByThemeId(themeId);
+        }
     }
 }
