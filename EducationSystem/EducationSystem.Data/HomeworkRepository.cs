@@ -145,31 +145,6 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<HomeworkAttemptDto> GetHomeworkAttempts()
-        {
-            var hwAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
-            var hwAttempts = _connection
-                .Query<HomeworkAttemptDto, UserDto, HomeworkDto, HomeworkAttemptStatusDto, HomeworkAttemptDto>(
-                "dbo.HomeworkAttempt_SelectAll",
-                (hwAttempt, user, homework, hwAttemptStatus) =>
-                {
-                    if (!hwAttemptDictionary.TryGetValue(hwAttempt.Id, out HomeworkAttemptDto hwAttemptEntry))
-                    {
-                        hwAttemptEntry =  hwAttempt;
-                        hwAttemptEntry.Author = user;
-                        hwAttemptEntry.Homework = homework;
-                        hwAttemptEntry.HomeworkAttemptStatus = hwAttemptStatus;
-                        hwAttemptDictionary.Add(hwAttemptEntry.Id, hwAttemptEntry);
-                    }
-                    return hwAttemptEntry;
-                },
-                splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
-                .Distinct()
-                .ToList();
-            return hwAttempts;
-        }
-
         public HomeworkAttemptDto GetHomeworkAttemptById(int id)
         {
             //var commentDictionary = new Dictionary<int, CommentDto>();
