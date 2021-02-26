@@ -103,25 +103,14 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int DeleteCourse(int id)
+        public int DeleteOrRecoverCourse(int id, bool isDeleted)
         {
             var result = _connection
-                .Execute("dbo.Course_SoftDeleteOrRecover",
+                .Execute("dbo.Course_DeleteOrRecover",
                 new
                 {
-                    id                    
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-
-        public int RecoverSoftDeletedCourse(int id)
-        {
-            var result = _connection
-                .Execute("dbo.Course_Recover",
-                new
-                {
-                    id
+                    id,
+                    isDeleted
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;

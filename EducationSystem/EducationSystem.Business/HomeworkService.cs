@@ -46,7 +46,8 @@ namespace EducationSystem.Business
 
         public int DeleteHomework(int id)
         {
-            return _homeworkRepository.DeleteHomework(id);
+            bool isDeleted = true;
+            return _homeworkRepository.DeleteOrRecoverHomework(id, isDeleted);
         }
 
         public int AddHomework_Theme(int homeworkId, int themeId)
@@ -55,7 +56,8 @@ namespace EducationSystem.Business
         }
         public int RecoverHomework(int id)
         {
-            return _homeworkRepository.RecoverHomework(id);
+            bool isDeleted = false;
+            return _homeworkRepository.DeleteOrRecoverHomework(id, isDeleted);
         }
 
         public int HardDeleteHomework(int id)
@@ -90,12 +92,14 @@ namespace EducationSystem.Business
 
         public int DeleteComment(int id)
         {
-            return _homeworkRepository.DeleteComment(id);
+            bool isDeleted = true;
+            return _homeworkRepository.DeleteOrRecoverComment(id, isDeleted);
         }
 
         public int RecoverComment(int id)
         {
-            return _homeworkRepository.RecoverComment(id);
+            bool isDeleted = false;
+            return _homeworkRepository.DeleteOrRecoverComment(id, isDeleted);
         }
 
         public int HardDeleteComment(int id)
@@ -157,7 +161,8 @@ namespace EducationSystem.Business
 
         public int DeleteHomeworkAttempt(int id)
         {
-            return _homeworkRepository.DeleteHomeworkAttempt(id);
+            bool isDeleted = true;
+            return _homeworkRepository.DeleteOrRecoverHomeworkAttempt(id, isDeleted);
         }
         public int DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
         {
@@ -166,7 +171,8 @@ namespace EducationSystem.Business
 
         public int RecoverHomeworkAttempt(int id)
         {
-            return _homeworkRepository.RecoverHomeworkAttempt(id);
+            bool isDeleted = false;
+            return _homeworkRepository.DeleteOrRecoverHomeworkAttempt(id, isDeleted);
         }
 
         public int HardDeleteHomeworkAttempt(int id)

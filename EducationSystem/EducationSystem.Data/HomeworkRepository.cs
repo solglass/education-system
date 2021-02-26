@@ -121,25 +121,14 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int DeleteHomework(int id)
+        public int DeleteOrRecoverHomework(int id, bool isDeleted)
         {
             var result = _connection
-                .Execute("dbo.Homework_Delete",
+                .Execute("dbo.Homework_DeleteOrRecover",
                 new
                 {
-                    id
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-
-        public int RecoverHomework(int id)
-        {
-            var result = _connection
-                .Execute("dbo.Homework_Recover",
-                new
-                {
-                    id
+                    id,
+                    isDeleted
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -239,20 +228,14 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int DeleteHomeworkAttempt(int id)
+        public int DeleteOrRecoverHomeworkAttempt(int id, bool isDeleted)
         {
             var result = _connection
-                .Execute("dbo.HomeworkAttempt_Delete",
-                new { id },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-
-        public int RecoverHomeworkAttempt(int id)
-        {
-            var result = _connection
-                .Execute("dbo.HomeworkAttempt_Recover",
-                new { id },
+                .Execute("dbo.HomeworkAttempt_DeleteOrRecover",
+                new { 
+                    id,
+                    isDeleted
+                    },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -280,25 +263,15 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int DeleteComment(int id)
-        {
-            var result = _connection
-                 .Execute("dbo.Comment_Delete",
-                 new
-                 {
-                     id
-                 },
-                 commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
 
-        public int RecoverComment(int id)
+        public int DeleteOrRecoverComment(int id, bool isDeleted)
         {
             var result = _connection
-                 .Execute("dbo.Comment_Recover",
+                 .Execute("dbo.Comment_DeleteOrRecover",
                  new
                  {
-                     id
+                     id,
+                     isDeleted
                  },
                  commandType: System.Data.CommandType.StoredProcedure);
             return result;

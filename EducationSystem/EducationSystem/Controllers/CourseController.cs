@@ -105,9 +105,9 @@ namespace EducationSystem.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult RemoveCourseInfo(int id)
+        public ActionResult DeleteCourse(int id)
         {
-            var result = _courseService.RemoveCourse(id);
+            var result = _courseService.DeleteCourse(id);
             if (result == 1)
                 return Ok($"Курс #{id} удален!");
             else
@@ -117,7 +117,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/id/recovery
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult RecoverDeletedCourse(int id)
+        public ActionResult RecoverCourse(int id)
         {
             var result = _courseService.RecoverCourse(id);
             if (result == 1)

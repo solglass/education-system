@@ -105,7 +105,6 @@
     <Build Include="StoredProcedures\Theme\dbo.Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Update.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Add.sql" />
-    <Build Include="StoredProcedures\Comment\dbo.Comment_Delete.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_SelectById.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Update.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_SelectById.sql" />
@@ -117,7 +116,6 @@
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Add.sql" />
-    <Build Include="StoredProcedures\Homework\dbo.Homework_Delete.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Search.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Update.sql" />
@@ -273,8 +271,8 @@
     <Build Include="StoredProcedures\Material\dbo.Material_Update.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_Recover.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Recover.sql" />
-    <Build Include="StoredProcedures\Homework\dbo.Homework_Recover.sql" />
-    <Build Include="StoredProcedures\Comment\dbo.Comment_Recover.sql" />
+    <Build Include="StoredProcedures\Homework\dbo.Homework_DeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\Comment\dbo.Comment_DeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Recover.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_Recover.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Recover.sql" />
