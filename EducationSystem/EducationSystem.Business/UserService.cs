@@ -42,12 +42,14 @@ namespace EducationSystem.Business
 
         public int DeleteUser(int id)
         {
-            return _userRepository.DeleteUser(id);
+            bool isDeleted = true;
+            return _userRepository.DeleteOrRecoverUser(id, isDeleted);
         }
 
         public int RecoverUser(int id)
         {
-            return _userRepository.RecoverUser(id);
+            bool isDeleted = false;
+            return _userRepository.DeleteOrRecoverUser(id, isDeleted);
         }
 
         public int HardDeleteUser(int id)

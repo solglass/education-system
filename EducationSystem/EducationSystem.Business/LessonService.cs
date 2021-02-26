@@ -24,11 +24,13 @@ namespace EducationSystem.Business
 
         public int DeleteLesson(int id)
         {
-            return _lessonRepository.DeleteLesson(id);
+            bool isDeleted = true;
+            return _lessonRepository.DeleteOrRecoverLesson(id, isDeleted);
         }
         public int RecoverLesson(int id)
         {
-            return _lessonRepository.RecoverLesson(id);
+            bool isDeleted = false;
+            return _lessonRepository.DeleteOrRecoverLesson(id, isDeleted);
         }
 
         public int HardDeleteLesson(int id)

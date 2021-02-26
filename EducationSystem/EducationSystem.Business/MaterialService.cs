@@ -22,13 +22,15 @@ namespace EducationSystem.Business
         public int UpdateMaterial(int id, MaterialDto material) { return _materialRepository.UpdateMaterial(id, material); }
 
         public int DeleteMaterial(int id) 
-        { 
-            return _materialRepository.DeleteMaterial(id);
+        {
+            bool isDeleted = true;
+            return _materialRepository.DeleteOrRecoverMaterial(id, isDeleted);
         }
 
         public int RecoverMaterial(int id)
         {
-            return _materialRepository.RecoverMaterial(id);
+            bool isDeleted = false;
+            return _materialRepository.DeleteOrRecoverMaterial(id, isDeleted);
         }
 
         public int HardDeleteMaterial(int id)

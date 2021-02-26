@@ -77,20 +77,19 @@ namespace EducationSystem.Data
             return rows;
         }
 
-        public int DeleteMaterial(int id)
+        public int DeleteOrRecoverMaterial(int id, bool isDeleted)
         {
             int rows = _connection
-                .Execute("dbo.Material_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Material_DeleteOrRecover", 
+                new
+                { 
+                    id,
+                    isDeleted
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
             return rows;
         }
-
-        public int RecoverMaterial(int id)
-        {
-            int rows = _connection
-                .Execute("dbo.Material_Recover", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return rows;
-        }
-
+       
         public int HardDeleteMaterial(int id)
         {
             int rows = _connection

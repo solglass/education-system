@@ -108,17 +108,6 @@ namespace EducationSystem.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить материал #{id}!");
         }
-
-        // https://localhost:44365/api/material/id/wipe
-        [HttpDelete("{id}/wipe")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult HardDeleteMaterial(int id)
-        {
-            var result = _service.HardDeleteMaterial(id);
-            if (result == 1)
-                return Ok($"Материал #{id} полностью удален!");
-            else
-                return Problem($"Ошибка! Не удалось полностью удалить материал #{id}!");
-        }
+       
     }
 }

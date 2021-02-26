@@ -94,18 +94,6 @@ namespace EducationSystem.Controllers
                 return Problem($"Ошибка! Не удалось восстановить урок #{id}!");
         }
 
-        // https://localhost:50221/api/lesson/id/wipe
-        [HttpDelete("{id}/wipe")]
-        [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult HardDeleteLesson(int id)
-        {
-            var result = _lessonService.HardDeleteLesson(id);
-            if (result == 1)
-                return Ok($"Урок #{id} полностью удален!");
-            else
-                return Problem($"Ошибка! Не удалось восстановить урок #{id}!");
-        }
-
         // https://localhost:50221/api/lesson/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]

@@ -144,23 +144,6 @@ namespace EducationSystem.Controllers
                 return Problem($"Ошибка! Не удалось восстановить пользователя #{id}!");
         }
 
-        // https://localhost:50221/api/user/42/wipe
-        [HttpDelete("{id}/wipe")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult HardDeleteUser(int id)
-        {
-            if (_userService.GetUserById(id) == null)
-            {
-                return Problem("Не найден пользователь");
-            }
-
-            var result = _userService.HardDeleteUser(id);
-            if (result == 1)
-                return Ok($"Пользователь #{id} полностью удален!");
-            else
-                return Problem($"Ошибка! Не удалось полностью удалить пользователя #{id}!");
-        }
-
         //https://localhost:50221/api/role/
         [HttpPost]
         [Authorize(Roles = "Админ")]

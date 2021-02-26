@@ -144,17 +144,15 @@ namespace EducationSystem.Data
                     user.Email
                 }, commandType: System.Data.CommandType.StoredProcedure);
         }
-        public int DeleteUser(int id)
+        public int DeleteOrRecoverUser(int id, bool isDeleted)
         {
             return _connection
-                .Execute("dbo.User_Delete", new { id },
-                commandType: System.Data.CommandType.StoredProcedure);
-        }
-
-        public int RecoverUser(int id)
-        {
-            return _connection
-                .Execute("dbo.User_Recover", new { id },
+                .Execute("dbo.User_DeleteOrRecover",
+                new 
+                {
+                  id,
+                  isDeleted
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 

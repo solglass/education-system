@@ -109,7 +109,6 @@
     <Build Include="StoredProcedures\Comment\dbo.Comment_Update.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_SelectById.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_Add.sql" />
-    <Build Include="StoredProcedures\Course\dbo.Course_Delete.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_SelectAll.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_Update.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Add.sql" />
@@ -120,7 +119,6 @@
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Add.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Delete.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectAll.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectById.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Update.sql" />
@@ -200,7 +198,6 @@
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Update.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Add.sql" />
-    <Build Include="StoredProcedures\User\dbo.User_Delete.sql" />
     <Build Include="StoredProcedures\User\dbo.User_HardDelete.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
@@ -235,7 +232,6 @@
     <Build Include="Tables\dbo.User_Role.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByHomeworkId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Add.sql" />
-    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Delete.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByID.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
@@ -267,15 +263,14 @@
     <Build Include="StoredProcedures\Material\dbo.Material_HardDelete.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_SelectAll.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_SelectById.sql" />
-    <Build Include="StoredProcedures\Material\dbo.Material_Delete.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_Update.sql" />
-    <Build Include="StoredProcedures\Course\dbo.Course_Recover.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Recover.sql" />
+    <Build Include="StoredProcedures\Course\dbo.Course_DeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_DeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_DeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_DeleteOrRecover.sql" />
-    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Recover.sql" />
-    <Build Include="StoredProcedures\Material\dbo.Material_Recover.sql" />
-    <Build Include="StoredProcedures\User\dbo.User_Recover.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_DeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\Material\dbo.Material_DeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_DeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
   </ItemGroup>
