@@ -290,16 +290,11 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<UserDto> GetStudentByPercentOfSkip(int percent)
+        public List<AttendanceReportDto> GetStudentByPercentOfSkip(int percent)
         {
             return _connection
-                .Query<UserDto, double, UserDto>("dbo.Student_SelectByPercentOfSkip",
-                (user, per) => 
-                { 
-                    user.Id = 
-                }
+                .Query<AttendanceReportDto>("dbo.Student_SelectByPercentOfSkip",
                 new { percent = percent },
-                splitOn: "PercentOfSkip",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
