@@ -4,6 +4,7 @@ using System.Globalization;
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 
 namespace EducationSystem.API.Mappers
@@ -12,29 +13,21 @@ namespace EducationSystem.API.Mappers
     {
         public GroupDto ToDto(GroupInputModel inputModel) 
         {
-            //var courseMapper = new CourseMapper();
             var groupStatusMapper = new GroupStatusMapper();
-            return new GroupDto 
+            return new GroupDto
             {
-                StartDate =  DateTime.ParseExact(inputModel.StartDate, "dd.MM.yyyy", CultureInfo.InvariantCulture),
-                Course = new CourseDto { Id = inputModel.Course.Id },       // delete
-                //Course = courseMapper.ToDto(inputModel.Course),
-                GroupStatus = groupStatusMapper.ToDto(inputModel.GroupStatus)
+                StartDate = DateTime.ParseExact(inputModel.StartDate, "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                GroupStatus = (GroupStatus)inputModel.GroupStatusId
             };
         }
 
         public GroupOutputModel FromDto(GroupDto groupDto) 
         {
-            //var courseMapper = new CourseMapper();
-            //var groupStatusMapper = new GroupStatusMapper();
             return new GroupOutputModel
             {
                 Id = groupDto.Id,
-                StartDate = (groupDto.StartDate).ToString(),
-                Course = groupDto.Course,                                    // delete
-                GroupStatus = groupDto.GroupStatus                           // delete
-                //Course = courseMapper.FromDto(groupDto.Course),
-                //GroupStatus = groupStatusMapper.FromDto(groupDto.GroupStatus)
+                StartDate = (groupDto.StartDate).ToString("dd.MM.yyyy"),
+                GroupStatus = FriendlyNames.GetFriendlyGroupStatusName(groupDto.GroupStatus)
             };
 
         }

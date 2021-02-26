@@ -5,6 +5,6 @@ namespace EducationSystem.API.Models.InputModels
         public int Id { get; set; }     
         public string StartDate { get; set; }
         public CourseInputModel Course { get; set; }
-        public GroupStatusInputModel GroupStatus { get; set; }
+        public int GroupStatusId { get; set; }
     }
 }

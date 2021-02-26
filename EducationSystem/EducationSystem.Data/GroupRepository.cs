@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,11 @@ namespace EducationSystem.Data
         public List<GroupDto> GetGroups()
         {
             var result = _connection
-                .Query<GroupDto, CourseDto, GroupStatusDto, GroupDto>("dbo.Group_SelectAll",
+                .Query<GroupDto, CourseDto, int, GroupDto>("dbo.Group_SelectAll",
                     (group, course, groupStatus) =>
                     {
                         group.Course = course;
-                        group.GroupStatus = groupStatus;
+                        group.GroupStatus = (GroupStatus)groupStatus;
                         return group;
                     },
                     splitOn: "Id",
@@ -38,11 +39,11 @@ namespace EducationSystem.Data
         public GroupDto GetGroupById(int id)
         {
             var result = _connection
-                .Query<GroupDto, CourseDto, GroupStatusDto, GroupDto>("dbo.Group_SelectById",
+                .Query<GroupDto, CourseDto, int, GroupDto>("dbo.Group_SelectById",
                     (group, course, groupStatus) =>
                     {
                         group.Course = course;
-                        group.GroupStatus = groupStatus;
+                        group.GroupStatus = (GroupStatus)groupStatus;
                         return group;
                     },
                     new { id },
@@ -90,9 +91,17 @@ namespace EducationSystem.Data
         }
 
         public List<GroupDto> GetGroupsWithoutTutors()
-        {
+        { 
             var result = _connection
-                .Query<GroupDto>("Group_SelectWithoutTutors", commandType: System.Data.CommandType.StoredProcedure)
+                .Query<GroupDto, int, CourseDto, GroupDto>("dbo.Group_SelectWithoutTutors",
+                 (group, groupStatus, course) =>
+                 {
+                     group.Course = course;
+                     group.GroupStatus = (GroupStatus)groupStatus;
+                     return group;
+                 },
+                    splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
         }
@@ -104,7 +113,7 @@ namespace EducationSystem.Data
                 new 
                 { 
                     CourseID = groupDto.Course.Id, 
-                    StatusId = groupDto.GroupStatus.Id, 
+                    StatusId = (int)groupDto.GroupStatus, 
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -119,7 +128,7 @@ namespace EducationSystem.Data
                 { 
                     Id = groupDto.Id, 
                     CourseID = groupDto.Course.Id, 
-                    StatusId = groupDto.GroupStatus.Id, 
+                    StatusId = (int)groupDto.GroupStatus, 
                     StartDate = groupDto.StartDate 
                 }, 
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -171,48 +180,6 @@ namespace EducationSystem.Data
                     groupId,
                     materialId
                 }, 
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-
-        public List<GroupStatusDto> GetGroupStatus()
-        {
-            var groupStatus = _connection
-                                .Query<GroupStatusDto>("dbo.GroupStatus_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                                .ToList();
-            return groupStatus;
-        }
-
-        public GroupStatusDto GetGroupStatusById(int id)
-        {
-            var groupStatus = _connection
-            .QuerySingleOrDefault<GroupStatusDto>("dbo.GroupStatus_SelectAll", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return groupStatus;
-        }
-
-        public int AddGroupStatus(string Name)
-        {
-            var result = _connection
-              .Execute("dbo.GroupStatuses_Add",
-              new { Name },
-              commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-
-        }
-        public int UpdateGroupStatus(GroupStatusDto groupStatus)
-        {
-            var result = _connection
-                .Execute("dbo.GroupStatus_Update",
-                new { groupStatus.Id, groupStatus.Name },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-
-        public int DeleteGroupStatus(int id)
-        {
-            var result = _connection
-                .Execute("dbo.GroupStatus_Delete",
-                new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -317,5 +284,6 @@ namespace EducationSystem.Data
             .Query<GroupReportDto>("dbo.Create_Report", commandType: System.Data.CommandType.StoredProcedure)
             .ToList();
         }
+       
     }
 }
