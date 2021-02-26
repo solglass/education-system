@@ -43,9 +43,9 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/homework
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult AddHomework([FromBody] HomeworkDto homework)
+        public ActionResult AddHomework([FromBody] HomeworkInputModel homework)
         {
-            _repo.AddHomework(homework);
+            _homeworkService.AddHomework(_homeworkMapper.ToDto(homework));
             return Ok("Задание добавлено");
         }
 

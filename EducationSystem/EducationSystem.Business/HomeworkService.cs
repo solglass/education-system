@@ -8,10 +8,12 @@ namespace EducationSystem.Business
     {
         private HomeworkRepository _homeworkRepository;
         private HomeworkAttemptRepository _homeworkAttemptRepository;
+        private TagRepository _tagRepository;
         public HomeworkService()
         {
             _homeworkRepository = new HomeworkRepository();
             _homeworkAttemptRepository = new HomeworkAttemptRepository();
+            _tagRepository = new TagRepository();
         }
 
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
@@ -41,7 +43,16 @@ namespace EducationSystem.Business
 
         public int AddHomework(HomeworkDto homeworkDto)
         {
-            return _homeworkRepository.AddHomework(homeworkDto);
+            var result = _homeworkRepository.AddHomework(homeworkDto);
+            homeworkDto.Themes.ForEach(theme =>
+            {
+                _homeworkRepository.AddHomework_Theme(result, theme.Id);
+            });
+            homeworkDto.Tags.ForEach(tag =>
+            {
+                _tagRepository.HomeworkTagAdd(new HomeworkTagDto() { HomeworkId = result, TagId = tag.Id });
+            });
+            return result;
         }
         public int DeleteHomework(int id)
         {
