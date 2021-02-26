@@ -31,9 +31,9 @@ namespace EducationSystem.Business
         }
         /* public UpdateLesson
         */
-       public List<FeedbackDto> GetFeedbacks()
+       public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
         {
-            return _lessonRepository.GetFeedbacks();
+            return _lessonRepository.GetFeedbacks(lessonId, groupId, courseId);
         }
         public FeedbackDto GetFeedbackById(int id)
         {

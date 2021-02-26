@@ -18,7 +18,7 @@ namespace EducationSystem.API.Mappers
             {
                 ID = inputModel.ID,
                 UserID = inputModel.UserID,
-                Messege = inputModel.Messege,
+                Messege = inputModel.Message,
                 LessonID = inputModel.LessonID,
                 UnderstandingLevelID = inputModel.UnderstandingLevelID,
             };

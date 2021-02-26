@@ -17,7 +17,7 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/lesson/
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class LessonController : ControllerBase
     {
         private LessonRepository _repo;
@@ -87,12 +87,12 @@ namespace EducationSystem.Controllers
             return Ok("Урок обновлён");
         }
 
-        // https://localhost:50221/api/feedback/
-        [HttpGet("feedback")]
+        // https://localhost:50221/api/feedback/1/2/2
+        [HttpGet("feedback/{lessonId}/{groupId}/{courseId}")]
         [Authorize(Roles = "Админ")]
-        public ActionResult GetFeedbacks()
+        public ActionResult GetFeedbacks(int lessonId, int groupId, int courseId)
         {
-            var result = _lessonService.GetFeedbacks();
+            var result = _lessonService.GetFeedbacks(lessonId, groupId, courseId);
             return Ok(result);
         }
 
@@ -183,6 +183,11 @@ namespace EducationSystem.Controllers
             return Ok("Посещаемость удалена");
         }
         // https://localhost:50221/api/lesson/theme/3/lessons
+        /// <summary>
+        /// Get all lessons that belong to one theme and are not deleted.
+        /// </summary>
+        /// <param name="id">The identifier of the theme that we want to see all its lessons.</param>
+        /// <returns>The list of lessonOutputModel.</returns>
         [HttpGet("Theme/{id}/lessons")]
        // [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int id)
