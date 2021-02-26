@@ -203,6 +203,7 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! К созданной теме #{-(result + 2)} не удалось привязать теги! ");
         }
+
         [HttpPost("theme/{themeId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)

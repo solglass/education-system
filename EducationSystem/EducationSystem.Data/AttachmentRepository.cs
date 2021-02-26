@@ -30,7 +30,7 @@ namespace EducationSystem.Data
                         return attachment;
                     },
                     new { id },
-                    splitOn: "AttachmentType",
+                    splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return data;
@@ -99,7 +99,24 @@ namespace EducationSystem.Data
 
         }
 
-
+        public string GetFriendlyAttachmentTypeName(AttachmentType attachmentType)
+        {
+            switch (attachmentType)
+            {
+                case AttachmentType.File:
+                    {
+                        return "Файл";
+                    }
+                case AttachmentType.Link:
+                    {
+                        return "Ссылка";
+                    }
+                default:
+                    {
+                        return "Некорректный тип файла";
+                    }
+            }
+        }
 
     }
 }

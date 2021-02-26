@@ -4,6 +4,7 @@ using AutoMapper;
 using EducationSystem.API;
 using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
@@ -51,12 +52,12 @@ namespace EducationSystem.Controllers
             return Ok("Урок добавлен");
         }
 
-        // https://localhost:50221/api/lesson/
-        [HttpGet]
+        // https://localhost:50221/api/lesson/3
+        [HttpGet("{id}")]
         [Authorize(Roles = "Админ")]
-        public ActionResult<List<LessonDto>> GetLessons()
+        public ActionResult<List<LessonDto>> GetLessons(int id)
         {
-            var result = _lessonService.GetLessons();
+            var result = _lessonService.GetLessonsByGroupId(id);
             return Ok(result);
         }
 
@@ -114,12 +115,12 @@ namespace EducationSystem.Controllers
             return Ok("Урок обновлён");
         }
 
-        // https://localhost:50221/api/feedback/
-        [HttpGet("feedback")]
+        // https://localhost:50221/api/feedback/1/2/2
+        [HttpGet("feedback/{lessonId}/{groupId}/{courseId}")]
         [Authorize(Roles = "Админ")]
-        public ActionResult GetFeedbacks()
+        public ActionResult GetFeedbacks(int lessonId, int groupId, int courseId)
         {
-            var result = _lessonService.GetFeedbacks();
+            var result = _lessonService.GetFeedbacks(lessonId, groupId, courseId);
             return Ok(result);
         }
 
@@ -254,7 +255,20 @@ namespace EducationSystem.Controllers
             _lessonService.DeleteAttendance(id);
             return Ok("Посещаемость удалена");
         }
-
+        // https://localhost:50221/api/lesson/theme/3/lessons
+        /// <summary>
+        /// Get all lessons that belong to one theme and are not deleted.
+        /// </summary>
+        /// <param name="id">The identifier of the theme that we want to see all its lessons.</param>
+        /// <returns>The list of lessonOutputModel.</returns>
+        [HttpGet("Theme/{id}/lessons")]
+       // [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
+        public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int id)
+        {
+            var lessons = _mapper.Map<List<LessonOutputModel>>(_lessonService.GetLessonsByThemeId(id));
+            return Ok(lessons);
+              
+        }
         
 
         // https://localhost:50221/api/lesson-theme/3

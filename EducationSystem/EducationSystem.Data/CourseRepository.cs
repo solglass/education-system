@@ -227,7 +227,7 @@ namespace EducationSystem.Data
         public int DeleteTheme(int id)
         {
             var result = _connection
-                .Execute("dbo.Theme_Delete",
+                .Execute("dbo.Theme_SoftDelete",
                 new
                 {
                     id

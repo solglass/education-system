@@ -12,34 +12,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EducationSystem.API.Controllers
+namespace EducationSystem.Controllers
 {
-    // https://localhost:50221/api/material/
+    // https://localhost:44365/api/material/
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class MaterialContoller : ControllerBase
+    public class MaterialController : ControllerBase
     {
 
         private MaterialService _service;
         private MaterialMapper _mapper;
 
-        public MaterialContoller()
+        public MaterialController()
         {
             _mapper = new MaterialMapper();
             _service = new MaterialService();
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult GetMaterials()
+        // https://localhost:44365/api/material/340/group
+        [HttpGet("{id}/group")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
+        public ActionResult GetmaterialsByGroupId(int id)
         {
-            var courses = _service.GetMaterials();
-            var result = _mapper.FromDtos(courses);
+            var result = _mapper.FromDtos(_service.GetMaterialsByGroupId(id));
             return Ok(result);
         }
 
-        // https://localhost:50221/api/material/2
+        // https://localhost:44365/api/material/340/tag
+        [HttpGet("{id}/tag")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
+        public ActionResult GetmaterialsByTagId(int id)
+        {
+            var result =_mapper.FromDtos( _service.GetMaterialsByTagId(id));
+            return Ok(result);
+        }
+
+        // https://localhost:44365/api/material/2
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialById(int id)
