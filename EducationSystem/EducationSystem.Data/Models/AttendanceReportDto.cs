@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class AttendanceReportDto : AttendanceDto
+    public class AttendanceReportDto : UserDto
     {
         public decimal PercentOfSkipLessons { get; set; }
     }

@@ -8,6 +8,7 @@ begin
 		u.FirstName,
 		u.LastName,
 		u.Login,
+		u.UserPic,
 		p.PercentOfSkip
 	from
 		(
