@@ -52,11 +52,6 @@ namespace EducationSystem.Business
             return _userRepository.DeleteOrRecoverUser(id, isDeleted);
         }
 
-        public int HardDeleteUser(int id)
-        {
-            return _userRepository.HardDeleteUser(id);
-        }
-
         public int ChangePassword(int id,string oldPassword, string password)
         {
             oldPassword = new SecurityService().GetHash(oldPassword);

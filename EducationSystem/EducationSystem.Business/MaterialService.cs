@@ -33,10 +33,5 @@ namespace EducationSystem.Business
             return _materialRepository.DeleteOrRecoverMaterial(id, isDeleted);
         }
 
-        public int HardDeleteMaterial(int id)
-        {
-            return _materialRepository.HardDeleteMaterial(id);
-        }
-
     }
 }

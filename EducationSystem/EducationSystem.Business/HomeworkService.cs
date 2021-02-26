@@ -60,12 +60,6 @@ namespace EducationSystem.Business
             return _homeworkRepository.DeleteOrRecoverHomework(id, isDeleted);
         }
 
-        public int HardDeleteHomework(int id)
-        {
-            return _homeworkRepository.HardDeleteHomework(id);
-        }
-
-
         public int DeleteHomework_Theme(int homeworkId, int themeId)
         {
             return _homeworkRepository.DeleteHomework_Theme(homeworkId, themeId);
@@ -101,12 +95,6 @@ namespace EducationSystem.Business
             bool isDeleted = false;
             return _homeworkRepository.DeleteOrRecoverComment(id, isDeleted);
         }
-
-        public int HardDeleteComment(int id)
-        {
-            return _homeworkRepository.HardDeleteComment(id);
-        }
-
 
         public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
         {
@@ -173,11 +161,6 @@ namespace EducationSystem.Business
         {
             bool isDeleted = false;
             return _homeworkRepository.DeleteOrRecoverHomeworkAttempt(id, isDeleted);
-        }
-
-        public int HardDeleteHomeworkAttempt(int id)
-        {
-            return _homeworkRepository.HardDeleteHomeworkAttempt(id);
         }
     }
 }

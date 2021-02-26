@@ -33,11 +33,6 @@ namespace EducationSystem.Business
             return _lessonRepository.DeleteOrRecoverLesson(id, isDeleted);
         }
 
-        public int HardDeleteLesson(int id)
-        {
-            return _lessonRepository.HardDeleteLesson(id);
-        }
-
         public void AddLesson(LessonDto lesson)
         {
             _lessonRepository.AddLesson(lesson);
