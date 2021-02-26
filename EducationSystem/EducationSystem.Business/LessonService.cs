@@ -8,10 +8,10 @@ namespace EducationSystem.Business
 {
     public class LessonService : ILessonService
     {
-        private LessonRepository _lessonRepository;
-        public LessonService()
+        private ILessonRepository _lessonRepository;
+        public LessonService(ILessonRepository lessonRepository)
         {
-            _lessonRepository = new LessonRepository();
+            _lessonRepository = lessonRepository;
         }
         public List<LessonDto> GetLessonsByGroupId(int id)
         {

@@ -8,11 +8,12 @@ namespace EducationSystem.Business
 {
     public class ReportService : IReportService
     {
-        private GroupRepository _groupReportRepository;
-        private PaymentRepository _paymentReportRepository;
-        public ReportService()
+        private IGroupRepository _groupReportRepository;
+        private IPaymentRepository _paymentReportRepository;
+        public ReportService(IGroupRepository groupRepository, IPaymentRepository paymentRepository)
         {
-            _groupReportRepository = new GroupRepository();
+            _groupReportRepository = groupRepository;
+            _paymentReportRepository = paymentRepository;
         }
         public List<UserDto> GetStudentsByIsPaidInPeriod(string period)
         {

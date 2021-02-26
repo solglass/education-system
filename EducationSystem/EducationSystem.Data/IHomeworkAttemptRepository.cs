@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using EducationSystem.Data.Models;
+using System.Collections.Generic;
 
-namespace EducationSystem.Data.Models
+namespace EducationSystem.Data
 {
     public interface IHomeworkAttemptRepository
     {

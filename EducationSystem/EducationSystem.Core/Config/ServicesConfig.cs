@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace EducationSystem.Core.Config
 {
-    class ServicesConfig
+    public static class ServicesConfig
     {
+       
     }
 }

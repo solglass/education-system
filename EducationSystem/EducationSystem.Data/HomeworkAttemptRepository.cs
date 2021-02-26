@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace EducationSystem.Data.Models
+namespace EducationSystem.Data
 {
     public class HomeworkAttemptRepository : IHomeworkAttemptRepository
     {

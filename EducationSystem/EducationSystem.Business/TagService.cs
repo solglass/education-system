@@ -8,10 +8,10 @@ namespace EducationSystem.Business
 {
     public class TagService : ITagService
     {
-        private TagRepository _tagRepository;
-        public TagService()
+        private ITagRepository _tagRepository;
+        public TagService(ITagRepository tagRepository)
         {
-            _tagRepository = new TagRepository();
+            _tagRepository = tagRepository;
         }
         public List<TagDto> GetTags() { return _tagRepository.GetTags(); }
         public TagDto GetTagById(int id) { return _tagRepository.GetTagById(id); }

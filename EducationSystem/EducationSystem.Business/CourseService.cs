@@ -8,17 +8,23 @@ namespace EducationSystem.Business
 {
     public class CourseService : ICourseService
     {
-        private CourseRepository _courseRepo;
-        private TagRepository _tagRepo;
-        private LessonRepository _lessonRepo;
-        private HomeworkRepository _homeworkRepo;
+        private ICourseRepository _courseRepo;
+        private ITagRepository _tagRepo;
+        private ILessonRepository _lessonRepo;
+        private IHomeworkRepository _homeworkRepo;
 
-        public CourseService()
+        public CourseService
+            (
+            ICourseRepository courseRepository, 
+            ITagRepository tagRepository, 
+            ILessonRepository lessonRepository, 
+            IHomeworkRepository homeworkRepository
+            )
         {
-            _courseRepo = new CourseRepository();
-            _tagRepo = new TagRepository();
-            _homeworkRepo = new HomeworkRepository();
-            _lessonRepo = new LessonRepository();
+            _courseRepo = courseRepository;
+            _tagRepo =  tagRepository;
+            _homeworkRepo = homeworkRepository;
+            _lessonRepo = lessonRepository;
         }
 
         public List<CourseDto> GetCourses()

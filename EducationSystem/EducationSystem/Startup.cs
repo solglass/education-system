@@ -1,5 +1,8 @@
+using EducationSystem.API.Config;
 using EducationSystem.API.Middleware;
 using EducationSystem.Core.Authentication;
+using EducationSystem.Core.Config;
+using EducationSystem.Core.Config.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,28 +27,10 @@ namespace EducationSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.RequireHttpsMetadata = false;
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {                           
-                            ValidateIssuer = true,  
-                            ValidIssuer = AuthOptions.ISSUER,
-                            ValidateAudience = true,
-                            ValidAudience = AuthOptions.AUDIENCE,
-                            ValidateLifetime = true,
-                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                            ValidateIssuerSigningKey = true,
-                        };
-                    });
+            services.AuthentificationConfigExtention();
             services.AddControllers();
-            services.AddSwaggerGen(swagger =>
-            {
-                swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "EducationSystem" });
-                swagger.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-            });
-            services.AddSwaggerGenNewtonsoftSupport();
+            services.SwaggerExtention();
+            services.RegistrateServicesConfig();
             services.AddAutoMapper(typeof(Startup));
         }
 

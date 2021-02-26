@@ -9,11 +9,11 @@ namespace EducationSystem.Business
     public class AttachmentService : IAttachmentService
     {
 
-        private AttachmentRepository _attachmentRepository;
+        private IAttachmentRepository _attachmentRepository;
 
-        public AttachmentService()
+        public AttachmentService(IAttachmentRepository attachmentRepository)
         {
-            _attachmentRepository = new AttachmentRepository();
+            _attachmentRepository = attachmentRepository;
         }
 
         public AttachmentDto GetAttachmentById(int id)

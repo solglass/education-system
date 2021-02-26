@@ -8,11 +8,11 @@ namespace EducationSystem.Business
 {
     public class UserService : IUserService
     {
-        private UserRepository _userRepository;
+        private IUserRepository _userRepository;
 
-        public UserService()
+        public UserService(IUserRepository userRepository)
         {
-            _userRepository = new UserRepository();
+            _userRepository = userRepository;
         }
         public List<UserDto> GetUsers()
         {

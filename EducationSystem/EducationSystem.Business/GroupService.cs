@@ -8,11 +8,11 @@ namespace EducationSystem.Business
 {
     public class GroupService : IGroupService
     {
-        private GroupRepository _groupRepository;
+        private IGroupRepository _groupRepository;
 
-        public GroupService()
+        public GroupService(IGroupRepository groupRepository)
         {
-            _groupRepository = new GroupRepository();
+            _groupRepository = groupRepository;
         }
 
         public List<GroupDto> GetGroups()

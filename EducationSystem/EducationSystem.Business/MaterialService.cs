@@ -8,10 +8,10 @@ namespace EducationSystem.Business
 {
     public class MaterialService : IMaterialService
     {
-        private MaterialRepository _materialRepository;
-        public MaterialService()
+        private IMaterialRepository _materialRepository;
+        public MaterialService(IMaterialRepository materialRepository)
         {
-            _materialRepository = new MaterialRepository();
+            _materialRepository = materialRepository;
         }
 
         public List<MaterialDto> GetMaterialsByTagId(int id) { return _materialRepository.GetMaterialsByTagId(id); }

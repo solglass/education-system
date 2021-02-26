@@ -6,12 +6,12 @@ namespace EducationSystem.Business
 {
     public class HomeworkService : IHomeworkService
     {
-        private HomeworkRepository _homeworkRepository;
-        private HomeworkAttemptRepository _homeworkAttemptRepository;
-        public HomeworkService()
+        private IHomeworkRepository _homeworkRepository;
+        private IHomeworkAttemptRepository _homeworkAttemptRepository;
+        public HomeworkService(IHomeworkRepository homeworkRepository, IHomeworkAttemptRepository homeworkAttemptRepository)
         {
-            _homeworkRepository = new HomeworkRepository();
-            _homeworkAttemptRepository = new HomeworkAttemptRepository();
+            _homeworkRepository = homeworkRepository;
+            _homeworkAttemptRepository = homeworkAttemptRepository;
         }
 
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
