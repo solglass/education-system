@@ -11,16 +11,16 @@ namespace EducationSystem.Data.Tests
     [TestFixture]
     public class CourseTests
     {
-        private CourseRepository _courseRepo;
+        private ICourseRepository _courseRepo;
         private int _courseId;
         private List<int> _themeIdList;
         private CourseDto _expectedCourse;
         private List<CourseDto> _coursesFromDb;
 
         [OneTimeSetUp]
-        public void SetUpTest()
+        public void SetUpTest(ICourseRepository courseRepository)
         {
-            _courseRepo = new CourseRepository();
+            _courseRepo = courseRepository;
             _coursesFromDb = new List<CourseDto>();
             _themeIdList = new List<int>();
             _expectedCourse = GetCourseMock(1);

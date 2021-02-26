@@ -17,9 +17,11 @@ namespace EducationSystem
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
+        public Startup()
+        {           
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json");
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -32,6 +34,7 @@ namespace EducationSystem
             services.SwaggerExtention();
             services.RegistrateServicesConfig();
             services.AddAutoMapper(typeof(Startup));
+            services.Configure<AppSettingsConfig>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,14 +9,14 @@ namespace EducationSystem.Data.Tests
     public class ThemeTests
     {
 
-        private CourseRepository _courseRepo;
+        private ICourseRepository _courseRepo;
         private List<int> _themeIdList;
         private List<ThemeDto> _themeFromDb;
         [OneTimeSetUp]
-        public void SetUpTest()
+        public void SetUpTest(ICourseRepository courseRepository)
         {
 
-            _courseRepo = new CourseRepository();
+            _courseRepo = courseRepository;
 
             _themeFromDb = new List<ThemeDto>();
 

@@ -12,10 +12,10 @@ namespace EducationSystem.Business
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private UserRepository _repo;
-        public AuthenticationService()
+        private IUserRepository _repo;
+        public AuthenticationService(IUserRepository userRepository)
         {
-            _repo = new UserRepository();
+            _repo = userRepository;
         }
         public UserDto GetAuthentificatedUser(string login)
         {

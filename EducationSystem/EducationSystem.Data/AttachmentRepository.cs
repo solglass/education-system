@@ -6,16 +6,19 @@ using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using EducationSystem.Core.Enums;
+using EducationSystem.Core.Config;
+using Microsoft.Extensions.Options;
 
 namespace EducationSystem.Data
 {
-    public class AttachmentRepository : IAttachmentRepository
+    public class AttachmentRepository : BaseRepository, IAttachmentRepository
     {
-        private SqlConnection _connection;
-
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
-        public AttachmentRepository()
+        IHomeworkRepository _homeworkrepo;
+        IHomeworkAttemptRepository _homeworkAttRepo;
+        public AttachmentRepository(IOptions<AppSettingsConfig> options, IHomeworkRepository homeworkRepository, IHomeworkAttemptRepository homeworkAttemptRepository): base(options)
         {
+            _homeworkrepo = homeworkRepository;
+            _homeworkAttRepo = homeworkAttemptRepository;
             _connection = new SqlConnection(_connectionString);
         }
 
@@ -74,27 +77,26 @@ namespace EducationSystem.Data
         public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
         {
             int attachmentId = AddAttachment(attachmentDto);
-            HomeworkRepository homeworkrepo = new HomeworkRepository();
+            
             Comment_AttachmentDto comment_AttachmentDto = new Comment_AttachmentDto
             {
                 AttachmentId = attachmentId,
                 CommentId = commentId
             };
-            homeworkrepo.AddComment_Attachment(comment_AttachmentDto);
+            _homeworkrepo.AddComment_Attachment(comment_AttachmentDto);
             return attachmentId;
 
         }
 
         public int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId)
         {
-            int attachmentId = AddAttachment(attachmentDto);
-            HomeworkAttemptRepository homeworkAttRepo = new HomeworkAttemptRepository();
+            int attachmentId = AddAttachment(attachmentDto);            
             HomeworkAttempt_AttachmentDto homework_AttachmentDto = new HomeworkAttempt_AttachmentDto
             {
                 AttachmentId = attachmentId,
                 HomeworkAttemptId = homeworkAttemptId
             };
-            homeworkAttRepo.AddHomeworkAttempt_Attachment(homework_AttachmentDto);
+            _homeworkAttRepo.AddHomeworkAttempt_Attachment(homework_AttachmentDto);
             return attachmentId;
 
         }

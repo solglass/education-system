@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +13,7 @@ namespace EducationSystem.Data
 {
     public class HomeworkRepository : BaseRepository, IHomeworkRepository
     {
-        public HomeworkRepository()
+        public HomeworkRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }

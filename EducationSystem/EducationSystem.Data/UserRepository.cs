@@ -1,5 +1,7 @@
 using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Data.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +13,7 @@ namespace EducationSystem.Data
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
-        public UserRepository()
+        public UserRepository(IOptions<AppSettingsConfig> options): base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }

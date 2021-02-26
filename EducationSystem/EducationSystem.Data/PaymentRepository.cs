@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Data.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -7,14 +9,9 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class PaymentRepository : IPaymentRepository
+    public class PaymentRepository : BaseRepository,IPaymentRepository
     {
-
-        private SqlConnection _connection;
-
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
-
-        public PaymentRepository()
+        public PaymentRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }
