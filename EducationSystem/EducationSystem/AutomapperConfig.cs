@@ -23,6 +23,10 @@ namespace EducationSystem.API
             CreateMap<HomeworkDto, HomeworkOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)));
+            CreateMap<HomeworkDto, HomeworkSearchOutputModel>()
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)))
+                .ForMember(dest=> dest.GroupId, opts => opts.MapFrom(src => src.Group.Id));
             CreateMap<GroupInputModel, GroupDto>();
             CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))

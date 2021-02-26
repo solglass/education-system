@@ -70,13 +70,13 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/homework/group/2
         [HttpGet("group/{groupId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByGroupId(int groupId)
+        public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByGroupId(int groupId)
         {
-            var result = new List<HomeworkOutputModel>();
+            var result = new List<HomeworkSearchOutputModel>();
             var dtos = _homeworkService.GetHomeworksByGroupId(groupId);
             foreach(var dto in dtos)
             {
-                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
+                result.Add(_mapper.Map<HomeworkSearchOutputModel>(dto));
             }                
             return Ok(result);
         }
@@ -84,13 +84,13 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/homework/tag/2
         [HttpGet("tag/{tagId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByTagId(int tagId)
+        public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByTagId(int tagId)
         {
-            var result = new List<HomeworkOutputModel>();
+            var result = new List<HomeworkSearchOutputModel>();
             var dtos = _homeworkService.GetHomeworksByTagId(tagId);
             foreach (var dto in dtos)
             {
-                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
+                result.Add(_mapper.Map<HomeworkSearchOutputModel>(dto));
             }
             return Ok(result);
         }
@@ -98,13 +98,13 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/homework/theme/2
         [HttpGet("theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByThemeId(int themeId)
+        public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByThemeId(int themeId)
         {
-            var result = new List<HomeworkOutputModel>();
+            var result = new List<HomeworkSearchOutputModel>();
             var dtos = _homeworkService.GetHomeworksByThemeId(themeId);
             foreach (var dto in dtos)
             {
-                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
+                result.Add(_mapper.Map<HomeworkSearchOutputModel>(dto));
             }
             return Ok(result);
         }

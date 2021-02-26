@@ -64,27 +64,62 @@ namespace EducationSystem.Data
             return homeworks;
         }
 
-        public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
-        {           
-            return GetHomeworksByValue(new
-            {
-                groupId = groupId
-            });
-        }
-        public List<HomeworkDto> GetHomeworksByTagId(int tagId)
+        public List<HomeworkDto> SearchHomeworks(int? groupId, int? themeId, int? tagId)
         {
-            return GetHomeworksByValue(new
-            {
-                tagId = tagId
-            });
-        }
-        public List<HomeworkDto> GetHomeworksByThemeId(int themeId)
-        {
-            return GetHomeworksByValue(new
-            {
-                themeId = themeId
-            });
-        }
+            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
+            var tagDictionary = new Dictionary<int, TagDto>();
+            var themeDictionary = new Dictionary<int, ThemeDto>();
+
+            _connection.Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
+                    "dbo.Homework_Search",
+                    (homework, group, tag, theme) =>
+                    {
+                        if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
+                        {
+                            homeworkEntry = homework;
+                            homeworkEntry.Group = group;
+                            homeworkEntry.Tags = new List<TagDto>();
+                            homeworkEntry.Themes = new List<ThemeDto>();
+                            homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
+                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
+                            tagDictionary.Clear();
+                            themeDictionary.Clear();
+                        }
+
+                        if (theme != null)
+                        {
+                            if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
+                            {
+                                themeEntry = theme;
+                                homeworkEntry.Themes.Add(themeEntry);
+                                themeDictionary.Add(themeEntry.Id, themeEntry);
+                            }
+                        }
+                        if (tag != null)
+                        {
+                            if (!tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
+                            {
+                                tagEntry = tag;
+                                tagDictionary.Add(tagEntry.Id, tagEntry);
+                                homeworkEntry.Tags.Add(tagEntry);
+                            }
+                        }
+                        return homeworkEntry;
+                    },
+                    new
+                    {
+                        groupId = groupId,
+                        themeId = themeId,
+                        tagId = tagId
+                    },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
+                .ToList();
+            var homework = new List<HomeworkDto>();
+            homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
+            return homework;
+        }        
 
         public int AddHomework(HomeworkDto homework)
         {
@@ -579,58 +614,5 @@ namespace EducationSystem.Data
                 .ToList();
             return comments;
         }
-        private List<HomeworkDto> GetHomeworksByValue(object value)
-        {
-            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
-            var tagDictionary = new Dictionary<int, TagDto>();
-            var themeDictionary = new Dictionary<int, ThemeDto>();
-
-            _connection.Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
-                    "dbo.Homework_Search",
-                    (homework, group, tag, theme) =>
-                    {
-                        if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
-                        {
-                            homeworkEntry = homework;
-                            homeworkEntry.Group = group;
-                            homeworkEntry.Tags = new List<TagDto>();
-                            homeworkEntry.Themes = new List<ThemeDto>();
-                            homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
-                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
-                            tagDictionary.Clear();
-                            themeDictionary.Clear();
-                        }
-
-                        if (theme != null)
-                        {
-                            if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                            {
-                                themeEntry = theme;
-                                homeworkEntry.Themes.Add(themeEntry);
-                                themeDictionary.Add(themeEntry.Id, themeEntry);
-                            }
-                        }
-                        if (tag != null)
-                        {
-                            if (!tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
-                            {
-                                tagEntry = tag;
-                                tagDictionary.Add(tagEntry.Id, tagEntry);
-                                homeworkEntry.Tags.Add(tagEntry);
-                            }
-                        }
-                        return homeworkEntry;
-                    },
-                    value,
-                    splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                .Distinct()
-                .ToList();
-            var homework = new List<HomeworkDto>();
-            homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
-            return homework;
-        }
-
-
     }
 }
