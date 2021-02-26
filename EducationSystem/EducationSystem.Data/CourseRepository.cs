@@ -211,12 +211,7 @@ namespace EducationSystem.Data
         public int DeleteTheme(int id)
         {
             var result = _connection
-                .Execute("dbo.Theme_Delete",
-                new
-                {
-                    id
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Theme_Delete", new {id}, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
