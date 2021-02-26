@@ -94,7 +94,7 @@ namespace EducationSystem.Data
         public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
         {
             return _connection
-                .Query<FeedbackDto, LessonDto, UnderstandingLevelDto, UserDto, FeedbackDto>(
+                .Query<FeedbackDto, LessonDto, int, UserDto, FeedbackDto>(
                     "dbo.Feedback_Search",
                     (feedback, lesson, understendinglevel, user) =>
                     {
