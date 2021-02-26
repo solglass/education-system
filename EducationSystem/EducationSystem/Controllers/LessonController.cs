@@ -20,16 +20,16 @@ namespace EducationSystem.Controllers
     [Authorize]
     public class LessonController : ControllerBase
     {
-        private LessonRepository _repo;
+        private ILessonRepository _repo;
         private LessonMapper _lessonMapper;
-        private LessonService _lessonService;
+        private ILessonService _lessonService;
         private IMapper _mapper;
 
-        public LessonController(IMapper mapper)
+        public LessonController(IMapper mapper, ILessonRepository lessonRepository, ILessonService lessonService)
         {
-            _repo = new LessonRepository();
+            _repo = lessonRepository;
             _lessonMapper = new LessonMapper();
-            _lessonService = new LessonService();
+            _lessonService = lessonService;
             _mapper = mapper;
         }
 

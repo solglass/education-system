@@ -24,18 +24,18 @@ namespace EducationSystem.API.Controllers
     {
 
 
-        private HomeworkRepository _repo;
+        private IHomeworkRepository _repo;
         private HomeworkMapper _homeworkMapper;
         private HomeworkAttemptMapper _homeworkAttemptMapper;
-        private HomeworkService _homeworkService;
+        private IHomeworkService _homeworkService;
         private IMapper _mapper;
 
-        public HomeworkController(IMapper mapper)
+        public HomeworkController(IMapper mapper, IHomeworkRepository homeworkRepository, IHomeworkService homeworkService)
         {
-            _repo = new HomeworkRepository();
+            _repo = homeworkRepository;
             _homeworkMapper = new HomeworkMapper();
             _homeworkAttemptMapper = new HomeworkAttemptMapper();
-            _homeworkService = new HomeworkService();
+            _homeworkService = homeworkService;
             _mapper = mapper;
         }
 

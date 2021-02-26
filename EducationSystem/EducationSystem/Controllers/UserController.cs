@@ -23,20 +23,21 @@ namespace EducationSystem.Controllers
     public class UserController : ControllerBase
     {
        
-        private PaymentRepository _prepo;
+        private IPaymentRepository _prepo;
         private PaymentMapper _pMapper;
         private UserMapper _userMapper;
         private RoleMapper _roleMapper;
-        private UserService _userService;
+        private IUserService _userService;
         private readonly IMapper _mapper;
 
-        public UserController(IMapper mapper)
+        public UserController(IMapper mapper, IPaymentRepository paymentRepository, IUserService userService)
 
         {
+            _prepo = paymentRepository;
             _mapper = mapper;
             _userMapper = new UserMapper();
             _roleMapper = new RoleMapper();
-            _userService = new UserService();
+            _userService = userService;
         }
 
         // https://localhost:50221/api/user/register

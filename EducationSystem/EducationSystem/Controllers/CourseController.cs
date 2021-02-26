@@ -24,12 +24,12 @@ namespace EducationSystem.API.Controllers
     {
         private CourseMapper _courseMapper;
         private ThemeMapper _themeMapper;
-        private CourseService _courseService;
-        public CourseController()
+        private ICourseService _courseService;
+        public CourseController(ICourseService courseService)
         {
             _courseMapper = new CourseMapper();
             _themeMapper = new ThemeMapper();
-            _courseService = new CourseService();
+            _courseService = courseService;
         }
 
         [HttpGet]
