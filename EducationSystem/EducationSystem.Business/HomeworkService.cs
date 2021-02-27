@@ -15,18 +15,18 @@ namespace EducationSystem.Business
         }
 
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
-        { 
-            return _homeworkRepository.GetHomeworksByGroupId(groupId); 
+        {
+            return _homeworkRepository.SearchHomeworks(groupId, null, null);
         }
 
         public List<HomeworkDto> GetHomeworksByTagId(int tagId)
         {
-            return _homeworkRepository.GetHomeworksByTagId(tagId);
+            return _homeworkRepository.SearchHomeworks(null, null, tagId);
         }
 
         public List<HomeworkDto> GetHomeworksByThemeId(int themeId)
         {
-            return _homeworkRepository.GetHomeworksByThemeId(themeId);
+            return _homeworkRepository.SearchHomeworks(null, themeId, null);
         }
 
         public HomeworkDto GetHomeworkById(int id)
