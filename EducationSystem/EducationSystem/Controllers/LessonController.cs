@@ -272,12 +272,13 @@ namespace EducationSystem.Controllers
             return Ok("Тема урока удалена");
         }
 
-        // https://localhost:44365/api/lesson/attendance/0
-        [HttpGet("attendance/{percent}")]
-        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
-        public ActionResult GetStudentsByPercentOfSkip(int percent)
+        // https://localhost:44365/api/lesson/percent-of-skip/0/by-group/3
+        [HttpGet("percent-of-skip/{percent}/by-group/{groupId}")]
+        [AllowAnonymous]
+        //[Authorize(Roles = "Админ, Преподаватель, Менеджер")]
+        public ActionResult GetStudentsByPercentOfSkip(int percent, int groupId)
         {
-            return Ok(_lessonService.GetStudentByPercentOfSkip(percent));
+            return Ok(_lessonService.GetStudentByPercentOfSkip(percent, groupId));
         }
     }
 }

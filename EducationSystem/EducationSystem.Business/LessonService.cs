@@ -94,9 +94,9 @@ namespace EducationSystem.Business
             return _lessonRepository.GetLessonsByThemeId(themeId);
         }
 
-        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent)
+        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
         {
-            return _lessonRepository.GetStudentByPercentOfSkip(percent);
+            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
         }
     }
 }
