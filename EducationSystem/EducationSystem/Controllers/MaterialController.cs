@@ -69,7 +69,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
-            _service.UpdateMaterial(id, _mapper.ToDto(material));
+            _service.UpdateMaterial(_mapper.ToDto(material));
             return Ok("Данные обновлены");
         }
 

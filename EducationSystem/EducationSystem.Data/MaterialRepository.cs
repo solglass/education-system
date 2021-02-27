@@ -63,7 +63,7 @@ namespace EducationSystem.Data
             return rows;
         }
 
-        public int UpdateMaterial(int id, MaterialDto material)
+        public int UpdateMaterial(MaterialDto material)
         {
             int rows = _connection
                 .Execute("dbo.Material_Update", 
