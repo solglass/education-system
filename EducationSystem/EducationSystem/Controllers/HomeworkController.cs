@@ -45,11 +45,11 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomework([FromBody] HomeworkInputModel homework)
         {
-            var result = _homeworkService.AddHomework(_homeworkMapper.ToDto(homework));
+            var result = _homeworkService.AddHomework(_mapper.Map<HomeworkDto>(homework));
             return Ok(result);
         }
 
-        
+        //todo: the model is not filled in.
         // https://localhost:44365/api/homework/42
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
@@ -59,12 +59,14 @@ namespace EducationSystem.API.Controllers
             return Ok(results);
         }
 
-        [HttpGet("attempts/{id}")]
+        //todo: doesn't work. Error in GetCommentsByHomeworkAttemptId
+        // https://localhost:44365/api/homework/2/attempts
+        [HttpGet("{id}/attempts")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult GetHomeworkAttemptsByHomeworkId(int id)
         {
-            var outputModel = _homeworkAttemptMapper.FromDtos(_repo.GetHomeworkAttemptsByHomeworkId(id));
-            return Ok(outputModel);
+            var result = _homeworkAttemptMapper.FromDtos(_homeworkService.GetHomeworkAttemptsByHomeworkId(id));
+            return Ok(result);
         }
 
         // https://localhost:44365/api/homework/group/2
@@ -74,10 +76,10 @@ namespace EducationSystem.API.Controllers
         {
             var result = new List<HomeworkOutputModel>();
             var dtos = _homeworkService.GetHomeworksByGroupId(groupId);
-            foreach(var dto in dtos)
+            foreach (var dto in dtos)
             {
                 result.Add(_mapper.Map<HomeworkOutputModel>(dto));
-            }                
+            }
             return Ok(result);
         }
 
@@ -109,33 +111,39 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
+        //todo: Automapper doesn't work
         // https://localhost:44365/api/homework/42
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult UpdateHomework(int id, [FromBody] HomeworkDto homework)
+        public ActionResult UpdateHomework(int id, [FromBody] HomeworkUpdateInputModel homework)
         {
-            _repo.UpdateHomework(homework);
-            return Ok("success");
+            var dto = _mapper.Map<HomeworkDto>(homework);
+            dto.Id = id;
+            var result = _homeworkService.UpdateHomework(dto);
+
+            return Ok(result);
         }
 
         // https://localhost:44365/api/homework/42
-        [HttpDelete("homeworkAttempts/{id}")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteHomework(int id)
         {
-            _repo.DeleteHomework(id);
-            return Ok("success");
+            var result = _homeworkService.DeleteHomework(id);
+
+            return Ok(result);
         }
 
-
-
-        // https://localhost:44365/api/homework/homeworkAttempts
-        [HttpPost]
+        // https://localhost:44365/api/homework/2/attempt
+        [HttpPost("{homeworkId}/attempt")]
         [Authorize(Roles = "Студент")]
-        public ActionResult CreateAttempt([FromBody] HomeworkAttemptInputModel inputModel)
+        public ActionResult CreateAttempt(int homeworkId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
-            int result = _homeworkService.AddHomeworkAttempt(_homeworkAttemptMapper.ToDto(inputModel));
-            return Ok("Задание отправлено на проверку");
+            var dto = _homeworkAttemptMapper.ToDto(inputModel);
+            dto.Homework = new HomeworkDto { Id = homeworkId };
+            var result = _homeworkService.AddHomeworkAttempt(_homeworkAttemptMapper.ToDto(inputModel));
+
+            return Ok(result);
         }
 
 

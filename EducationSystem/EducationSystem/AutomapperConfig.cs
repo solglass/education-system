@@ -44,8 +44,15 @@ namespace EducationSystem.API
             CreateMap<HomeworkInputModel, HomeworkDto>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.DeadlineDate)))
-                .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupDto() { Id = src.GroupId }));
+                .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupDto() { Id = src.GroupId }))
+               .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })))
+               .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
 
+            CreateMap<HomeworkUpdateInputModel, HomeworkDto>()
+               .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
+               .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.DeadlineDate)))
+               .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })))
+               .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
         }
     }
 }

@@ -114,7 +114,6 @@ namespace EducationSystem.Data
                     description = homework.Description,
                     startDate = homework.StartDate,
                     deadlineDate = homework.DeadlineDate,
-                    groupId = homework.Group.Id,
                     isOptional = homework.IsOptional
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -497,7 +496,7 @@ namespace EducationSystem.Data
                     }
                     return attemptEntry;
                 },
-                new {id },
+                new {homeworkId = id },
                 splitOn: "id", 
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
@@ -526,7 +525,7 @@ namespace EducationSystem.Data
                     return commentEntry;
                 },
                 new { AttemptId = id },
-                splitOn: "AttachmentType",
+                splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
