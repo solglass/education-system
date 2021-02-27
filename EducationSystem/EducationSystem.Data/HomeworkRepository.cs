@@ -185,7 +185,7 @@ namespace EducationSystem.Data
             //var commentDictionary = new Dictionary<int, CommentDto>();
             var hwAttemptEntry = new HomeworkAttemptDto();
             var hwAttempt = _connection
-                .Query<HomeworkAttemptDto, UserDto,  HomeworkDto, HomeworkAttemptStatusDto, HomeworkAttemptDto>(
+                .Query<HomeworkAttemptDto, UserDto,  HomeworkDto, int, HomeworkAttemptDto>(
                 "dbo.HomeworkAttempt_SelectById",
                 (hwAttempt, user, homework, hwAttemptStatus) =>
                 {
@@ -194,7 +194,7 @@ namespace EducationSystem.Data
                         hwAttemptEntry = hwAttempt;
                         hwAttemptEntry.Author = user;
                         hwAttemptEntry.Homework = homework;
-                        hwAttemptEntry.HomeworkAttemptStatus = hwAttemptStatus;
+                        hwAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus) hwAttemptStatus;
                     }
                     
                     return hwAttemptEntry;
@@ -215,7 +215,7 @@ namespace EducationSystem.Data
                     comment = homeworkAttempt.Comment,
                     userId = homeworkAttempt.Author.Id,
                     homeworkId = homeworkAttempt.Homework.Id,
-                    statusId = homeworkAttempt.HomeworkAttemptStatus.Id
+                    statusId = (int)homeworkAttempt.HomeworkAttemptStatus
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -231,7 +231,7 @@ namespace EducationSystem.Data
                      comment = homeworkAttempt.Comment,
                      author = homeworkAttempt.Author.Id,
                      homework = homeworkAttempt.Homework.Id,
-                     homeworkAttemptStatus = homeworkAttempt.HomeworkAttemptStatus.Id
+                     homeworkAttemptStatus = (int)homeworkAttempt.HomeworkAttemptStatus
                  },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -298,7 +298,7 @@ namespace EducationSystem.Data
 
 
             var comments = _connection
-                .Query<CommentDto, UserDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, CommentDto>(
+                .Query<CommentDto, UserDto, HomeworkAttemptDto, int, CommentDto>(
                     "dbo.Homework_SelectById",
                     (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
                     {
@@ -310,11 +310,11 @@ namespace EducationSystem.Data
                             commentDictionary.Add(commentEntry.Id, commentEntry);
                         }
 
-                        if (homeworkAttempt != null && homeworkAttemptStatus != null && user != null && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
+                        if (homeworkAttempt != null && homeworkAttemptStatus != 0 && user != null && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
                         {
                             homeworkAttemptEntry = homeworkAttempt;
                             homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = homeworkAttemptStatus;
+                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus) homeworkAttemptStatus;
                             commentEntry.HomeworkAttempt = homeworkAttemptEntry;
                             homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
                         }
@@ -343,7 +343,7 @@ namespace EducationSystem.Data
 
 
             var comment = _connection
-                .Query<CommentDto, UserDto, HomeworkAttemptDto, HomeworkAttemptStatusDto, CommentDto>(
+                .Query<CommentDto, UserDto, HomeworkAttemptDto, int, CommentDto>(
                     "dbo.Homework_SelectById",
                     (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
                     {
@@ -355,11 +355,11 @@ namespace EducationSystem.Data
                             commentDictionary.Add(commentEntry.Id, commentEntry);
                         }
 
-                        if (homeworkAttempt != null && homeworkAttemptStatus != null && user != null && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
+                        if (homeworkAttempt != null && homeworkAttemptStatus != 0 && user != null && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
                         {
                             homeworkAttemptEntry = homeworkAttempt;
                             homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = homeworkAttemptStatus;
+                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
                             commentEntry.HomeworkAttempt = homeworkAttemptEntry;
                             homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
                         }
@@ -433,47 +433,7 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int AddHomeworkAttemptStatus(HomeworkAttemptStatusDto homeworkAttemptStatus)
-        {
-            var result = _connection
-                .QuerySingle<int>("dbo.HomeworkAttemptStatus_Add",
-                new
-                {
-                    homeworkAttemptStatus.Name
-                }, 
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-        public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatuses()
-        {
-            var result = _connection
-                 .Query<HomeworkAttemptStatusDto>("dbo.HomeworkAttemptStatus_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return result;
-        }
 
-        public int DeleteHomeworkAttemptStatus(int id)
-        {
-            var result = _connection
-                .Execute("dbo.HomeworkAttemptStatus_Delete",
-                new
-                {
-                    id
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
-        public int HardDeleteHomeworkAttemptStatus(int id)
-        {
-            var result = _connection
-                .Execute("dbo.HomeworkAttemptStatus_HardDelete",
-                new
-                {
-                    id
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
 
 
         public List<Comment_AttachmentDto> GetComment_Attachments()
@@ -519,15 +479,15 @@ namespace EducationSystem.Data
         {
             var hwAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
             var homeworkAttempts = _connection
-                .Query<HomeworkAttemptDto, UserDto, HomeworkAttemptStatusDto, HomeworkAttemptDto>(
+                .Query<HomeworkAttemptDto, UserDto, int, HomeworkAttemptDto>(
                 "dbo.HomeworkAttempt_SelectByHomeworkId",
-                (attempt, user, status) =>
+                (attempt, user, homeworkAttemptStatus) =>
                 {
                     if (!hwAttemptDictionary.TryGetValue(attempt.Id, out HomeworkAttemptDto attemptEntry))
                     {
                         attemptEntry = attempt;
                         attemptEntry.Author = user;
-                        attemptEntry.HomeworkAttemptStatus = status;
+                        attemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus) homeworkAttemptStatus;
                         hwAttemptDictionary.Add(attemptEntry.Id, attemptEntry);
                     }
                     return attemptEntry;
