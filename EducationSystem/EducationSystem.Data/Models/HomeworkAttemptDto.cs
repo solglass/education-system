@@ -33,7 +33,7 @@ namespace EducationSystem.Data.Models
             {
                 return false;
             }
-            if (attemptObj.HomeworkAttemptStatus == null || HomeworkAttemptStatus == null 
+            if (attemptObj.HomeworkAttemptStatus == 0 || HomeworkAttemptStatus == 0 
                 || !attemptObj.HomeworkAttemptStatus.Equals(HomeworkAttemptStatus))
             {
                 return false;
@@ -61,6 +61,10 @@ namespace EducationSystem.Data.Models
                 }
             }
             return true;
+        }
+        public override int GetHashCode()
+        {
+            return Id;
         }
     }
 }

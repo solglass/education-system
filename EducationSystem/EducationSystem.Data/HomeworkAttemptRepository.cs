@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -92,10 +93,10 @@ namespace EducationSystem.Data.Models
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
         {
            var homeworkAttempt = _connection
-          .Query<HomeworkAttemptWithCountDto, HomeworkAttemptStatusDto, HomeworkDto,UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByUserId",
+          .Query<HomeworkAttemptWithCountDto, int, HomeworkDto,UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByUserId",
           (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
           {
-            homeworkAttempt.HomeworkAttemptStatus = homeworkAttemptStatus;
+            homeworkAttempt.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
             homeworkAttempt.Homework = homework;
             homeworkAttempt.Author = author;
             homework.Group = new GroupDto();
@@ -108,10 +109,10 @@ namespace EducationSystem.Data.Models
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
         {
           var homeworkAttempt = _connection
-          .Query<HomeworkAttemptWithCountDto, HomeworkAttemptStatusDto, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByGroupIdAndStatusId",
+          .Query<HomeworkAttemptWithCountDto, int, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByGroupIdAndStatusId",
           (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
           {
-            homeworkAttempt.HomeworkAttemptStatus = homeworkAttemptStatus;
+            homeworkAttempt.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
             homeworkAttempt.Homework = homework;
             homeworkAttempt.Author = author;
             homework.Group = new GroupDto();

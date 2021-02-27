@@ -214,7 +214,7 @@ namespace EducationSystem.API.Controllers
           return Ok(outputModel);
         }
         
-        [HttpGet("homework/attempts/by-grop/{statusId}/{groupId}")]
+        [HttpGet("homework/attempts/by-group/{statusId}/{groupId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult GetHomeworkAttemptByStatusIdAndGroupId(int statusId, int groupId)
         {

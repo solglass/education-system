@@ -65,8 +65,8 @@ namespace EducationSystem.API.Mappers
             StatusId = dto.StatusId,
             CountComments = dto.CountComments,
             CountAttachments = dto.CountAttachments,
-            HomeworkAttemptStatus = new HomeworkAttemptStatusOutputModel { Id = dto.HomeworkAttemptStatus.Id, Name = dto.HomeworkAttemptStatus.Name },
-            Homework = new HomeworkOutputModel { Id = dto.Homework.Id, Description = dto.Homework.Description, Group = new GroupOutputModel { Id = dto.Homework.Group.Id } },
+            HomeworkAttemptStatus = FriendlyNames.GetFriendlyHomeworkAttemptStatusName(dto.HomeworkAttemptStatus),
+              Homework = new HomeworkOutputModel { Id = dto.Homework.Id, Description = dto.Homework.Description, Group = new GroupOutputModel { Id = dto.Homework.Group.Id } },
             AuthorAttachment = new AuthorOutputModel { Id = dto.Author.Id, FirstName = dto.Author.FirstName, LastName = dto.Author.LastName, UserPic = dto.Author.UserPic }
             
           };
