@@ -38,6 +38,7 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>();
+            CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
         }
     }
 }
