@@ -90,7 +90,6 @@
     <Folder Include="StoredProcedures\TeacherGroup" />
     <Folder Include="StoredProcedures\Theme" />
     <Folder Include="StoredProcedures\Theme_Tag" />
-    <Folder Include="StoredProcedures\UnderstandingLevel" />
     <Folder Include="StoredProcedures\User" />
     <Folder Include="StoredProcedures\User_Role" />
     <Folder Include="Tables" />
@@ -124,7 +123,6 @@
     <Build Include="StoredProcedures\Homework\dbo.Homework_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Add.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Delete.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectAll.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectById.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo.HomeworkAttemptStatus_Add.sql" />
@@ -261,18 +259,16 @@
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectAll.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByID.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_Update.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_Add.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_Delete.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_SelectAll.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_SelectByID.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_Update.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Add.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Delete.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_SelectAll.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_SelectById.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_SelectByGroupIdAndStatusId.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_SelectByUserId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPercentOfSkip.sql" />
+    <Build Include="StoredProcedures\Group_Material\Group_Material_SelectById.sql" />
   </ItemGroup>
 </Project>
