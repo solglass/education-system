@@ -33,19 +33,18 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/material/340/group
         [HttpGet("{id}/group")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetmaterialsByGroupId(int id)
+        public ActionResult GetMaterialsByGroupId(int id)
         {
-            var result = _mapper.FromDtos(_service.GetMaterialsByGroupId(id));
-            return Ok(result);
+            return Ok (_mapper.FromDtos(_service.GetMaterialsByGroupId(id)));
+            
         }
 
         // https://localhost:44365/api/material/340/tag
         [HttpGet("{id}/tag")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetmaterialsByTagId(int id)
+        public ActionResult GetMaterialsByTagId(int id)
         {
-            var result =_mapper.FromDtos( _service.GetMaterialsByTagId(id));
-            return Ok(result);
+            return Ok (_mapper.FromDtos( _service.GetMaterialsByTagId(id)));
         }
 
         // https://localhost:44365/api/material/2
@@ -53,36 +52,34 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialById(int id)
         {
-            var course = _service.GetMaterialById(id);
-            var result = _mapper.FromDto(course);
-            return Ok(result);
+            return Ok(_mapper.FromDto(_service.GetMaterialById(id)));
         }
 
-        [HttpPost("new-material")]
+        // https://localhost:44365/api/material
+        [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
-            var newMaterial = _mapper.ToDto(materialInputModel);
-            _service.AddMaterial(newMaterial);
+            _service.AddMaterial(_mapper.ToDto(materialInputModel));
             return Ok("Материалы добавлены");
         }
 
-        // https://localhost:50221/material/2
+        // https://localhost:44365/material/2
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
             _service.UpdateMaterial(id, _mapper.ToDto(material));
-            return Ok("success");
+            return Ok("Данные обновлены");
         }
 
-        // https://localhost:50221/api/material/2
+        // https://localhost:44365/api/material/2
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteMaterial(int id)
         {
             _service.DeleteMaterialById(id);
-            return Ok("success");
+            return Ok("Материалы удалены");
         }
     }
 }
