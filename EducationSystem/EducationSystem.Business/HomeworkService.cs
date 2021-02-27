@@ -15,18 +15,18 @@ namespace EducationSystem.Business
         }
 
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
-        { 
-            return _homeworkRepository.GetHomeworksByGroupId(groupId); 
+        {
+            return _homeworkRepository.SearchHomeworks(groupId, null, null);
         }
 
         public List<HomeworkDto> GetHomeworksByTagId(int tagId)
         {
-            return _homeworkRepository.GetHomeworksByTagId(tagId);
+            return _homeworkRepository.SearchHomeworks(null, null, tagId);
         }
 
         public List<HomeworkDto> GetHomeworksByThemeId(int themeId)
         {
-            return _homeworkRepository.GetHomeworksByThemeId(themeId);
+            return _homeworkRepository.SearchHomeworks(null, themeId, null);
         }
 
         public HomeworkDto GetHomeworkById(int id)
@@ -117,26 +117,6 @@ namespace EducationSystem.Business
         }
 
 
-        public List<HomeworkAttemptDto> GetHomeworkAttemptsAll()
-        {
-            var dtos = _homeworkRepository.GetHomeworkAttempts();
-
-            foreach (var item in dtos)
-            {
-                item.Comments = _homeworkRepository.GetCommentsByHomeworkAttemptId(item.Id);
-
-                // check comments and then
-                foreach (var comment in item.Comments)
-                {
-                    //comment.Attachments = _homeworkRepository.GetAttachmentsByCommentId
-                }
-
-                item.Attachments = _homeworkRepository.GetAttachmentsByHomeworkAttemptId(item.Id);
-            }
-
-            return dtos;
-        }
-
         public int AddHomeworkAttempt(HomeworkAttemptDto homeworkAttempt)
         {
             return _homeworkRepository.AddHomeworkAttempt(homeworkAttempt);
@@ -162,5 +142,17 @@ namespace EducationSystem.Business
             bool isDeleted = false;
             return _homeworkRepository.DeleteOrRecoverHomeworkAttempt(id, isDeleted);
         }
+        public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
+        {
+          var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByUserId(id);
+        
+          return dtos;
+        }
+        public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
+        {
+          var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
+        
+          return dtos;
+        }
     }
 }

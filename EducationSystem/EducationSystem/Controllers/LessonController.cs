@@ -97,7 +97,7 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/lesson/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult UpdateLesson(int id,[FromBody]LessonDto lessonDto)
+        public ActionResult UpdateLesson(int id, [FromBody] LessonDto lessonDto)
         {
             _repo.UpdateLesson(lessonDto);
             return Ok("Урок обновлён");
@@ -133,7 +133,7 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/feedback/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult UpdateFeedback(int id,[FromBody]FeedbackDto feedbackDto)
+        public ActionResult UpdateFeedback(int id, [FromBody] FeedbackDto feedbackDto)
         {
             _repo.UpdateFeedback(feedbackDto);
             return Ok("Отзыв обновлён");
@@ -148,57 +148,12 @@ namespace EducationSystem.Controllers
             return Ok("Отзыв удалён");
         }
 
-        // https://localhost:50221/api/understandingLevel/
-        [HttpGet]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult GetUnderstandingLevels()
-        {
-            var result = _lessonService.GetUnderstandingLevels();
-            return Ok(result);
-        }
-
-        // https://localhost:50221/api/understandingLevel/3
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult GetUnderstandingLevelById(int id)
-        {
-            var result = _lessonService.GetUnderstandingLevelById(id);
-            return Ok(result);
-        }
-
-        // https://localhost:50221/api/understandingLevel/
-        [HttpPost]
-        [Authorize(Roles = "Админ, Студент")]
-        public ActionResult AddNewUnderstandingLevel(UnderstandingLevelDto understandingLevel)
-        {
-            _repo.AddUnderstandingLevel(understandingLevel);
-            return Ok("Сложность добавлена");
-        }
-
-        // https://localhost:50221/api/understandingLevel/5
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Админ, Студент")]
-        public ActionResult UpdateUnderstandingLevel(int id,[FromBody]UnderstandingLevelDto understandingLevelDto)
-        {
-            _repo.UpdateUnderstandingLevel(understandingLevelDto);
-            return Ok("Сложность обновлена");
-        }
-
-        // https://localhost:50221/api/UnderstandingLevel/3
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Студент")]
-        public ActionResult DeleteUnderstandingLevel(int id)
-        {
-            _lessonService.DeleteUnderstandingLevel(id);
-            return Ok("Сложность удалена");
-        }
-
         // https://localhost:50221/api/attendance/
         [HttpGet]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult GetAttendances()
         {
-            var result =_lessonService.GetAttendances();
+            var result = _lessonService.GetAttendances();
             return Ok(result);
         }
 
@@ -230,8 +185,8 @@ namespace EducationSystem.Controllers
         /// <returns>Updated rows.</returns>
         [HttpPut("{lessonId}/Attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult<int> UpdateAttendance(int lessonId, int attendanceId, [FromBody]AttendanceUpdateInputModel attendance)
-        {            
+        public ActionResult<int> UpdateAttendance(int lessonId, int attendanceId, [FromBody] AttendanceUpdateInputModel attendance)
+        {
             return Ok(_lessonService.UpdateAttendance(_mapper.Map<AttendanceDto>(attendance)));
         }
 
@@ -250,14 +205,14 @@ namespace EducationSystem.Controllers
         /// <param name="id">The identifier of the theme that we want to see all its lessons.</param>
         /// <returns>The list of lessonOutputModel.</returns>
         [HttpGet("Theme/{id}/lessons")]
-       // [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
+        // [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int id)
         {
             var lessons = _mapper.Map<List<LessonOutputModel>>(_lessonService.GetLessonsByThemeId(id));
             return Ok(lessons);
-              
+
         }
-        
+
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpGet("{id}")]
@@ -277,7 +232,7 @@ namespace EducationSystem.Controllers
             return Ok("Тема урока добавлена");
         }
 
-        
+
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpDelete("{id}")]
@@ -286,6 +241,16 @@ namespace EducationSystem.Controllers
         {
             _lessonService.DeleteAttendance(id);
             return Ok("Тема урока удалена");
+        }
+
+        // https://localhost:44365/api/lesson/percent-of-skip/0/by-group/3
+        [HttpGet("percent-of-skip/{percent}/by-group/{groupId}")]
+        [AllowAnonymous]
+        //[Authorize(Roles = "Админ, Преподаватель, Менеджер")]
+        public ActionResult GetStudentsByPercentOfSkip(int percent, int groupId)
+        {
+            return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
+            //return Ok(_lessonService.GetStudentByPercentOfSkip(percent, groupId));
         }
     }
 }

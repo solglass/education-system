@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
@@ -49,7 +49,7 @@ namespace EducationSystem.API.Controllers
             return Ok("Задание добавлено");
         }
 
-
+        
         // https://localhost:44365/api/homework/42
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
@@ -67,45 +67,33 @@ namespace EducationSystem.API.Controllers
             return Ok(outputModel);
         }
 
-        // https://localhost:44365/api/homework/group/2
-        [HttpGet("group/{groupId}")]
+        // https://localhost:44365/api/homework/by-group/2
+        [HttpGet("by-group/{groupId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByGroupId(int groupId)
+        public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByGroupId(int groupId)
         {
-            var result = new List<HomeworkOutputModel>();
-            var dtos = _homeworkService.GetHomeworksByGroupId(groupId);
-            foreach (var dto in dtos)
-            {
-                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
-            }
+            var result = _mapper.Map<List<HomeworkSearchOutputModel>>(_homeworkService.GetHomeworksByGroupId(groupId));
+                      
             return Ok(result);
         }
 
-        // https://localhost:44365/api/homework/tag/2
-        [HttpGet("tag/{tagId}")]
+        // https://localhost:44365/api/homework/by-tag/2
+        [HttpGet("by-tag/{tagId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByTagId(int tagId)
+        public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByTagId(int tagId)
         {
-            var result = new List<HomeworkOutputModel>();
-            var dtos = _homeworkService.GetHomeworksByTagId(tagId);
-            foreach (var dto in dtos)
-            {
-                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
-            }
+            var result = _mapper.Map<List<HomeworkSearchOutputModel>>(_homeworkService.GetHomeworksByTagId(tagId));
+            
             return Ok(result);
         }
 
-        // https://localhost:44365/api/homework/theme/2
-        [HttpGet("theme/{themeId}")]
+        // https://localhost:44365/api/homework/by-theme/2
+        [HttpGet("by-theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkOutputModel>> GetHomewroksByThemeId(int themeId)
+        public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByThemeId(int themeId)
         {
-            var result = new List<HomeworkOutputModel>();
-            var dtos = _homeworkService.GetHomeworksByThemeId(themeId);
-            foreach (var dto in dtos)
-            {
-                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
-            }
+            var result = _mapper.Map<List<HomeworkSearchOutputModel>>(_homeworkService.GetHomeworksByThemeId(themeId));
+
             return Ok(result);
         }
 
@@ -118,31 +106,7 @@ namespace EducationSystem.API.Controllers
             return Ok("success");
         }
 
-        // https://localhost:44365/api/homework/id
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult DeleteHomework(int id)
-        {
-            var result = _homeworkService.DeleteHomework(id);
-            if (result == 1)
-                return Ok($"Домашняя работа #{id} удалена!");
-            else
-                return Problem($"Ошибка! Не удалось удалить домашнюю работу #{id}!");
-        }
-
-        // https://localhost:44365/api/homework/id/recovery
-        [HttpPut("{id}/recovery")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult RecoverHomework(int id)
-        {
-            var result = _homeworkService.RecoverHomework(id);
-            if (result == 1)
-                return Ok($"Домашняя работа #{id} восстановлена!");
-            else
-                return Problem($"Ошибка! Не удалось восстановить домашнюю работу #{id}!");
-        }
-
-
+    
 
         // https://localhost:44365/api/homework/homeworkAttempts
         [HttpPost]
@@ -153,39 +117,6 @@ namespace EducationSystem.API.Controllers
             return Ok("Задание отправлено на проверку");
         }
 
-
-        // https://localhost:44365/api/homework/homeworkAttempts
-        [HttpGet("homeworkAttempts")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetHomeworkAttempts()
-        {
-            var results = _homeworkService.GetHomeworkAttemptsAll();
-            return Ok(results);
-        }
-
-        // https://localhost:44365/api/homework/homeworkAttempts/42
-        [HttpDelete("homeworkAttempts/{id}")]
-        [Authorize(Roles = "Админ, Студент")]
-        public ActionResult DeleteHomeworkAttempt(int id)
-        {
-            var result = _homeworkService.DeleteHomeworkAttempt(id);
-            if (result == 1)
-                return Ok($"Решение #{id} удалено!");
-            else
-                return Problem($"Ошибка! Не удалось удалить решение #{id}!");
-        }
-
-        // https://localhost:44365/api/homework/homeworkAttempts/id/recovery
-        [HttpPut("homeworkAttempts/{id}/recovery")]
-        [Authorize(Roles = "Админ, Студент")]
-        public ActionResult RecoverHomeworkAttempt(int id)
-        {
-            var result = _homeworkService.RecoverHomeworkAttempt(id);
-            if (result == 1)
-                return Ok($"Решение #{id} восстановлено!");
-            else
-                return Problem($"Ошибка! Не удалось восстановить решение #{id}!");
-        }
 
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpGet("homeworkAttempts/{id}")]
@@ -204,6 +135,7 @@ namespace EducationSystem.API.Controllers
             _homeworkService.UpdateHomeworkAttempt(_homeworkAttemptMapper.ToDto(inputModel));
             return Ok("Изменения сохранены");
         }
+
        
         //https://localhost:44365/api/homework/comment
         [HttpPost]
@@ -221,30 +153,6 @@ namespace EducationSystem.API.Controllers
         {
             var results = _repo.GetComments();
             return Ok(results);
-        }
-
-        // https://localhost:44365/api/comments/id
-        [HttpDelete("comments/{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult DeleteComment(int id)
-        {
-            var result = _homeworkService.DeleteComment(id);
-            if (result == 1)
-                return Ok($"Комментарий #{id} удален!");
-            else
-                return Problem($"Ошибка! Не удалось удалить комментарий #{id}!");
-        }
-
-        // https://localhost:44365/api/comments/id/recovery
-        [HttpPut("comments/{id}/recovery")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult RecoverComment(int id)
-        {
-            var result = _homeworkService.RecoverComment(id);
-            if (result == 1)
-                return Ok($"Комментарий #{id} восстановлен!");
-            else
-                return Problem($"Ошибка! Не удалось восстановить комментарий #{id}!");
         }
 
         // https://localhost:44365/api/homework/comments/42
@@ -287,15 +195,108 @@ namespace EducationSystem.API.Controllers
         [HttpDelete("homeworkAttempt/{homeworkAttemptId}/attachment/{attachmentId}")]
         public ActionResult DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
         {
-            var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId, attachmentId);
+            var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId,attachmentId);
             return Ok(results);
         }
+        
+        // https://localhost:44365/api/homework/id
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult DeleteHomework(int id)
+        {
+            var result = _homeworkService.DeleteHomework(id);
+            if (result == 1)
+                return Ok($"Домашняя работа #{id} удалена!");
+            else
+                return Problem($"Ошибка! Не удалось удалить домашнюю работу #{id}!");
+        }
+
+        // https://localhost:44365/api/homework/id/recovery
+        [HttpPut("{id}/recovery")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult RecoverHomework(int id)
+        {
+            var result = _homeworkService.RecoverHomework(id);
+            if (result == 1)
+                return Ok($"Домашняя работа #{id} восстановлена!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить домашнюю работу #{id}!");
+        }
+
+
+       
+
+        // https://localhost:44365/api/homework/homeworkAttempts/42
+        [HttpDelete("homeworkAttempts/{id}")]
+        [Authorize(Roles = "Админ, Студент")]
+        public ActionResult DeleteHomeworkAttempt(int id)
+        {
+            var result = _homeworkService.DeleteHomeworkAttempt(id);
+            if (result == 1)
+                return Ok($"Решение #{id} удалено!");
+            else
+                return Problem($"Ошибка! Не удалось удалить решение #{id}!");
+        }
+
+        // https://localhost:44365/api/homework/homeworkAttempts/id/recovery
+        [HttpPut("homeworkAttempts/{id}/recovery")]
+        [Authorize(Roles = "Админ, Студент")]
+        public ActionResult RecoverHomeworkAttempt(int id)
+        {
+            var result = _homeworkService.RecoverHomeworkAttempt(id);
+            if (result == 1)
+                return Ok($"Решение #{id} восстановлено!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить решение #{id}!");
+        }
+
+      
+        // https://localhost:44365/api/comments/id
+        [HttpDelete("comments/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult DeleteComment(int id)
+        {
+            var result = _homeworkService.DeleteComment(id);
+            if (result == 1)
+                return Ok($"Комментарий #{id} удален!");
+            else
+                return Problem($"Ошибка! Не удалось удалить комментарий #{id}!");
+        }
+
+        // https://localhost:44365/api/comments/id/recovery
+        [HttpPut("comments/{id}/recovery")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult RecoverComment(int id)
+        {
+            var result = _homeworkService.RecoverComment(id);
+            if (result == 1)
+                return Ok($"Комментарий #{id} восстановлен!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить комментарий #{id}!");
+        }
+
+ 
         // https://localhost:44365/api/homework/3/theme/1
         [HttpPost("homework/{homeworkId}/theme/{themeId}")]
         public ActionResult AddHomeworkTheme(int homeworkId, int themeId)
         {
-            var results = _homeworkService.AddHomework_Theme(homeworkId, themeId);
+            var results = _homeworkService.AddHomework_Theme(homeworkId, themeId); 
             return Ok(results);
+        }
+        [HttpGet("homework/attempts/by-user/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult GetHomeworkAttemptsByUserId(int id)
+        {
+          var outputModel = _homeworkAttemptMapper.FromDtos(_homeworkService.GetHomeworkAttemptsByUserId(id));
+          return Ok(outputModel);
+        }
+        
+        [HttpGet("homework/attempts/by-grop/{statusId}/{groupId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult GetHomeworkAttemptByStatusIdAndGroupId(int statusId, int groupId)
+        {
+          var outputModel = _homeworkAttemptMapper.FromDtos(_homeworkService.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId));
+          return Ok(outputModel);
         }
     }
 

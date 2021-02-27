@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -90,11 +90,11 @@
     <Folder Include="StoredProcedures\TeacherGroup" />
     <Folder Include="StoredProcedures\Theme" />
     <Folder Include="StoredProcedures\Theme_Tag" />
-    <Folder Include="StoredProcedures\UnderstandingLevel" />
     <Folder Include="StoredProcedures\User" />
     <Folder Include="StoredProcedures\User_Role" />
     <Folder Include="Tables" />
     <Folder Include="Scripts" />
+    <Folder Include="StoredProcedures\Student" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
@@ -119,7 +119,6 @@
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Add.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectAll.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectById.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttemptStatus\dbo.HomeworkAttemptStatus_Add.sql" />
@@ -248,11 +247,6 @@
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectAll.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByID.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_Update.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_Add.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_Delete.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_SelectAll.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_SelectByID.sql" />
-    <Build Include="StoredProcedures\UnderstandingLevel\dbo.UnderstandingLevel_Update.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Add.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_Delete.sql" />
     <Build Include="StoredProcedures\Role\dbo.Role_SelectAll.sql" />
@@ -271,7 +265,11 @@
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_DeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_DeleteOrRecover.sql" />
     <Build Include="StoredProcedures\User\dbo.User_DeleteOrRecover.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_SelectByGroupIdAndStatusId.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_SelectByUserId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Student\Student_SelectByPercentOfSkip.sql" />
+    <Build Include="StoredProcedures\Group_Material\Group_Material_SelectById.sql" />
   </ItemGroup>
 </Project>
