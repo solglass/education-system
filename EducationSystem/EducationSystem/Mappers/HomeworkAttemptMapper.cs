@@ -60,7 +60,6 @@ namespace EducationSystem.API.Mappers
           {
             Id = dto.Id,
             Comment = dto.Comment,
-            IsDeleted = dto.IsDeleted,
             StatusId = dto.StatusId,
             CountComments = dto.CountComments,
             CountAttachments = dto.CountAttachments,

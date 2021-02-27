@@ -45,8 +45,8 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomework([FromBody] HomeworkInputModel homework)
         {
-            _homeworkService.AddHomework(_homeworkMapper.ToDto(homework));
-            return Ok("Задание добавлено");
+            var result = _homeworkService.AddHomework(_homeworkMapper.ToDto(homework));
+            return Ok(result);
         }
 
         
@@ -55,11 +55,11 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult GetHomeworkById(int id)
         {
-            var results = _repo.GetHomeworkById(id);
+            var results = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(id));
             return Ok(results);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("attempts/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult GetHomeworkAttemptsByHomeworkId(int id)
         {

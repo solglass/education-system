@@ -33,7 +33,8 @@ namespace EducationSystem.Business
 
         public HomeworkDto GetHomeworkById(int id)
         {
-            return _homeworkRepository.GetHomeworkById(id);
+            var result = _homeworkRepository.GetHomeworkById(id);
+            return result;
         }
 
         public int UpdateHomework(HomeworkDto homeworkDto)
