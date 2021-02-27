@@ -64,15 +64,6 @@ namespace EducationSystem.Business
         {
             return _homeworkRepository.DeleteHomework_Theme(homeworkId, themeId);
         }
-        public List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatuses()
-        {
-            return _homeworkRepository.GetHomeworkAttemptStatuses();
-        }
-
-        public int DeleteHomeworkAttemptStatus(int id)
-        {
-            return _homeworkRepository.DeleteHomeworkAttemptStatus(id);
-        }
 
         public List<CommentDto> GetComments()
         {

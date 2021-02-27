@@ -173,24 +173,7 @@ namespace EducationSystem.API.Controllers
             return Ok(results);
         }
 
-        // https://localhost:44365/api/homework/HomeworkAttemptStatus
-        [HttpGet("HomeworkAttemptStatus")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetHomeworkAttemptStatuses()
-        {
-            var results = _repo.GetHomeworkAttemptStatuses();
-            return Ok(results);
-        }
-
-        // https://localhost:44365/api/homework/HomeworkAttemptStatus/42
-        [HttpDelete("HomeworkAttemptStatus/{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult DeleteHomeworkAttemptStatus(int id)
-        {
-            var results = _repo.DeleteHomeworkAttemptStatus(id);
-            return Ok(results);
-        }
-
+        
         // https://localhost:44365/api/homeworkAttempt/3/attachment/1
         [HttpDelete("homeworkAttempt/{homeworkAttemptId}/attachment/{attachmentId}")]
         public ActionResult DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
