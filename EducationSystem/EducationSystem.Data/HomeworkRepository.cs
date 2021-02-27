@@ -156,18 +156,19 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int DeleteHomework(int id)
+        public int DeleteOrRecoverHomework(int id, bool isDeleted)
         {
             var result = _connection
-                .Execute("dbo.Homework_Delete",
+                .Execute("dbo.Homework_DeleteOrRecover",
                 new
                 {
-                    id
+                    id,
+                    isDeleted
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        
+
         public int HardDeleteHomework(int id)
         {
             var result = _connection
@@ -237,14 +238,18 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int DeleteHomeworkAttempt(int id)
+        public int DeleteOrRecoverHomeworkAttempt(int id, bool isDeleted)
         {
             var result = _connection
-                .Execute("dbo.HomeworkAttempt_Delete",
-                new { id },
+                .Execute("dbo.HomeworkAttempt_DeleteOrRecover",
+                new { 
+                    id,
+                    isDeleted
+                    },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
         public int HardDeleteHomeworkAttempt(int id)
         {
             var result = _connection
@@ -267,17 +272,21 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
             return result;
         }
-        public int DeleteComment(int id)
+
+
+        public int DeleteOrRecoverComment(int id, bool isDeleted)
         {
             var result = _connection
-                 .Execute("dbo.Comment_Delete",
+                 .Execute("dbo.Comment_DeleteOrRecover",
                  new
                  {
-                     id
+                     id,
+                     isDeleted
                  },
                  commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
         public int HardDeleteComment(int id)
         {
             var result = _connection

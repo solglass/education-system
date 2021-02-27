@@ -1,6 +1,6 @@
 ﻿using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
-using EducationSystem.Core.Enums;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -65,7 +65,7 @@ namespace EducationSystem.API.Mappers
             StatusId = dto.StatusId,
             CountComments = dto.CountComments,
             CountAttachments = dto.CountAttachments,
-            HomeworkAttemptStatus = FriendlyNames.GetFriendlyHomeworkAttemptStatusName(dto.HomeworkAttemptStatus),
+            HomeworkAttemptStatus = FriendlyNames.GetFriendlyHomeworkAttemptStatusName(dto.HomeworkAttemptStatus),
               Homework = new HomeworkOutputModel { Id = dto.Homework.Id, Description = dto.Homework.Description, Group = new GroupOutputModel { Id = dto.Homework.Group.Id } },
             AuthorAttachment = new AuthorOutputModel { Id = dto.Author.Id, FirstName = dto.Author.FirstName, LastName = dto.Author.LastName, UserPic = dto.Author.UserPic }
             
