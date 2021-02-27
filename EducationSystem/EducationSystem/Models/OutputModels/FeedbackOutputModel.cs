@@ -11,7 +11,7 @@ namespace EducationSystem.API.Models.OutputModels
         public int UserID { get; set; }
         public string Messege { get; set; }
         public int LessonID { get; set; }
-        public int UnderstandingLevelID { get; set; }
+        public String UnderstandingLevel { get; set; }
        
     }
 }
