@@ -40,7 +40,7 @@ namespace EducationSystem.API.Mappers
             {
                 Id = attachmentDto.Id,
                 Path = attachmentDto.Path,
-                AttachmentType = attachmentDto.AttachmentType
+                AttachmentType = FriendlyNames.GetFriendlyAttachmentTypeName(attachmentDto.AttachmentType) 
             };
         }
 

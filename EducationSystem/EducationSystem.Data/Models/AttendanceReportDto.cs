@@ -4,9 +4,8 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class UnderstandingLevelDto
+    public class AttendanceReportDto : UserDto
     {
-        public int ID { get; set; }
-        public string Name { get; set; }
+        public decimal PercentOfSkipLessons { get; set; }
     }
 }

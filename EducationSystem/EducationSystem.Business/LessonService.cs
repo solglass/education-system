@@ -31,9 +31,9 @@ namespace EducationSystem.Business
         }
         /* public UpdateLesson
         */
-       public List<FeedbackDto> GetFeedbacks()
+       public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
         {
-            return _lessonRepository.GetFeedbacks();
+            return _lessonRepository.GetFeedbacks(lessonId, groupId, courseId);
         }
         public FeedbackDto GetFeedbackById(int id)
         {
@@ -61,21 +61,6 @@ namespace EducationSystem.Business
         /* public AddAttendance
         *  public UpdateAttendance
         */
-        public List<UnderstandingLevelDto> GetUnderstandingLevels()
-        {
-            return _lessonRepository.GetUnderstandingLevels();
-        }
-        public UnderstandingLevelDto GetUnderstandingLevelById(int id)
-        {
-            return _lessonRepository.GetUnderstandingLevelById(id);
-        }
-        public void DeleteUnderstandingLevel(int id)
-        {
-            _lessonRepository.DeleteUnderstandingLevel(id);
-        }
-        /* public AddUnderstandingLevel
-        *  public UpdateUnderstandingLevel
-        */
         
         public LessonThemeDto GetLessonThemeById(int id)
         {
@@ -92,6 +77,11 @@ namespace EducationSystem.Business
         public List<LessonDto> GetLessonsByThemeId(int themeId)
         {
             return _lessonRepository.GetLessonsByThemeId(themeId);
+        }
+
+        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
+        {
+            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
         }
     }
 }

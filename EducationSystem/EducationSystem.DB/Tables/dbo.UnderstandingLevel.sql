@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[UnderstandingLevel](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [int] NOT NULL,
 	[Name] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_UNDERSTANDINGLEVEL] PRIMARY KEY CLUSTERED 
 (

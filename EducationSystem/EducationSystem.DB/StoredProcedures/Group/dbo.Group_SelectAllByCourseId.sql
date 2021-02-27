@@ -5,8 +5,7 @@ begin
 		g.Id,
 		g.CourseID,
 		g.StartDate,
-		gs.Id,
-		gs.Name
-	from dbo.[Group] g inner join dbo.GroupStatus gs on gs.Id = g.StatusId
+		g.StatusId as Id
+	from dbo.[Group] g 
 	where g.CourseID=@courseId
 end
