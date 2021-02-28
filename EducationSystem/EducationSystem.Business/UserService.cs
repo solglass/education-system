@@ -39,9 +39,17 @@ namespace EducationSystem.Business
             userDto.Password = new SecurityService().GetHash(userDto.Password);
             return _userRepository.AddUser(userDto);
         }
+
         public int DeleteUser(int id)
         {
-            return _userRepository.DeleteUser(id);
+            bool isDeleted = true;
+            return _userRepository.DeleteOrRecoverUser(id, isDeleted);
+        }
+
+        public int RecoverUser(int id)
+        {
+            bool isDeleted = false;
+            return _userRepository.DeleteOrRecoverUser(id, isDeleted);
         }
 
         public int ChangePassword(int id, string oldPassword, string password)

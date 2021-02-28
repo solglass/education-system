@@ -12,7 +12,6 @@ namespace EducationSystem.Data.Tests
         private UserDto _userDto;
         private HomeworkRepository _homeworkRepo;
         private HomeworkDto _homeworkDto;
-        private HomeworkAttemptStatusDto _homeworkAttemptStatusDto;
         private AttachmentRepository _attachmentRepo;
         private List<AttachmentDto> _attachmentDtos; 
         private List<CommentDto> _commentDtos;

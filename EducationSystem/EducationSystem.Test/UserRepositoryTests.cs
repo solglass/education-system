@@ -111,40 +111,41 @@ namespace EducationSystem.Data.Tests
         //    }
         //}
 
-        [TestCase(1)]
-        public void RoleUpdate(int dtoMockNumber)
-        {
-            RoleDto expected = GetMockRoleAdd(dtoMockNumber);
-            _roleId.Add(_uRepo.AddRole(expected));
-            if (_roleId.Count == 0) 
-            {
-                Assert.Fail("Role addition failed"); 
-            }
-            else
-            {
-                int newId = _roleId[_roleId.Count - 1];
-                expected.Id = newId;
-                _uRepo.UpdateRole(expected);
-                RoleDto actual = _uRepo.GetRoleById (newId);
-                Assert.AreEqual(expected, actual);
-            }
-        }
-        [TearDown]
-        public void UserRepositiryTestsTearDown()
-        {
-            foreach (int elem in _userRoleId)
-            {
-                uRepo.DeleteRoleToUser(elem);
-            }
-            foreach (int elem in _roleId)
-            {
-                uRepo.DeleteRole(elem);
-            }
-            foreach (int elem in _userId)
-            {
-                uRepo.DeleteUser(elem);
-            }
-        }
+        //[TestCase(1)]
+        //public void RoleUpdate(int dtoMockNumber)
+        //{
+        //    RoleDto expected = GetMockRoleAdd(dtoMockNumber);
+        //    _roleId.Add(_uRepo.AddRole(expected));
+        //    if (_roleId.Count == 0) 
+        //    {
+        //        Assert.Fail("Role addition failed"); 
+        //    }
+        //    else
+        //    {
+        //        int newId = _roleId[_roleId.Count - 1];
+        //        expected.Id = newId;
+        //        _uRepo.UpdateRole(expected);
+        //        RoleDto actual = _uRepo.GetRoleById (newId);
+        //        Assert.AreEqual(expected, actual);
+        //    }
+        //}
+        //[TearDown]
+        //public void UserRepositiryTestsTearDown()
+        //{
+        //    UserRepository uRepo = new UserRepository();
+        //    foreach (int elem in _userRoleId)
+        //    {
+        //        uRepo.DeleteRoleToUser(elem);
+        //    }
+        //    foreach (int elem in _roleId)
+        //    {
+        //        uRepo.DeleteRole(elem);
+        //    }
+        //    foreach (int elem in _userId)
+        //    {
+        //        uRepo.DeleteUser(elem);
+        //    }
+        //}
 
         private UserDto GetMockUserAdd(int n)
         {

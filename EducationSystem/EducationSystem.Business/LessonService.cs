@@ -21,10 +21,18 @@ namespace EducationSystem.Business
         {
             return _lessonRepository.GetLessonById(id);
         }
-        public void DeleteLesson(int id)
+
+        public int DeleteLesson(int id)
         {
-            _lessonRepository.DeleteLesson(id);
+            bool isDeleted = true;
+            return _lessonRepository.DeleteOrRecoverLesson(id, isDeleted);
         }
+        public int RecoverLesson(int id)
+        {
+            bool isDeleted = false;
+            return _lessonRepository.DeleteOrRecoverLesson(id, isDeleted);
+        }
+
         public void AddLesson(LessonDto lesson)
         {
             _lessonRepository.AddLesson(lesson);
@@ -77,6 +85,11 @@ namespace EducationSystem.Business
         public List<LessonDto> GetLessonsByThemeId(int themeId)
         {
             return _lessonRepository.GetLessonsByThemeId(themeId);
+        }
+
+        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
+        {
+            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
         }
     }
 }

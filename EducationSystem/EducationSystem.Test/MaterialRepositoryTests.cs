@@ -60,17 +60,17 @@ namespace EducationSystem.Data.Tests
         [TestCase(5)]
         [TestCase(6)]
         [TestCase(7)]
-        public void DeleteMaterialTest(int caseOfMock)
+        public void HardDeleteMaterialTest(int caseOfMock)
         {
             _materials.RemoveAt(0);
             List<MaterialDto> expected = _materials;
-            if (_materialRepository.DeleteMaterialById(caseOfMock) != 1)
+            if (_materialRepository.HardDeleteMaterial(caseOfMock) != 1)
                 throw new Exception("Delete failed");
             List<MaterialDto> actual = _materialRepository.GetMaterials();
             Assert.AreEqual(expected, actual);
         }
 
-        public List<MaterialDto> DeleteMaterialMock(int a)
+        public List<MaterialDto> HardDeleteMaterialMock(int a)
         {
             List<MaterialDto> materials = GetMaterialsMock();
             switch(a)

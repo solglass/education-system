@@ -4,10 +4,8 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class HomeworkAttemptStatusDto
+    public class AttendanceReportDto : UserDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-
+        public decimal PercentOfSkipLessons { get; set; }
     }
 }

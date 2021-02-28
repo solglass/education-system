@@ -77,12 +77,37 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/material/2
+        //[HttpDelete("{id}")]
+        //[Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        //public ActionResult DeleteMaterial(int id)
+        //{
+        //    _service.DeleteMaterialById(id);
+        //    return Ok("success");
+        //}
+
+        // https://localhost:44365/api/material/id
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteMaterial(int id)
         {
-            _service.DeleteMaterialById(id);
-            return Ok("success");
+            var result = _service.DeleteMaterial(id);
+            if (result == 1)
+                return Ok($"Материал #{id} удален!");
+            else
+                return Problem($"Ошибка! Не удалось удалить материал #{id}!");
         }
+
+        // https://localhost:44365/api/material/id/recovery
+        [HttpPut("{id}/recovery")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult RecoverMaterial(int id)
+        {
+            var result = _service.RecoverMaterial(id);
+            if (result == 1)
+                return Ok($"Материал #{id} восстановлен!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить материал #{id}!");
+        }
+       
     }
 }
