@@ -29,7 +29,7 @@ namespace EducationSystem.Data
                         group.GroupStatus = (GroupStatus)groupStatus;
                         return group;
                     },
-                    splitOn: "Id,LessonID",
+                    splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
@@ -38,37 +38,29 @@ namespace EducationSystem.Data
        
         public List<GroupDto> GetGroupByThemeId(int id)
         {
-            var groupEntry = new GroupDto();
-            var courseEntry = new CourseDto();
-            var themeDictionary = new Dictionary<int, ThemeDto>();
+            List<ThemeDto> Themes = new List<ThemeDto>();
+            ThemeDto themeEntry = new ThemeDto();
+            CourseDto courseEntry = new CourseDto();
             var result = _connection
-                .Query<GroupDto, CourseDto, ThemeDto, GroupDto>("dbo.Group_SelectByTheme",
-                    (group, course, theme) =>
-                    {
-                        if (groupEntry.Id == 0)
-                        {
-                            groupEntry = group;
-                            groupEntry.Course = new CourseDto();
-                        }
-                        if (courseEntry.Id == 0)
-                        {
-                            courseEntry = course;
-                            courseEntry.Themes = new List<ThemeDto>();
-                            groupEntry.Course = courseEntry;
-                        }
-                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                        {
-                            themeEntry = theme;
-                            courseEntry.Themes.Add(theme);
-                            themeDictionary.Add(themeEntry.Id, themeEntry);
-                        }
-                        return groupEntry;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                .Distinct()
-                .ToList();
+               .Query<GroupDto,CourseDto, int, GroupDto>("dbo.Group_SelectByTheme",
+                   (group, course, groupStatus) =>
+                   {
+                       if (course == null)
+                       {
+                           course = courseEntry;
+                       }
+                       group.Course = course;
+                       if (group.Course.Themes == null)
+                       {
+                           group.Course.Themes = Themes;
+                       }
+                       group.GroupStatus = (GroupStatus)groupStatus;
+                       return group;
+                   },new { id },
+                   splitOn: "Id",
+                   commandType: System.Data.CommandType.StoredProcedure)
+               .Distinct()
+               .ToList();
             return result;
         }
         public GroupDto GetGroupProgramsByGroupId(int id)

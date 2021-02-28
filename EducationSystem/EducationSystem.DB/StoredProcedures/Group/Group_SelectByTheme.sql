@@ -3,9 +3,12 @@
 as
 begin
 select
-	 t.*,
 	 g.StartDate,
-	 g.StatusId as Id
+	 t.CountLessons,
+		t.GroupID,
+		c.Id,
+		c.Name,
+		g.StatusId as Id
 from
 	(select 
 	l.GroupID,
