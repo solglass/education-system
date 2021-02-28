@@ -1,4 +1,5 @@
-﻿using EducationSystem.API.Mappers;
+﻿using AutoMapper;
+using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
 using EducationSystem.Controllers;
@@ -22,29 +23,31 @@ namespace EducationSystem.Controllers
     {
 
         private MaterialService _service;
-        private MaterialMapper _mapper;
+        private MaterialMapper _matMapper;
+        private IMapper _mapper;
 
-        public MaterialController()
+        public MaterialController(IMapper mapper)
         {
-            _mapper = new MaterialMapper();
+            _matMapper = new MaterialMapper();
             _service = new MaterialService();
+            _mapper = mapper;
         }
 
-        // https://localhost:44365/api/material/340/group
-        [HttpGet("{id}/group")]
+        // https://localhost:44365/api/material/by-group/340
+        [HttpGet("by-group/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialsByGroupId(int id)
         {
-            return Ok (_mapper.FromDtos(_service.GetMaterialsByGroupId(id)));
-            
+            return Ok(_matMapper.FromDtos(_service.GetMaterialsByGroupId(id)));
+
         }
 
-        // https://localhost:44365/api/material/340/tag
-        [HttpGet("{id}/tag")]
+        // https://localhost:44365/api/material/by-tag/340
+        [HttpGet("by-tag/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialsByTagId(int id)
         {
-            return Ok (_mapper.FromDtos( _service.GetMaterialsByTagId(id)));
+            return Ok(_matMapper.FromDtos(_service.GetMaterialsByTagId(id)));
         }
 
         // https://localhost:44365/api/material/2
@@ -52,7 +55,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialById(int id)
         {
-            return Ok(_mapper.FromDto(_service.GetMaterialById(id)));
+            return Ok(_matMapper.FromDto(_service.GetMaterialById(id)));
         }
 
         // https://localhost:44365/api/material
@@ -60,16 +63,18 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
-            _service.AddMaterial(_mapper.ToDto(materialInputModel));
+            _service.AddMaterial(_matMapper.ToDto(materialInputModel));
             return Ok("Материалы добавлены");
         }
 
-        // https://localhost:44365/material/2
+        // https://localhost:44365/api/material/8
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
-            _service.UpdateMaterial(_mapper.ToDto(material));
+            var dto = _mapper.Map<MaterialDto>(material);
+            dto.Id = id;
+            _service.UpdateMaterial(dto);
             return Ok("Данные обновлены");
         }
 
