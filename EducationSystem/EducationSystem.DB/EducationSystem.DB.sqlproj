@@ -272,5 +272,6 @@
     <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectByTheme.sql" />
   </ItemGroup>
 </Project>
