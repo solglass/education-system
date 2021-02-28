@@ -110,7 +110,7 @@ namespace EducationSystem.Controllers
             _userService.UpdateUser(userDto);
             return Ok("Обновлено");
         }
-
+    /*
         // https://localhost:50221/api/user/42
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер")]
@@ -144,6 +144,7 @@ namespace EducationSystem.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить пользователя #{id}!");
         }
+    */
 
         //https://localhost:50221/api/role/
         [HttpPost]

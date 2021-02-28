@@ -14,6 +14,8 @@ namespace EducationSystem.Business
         RoleDto GetRole(int id);
         List<RoleDto> GetRoles();
         UserDto GetUserById(int id);
+
+        int DeleteOrRecoverUser(int id, bool isDeleted);
         List<UserDto> GetUsers();
         int UpdateRole(RoleDto roleDto);
         int UpdateUser(UserDto userDto);

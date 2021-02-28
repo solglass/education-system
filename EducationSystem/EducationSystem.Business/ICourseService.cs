@@ -15,7 +15,6 @@ namespace EducationSystem.Business
         ThemeDto GetThemeById(int id);
         List<ThemeDto> GetThemes();
         List<ThemeDto> GetUncoveredThemesByGroupId(int id);
-        int RemoveCourse(int id);
         int RemoveThemeFromCourse(int courseId, int themeId);
         int UpdateCourse(CourseDto course);
     }

@@ -102,7 +102,7 @@ namespace EducationSystem.API.Controllers
             else 
                 return Problem($"Ошибка! Не получилось обновить курс #{id}!");
         }
-
+        /*
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult DeleteCourse(int id)
@@ -125,6 +125,7 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не получилось восстановить курс #{id}!");
         }
+        */
 
         // https://localhost:XXXXX/api/course/3/theme/8
         [HttpPost("{courseId}/theme/{themeId}")]

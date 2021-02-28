@@ -12,7 +12,6 @@ namespace EducationSystem.Data
         UserDto CheckUser(string login);
         int DeleteRole(int id);
         int DeleteRoleToUser(int id);
-        int DeleteUser(int id);
         List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId);
         RoleDto GetRoleById(int id);
         List<RoleDto> GetRoles();
@@ -21,5 +20,6 @@ namespace EducationSystem.Data
         int HardDeleteUser(int id);
         int UpdateRole(RoleDto role);
         int UpdateUser(UserDto user);
+        int DeleteOrRecoverUser(int id, bool isDeleted);
     }
 }

@@ -24,21 +24,20 @@ namespace EducationSystem.API.Controllers
     {
 
 
-        private HomeworkRepository _repo;
+        private IHomeworkRepository _repo;
         private HomeworkMapper _homeworkMapper;
         private HomeworkAttemptMapper _homeworkAttemptMapper;
-        private HomeworkService _homeworkService;
+        private IHomeworkService _homeworkService;
         private IMapper _mapper;
 
-        public HomeworkController(IMapper mapper)
+        public HomeworkController(IMapper mapper, IHomeworkRepository homeworkRepository, IHomeworkService homeworkService)
         {
-            _repo = new HomeworkRepository();
+            _repo = homeworkRepository;
             _homeworkMapper = new HomeworkMapper();
             _homeworkAttemptMapper = new HomeworkAttemptMapper();
-            _homeworkService = new HomeworkService();
+            _homeworkService = homeworkService;
             _mapper = mapper;
         }
-
 
         // https://localhost:44365/api/homework
         [HttpPost]
@@ -181,7 +180,7 @@ namespace EducationSystem.API.Controllers
             var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId,attachmentId);
             return Ok(results);
         }
-        
+        /*
         // https://localhost:44365/api/homework/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
@@ -206,9 +205,9 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! Не удалось восстановить домашнюю работу #{id}!");
         }
 
+        */
 
-       
-
+        /*
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpDelete("homeworkAttempts/{id}")]
         [Authorize(Roles = "Админ, Студент")]
@@ -232,6 +231,7 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить решение #{id}!");
         }
+        
 
       
         // https://localhost:44365/api/comments/id
@@ -257,8 +257,8 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить комментарий #{id}!");
         }
+        */
 
- 
         // https://localhost:44365/api/homework/3/theme/1
         [HttpPost("homework/{homeworkId}/theme/{themeId}")]
         public ActionResult AddHomeworkTheme(int homeworkId, int themeId)

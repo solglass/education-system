@@ -8,8 +8,8 @@ namespace EducationSystem.Data
         int AddCourse(CourseDto course);
         int AddCourse_Theme(int courseId, int themeId);
         int AddTheme(ThemeDto theme);
-        int DeleteCourse(int id);
         int DeleteCourse_Theme(int courseId, int themeId);
+        int DeleteOrRecoverCourse(int id, bool isDeleted);
         int DeleteTheme(int id);
         CourseDto GetCourseById(int id);
         List<CourseDto> GetCourses();

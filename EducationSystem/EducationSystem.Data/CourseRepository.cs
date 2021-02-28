@@ -11,7 +11,7 @@ namespace EducationSystem.Data
     public class CourseRepository : BaseRepository, ICourseRepository
     {
 
-        public CourseRepository(IOptions<AppSettingsConfig> options): base(options)
+        public CourseRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }

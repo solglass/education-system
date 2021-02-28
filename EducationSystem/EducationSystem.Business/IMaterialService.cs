@@ -6,7 +6,6 @@ namespace EducationSystem.Business
     public interface IMaterialService
     {
         int AddMaterial(MaterialDto material);
-        int DeleteMaterialById(int id);
         MaterialDto GetMaterialById(int id);
         List<MaterialDto> GetMaterialsByGroupId(int id);
         List<MaterialDto> GetMaterialsByTagId(int id);
