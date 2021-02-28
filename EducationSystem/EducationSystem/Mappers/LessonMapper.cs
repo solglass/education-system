@@ -28,7 +28,6 @@ namespace EducationSystem.API.Mappers
 
             return new LessonDto
             {
-                ID = inputModel.ID,
                 GroupID = inputModel.GroupID,
                 Comment = inputModel.Comment,
                 Date = DateTime.ParseExact(inputModel.LessonDate, "dd.MM.yyyy", CultureInfo.InvariantCulture)
@@ -52,7 +51,6 @@ namespace EducationSystem.API.Mappers
 
             return new LessonOutputModel
             {
-                ID = dto.ID,
                 GroupID = dto.GroupID,
                 Comment = dto.Comment,
                 LessonDate = Converters.DateTimeToStr(dto.Date)
