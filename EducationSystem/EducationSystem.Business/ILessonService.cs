@@ -8,7 +8,6 @@ namespace EducationSystem.Business
         void AddLesson(LessonDto lesson);
         void DeleteAttendance(int id);
         void DeleteFeedback(int id);
-        void DeleteLesson(int id);
         AttendanceDto GetAttendanceById(int id);
         List<AttendanceDto> GetAttendances();
         FeedbackDto GetFeedbackById(int id);
@@ -18,5 +17,6 @@ namespace EducationSystem.Business
         List<LessonDto> GetLessonsByThemeId(int themeId);
         LessonThemeDto GetLessonThemeById(int id);
         int UpdateAttendance(AttendanceDto attendance);
+        object GetStudentByPercentOfSkip(int percent, int groupId);
     }
 }

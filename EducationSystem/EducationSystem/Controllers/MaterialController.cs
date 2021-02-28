@@ -84,7 +84,7 @@ namespace EducationSystem.Controllers
         //    _service.DeleteMaterialById(id);
         //    return Ok("success");
         //}
-
+        /*
         // https://localhost:44365/api/material/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
@@ -108,6 +108,7 @@ namespace EducationSystem.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить материал #{id}!");
         }
+        */
        
     }
 }

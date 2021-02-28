@@ -79,5 +79,10 @@ namespace EducationSystem.Business
         {
             return _userRepository.GetRoles();
         }
+
+        public int DeleteOrRecoverUser(int id, bool isDeleted)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

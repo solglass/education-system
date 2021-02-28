@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using Microsoft.Extensions.Options;
@@ -9,10 +10,10 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class HomeworkAttemptRepository : BaseRepository
+    public class HomeworkAttemptRepository : BaseRepository, IHomeworkAttemptRepository
     {
 
-        public HomeworkAttemptRepository()
+        public HomeworkAttemptRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }
@@ -114,27 +115,37 @@ namespace EducationSystem.Data
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
         {
-           var homeworkAttempt = _connection
-          .Query<HomeworkAttemptWithCountDto, int, HomeworkDto,UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByUserId",
-          (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
-          {
-            homeworkAttempt.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
-            homeworkAttempt.Homework = homework;
-            homeworkAttempt.Author = author;
-            homework.Group = new GroupDto();
+            var homeworkAttempt = _connection
+           .Query<HomeworkAttemptWithCountDto, int, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByUserId",
+           (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
+           {
+               homeworkAttempt.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
+               homeworkAttempt.Homework = homework;
+               homeworkAttempt.Author = author;
+               homework.Group = new GroupDto();
+               return homeworkAttempt;
+           },
+               new { id }, commandType: System.Data.CommandType.StoredProcedure)
+               .ToList();
             return homeworkAttempt;
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
         {
-          var homeworkAttempt = _connection
-          .Query<HomeworkAttemptWithCountDto, int, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByGroupIdAndStatusId",
-          (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
-          {
-            homeworkAttempt.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
-            homeworkAttempt.Homework = homework;
-            homeworkAttempt.Author = author;
-            homework.Group = new GroupDto();
+            var homeworkAttempt = _connection
+            .Query<HomeworkAttemptWithCountDto, int, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByGroupIdAndStatusId",
+            (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
+            {
+                homeworkAttempt.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
+                homeworkAttempt.Homework = homework;
+                homeworkAttempt.Author = author;
+                homework.Group = new GroupDto();
+                return homeworkAttempt;
+            },
+            new { statusId, groupId }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
             return homeworkAttempt;
         }
     }
 }
+
+        

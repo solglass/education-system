@@ -69,7 +69,7 @@ namespace EducationSystem.Controllers
             var result = _lessonService.GetLessonById(id);
             return Ok(result);
         }
-
+        /*
         // https://localhost:50221/api/lesson/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
@@ -81,6 +81,7 @@ namespace EducationSystem.Controllers
             else
                 return Problem($"Ошибка! Не удалось удалить урок #{id}!");
         }
+       
 
         // https://localhost:50221/api/lesson/id/recovery
         [HttpPut("{id}/recovery")]
@@ -93,6 +94,7 @@ namespace EducationSystem.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить урок #{id}!");
         }
+      */
 
         // https://localhost:50221/api/lesson/5
         [HttpPut("{id}")]

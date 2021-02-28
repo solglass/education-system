@@ -91,5 +91,10 @@ namespace EducationSystem.Business
         {
             return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
         }
+
+        object ILessonService.GetStudentByPercentOfSkip(int percent, int groupId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -121,7 +121,7 @@ namespace EducationSystem.Data
             var homework = new List<HomeworkDto>();
             homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
             return homework;
-        }        
+        }
 
         public int AddHomework(HomeworkDto homework)
         {
@@ -188,7 +188,7 @@ namespace EducationSystem.Data
             //var commentDictionary = new Dictionary<int, CommentDto>();
             var hwAttemptEntry = new HomeworkAttemptDto();
             var hwAttempt = _connection
-                .Query<HomeworkAttemptDto, UserDto,  HomeworkDto, int, HomeworkAttemptDto>(
+                .Query<HomeworkAttemptDto, UserDto, HomeworkDto, int, HomeworkAttemptDto>(
                 "dbo.HomeworkAttempt_SelectById",
                 (hwAttempt, user, homework, hwAttemptStatus) =>
                 {
@@ -197,9 +197,9 @@ namespace EducationSystem.Data
                         hwAttemptEntry = hwAttempt;
                         hwAttemptEntry.Author = user;
                         hwAttemptEntry.Homework = homework;
-                        hwAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus) hwAttemptStatus;
+                        hwAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)hwAttemptStatus;
                     }
-                    
+
                     return hwAttemptEntry;
                 },
                 new { id },
@@ -244,10 +244,11 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .Execute("dbo.HomeworkAttempt_DeleteOrRecover",
-                new { 
+                new
+                {
                     id,
                     isDeleted
-                    },
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -325,7 +326,7 @@ namespace EducationSystem.Data
                         {
                             homeworkAttemptEntry = homeworkAttempt;
                             homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus) homeworkAttemptStatus;
+                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
                             commentEntry.HomeworkAttempt = homeworkAttemptEntry;
                             homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
                         }
@@ -498,7 +499,7 @@ namespace EducationSystem.Data
                     {
                         attemptEntry = attempt;
                         attemptEntry.Author = user;
-                        attemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus) homeworkAttemptStatus;
+                        attemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
                         hwAttemptDictionary.Add(attemptEntry.Id, attemptEntry);
                     }
                     return attemptEntry;

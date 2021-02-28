@@ -11,14 +11,12 @@ namespace EducationSystem.Business
         int DeleteHomework(int id);
         int DeleteHomeworkAttempt(int id);
         int DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId);
-        int DeleteHomeworkAttemptStatus(int id);
         int DeleteHomework_Theme(int homeworkId, int themeId);
         CommentDto GetCommentById(int id);
         List<CommentDto> GetComments();
         List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id);
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId);
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id);
-        List<HomeworkAttemptStatusDto> GetHomeworkAttemptStatuses();
         HomeworkDto GetHomeworkById(int id);
         List<HomeworkDto> GetHomeworksByGroupId(int groupId);
         List<HomeworkDto> GetHomeworksByTagId(int tagId);
