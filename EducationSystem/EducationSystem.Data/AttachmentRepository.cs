@@ -98,26 +98,6 @@ namespace EducationSystem.Data
             return attachmentId;
 
         }
-
-        public string GetFriendlyAttachmentTypeName(AttachmentType attachmentType)
-        {
-            switch (attachmentType)
-            {
-                case AttachmentType.File:
-                    {
-                        return "Файл";
-                    }
-                case AttachmentType.Link:
-                    {
-                        return "Ссылка";
-                    }
-                default:
-                    {
-                        return "Некорректный тип файла";
-                    }
-            }
-        }
-
     }
 }
 

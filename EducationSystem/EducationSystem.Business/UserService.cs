@@ -58,26 +58,5 @@ namespace EducationSystem.Business
             password = new SecurityService().GetHash(password);
             return _userRepository.ChangeUserPassword(id, oldPassword, password);
         }
-
-        public int AddRole(RoleDto roleDto)
-        {
-            return _userRepository.AddRole(roleDto);
-        }
-        public int UpdateRole(RoleDto roleDto)
-        {
-            return _userRepository.UpdateRole(roleDto);
-        }
-        public int DeleteRole(int id)
-        {
-            return _userRepository.DeleteRole(id);
-        }
-        public RoleDto GetRole(int id)
-        {
-            return _userRepository.GetRoleById(id);
-        }
-        public List<RoleDto> GetRoles()
-        {
-            return _userRepository.GetRoles();
-        }
     }
 }
