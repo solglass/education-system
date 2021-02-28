@@ -57,6 +57,13 @@ namespace EducationSystem.Controllers
             GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupById(id));
             return Ok(result);
         }
+        // https://localhost:44365/api/group/theme/3
+        [HttpGet("theme/{Id}")]
+        public ActionResult<List<GroupOutputModel>> GetGroupByThemeId(int id)
+        {
+            List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroupByThemeId(id));
+            return Ok(result);
+        }
 
         // https://localhost:44365/api/group/groups-without-tutors
         [HttpGet("groups-without-tutors")]
@@ -154,7 +161,7 @@ namespace EducationSystem.Controllers
             return Ok(addGroup);
         }      
         [HttpGet("student-group/{id}")]
-        //[Authorize(Roles = "Админ, Менеджер, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Админ, Менеджер, Преподаватель, Тьютор")]
         public ActionResult GetStudentGroupById(int id)
         {
             var group = _repo.GetStudentGroupById(id);

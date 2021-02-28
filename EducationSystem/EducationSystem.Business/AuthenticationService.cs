@@ -1,4 +1,5 @@
 ﻿using EducationSystem.Core.Authentication;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -47,9 +48,9 @@ namespace EducationSystem.Business
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
                 };
-            foreach (RoleDto role in user.Roles)
+            foreach(Role role in user.Roles)
             {
-                claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.Name));
+                claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, FriendlyNames.GetFriendlyRoleName(role)));
             }
             ClaimsIdentity claimsIdentity =
             new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,

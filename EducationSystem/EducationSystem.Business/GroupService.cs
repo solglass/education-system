@@ -29,7 +29,10 @@ namespace EducationSystem.Business
         {
             return _groupRepository.GetGroupsWithoutTutors();
         }
-
+        public List<GroupDto> GetGroupByThemeId(int id)
+        {
+            return _groupRepository.GetGroupByThemeId(id);
+        }
         public GroupDto GetGroupProgramsByGroupId(int id)
         {
             return _groupRepository.GetGroupProgramsByGroupId(id);

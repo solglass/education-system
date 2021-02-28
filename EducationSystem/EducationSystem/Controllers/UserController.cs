@@ -146,54 +146,6 @@ namespace EducationSystem.Controllers
         }
     */
 
-        //https://localhost:50221/api/role/
-        [HttpPost]
-        [Authorize(Roles = "Админ")]
-        public ActionResult AddRole([FromBody] RoleInputModel inputModel)
-        {
-            RoleDto roleDto;
-            roleDto = _roleMapper.ToDto(inputModel);
-            _userService.AddRole(roleDto);
-            return Ok("Роль добавлена");
-        }
-
-        // https://localhost:50221/api/role
-        [HttpGet]
-        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
-        public ActionResult GetURoles()
-        {
-            var roles = _userService.GetRoles();
-            return Ok(roles);
-        }
-
-        // https://localhost:50221/api/role/42
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult UpdateRole([FromBody] RoleInputModel inputModel)
-        {
-            RoleDto roleDto;
-            roleDto = _roleMapper.ToDto(inputModel);
-            if (_userService.GetRole(roleDto.Id) == null)
-            {
-                return Problem("Роль не найдена");
-            }
-            _userService.UpdateRole(roleDto);
-            return Ok("Обновлено");
-        }
-
-        // https://localhost:50221/api/role/42
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult DeleteRole(int id)
-        {
-            if (_userService.GetRole(id) == null)
-            {
-                return Problem("Роль не найдена");
-            }
-            _userService.DeleteRole(id);
-            return Ok("Удалено");
-        }
-
         // https://localhost:50221/api/user/payment/payment/name
         [HttpPost("payment/name")]
         [Authorize(Roles = "Менеджер,Студент")]
