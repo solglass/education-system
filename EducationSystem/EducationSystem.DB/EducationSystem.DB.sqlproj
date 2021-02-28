@@ -265,5 +265,6 @@
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPercentOfSkip.sql" />
     <Build Include="StoredProcedures\Group_Material\Group_Material_SelectById.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectByTheme.sql" />
   </ItemGroup>
 </Project>
