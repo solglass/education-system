@@ -1,9 +1,9 @@
-﻿CREATE proc [dbo].[HomeworkAttempt_SelectByHomeworkId] (
+﻿CREATE  proc [dbo].[HomeworkAttempt_SelectByHomeworkId] (
 	@homeworkId int
 )
 as
 begin
-	select
+	select 
 		hma.Id,
 		hma.Comment,
 		hma.HomeworkID,
@@ -14,12 +14,11 @@ begin
 		u.LastName,
 		u.UserPic,
 		hmas.Id,
+		hmas.Id as homeworkAttemptStatus,
 		hmas.Name
 	from dbo.HomeworkAttempt hma 
 		inner join dbo.[User] u on hma.UserID = u.Id
 		inner join dbo.HomeworkAttemptStatus hmas on hma.StatusID = hmas.Id
-		left join dbo.HomeworkAttempt_Attachment hwaa on hwaa.HomeworkAttemptID = hma.Id
-		left join dbo.Attachment a on hwaa.AttachmentID = a.Id
-	
+
 	where hma.HomeworkId = @homeworkId
 end

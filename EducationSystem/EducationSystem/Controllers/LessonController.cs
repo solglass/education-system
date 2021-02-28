@@ -70,14 +70,30 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
-        // https://localhost:50221/api/lesson/3
+        // https://localhost:50221/api/lesson/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteLesson(int id)
         {
-            _lessonService.DeleteLesson(id);
-            return Ok("Урок удалён");
+            var result = _lessonService.DeleteLesson(id);
+            if (result == 1)
+                return Ok($"Урок #{id} удален!");
+            else
+                return Problem($"Ошибка! Не удалось удалить урок #{id}!");
         }
+
+        // https://localhost:50221/api/lesson/id/recovery
+        [HttpPut("{id}/recovery")]
+        [Authorize(Roles = "Админ, Преподаватель")]
+        public ActionResult RecoverLesson(int id)
+        {
+            var result = _lessonService.RecoverLesson(id);
+            if (result == 1)
+                return Ok($"Урок #{id} восстановлен!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить урок #{id}!");
+        }
+
         // https://localhost:50221/api/lesson/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
