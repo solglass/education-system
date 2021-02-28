@@ -4,13 +4,13 @@ using System.Text;
 
 namespace EducationSystem.Core.Enums
 {
-    public enum HomeworkAttemptStatus
+    public enum Role
     {
-        ToDo = 1,
-        Expired,
-        ToCheck,
-        ToFix,
-        Passed,
-        PassedLate
+        Admin = 1, 
+        Student, 
+        Teacher, 
+        Tutor, 
+        Methodist, 
+        Manager
     }
 }
