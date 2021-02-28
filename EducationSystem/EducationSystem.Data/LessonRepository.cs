@@ -99,7 +99,7 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
+        public List<FeedbackDto> GetFeedbacks(int? lessonId, int? groupId, int? courseId)
         {
             return _connection
                 .Query<FeedbackDto, LessonDto, int, UserDto, FeedbackDto>(
