@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EducationSystem.Core.Config
+namespace EducationSystem.API.Config
 {
     public static class SwaggerConfig
     {

@@ -20,9 +20,6 @@ namespace EducationSystem.Data.Tests
         [SetUp]
         public void AttemptSetUp()
         {
-            _userRepo = new UserRepository();
-            _homeworkRepo = new HomeworkRepository();
-            _attachmentRepo = new AttachmentRepository();
         }
     }
 }

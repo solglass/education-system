@@ -18,9 +18,8 @@ namespace EducationSystem.Data.Tests
         private List<CourseDto> _coursesFromDb;
 
         [OneTimeSetUp]
-        public void SetUpTest(ICourseRepository courseRepository)
+        public void SetUpTest()
         {
-            _courseRepo = courseRepository;
             _coursesFromDb = new List<CourseDto>();
             _themeIdList = new List<int>();
             _expectedCourse = GetCourseMock(1);

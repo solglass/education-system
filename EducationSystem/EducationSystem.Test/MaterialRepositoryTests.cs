@@ -17,7 +17,6 @@ namespace EducationSystem.Data.Tests
         public void MaterialRepositorySetUp()
         {
             _materialDto = new MaterialDto();
-            _materialRepository = new MaterialRepository();
             _materials = GetMaterialsMock();
         }
 
