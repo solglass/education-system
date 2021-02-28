@@ -21,10 +21,18 @@ namespace EducationSystem.Business
         {
            return _lessonRepository.GetLessonById(id);
         }
-        public void DeleteLesson(int id)
+
+        public int DeleteLesson(int id)
         {
-            _lessonRepository.DeleteLesson(id);
+            bool isDeleted = true;
+            return _lessonRepository.DeleteOrRecoverLesson(id, isDeleted);
         }
+        public int RecoverLesson(int id)
+        {
+            bool isDeleted = false;
+            return _lessonRepository.DeleteOrRecoverLesson(id, isDeleted);
+        }
+
         public void AddLesson(LessonDto lesson)
         {
             _lessonRepository.AddLesson(lesson);
@@ -61,37 +69,27 @@ namespace EducationSystem.Business
         /* public AddAttendance
         *  public UpdateAttendance
         */
-        public List<UnderstandingLevelDto> GetUnderstandingLevels()
-        {
-            return _lessonRepository.GetUnderstandingLevels();
-        }
-        public UnderstandingLevelDto GetUnderstandingLevelById(int id)
-        {
-            return _lessonRepository.GetUnderstandingLevelById(id);
-        }
-        public void DeleteUnderstandingLevel(int id)
-        {
-            _lessonRepository.DeleteUnderstandingLevel(id);
-        }
-        /* public AddUnderstandingLevel
-        *  public UpdateUnderstandingLevel
-        */
         
         public LessonThemeDto GetLessonThemeById(int id)
         {
             return _lessonRepository.GetLessonThemeById(id);
         }
-        
-        public int UpdateAttendance(AttendanceDto attendance)
-        {
-            return _lessonRepository.UpdateAttendance(attendance);
-        }
-        /* public AddLessonTheme
-*  public UpdateLessonTheme
-*/
-        public List<LessonDto> GetLessonsByThemeId(int themeId)
-        {
-            return _lessonRepository.GetLessonsByThemeId(themeId);
-        }
+        
+        public int UpdateAttendance(AttendanceDto attendance)
+        {
+            return _lessonRepository.UpdateAttendance(attendance);
+        }
+        /* public AddLessonTheme
+*  public UpdateLessonTheme
+*/
+        public List<LessonDto> GetLessonsByThemeId(int themeId)
+        {
+            return _lessonRepository.GetLessonsByThemeId(themeId);
+        }
+
+        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
+        {
+            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
+        }
     }
 }
