@@ -9,18 +9,18 @@ namespace EducationSystem.Core.Enums
         public static string GetFriendlyAttachmentTypeName(AttachmentType attachmentType)
         {
 
-            String FriendlyName = attachmentType switch
+            string friendlyName = attachmentType switch
             {
                 AttachmentType.File => "Файл",
                 AttachmentType.Link => "Ссылка",
                 _ => "Некорректный тип файла"
             };
-            return FriendlyName;
+            return friendlyName;
 
         }
         public static string GetFriendlyGroupStatusName(GroupStatus groupStatus)
         {
-            String FriendlyName = groupStatus switch
+            string friendlyName = groupStatus switch
             {
                 GroupStatus.Recruitment => "Ведётся набор",
                 GroupStatus.ReadyToStart => "Ждёт начала обучения",
@@ -28,7 +28,54 @@ namespace EducationSystem.Core.Enums
                 GroupStatus.Finished => "Завершила обучение",
                 _ => "Статус группы не найден"
             };
-            return FriendlyName;
+            return friendlyName;
+
+        }
+
+        public static string GetFriendlyUnderstandingLevelName(UnderstandingLevel understandingLevel)
+        {
+            string friendlyName = understandingLevel switch
+            {
+                UnderstandingLevel.Bad => "Плохо",
+                UnderstandingLevel.Medium => "Средне",
+                UnderstandingLevel.Good => "Хорошо",
+                _ => "Уровень понимания не найден"
+            };
+            return friendlyName;
+
+        }
+
+        public static string GetFriendlyHomeworkAttemptStatusName(HomeworkAttemptStatus attemptStatus)
+        {
+
+            string friendlyName = attemptStatus switch
+            {
+                HomeworkAttemptStatus.ToDo => "Назначено",
+                HomeworkAttemptStatus.Expired => "Просрочено",
+                HomeworkAttemptStatus.ToCheck => "Ждет проверки",
+                HomeworkAttemptStatus.Passed => "Ждет исправления",
+                HomeworkAttemptStatus.PassedLate=> "Сдано",
+                HomeworkAttemptStatus.ToFix => "Сдано с опозданием",
+                _ => "Некорректный статус"
+            };
+            return friendlyName;
+
+        }
+
+        public static string GetFriendlyRoleName(Role role)
+        {
+
+            string friendlyName = role switch
+            {
+                Role.Admin => "Администратор",
+                Role.Manager => "Менеджер",
+                Role.Methodist => "Методист",
+                Role.Student => "Студент",
+                Role.Teacher => "Преподаватель",
+                Role.Tutor => "Тьютор",
+                _ => "Роль не существует"
+            };
+            return friendlyName;
 
         }
     }

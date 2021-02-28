@@ -8,7 +8,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class MaterialRepository: BaseRepository
+    public class MaterialRepository : BaseRepository
     {
         public MaterialRepository()
         {
@@ -21,6 +21,24 @@ namespace EducationSystem.Data
                 .Query<MaterialDto>("dbo.Material_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return materials;
+        }
+
+        public List<MaterialDto> GetMaterialsByTagId(int id)
+        {
+            return _connection
+                    .Query<MaterialDto>("dbo.Material_SelectByTagId",
+                    new { tagId = id },
+                    commandType: System.Data.CommandType.StoredProcedure)
+                    .ToList();
+        }
+
+        public List<MaterialDto> GetMaterialsByGroupId(int id)
+        {
+            return _connection
+                    .Query<MaterialDto>("dbo.Material_SelectByGroupId",
+                    new { groupId = id },
+                    commandType: System.Data.CommandType.StoredProcedure)
+                    .ToList();
         }
 
         public MaterialDto GetMaterialById(int id)
@@ -59,10 +77,23 @@ namespace EducationSystem.Data
             return rows;
         }
 
-        public int DeleteMaterialById(int id)
+        public int DeleteOrRecoverMaterial(int id, bool isDeleted)
         {
             int rows = _connection
-                .Execute("dbo.Material_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Material_DeleteOrRecover", 
+                new
+                { 
+                    id,
+                    isDeleted
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return rows;
+        }
+       
+        public int HardDeleteMaterial(int id)
+        {
+            int rows = _connection
+                .Execute("dbo.Material_HardDelete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
             return rows;
         }
     }
