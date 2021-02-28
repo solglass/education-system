@@ -26,7 +26,6 @@ namespace EducationSystem.Controllers
         private PaymentRepository _prepo;
         private PaymentMapper _pMapper;
         private UserMapper _userMapper;
-        private RoleMapper _roleMapper;
         private UserService _userService;
         private readonly IMapper _mapper;
 
@@ -35,7 +34,6 @@ namespace EducationSystem.Controllers
         {
             _mapper = mapper;
             _userMapper = new UserMapper();
-            _roleMapper = new RoleMapper();
             _userService = new UserService();
         }
 
@@ -142,54 +140,6 @@ namespace EducationSystem.Controllers
                 return Ok($"Пользователь #{id} восстановлен!");
             else
                 return Problem($"Ошибка! Не удалось восстановить пользователя #{id}!");
-        }
-
-        //https://localhost:50221/api/role/
-        [HttpPost]
-        [Authorize(Roles = "Админ")]
-        public ActionResult AddRole([FromBody] RoleInputModel inputModel)
-        {
-            RoleDto roleDto;
-            roleDto = _roleMapper.ToDto(inputModel);
-            _userService.AddRole(roleDto);
-            return Ok("Роль добавлена");
-        }
-
-        // https://localhost:50221/api/role
-        [HttpGet]
-        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
-        public ActionResult GetURoles()
-        {
-            var roles = _userService.GetRoles();
-            return Ok(roles);
-        }
-
-        // https://localhost:50221/api/role/42
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult UpdateRole([FromBody] RoleInputModel inputModel)
-        {
-            RoleDto roleDto;
-            roleDto = _roleMapper.ToDto(inputModel);
-            if (_userService.GetRole(roleDto.Id) == null)
-            {
-                return Problem("Роль не найдена");
-            }
-            _userService.UpdateRole(roleDto);
-            return Ok("Обновлено");
-        }
-
-        // https://localhost:50221/api/role/42
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult DeleteRole(int id)
-        {
-            if (_userService.GetRole(id) == null)
-            {
-                return Problem("Роль не найдена");
-            }
-            _userService.DeleteRole(id);
-            return Ok("Удалено");
         }
 
         // https://localhost:50221/api/user/payment/payment/name

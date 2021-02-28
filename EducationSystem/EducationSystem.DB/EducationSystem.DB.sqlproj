@@ -83,7 +83,6 @@
     <Folder Include="StoredProcedures\Material" />
     <Folder Include="StoredProcedures\Material_Tag" />
     <Folder Include="StoredProcedures\Payment" />
-    <Folder Include="StoredProcedures\Role" />
     <Folder Include="StoredProcedures\Student_Group" />
     <Folder Include="StoredProcedures\Tag" />
     <Folder Include="StoredProcedures\TeacherGroup" />
@@ -120,7 +119,7 @@
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Add.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectById.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Update.sql" />
-	<Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Delete.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Delete.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Add.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectById.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Update.sql" />
@@ -241,11 +240,6 @@
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectAll.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByID.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_Update.sql" />
-    <Build Include="StoredProcedures\Role\dbo.Role_Add.sql" />
-    <Build Include="StoredProcedures\Role\dbo.Role_Delete.sql" />
-    <Build Include="StoredProcedures\Role\dbo.Role_SelectAll.sql" />
-    <Build Include="StoredProcedures\Role\dbo.Role_SelectById.sql" />
-    <Build Include="StoredProcedures\Role\dbo.Role_Update.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_HardDelete.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_Add.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_HardDelete.sql" />
@@ -265,5 +259,6 @@
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPercentOfSkip.sql" />
     <Build Include="StoredProcedures\Group_Material\Group_Material_SelectById.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectByTheme.sql" />
   </ItemGroup>
 </Project>
