@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,9 @@ using System.Linq;
 
 namespace EducationSystem.Data.Models
 {
-    public class HomeworkAttemptRepository
+    public class HomeworkAttemptRepository : BaseRepository
     {
-        private SqlConnection _connection;
 
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
         public HomeworkAttemptRepository()
         {
             _connection = new SqlConnection(_connectionString);
@@ -42,32 +41,45 @@ namespace EducationSystem.Data.Models
             return result;
         }
 
-        public int UpdateHomeworkAttempt(int id, string comment, int userId, int homeworkId, int statusId)
+        public int UpdateHomeworkAttempt(int id, string comment, int statusId)
         {
             var result = _connection
                 .Execute("dbo.HomeworkAttempt_Update",
-                new { id, comment, userId, homeworkId, statusId },
+                new { id, comment, statusId },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
-        public int DeleteHomeworkAttempt(int id)
-        {
-            var result = _connection
-                .Execute("dbo.HomeworkAttempt_Delete", 
-                new { id }, 
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
+        // Код размещен в HomeworkRepository
 
-        public List<HomeworkAttempt_AttachmentDto> GetHomeworkAttempt_Attachments()
-        {
-            var data = _connection.
-                Query<HomeworkAttempt_AttachmentDto>(
-                "dbo.HomeworkAttempt_Attachment_SelectAll",
-                commandType: System.Data.CommandType.StoredProcedure).ToList();
-            return data;
-        }
+        //public int DeleteHomeworkAttempt(int id)
+        //{
+        //    var result = _connection
+        //        .Execute("dbo.HomeworkAttempt_Delete", 
+        //        new { id }, 
+        //        commandType: System.Data.CommandType.StoredProcedure);
+        //    return result;
+        //}
+
+        //public int RecoverHomeworkAttempt(int id)
+        //{
+        //    var result = _connection
+        //        .Execute("dbo.HomeworkAttempt_Recover",
+        //        new { id },
+        //        commandType: System.Data.CommandType.StoredProcedure);
+        //    return result;
+        //}
+
+        //public int HardDeleteHomeworkAttempt(int id)
+        //{
+        //    var result = _connection
+        //        .Execute("dbo.HomeworkAttempt_HardDelete",
+        //        new { id },
+        //        commandType: System.Data.CommandType.StoredProcedure);
+        //    return result;
+        //}
+
+
         public HomeworkAttempt_AttachmentDto GetHomeworkAttempt_AttachmentById(int id)
         {
             var data = _connection.
@@ -87,13 +99,46 @@ namespace EducationSystem.Data.Models
                 commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
-        public int DeleteHomeworkAttempt_AttachmentById(int id)
+        public int DeleteHomeworkAttempt_Attachment(int homeworkAttemptId, int attachmentId)
         {
             int rowsAffected = _connection.Execute(
                 "dbo.HomeworkAttempt_Attachment_Delete",
-                new { id },
+                new { homeworkAttemptID=homeworkAttemptId,
+                      attachmentID=attachmentId},
                 commandType: System.Data.CommandType.StoredProcedure);
             return rowsAffected;
+        }
+        public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
+        {
+           var homeworkAttempt = _connection
+          .Query<HomeworkAttemptWithCountDto, int, HomeworkDto,UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByUserId",
+          (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
+          {
+            homeworkAttempt.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
+            homeworkAttempt.Homework = homework;
+            homeworkAttempt.Author = author;
+            homework.Group = new GroupDto();
+            return homeworkAttempt;
+          },
+              new { id }, commandType: System.Data.CommandType.StoredProcedure)
+              .ToList();
+          return homeworkAttempt;
+        }
+        public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
+        {
+          var homeworkAttempt = _connection
+          .Query<HomeworkAttemptWithCountDto, int, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByGroupIdAndStatusId",
+          (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
+          {
+            homeworkAttempt.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
+            homeworkAttempt.Homework = homework;
+            homeworkAttempt.Author = author;
+            homework.Group = new GroupDto();
+            return homeworkAttempt;
+          },
+          new { statusId, groupId }, commandType: System.Data.CommandType.StoredProcedure)
+              .ToList();
+          return homeworkAttempt;
         }
     }
 }

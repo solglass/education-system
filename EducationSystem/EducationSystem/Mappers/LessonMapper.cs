@@ -31,7 +31,7 @@ namespace EducationSystem.API.Mappers
                 ID = inputModel.ID,
                 GroupID = inputModel.GroupID,
                 Comment = inputModel.Comment,
-                LessonDate = DateTime.ParseExact(inputModel.LessonDate, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                Date = DateTime.ParseExact(inputModel.LessonDate, "dd.MM.yyyy", CultureInfo.InvariantCulture)
             };
         }
 
@@ -55,7 +55,7 @@ namespace EducationSystem.API.Mappers
                 ID = dto.ID,
                 GroupID = dto.GroupID,
                 Comment = dto.Comment,
-                LessonDate = Converters.DateTimeToStr(dto.LessonDate)
+                LessonDate = Converters.DateTimeToStr(dto.Date)
             };
         
         }

@@ -1,4 +1,5 @@
 using Dapper;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace EducationSystem.Data
 
 
             var users = _connection.
-                Query<UserDto, RoleDto, UserDto>(
+                Query<UserDto, int, UserDto>(
                 "dbo.User_SelectAll",
                 (user, role) =>
                 {
@@ -31,11 +32,11 @@ namespace EducationSystem.Data
                     if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
                     {
                         userEntry = user;
-                        userEntry.Roles = new List<RoleDto>();
+                        userEntry.Roles = new List<Role>();
                         UserDictionary.Add(userEntry.Id, userEntry);
                     }
 
-                    userEntry.Roles.Add(role);
+                    userEntry.Roles.Add((Role)role);
                     return userEntry;
                 },
                 splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
@@ -49,7 +50,7 @@ namespace EducationSystem.Data
 
 
             var users = _connection.
-                Query<UserDto, RoleDto, UserDto>(
+                Query<UserDto, int, UserDto>(
                 "dbo.PassedStudentsAttempt_SelectByGroupId",
                 (user, role) =>
                 {
@@ -58,11 +59,11 @@ namespace EducationSystem.Data
                     if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
                     {
                         userEntry = user;
-                        userEntry.Roles = new List<RoleDto>();
+                        userEntry.Roles = new List<Role>();
                         UserDictionary.Add(userEntry.Id, userEntry);
                     }
 
-                    userEntry.Roles.Add(role);
+                    userEntry.Roles.Add((Role)role);
                     return userEntry;
                 },
                 new { groupId },
@@ -75,18 +76,18 @@ namespace EducationSystem.Data
         {
             var UserDictionary = new Dictionary<int, UserDto>();
             var users = _connection.
-                Query<UserDto, RoleDto, UserDto>(
+                Query<UserDto, int, UserDto>(
                 "dbo.User_SelectById",
                 (user, role) =>
                 {
                     if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
                     {
                         userEntry = user;
-                        userEntry.Roles = new List<RoleDto>();
+                        userEntry.Roles = new List<Role>();
                         UserDictionary.Add(userEntry.Id, userEntry);
                     }
 
-                    userEntry.Roles.Add(role);
+                    userEntry.Roles.Add((Role)role);
                     return userEntry;
                 },
                new { id },
@@ -139,19 +140,23 @@ namespace EducationSystem.Data
                     user.FirstName,
                     user.LastName,
                     user.BirthDate,
-                    user.Login,
-                    user.Password,
                     user.Phone,
                     user.UserPic,
                     user.Email
                 }, commandType: System.Data.CommandType.StoredProcedure);
         }
-        public int DeleteUser(int id)
+        public int DeleteOrRecoverUser(int id, bool isDeleted)
         {
             return _connection
-                .Execute("dbo.User_Delete", new { id },
+                .Execute("dbo.User_DeleteOrRecover",
+                new 
+                {
+                  id,
+                  isDeleted
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
+
         public int HardDeleteUser(int id)
         {
             return _connection
@@ -173,54 +178,21 @@ namespace EducationSystem.Data
                 .Execute("dbo.RoleToUser_Delete", new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
-        public List<RoleDto> GetRoles()
-        {
-            return _connection
-                 .Query<RoleDto>("dbo.Role_SelectAll", commandType: CommandType.StoredProcedure)
-                 .ToList();
-        }
-        public RoleDto GetRoleById(int id)
-        {
-            return _connection
-                .Query<RoleDto>("dbo.Role_SelectById", new { id },
-                commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-        }
-        public int AddRole(RoleDto role)
-        {
-            return _connection
-                .QuerySingle<int>("dbo.Role_Add",
-                new { role.Name },
-                commandType: System.Data.CommandType.StoredProcedure);
-        }
-        public int UpdateRole(RoleDto role)
-        {
-            return _connection
-                .Execute("dbo.Role_Update",
-                new { role.Id, role.Name },
-                commandType: System.Data.CommandType.StoredProcedure);
-        }
-        public int DeleteRole(int id)
-        {
-            return _connection
-                .Execute("dbo.Role_Delete",
-                new { id },
-                commandType: System.Data.CommandType.StoredProcedure);
-        }
+
         public UserDto CheckUser(string login)
         {         
             var userEntry = new UserDto();
             var result = _connection.
-                Query<UserDto, RoleDto, UserDto>(
+                Query<UserDto, int, UserDto>(
                 "dbo.Check_User_Authentication",
                 (user, role) =>
                 {
                 if (userEntry.Id == 0)
                     {
                         userEntry = user;
-                        userEntry.Roles = new List<RoleDto>();                      
+                        userEntry.Roles = new List<Role>();                      
                     }
-                    userEntry.Roles.Add(role);
+                    userEntry.Roles.Add((Role)role);
                     return userEntry;
                 },
                 new { login },

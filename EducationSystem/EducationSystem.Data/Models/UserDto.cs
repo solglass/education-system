@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EducationSystem.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,6 +17,6 @@ namespace EducationSystem.Data.Models
         public string UserPic { get; set; }
         public string Email { get; set; }
         public bool IsDeleted { get; set; }
-        public List<RoleDto> Roles { get; set; }
+        public List<Role> Roles { get; set; }
     }
 }

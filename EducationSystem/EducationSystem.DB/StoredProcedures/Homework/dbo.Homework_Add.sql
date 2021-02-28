@@ -3,8 +3,7 @@
 	@startDate datetime2(7),
 	@deadlineDate datetime2(7),
 	@groupId int,
-	@isOptional bit,
-	@isDeleted bit
+	@isOptional bit
 
 
  ) as
@@ -13,8 +12,8 @@
            ,[StartDate]
            ,[DeadlineDate]
            ,[GroupID]
-           ,[IsOptional]
-           ,[IsDeleted])
-	values (@description, @startDate, @deadlineDate, @groupId, @isOptional, @isDeleted)
+           ,[IsOptional])
+	values (@description, @startDate, @deadlineDate, @groupId, @isOptional)
 	select SCOPE_IDENTITY()
  end
+

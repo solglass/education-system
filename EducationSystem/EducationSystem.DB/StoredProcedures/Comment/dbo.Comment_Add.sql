@@ -2,6 +2,7 @@
 @userId int, @homeworkAttemptId int, @message nvarchar(max))
 as
 begin
-insert into dbo.Comment (UserID, HomeworkAttemptId, Message, IsDeleted)
+	insert into dbo.Comment (UserID, HomeworkAttemptId, Message, IsDeleted)
 	values (@userId, @homeworkAttemptId, @message, 0)
+	select SCOPE_IDENTITY()
 end

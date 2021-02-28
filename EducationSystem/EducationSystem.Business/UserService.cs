@@ -39,9 +39,17 @@ namespace EducationSystem.Business
             userDto.Password = new SecurityService().GetHash(userDto.Password);
             return _userRepository.AddUser(userDto); 
         }
+
         public int DeleteUser(int id)
         {
-            return _userRepository.DeleteUser(id);
+            bool isDeleted = true;
+            return _userRepository.DeleteOrRecoverUser(id, isDeleted);
+        }
+
+        public int RecoverUser(int id)
+        {
+            bool isDeleted = false;
+            return _userRepository.DeleteOrRecoverUser(id, isDeleted);
         }
 
         public int ChangePassword(int id,string oldPassword, string password)
@@ -49,27 +57,6 @@ namespace EducationSystem.Business
             oldPassword = new SecurityService().GetHash(oldPassword);
             password = new SecurityService().GetHash(password);
             return _userRepository.ChangeUserPassword(id, oldPassword, password);
-        }
-
-        public int AddRole(RoleDto roleDto)
-        {
-            return _userRepository.AddRole(roleDto);
-        }
-        public int UpdateRole(RoleDto roleDto)
-        {
-            return _userRepository.UpdateRole(roleDto);
-        }
-        public int DeleteRole(int id)
-        {
-            return _userRepository.DeleteRole(id);
-        }
-        public RoleDto GetRole(int id)
-        {
-            return _userRepository.GetRoleById(id);
-        }
-        public List<RoleDto> GetRoles()
-        {
-            return _userRepository.GetRoles();
         }
     }
 }

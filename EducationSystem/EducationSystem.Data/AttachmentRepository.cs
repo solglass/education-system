@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-
+using EducationSystem.Core.Enums;
 
 namespace EducationSystem.Data
 {
@@ -22,11 +22,11 @@ namespace EducationSystem.Data
         public AttachmentDto GetAttachmentById(int id)
         {
             var data = _connection
-                .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>(
+                .Query<AttachmentDto, int, AttachmentDto>(
                     "dbo.Attachment_SelectById",
                     (attachment, attachmentType) =>
                     {                                             
-                        attachment.AttachmentType = attachmentType;                       
+                        attachment.AttachmentType = (AttachmentType)attachmentType;                       
                         return attachment;
                     },
                     new { id },
@@ -40,7 +40,7 @@ namespace EducationSystem.Data
         {
             int id = attachmentDto.Id;
             string path = attachmentDto.Path;
-            int attachmentTypeID = attachmentDto.AttachmentType.Id;
+            int attachmentTypeID = (int)attachmentDto.AttachmentType;
             var data = _connection
                 .Execute("dbo.Attachment_Update", new { id, path, attachmentTypeID }, commandType: System.Data.CommandType.StoredProcedure);
             return data;
@@ -62,55 +62,14 @@ namespace EducationSystem.Data
                 new
                 {
                     path = attachmentDto.Path,
-                    attachmentTypeId = attachmentDto.AttachmentType.Id
+                    attachmentTypeId = (int)attachmentDto.AttachmentType
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return value;
 
         }
-        public List<AttachmentTypeDto> GetAttachmentTypes()
-        {
-            var data = _connection
-                .Query<AttachmentTypeDto>("dbo.AttachmentType_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return data;
 
 
-        }
-
-        public AttachmentTypeDto GetAttachmentTypeById(int id)
-        {
-            var data = _connection
-                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-
-        public int ModifyAttachmentType(int id, string name)
-        {
-            var data = _connection
-                .Execute("dbo.AttachmentType_Update", new { id, name }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-
-        public int DeleteAttachmentTypeById(int id)
-        {
-            var data = _connection
-                .Execute("dbo.AttachmentType_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-
-
-        public int AddAttachmentType(string name)
-        {          
-            var firstRow = _connection
-                .QuerySingleOrDefault("dbo.AttachmentType_Add",
-                new { name = name },
-                commandType: System.Data.CommandType.StoredProcedure);
-            var data = (IDictionary<string, object>)firstRow;
-            int value = Convert.ToInt32(data["LastId"]);
-            return value;
-
-        }
 
         public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
         {
@@ -139,9 +98,6 @@ namespace EducationSystem.Data
             return attachmentId;
 
         }
-
-
-
     }
 }
 

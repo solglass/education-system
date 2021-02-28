@@ -57,9 +57,16 @@ namespace EducationSystem.Business
             return index;
         }
 
-        public int RemoveCourse(int id)
+        public int DeleteCourse(int id)
         {
-           return _courseRepo.DeleteCourse(id); 
+            bool isDeleted = true;
+            return _courseRepo.DeleteOrRecoverCourse(id, isDeleted);
+        }
+
+        public int RecoverCourse(int id)
+        {
+            bool isDeleted = false;
+            return _courseRepo.DeleteOrRecoverCourse(id, isDeleted);
         }
 
         public int AddThemeToCourse(int courseId, int themeId)
@@ -121,22 +128,8 @@ namespace EducationSystem.Business
             }
           
 
-            List<Homework_ThemeDto> homeworkThemes = _homeworkRepo.GetHomeworkThemesByThemeId(id);
-            if(homeworkThemes!=null && homeworkThemes.Count>0)
-            {
-                foreach (var item in homeworkThemes)
-                {
-                    _homeworkRepo.DeleteHomework_Theme(item.Id);
-                }
-            }
-            List<LessonThemeDto> lessonThemes = _lessonRepo.GetLessonThemesByThemeId(id);
-            if (lessonThemes != null && lessonThemes.Count > 0)
-            {
-                foreach (var item in lessonThemes)
-                {
-                    _lessonRepo.DeleteLessonTheme(item.ID);
-                }
-            }
+           
+            
             return _courseRepo.DeleteTheme(id);
         }
 

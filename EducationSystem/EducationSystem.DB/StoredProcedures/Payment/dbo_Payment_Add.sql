@@ -8,4 +8,5 @@ create proc dbo.Payment_Add (
  begin
 	insert into [dbo].[Payment](ContractNumber,Amount,Date,Period,IsPaid)
 	values (@ContractNumber, @Amount, @Date, @Period, @IsPaid)
+	select SCOPE_IDENTITY()
  end

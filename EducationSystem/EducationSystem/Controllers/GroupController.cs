@@ -11,6 +11,7 @@ using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace EducationSystem.Controllers
 {
@@ -27,7 +28,8 @@ namespace EducationSystem.Controllers
         private ThemeMapper _themeMapper;
         private CourseService _courseService;
         private GroupReportMapper _reportMapper;
-        public GroupController()
+        private IMapper _mapper;
+        public GroupController(IMapper mapper)
         {
             
             _repo = new GroupRepository();
@@ -36,6 +38,7 @@ namespace EducationSystem.Controllers
             _courseService = new CourseService();
             _themeMapper = new ThemeMapper();
             _reportMapper = new GroupReportMapper();
+            _mapper = mapper;
         }
 
         // https://localhost:44365/api/group/
@@ -54,19 +57,25 @@ namespace EducationSystem.Controllers
             GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupById(id));
             return Ok(result);
         }
+        // https://localhost:44365/api/group/theme/3
+        [HttpGet("theme/{Id}")]
+        public ActionResult<List<GroupOutputModel>> GetGroupByThemeId(int id)
+        {
+            List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroupByThemeId(id));
+            return Ok(result);
+        }
 
         // https://localhost:44365/api/group/groups-without-tutors
         [HttpGet("groups-without-tutors")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult GetGroupsWithoutTutors()
+        public ActionResult<List<GroupOutputModel>> GetGroupsWithoutTutors()
         {
-            List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroupsWithoutTutors());
+            var result = _mapper.Map<List<GroupOutputModel>>(_service.GetGroupsWithoutTutors());
             return Ok(result);
         }
 
         // https://localhost:44365/api/group/3/programs-group
-        [HttpGet("{Id}/programs-group")]
-        
+        [HttpGet("{Id}/programs-group")]        
         public ActionResult GetGroupProgramsByGroupId(int id)
         {
             GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupProgramsByGroupId(id));
@@ -127,56 +136,6 @@ namespace EducationSystem.Controllers
                 return Problem("Ошибка!");
         }
 
-        // https://localhost:44365/api/group/group-status/name
-        [HttpPost("group-status/name")]
-        [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult AddGroupStatus(string name)
-        {
-            _repo.AddGroupStatus(name);
-            return Ok("Cтатус обновлен");
-        }
-
-        // https://localhost:44365/api/group/group-status
-        [HttpGet("group-status")]
-        public ActionResult GetGroupStatus()
-        {
-            var groupStatuses = _repo.GetGroupStatus();
-            return Ok(groupStatuses);
-        }
-
-        // https://localhost:44365/api/group/group-status/3
-        [HttpGet("group-status/{id}")]
-        public dynamic GetGroupStatus(int id)
-        {
-            var groupStatus = _repo.GetGroupStatusById(id);
-            return Ok(groupStatus);
-        }
-
-        // https://localhost:44365/api/group/group-status/3
-        [HttpPut("group-status/{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult UpdateGroupStatus(int id, [FromBody] GroupStatusDto groupStatus)
-        {
-            _repo.UpdateGroupStatus(groupStatus);
-            return Ok("success");
-        }
-
-        // https://localhost:50221/api/group/group-status/3
-        [HttpDelete("group-status/{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult DeleteGroupStatus(int id)
-        {
-            _repo.DeleteGroupStatus(id);
-            return Ok("success");
-        }
-        // https://localhost:50221/api/group/teacher-groups
-        [HttpGet("teacher-groups")]
-        [Authorize(Roles = "Админ, Менеджер, Преподаватель")]
-        public ActionResult GetTeacherGroups()
-        {
-            var groups = _repo.GetTeacherGroups();
-            return Ok(groups);
-        }
         // https://localhost:50221/api/group/teacher-group/1
         [HttpGet("teacher-group/{id}")]
         [Authorize(Roles = "Админ, Менеджер, Преподаватель")]
@@ -185,12 +144,12 @@ namespace EducationSystem.Controllers
             var group = _repo.GetTeacherGroupById(id);
             return Ok(group);
         }
-        // https://localhost:50221/api/group/teacher-group/2
-        [HttpDelete("teacher-group/{id}")]
+        // https://localhost:50221/api/group/2/teacher/3
+        [HttpDelete("{groupId}/teacher/{userId}")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult DeleteTeacherGroup(int id)
+        public ActionResult DeleteTeacherGroup(int groupId, int userId)
         {
-            var deletedGroup = _repo.DeleteTeacherGroup(id);
+            var deletedGroup = _repo.DeleteTeacherGroup(userId, groupId);
             return Ok(deletedGroup);
         }
         // https://localhost:50221/api/group/teacher-group
@@ -202,7 +161,7 @@ namespace EducationSystem.Controllers
             return Ok(addGroup);
         }      
         [HttpGet("student-group/{id}")]
-        //[Authorize(Roles = "Админ, Менеджер, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Админ, Менеджер, Преподаватель, Тьютор")]
         public ActionResult GetStudentGroupById(int id)
         {
             var group = _repo.GetStudentGroupById(id);
@@ -211,9 +170,9 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/group/student-group/1
         [HttpDelete("student-group{id}")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult DeleteStudentGroup(int id)
+        public ActionResult DeleteStudentGroup(int userId, int groupId)
         {
-            var deletedGroup = _repo.DeleteStudentGroupById(id);
+            var deletedGroup = _repo.DeleteStudentGroupById(userId, groupId);
             return Ok(deletedGroup);
         }
         // https://localhost:50221/api/group/student-group
