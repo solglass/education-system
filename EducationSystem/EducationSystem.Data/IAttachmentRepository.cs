@@ -10,7 +10,6 @@ namespace EducationSystem.Data
         int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId);
         int DeleteAttachmentById(int id);
         AttachmentDto GetAttachmentById(int id);
-        string GetFriendlyAttachmentTypeName(AttachmentType attachmentType);
         int ModifyAttachment(AttachmentDto attachmentDto);
     }
 }

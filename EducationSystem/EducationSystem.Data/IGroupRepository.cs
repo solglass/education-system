@@ -20,6 +20,7 @@ namespace EducationSystem.Data
         GroupDto GetGroupProgramsByGroupId(int id);
         List<GroupDto> GetGroups();
         List<GroupDto> GetGroupsByCourseId(int id);
+        List<GroupDto> GetGroupByThemeId(int id);
         List<GroupDto> GetGroupsWithoutTutors();
         StudentGroupDto GetStudentGroupById(int id);
         TeacherGroupDto GetTeacherGroupById(int id);

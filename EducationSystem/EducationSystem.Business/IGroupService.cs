@@ -14,5 +14,6 @@ namespace EducationSystem.Business
         List<GroupDto> GetGroups();
         List<GroupDto> GetGroupsWithoutTutors();
         int UpdateGroup(GroupDto groupDto);
+        List<GroupDto> GetGroupByThemeId(int id);
     }
 }
