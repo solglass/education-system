@@ -69,6 +69,10 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyAttachmentTypeName(src.AttachmentType)));
             CreateMap<HomeworkAttemptInputModel, HomeworkAttemptDto>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => (HomeworkAttemptStatus)src.HomeworkAttemptStatusId));
+
+            CreateMap<HomeworkAttemptWithCountDto, HomeworkAttemptWithCountOutputModel>()
+                .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
+
         }
     }
 }

@@ -23,17 +23,12 @@ namespace EducationSystem.API.Controllers
     public class HomeworkController : ControllerBase
     {
 
-
-        private HomeworkRepository _repo;
-        private HomeworkMapper _homeworkMapper;
         private HomeworkAttemptMapper _homeworkAttemptMapper;
         private HomeworkService _homeworkService;
         private IMapper _mapper;
 
         public HomeworkController(IMapper mapper)
         {
-            _repo = new HomeworkRepository();
-            _homeworkMapper = new HomeworkMapper();
             _homeworkAttemptMapper = new HomeworkAttemptMapper();
             _homeworkService = new HomeworkService();
             _mapper = mapper;
@@ -42,8 +37,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework
         [HttpPost]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult AddHomework([FromBody] HomeworkInputModel homework)
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]        public ActionResult AddHomework([FromBody] HomeworkInputModel homework)
         {
             var result = _homeworkService.AddHomework(_mapper.Map<HomeworkDto>(homework));
             return Ok(result);
@@ -203,6 +197,7 @@ namespace EducationSystem.API.Controllers
         
         // https://localhost:44365/api/homework/attempt/3/attachment/1
         [HttpDelete("attempt/{attemptId}/attachment/{attachmentId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteHomeworkAttemptAttachment(int attemptId, int attachmentId)
         {
             var results = _homeworkService.DeleteHomeworkAttemptAttachment(attemptId, attachmentId);
@@ -254,26 +249,35 @@ namespace EducationSystem.API.Controllers
 
  
         // https://localhost:44365/api/homework/3/theme/1
-        [HttpPost("homework/{homeworkId}/theme/{themeId}")]
+        [HttpPost("{homeworkId}/theme/{themeId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTheme(int homeworkId, int themeId)
         {
             var results = _homeworkService.AddHomework_Theme(homeworkId, themeId); 
+
             return Ok(results);
         }
-        [HttpGet("homework/attempts/by-user/{id}")]
+
+        //todo: the model is not filled in.
+        // https://localhost:44365/api/homework/attempt/by-user/2
+        [HttpGet("attempt/by-user/{userId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult GetHomeworkAttemptsByUserId(int id)
+        public ActionResult GetHomeworkAttemptsByUserId(int userId)
         {
-          var outputModel = _homeworkAttemptMapper.FromDtos(_homeworkService.GetHomeworkAttemptsByUserId(id));
-          return Ok(outputModel);
+          var results = _mapper.Map<List<HomeworkAttemptWithCountOutputModel>>(_homeworkService.GetHomeworkAttemptsByUserId(userId));
+
+          return Ok(results);
         }
-        
-        [HttpGet("homework/attempts/by-grop/{statusId}/{groupId}")]
+
+        //todo: the model is not filled in.
+        // https://localhost:44365/api/homework/attempt/by-group/2/by-status/1
+        [HttpGet("attempt/by-group/{groupId}/by-status/{statusId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult GetHomeworkAttemptByStatusIdAndGroupId(int statusId, int groupId)
         {
-          var outputModel = _homeworkAttemptMapper.FromDtos(_homeworkService.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId));
-          return Ok(outputModel);
+          var results = _mapper.Map<List<HomeworkAttemptWithCountOutputModel>>(_homeworkService.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId));
+
+          return Ok(results);
         }
     }
 
