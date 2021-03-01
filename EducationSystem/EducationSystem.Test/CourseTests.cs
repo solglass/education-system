@@ -11,7 +11,7 @@ namespace EducationSystem.Data.Tests
     [TestFixture]
     public class CourseTests
     {
-        private CourseRepository _courseRepo;
+        private ICourseRepository _courseRepo;
         private int _courseId;
         private List<int> _themeIdList;
         private CourseDto _expectedCourse;
@@ -20,7 +20,6 @@ namespace EducationSystem.Data.Tests
         [OneTimeSetUp]
         public void SetUpTest()
         {
-            _courseRepo = new CourseRepository();
             _coursesFromDb = new List<CourseDto>();
             _themeIdList = new List<int>();
             _expectedCourse = GetCourseMock(1);
