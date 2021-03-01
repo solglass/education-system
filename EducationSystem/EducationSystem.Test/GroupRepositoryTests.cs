@@ -11,12 +11,12 @@ namespace EducationSystem.Data.Tests
     public class GroupRepositoryTests
     {
         private List<int> _groupsId;
+        private GroupRepository gRepo;
         [SetUp]
         public void GroupsTestsSetup()
         {
             _groupsId = new List<int>();
             GroupDto expected = GetMockGroup_Add(1);
-            GroupRepository gRepo = new GroupRepository();
 
 
         }
@@ -25,7 +25,6 @@ namespace EducationSystem.Data.Tests
         public void Attachment_Add(int dtoMockNumber)
         {
             GroupDto expected = GetMockGroup_Add(dtoMockNumber);
-            GroupRepository gRepo = new GroupRepository();
             _groupsId.Add(gRepo.AddGroup(expected));
             expected.Id = _groupsId[_groupsId.Count - 1];
             if (_groupsId.Count == 0) { Assert.Fail("Group addition failed"); }
@@ -42,7 +41,6 @@ namespace EducationSystem.Data.Tests
         public void Group_Delete(int dtoMockNumber)
         {
             GroupDto expected = GetMockGroup_Add(dtoMockNumber);
-            GroupRepository gRepo = new GroupRepository();
             _groupsId.Add(gRepo.AddGroup(expected));
             if (_groupsId.Count == 0) { Assert.Fail("Group addition failed"); }
             else
@@ -59,7 +57,6 @@ namespace EducationSystem.Data.Tests
         public void Group_Update(int dtoMockNumber)
         {
             GroupDto expected = GetMockGroup_Add(dtoMockNumber);
-            GroupRepository gRepo = new GroupRepository();
             _groupsId.Add(gRepo.AddGroup(expected));
             if (_groupsId.Count == 0) { Assert.Fail("Group addition failed"); }
 
@@ -78,7 +75,7 @@ namespace EducationSystem.Data.Tests
         [TearDown]
         public void AttachmentsTestsTearDown()
         {
-            GroupRepository gRepo = new GroupRepository();
+
             foreach (int elem in _groupsId)
             {
                 gRepo.DeleteGroup(elem);
@@ -98,10 +95,10 @@ namespace EducationSystem.Data.Tests
                     {
                         Id = 999,
                         IsDeleted = false,
-                        Name="Test",
+                        Name = "Test",
                     };
                     groupDto.Course = courseDto;
-                    groupDto.StartDate= DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    groupDto.StartDate = DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     return groupDto;
                 default:
                     throw new Exception();
