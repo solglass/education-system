@@ -8,10 +8,9 @@ namespace EducationSystem.Business
         int AddUser(UserDto userDto);
         int ChangePassword(int id, string oldPassword, string password);
         int DeleteUser(int id);
+        int RecoverUser(int id);
         List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId);
-
         UserDto GetUserById(int id);
-
         List<UserDto> GetUsers();
         int UpdateUser(UserDto userDto);
     }

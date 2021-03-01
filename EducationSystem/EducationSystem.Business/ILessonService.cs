@@ -18,5 +18,7 @@ namespace EducationSystem.Business
         LessonThemeDto GetLessonThemeById(int id);
         int UpdateAttendance(AttendanceDto attendance);
         object GetStudentByPercentOfSkip(int percent, int groupId);
+        int DeleteLesson(int id);
+        int RecoverLesson(int id);
     }
 }

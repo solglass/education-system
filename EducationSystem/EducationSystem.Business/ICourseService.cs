@@ -17,5 +17,7 @@ namespace EducationSystem.Business
         List<ThemeDto> GetUncoveredThemesByGroupId(int id);
         int RemoveThemeFromCourse(int courseId, int themeId);
         int UpdateCourse(CourseDto course);
+        int DeleteCourse(int id);
+        int RecoverCourse(int id);
     }
 }

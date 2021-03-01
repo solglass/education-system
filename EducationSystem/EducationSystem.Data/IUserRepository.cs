@@ -2,6 +2,7 @@
 using EducationSystem.Data.Models;
 using System.Collections.Generic;
 
+
 namespace EducationSystem.Data
 {
     public interface IUserRepository
@@ -15,7 +16,7 @@ namespace EducationSystem.Data
         UserDto GetUserById(int id);
         List<UserDto> GetUsers();
         int HardDeleteUser(int id);
-        int UpdateUser(UserDto user);
-        int DeleteOrRecoverUser(int id, bool isDeleted);
+        int UpdateUser(UserDto user);
+        int DeleteOrRecoverUser(int id, bool isDeleted);
     }
 }
