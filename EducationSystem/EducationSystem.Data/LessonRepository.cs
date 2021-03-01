@@ -75,12 +75,20 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int DeleteLesson(int id)
+        public int DeleteOrRecoverLesson(int id, bool isDeleted)
         {
-           return _connection.Execute(
-                "dbo.Lesson_Delete",
-                new {id},
-                commandType: CommandType.StoredProcedure);
+            return _connection.Execute(
+                 "dbo.Lesson_DeleteOrRecover",
+                 new { id, isDeleted },
+                 commandType: CommandType.StoredProcedure);
+        }
+
+        public int HardDeleteLesson(int id)
+        {
+            return _connection.Execute(
+                 "dbo.Lesson_HardDelete",
+                 new { id },
+                 commandType: CommandType.StoredProcedure);
         }
 
         public int UpdateLesson(LessonDto lessonDto)

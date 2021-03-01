@@ -34,14 +34,48 @@ namespace EducationSystem.Core.Enums
 
         public static string GetFriendlyUnderstandingLevelName(UnderstandingLevel understandingLevel)
         {
-            String FriendlyName = understandingLevel switch
+            string friendlyName = understandingLevel switch
             {
                 UnderstandingLevel.Bad => "Плохо",
                 UnderstandingLevel.Medium => "Средне",
                 UnderstandingLevel.Good => "Хорошо",
                 _ => "Уровень понимания не найден"
             };
-            return FriendlyName;
+            return friendlyName;
+
+        }
+
+        public static string GetFriendlyHomeworkAttemptStatusName(HomeworkAttemptStatus attemptStatus)
+        {
+
+            string friendlyName = attemptStatus switch
+            {
+                HomeworkAttemptStatus.ToDo => "Назначено",
+                HomeworkAttemptStatus.Expired => "Просрочено",
+                HomeworkAttemptStatus.ToCheck => "Ждет проверки",
+                HomeworkAttemptStatus.Passed => "Ждет исправления",
+                HomeworkAttemptStatus.PassedLate=> "Сдано",
+                HomeworkAttemptStatus.ToFix => "Сдано с опозданием",
+                _ => "Некорректный статус"
+            };
+            return friendlyName;
+
+        }
+
+        public static string GetFriendlyRoleName(Role role)
+        {
+
+            string friendlyName = role switch
+            {
+                Role.Admin => "Администратор",
+                Role.Manager => "Менеджер",
+                Role.Methodist => "Методист",
+                Role.Student => "Студент",
+                Role.Teacher => "Преподаватель",
+                Role.Tutor => "Тьютор",
+                _ => "Роль не существует"
+            };
+            return friendlyName;
 
         }
     }

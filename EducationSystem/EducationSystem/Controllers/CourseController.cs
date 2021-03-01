@@ -105,13 +105,25 @@ namespace EducationSystem.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult RemoveCourseInfo(int id)
+        public ActionResult DeleteCourse(int id)
         {
-            var result = _courseService.RemoveCourse(id);
+            var result = _courseService.DeleteCourse(id);
             if (result == 1)
                 return Ok($"Курс #{id} удален!");
             else
                 return Problem($"Ошибка! Не получилось удалить курс #{id}!") ;
+        }
+
+        // https://localhost:XXXXX/api/course/id/recovery
+        [HttpPut("{id}/recovery")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        public ActionResult RecoverCourse(int id)
+        {
+            var result = _courseService.RecoverCourse(id);
+            if (result == 1)
+                return Ok($"Курс #{id} восстановлен!");
+            else
+                return Problem($"Ошибка! Не получилось восстановить курс #{id}!");
         }
 
         // https://localhost:XXXXX/api/course/3/theme/8
