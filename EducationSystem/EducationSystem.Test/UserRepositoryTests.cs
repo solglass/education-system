@@ -14,6 +14,7 @@ namespace EducationSystem.Data.Tests
         private List<int> _userRoleId;
 
         private UserRepository _uRepo;
+        private UserRepository uRepo;
 
         [SetUp]
         public void UserRepositoryTestsSetup()
@@ -21,7 +22,6 @@ namespace EducationSystem.Data.Tests
             _userId = new List<int>();
             _roleId = new List<int>();
             _userRoleId = new List<int>();
-            _uRepo = new UserRepository();
 
         }
 

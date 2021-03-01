@@ -22,20 +22,20 @@ namespace EducationSystem.Controllers
     public class GroupController : ControllerBase
     {
 
-        private GroupRepository _repo;
+        private IGroupRepository _repo;
         private GroupMapper _groupMapper;
-        private GroupService _service;
+        private IGroupService _service;
         private ThemeMapper _themeMapper;
-        private CourseService _courseService;
+        private ICourseService _courseService;
         private GroupReportMapper _reportMapper;
         private IMapper _mapper;
-        public GroupController(IMapper mapper)
+        public GroupController(IMapper mapper, IGroupRepository groupRepository, IGroupService groupService, ICourseService courseService)
         {
             
-            _repo = new GroupRepository();
+            _repo = groupRepository;
             _groupMapper = new GroupMapper();
-            _service = new GroupService();
-            _courseService = new CourseService();
+            _service = groupService;
+            _courseService = courseService;
             _themeMapper = new ThemeMapper();
             _reportMapper = new GroupReportMapper();
             _mapper = mapper;

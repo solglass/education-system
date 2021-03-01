@@ -6,20 +6,20 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-    public class LessonService
+    public class LessonService : ILessonService
     {
-        private LessonRepository _lessonRepository;
-        public LessonService()
+        private ILessonRepository _lessonRepository;
+        public LessonService(ILessonRepository lessonRepository)
         {
-            _lessonRepository = new LessonRepository();
+            _lessonRepository = lessonRepository;
         }
         public List<LessonDto> GetLessonsByGroupId(int id)
         {
-           return _lessonRepository.GetLessonsByGroupId(id);
+            return _lessonRepository.GetLessonsByGroupId(id);
         }
         public LessonDto GetLessonById(int id)
         {
-           return _lessonRepository.GetLessonById(id);
+            return _lessonRepository.GetLessonById(id);
         }
 
         public int DeleteLesson(int id)
@@ -39,7 +39,7 @@ namespace EducationSystem.Business
         }
         /* public UpdateLesson
         */
-       public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
+        public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
         {
             return _lessonRepository.GetFeedbacks(lessonId, groupId, courseId);
         }
@@ -69,27 +69,32 @@ namespace EducationSystem.Business
         /* public AddAttendance
         *  public UpdateAttendance
         */
-        
+
         public LessonThemeDto GetLessonThemeById(int id)
         {
             return _lessonRepository.GetLessonThemeById(id);
         }
-        
-        public int UpdateAttendance(AttendanceDto attendance)
-        {
-            return _lessonRepository.UpdateAttendance(attendance);
-        }
-        /* public AddLessonTheme
-*  public UpdateLessonTheme
-*/
-        public List<LessonDto> GetLessonsByThemeId(int themeId)
-        {
-            return _lessonRepository.GetLessonsByThemeId(themeId);
-        }
-
-        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
-        {
-            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
-        }
+
+        public int UpdateAttendance(AttendanceDto attendance)
+        {
+            return _lessonRepository.UpdateAttendance(attendance);
+        }
+        /* public AddLessonTheme
+*  public UpdateLessonTheme
+*/
+        public List<LessonDto> GetLessonsByThemeId(int themeId)
+        {
+            return _lessonRepository.GetLessonsByThemeId(themeId);
+        }
+
+        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
+        {
+            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
+        }
+
+        object ILessonService.GetStudentByPercentOfSkip(int percent, int groupId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

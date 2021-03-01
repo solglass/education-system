@@ -15,7 +15,6 @@ namespace EducationSystem.Data.Tests
         public void TagTestsSetup()
         {
             _tagId = new List<int>();
-            _tRepo = new TagRepository();
 
         }
 

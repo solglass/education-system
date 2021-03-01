@@ -19,14 +19,15 @@ namespace EducationSystem.Controllers
     [Route("api/[controller]")]
     public class TagController : ControllerBase
     {
-        private TagRepository _repo;
+        private ITagRepository _repo;
         private TagMapper _tagMapper;
-        private TagService _tagService;
+        private ITagService _tagService;
 
-        public TagController()
+        public TagController(ITagRepository tagRepository, ITagService tagService)
         {
 
-            _repo = new TagRepository();
+            _repo = tagRepository;
+            _tagService = tagService;
         }
 
         // https://localhost:50221/api/tag/

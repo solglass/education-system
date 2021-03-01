@@ -23,18 +23,19 @@ namespace EducationSystem.Controllers
     public class UserController : ControllerBase
     {
        
-        private PaymentRepository _prepo;
+        private IPaymentRepository _prepo;
         private PaymentMapper _pMapper;
         private UserMapper _userMapper;
-        private UserService _userService;
+        private IUserService _userService;
         private readonly IMapper _mapper;
 
-        public UserController(IMapper mapper)
+        public UserController(IMapper mapper, IPaymentRepository paymentRepository, IUserService userService)
 
         {
+            _prepo = paymentRepository;
             _mapper = mapper;
             _userMapper = new UserMapper();
-            _userService = new UserService();
+            _userService = userService;
         }
 
         // https://localhost:50221/api/user/register
@@ -107,7 +108,7 @@ namespace EducationSystem.Controllers
             _userService.UpdateUser(userDto);
             return Ok("Обновлено");
         }
-
+    
         // https://localhost:50221/api/user/42
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер")]
