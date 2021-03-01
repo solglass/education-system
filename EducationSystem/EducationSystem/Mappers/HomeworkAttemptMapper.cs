@@ -18,7 +18,6 @@ namespace EducationSystem.API.Mappers
                 Id = inputModel.Id,
                 Author = new UserDto { Id = inputModel.AuthorId},
                 Comment = inputModel.Comment,
-                Homework = new HomeworkDto { Id = inputModel.HomeworkId},
                 HomeworkAttemptStatus = (HomeworkAttemptStatus)inputModel.HomeworkAttemptStatusId
             }; 
         }

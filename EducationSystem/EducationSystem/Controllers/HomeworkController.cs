@@ -74,12 +74,8 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkOutputModel>> GetHomewroksByGroupId(int groupId)
         {
-            var result = new List<HomeworkOutputModel>();
-            var dtos = _homeworkService.GetHomeworksByGroupId(groupId);
-            foreach (var dto in dtos)
-            {
-                result.Add(_mapper.Map<HomeworkOutputModel>(dto));
-            }
+            var result = _mapper.Map<List<HomeworkSearchOutputModel>>(_homeworkService.GetHomeworksByGroupId(groupId));
+            
             return Ok(result);
         }
 
@@ -162,8 +158,8 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ")]
         public ActionResult DeleteHomeworkAttempt(int id)
         {
-            _homeworkService.DeleteHomeworkAttempt(id);
-            return Ok("Решение удалено");
+            var result = _homeworkService.DeleteHomeworkAttempt(id);
+            return Ok(result);
         }
 
         //https://localhost:44365/api/homework/comment
@@ -199,43 +195,10 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteHomework_Theme(int homeworkId, int themeId)
         {
             var results = _homeworkService.DeleteHomework_Theme(homeworkId, themeId);
-            return Ok(results);
-        }
 
-        // https://localhost:44365/api/homework/HomeworkAttemptStatus
-        [HttpGet("HomeworkAttemptStatus")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetHomeworkAttemptStatuses()
-        {
-            var results = _repo.GetHomeworkAttemptStatuses();
             return Ok(results);
         }
-
-        // https://localhost:44365/api/homework/HomeworkAttemptStatus/42
-        [HttpDelete("HomeworkAttemptStatus/{id}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult DeleteHomeworkAttemptStatus(int id)
-        {
-            var results = _repo.DeleteHomeworkAttemptStatus(id);
-            return Ok(results);
-        }
-
-        // https://localhost:44365/api/homeworkAttempt/3/attachment/1
-        [HttpDelete("homeworkAttempt/{homeworkAttemptId}/attachment/{attachmentId}")]
-        public ActionResult DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
-        {
-            var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId,attachmentId);
-            return Ok(results);
-        }
-        // https://localhost:44365/api/homework/3/theme/1
-        [HttpDelete("homework/{homeworkId}/theme/{themeId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult DeleteHomework_Theme(int homeworkId, int themeId)
-        {
-            var results = _homeworkService.DeleteHomework_Theme(homeworkId, themeId);
-            return Ok(results);
-        }
-
+        
         
         // https://localhost:44365/api/homeworkAttempt/3/attachment/1
         [HttpDelete("homeworkAttempt/{homeworkAttemptId}/attachment/{attachmentId}")]
@@ -245,17 +208,6 @@ namespace EducationSystem.API.Controllers
             return Ok(results);
         }
         
-        // https://localhost:44365/api/homework/id
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult DeleteHomework(int id)
-        {
-            var result = _homeworkService.DeleteHomework(id);
-            if (result == 1)
-                return Ok($"Домашняя работа #{id} удалена!");
-            else
-                return Problem($"Ошибка! Не удалось удалить домашнюю работу #{id}!");
-        }
 
         // https://localhost:44365/api/homework/id/recovery
         [HttpPut("{id}/recovery")]
@@ -267,21 +219,6 @@ namespace EducationSystem.API.Controllers
                 return Ok($"Домашняя работа #{id} восстановлена!");
             else
                 return Problem($"Ошибка! Не удалось восстановить домашнюю работу #{id}!");
-        }
-
-
-       
-
-        // https://localhost:44365/api/homework/homeworkAttempts/42
-        [HttpDelete("homeworkAttempts/{id}")]
-        [Authorize(Roles = "Админ, Студент")]
-        public ActionResult DeleteHomeworkAttempt(int id)
-        {
-            var result = _homeworkService.DeleteHomeworkAttempt(id);
-            if (result == 1)
-                return Ok($"Решение #{id} удалено!");
-            else
-                return Problem($"Ошибка! Не удалось удалить решение #{id}!");
         }
 
         // https://localhost:44365/api/homework/homeworkAttempts/id/recovery

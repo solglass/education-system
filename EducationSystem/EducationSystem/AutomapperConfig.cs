@@ -36,7 +36,6 @@ namespace EducationSystem.API
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<ThemeDto, ThemeOutputModel>();
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>();
-            CreateMap<HomeworkAttemptStatusDto, HomeworkAttemptStatusOutputModel>();
             CreateMap<AttachmentDto, AttachmentOutputModel>();
 
             CreateMap<LessonInputModel, LessonDto>();
