@@ -11,7 +11,7 @@ namespace EducationSystem.Business
         AttendanceDto GetAttendanceById(int id);
         List<AttendanceDto> GetAttendances();
         FeedbackDto GetFeedbackById(int id);
-        List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId);
+        List<FeedbackDto> GetFeedbacks(int? lessonId, int? groupId, int? courseId);
         LessonDto GetLessonById(int id);
         List<LessonDto> GetLessonsByGroupId(int id);
         List<LessonDto> GetLessonsByThemeId(int themeId);
