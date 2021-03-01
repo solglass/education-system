@@ -179,17 +179,19 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        // https://localhost:44365/api/homework/comments/42
-        [HttpGet("comments/{id}")]
+        // how check attemptId?
+        //https://localhost:44365/api/homework/attempt/2/comment/2
+        [HttpGet("attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult GetCommentById(int id)
+        public ActionResult GetCommentById(int attemptId, int commentId)
         {
-            var results = _repo.GetCommentById(id);
+            var results = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
+
             return Ok(results);
         }
 
         // https://localhost:44365/api/homework/3/theme/1
-        [HttpDelete("homework/{homeworkId}/theme/{themeId}")]
+        [HttpDelete("{homeworkId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteHomework_Theme(int homeworkId, int themeId)
         {
@@ -199,62 +201,55 @@ namespace EducationSystem.API.Controllers
         }
         
         
-        // https://localhost:44365/api/homeworkAttempt/3/attachment/1
-        [HttpDelete("homeworkAttempt/{homeworkAttemptId}/attachment/{attachmentId}")]
-        public ActionResult DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
+        // https://localhost:44365/api/homework/attempt/3/attachment/1
+        [HttpDelete("attempt/{attemptId}/attachment/{attachmentId}")]
+        public ActionResult DeleteHomeworkAttemptAttachment(int attemptId, int attachmentId)
         {
-            var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId,attachmentId);
+            var results = _homeworkService.DeleteHomeworkAttemptAttachment(attemptId, attachmentId);
+
             return Ok(results);
         }
         
 
-        // https://localhost:44365/api/homework/id/recovery
-        [HttpPut("{id}/recovery")]
+        // https://localhost:44365/api/homework/2/recovery
+        [HttpPut("{homeworkId}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult RecoverHomework(int id)
+        public ActionResult RecoverHomework(int homeworkId)
         {
-            var result = _homeworkService.RecoverHomework(id);
-            if (result == 1)
-                return Ok($"Домашняя работа #{id} восстановлена!");
-            else
-                return Problem($"Ошибка! Не удалось восстановить домашнюю работу #{id}!");
+            var result = _homeworkService.RecoverHomework(homeworkId);
+
+            return Ok(result);
         }
 
-        // https://localhost:44365/api/homework/homeworkAttempts/id/recovery
-        [HttpPut("homeworkAttempts/{id}/recovery")]
+        // https://localhost:44365/api/homework/attempt/3/recovery
+        [HttpPut("attempt/{attemptId}/recovery")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult RecoverHomeworkAttempt(int id)
+        public ActionResult RecoverHomeworkAttempt(int attemptId)
         {
-            var result = _homeworkService.RecoverHomeworkAttempt(id);
-            if (result == 1)
-                return Ok($"Решение #{id} восстановлено!");
-            else
-                return Problem($"Ошибка! Не удалось восстановить решение #{id}!");
+            var result = _homeworkService.RecoverHomeworkAttempt(attemptId);
+
+            return Ok(result);
         }
 
-      
-        // https://localhost:44365/api/comments/id
-        [HttpDelete("comments/{id}")]
+
+        //https://localhost:44365/api/homework/attempt/2/comment/2
+        [HttpDelete("attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult DeleteComment(int id)
+        public ActionResult DeleteComment(int attemptId, int commentId)
         {
-            var result = _homeworkService.DeleteComment(id);
-            if (result == 1)
-                return Ok($"Комментарий #{id} удален!");
-            else
-                return Problem($"Ошибка! Не удалось удалить комментарий #{id}!");
+            var result = _homeworkService.DeleteComment(commentId);
+
+            return Ok(result);
         }
 
-        // https://localhost:44365/api/comments/id/recovery
-        [HttpPut("comments/{id}/recovery")]
+        // https://localhost:44365/api/homework/attempt/2/comment/2/recovery
+        [HttpPut("attempt/{attemptId}/comment/{commentId}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult RecoverComment(int id)
+        public ActionResult RecoverComment(int attemptId, int commentId)
         {
-            var result = _homeworkService.RecoverComment(id);
-            if (result == 1)
-                return Ok($"Комментарий #{id} восстановлен!");
-            else
-                return Problem($"Ошибка! Не удалось восстановить комментарий #{id}!");
+            var result = _homeworkService.RecoverComment(commentId);
+
+            return Ok(result);
         }
 
  
