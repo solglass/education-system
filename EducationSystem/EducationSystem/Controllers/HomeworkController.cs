@@ -69,8 +69,8 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        // https://localhost:44365/api/homework/group/2
-        [HttpGet("group/{groupId}")]
+        // https://localhost:44365/api/homework/by-group/2
+        [HttpGet("by-group/{groupId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkOutputModel>> GetHomewroksByGroupId(int groupId)
         {
@@ -129,18 +129,19 @@ namespace EducationSystem.API.Controllers
         {
             var dto = _homeworkAttemptMapper.ToDto(inputModel);
             dto.Homework = new HomeworkDto { Id = homeworkId };
-            var result = _homeworkService.AddHomeworkAttempt(_homeworkAttemptMapper.ToDto(inputModel));
+            var result = _homeworkService.AddHomeworkAttempt(dto);
 
             return Ok(result);
         }
 
 
-        // https://localhost:44365/api/homework/homeworkAttempts/42
-        [HttpGet("homeworkAttempts/{id}")]
+        // https://localhost:44365/api/homework/attempt/42
+        [HttpGet("attempt/{attemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult GetHomeworkAttemptById(int id)
+        public ActionResult GetHomeworkAttemptById(int attemptId)
         {
-            var results = _repo.GetHomeworkAttemptById(id);
+            var results = _mapper.Map<HomeworkAttemptOutputModel>( _homeworkService.GetHomeworkAttemptById(attemptId));
+
             return Ok(results);
         }
 

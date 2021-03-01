@@ -37,7 +37,7 @@ namespace EducationSystem.API.Mappers
             return new HomeworkAttemptOutputModel
             {
                 Id = dto.Id,
-                Author = new UserOutputModel { Id = dto.Author.Id},
+                Author = new AuthorOutputModel { Id = dto.Author.Id},
                 Comment = dto.Comment,
                 HomeworkAttemptStatus = FriendlyNames.GetFriendlyHomeworkAttemptStatusName(dto.HomeworkAttemptStatus) 
             };

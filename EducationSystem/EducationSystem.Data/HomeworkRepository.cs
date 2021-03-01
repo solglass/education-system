@@ -187,16 +187,13 @@ namespace EducationSystem.Data
             var hwAttempt = _connection
                 .Query<HomeworkAttemptDto, UserDto,  HomeworkDto, int, HomeworkAttemptDto>(
                 "dbo.HomeworkAttempt_SelectById",
-                (hwAttempt, user, homework, hwAttemptStatus) =>
+                (attempt, user, homework, hwAttemptStatus) =>
                 {
-                    if (hwAttemptEntry.Id == 0)
-                    {
-                        hwAttemptEntry = hwAttempt;
-                        hwAttemptEntry.Author = user;
-                        hwAttemptEntry.Homework = homework;
-                        hwAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus) hwAttemptStatus;
-                    }
-                    
+                    hwAttemptEntry = attempt;
+                    hwAttemptEntry.Author = user;
+                    hwAttemptEntry.Homework = homework;
+                    hwAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)hwAttemptStatus;
+
                     return hwAttemptEntry;
                 },
                 new { id },

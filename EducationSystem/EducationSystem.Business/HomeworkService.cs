@@ -157,5 +157,10 @@ namespace EducationSystem.Business
         
           return dtos;
         }
+
+        public HomeworkAttemptDto GetHomeworkAttemptById(int id)
+        {
+            return _homeworkRepository.GetHomeworkAttemptById(id);
+        }
     }
 }
