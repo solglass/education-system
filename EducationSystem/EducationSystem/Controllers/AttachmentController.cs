@@ -57,11 +57,11 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/attachment/42
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel)
+        public ActionResult UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel, int id)
         {
             try
             {
-                _service.ModifyAttachment(_attachmentMapper.ToDto(attachmentInputModel));
+                _service.ModifyAttachment(_attachmentMapper.ToDto(attachmentInputModel, id));
             }
             catch (Exception ex)
             {
@@ -79,8 +79,9 @@ namespace EducationSystem.API.Controllers
             _service.DeleteAttachmentById(id);
             return Ok("Успех");
         }
-
-        [HttpGet]
+     //   https://localhost:44365/api/attachment/comment/4
+        [HttpPost("comment/{commentId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
         {
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
