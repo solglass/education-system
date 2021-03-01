@@ -180,7 +180,7 @@ namespace EducationSystem.API.Controllers
             var results = _homeworkService.DeleteHomeworkAttemptAttachment(homeworkAttemptId,attachmentId);
             return Ok(results);
         }
-        /*
+       
         // https://localhost:44365/api/homework/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
@@ -205,9 +205,6 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! Не удалось восстановить домашнюю работу #{id}!");
         }
 
-        */
-
-        /*
         // https://localhost:44365/api/homework/homeworkAttempts/42
         [HttpDelete("homeworkAttempts/{id}")]
         [Authorize(Roles = "Админ, Студент")]
@@ -231,8 +228,6 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить решение #{id}!");
         }
-        
-
       
         // https://localhost:44365/api/comments/id
         [HttpDelete("comments/{id}")]
@@ -257,7 +252,6 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить комментарий #{id}!");
         }
-        */
 
         // https://localhost:44365/api/homework/3/theme/1
         [HttpPost("homework/{homeworkId}/theme/{themeId}")]

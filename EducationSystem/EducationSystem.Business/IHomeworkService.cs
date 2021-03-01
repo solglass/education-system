@@ -23,5 +23,9 @@ namespace EducationSystem.Business
         List<HomeworkDto> GetHomeworksByThemeId(int themeId);
         int UpdateHomework(HomeworkDto homeworkDto);
         int UpdateHomeworkAttempt(HomeworkAttemptDto homeworkAttempt);
+        int DeleteComment(int id);
+        int RecoverComment(int id);
+        int RecoverHomework(int id);
+        int RecoverHomeworkAttempt(int id);
     }
 }

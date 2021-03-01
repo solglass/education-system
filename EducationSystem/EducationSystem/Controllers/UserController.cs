@@ -26,7 +26,6 @@ namespace EducationSystem.Controllers
         private IPaymentRepository _prepo;
         private PaymentMapper _pMapper;
         private UserMapper _userMapper;
-        private RoleMapper _roleMapper;
         private IUserService _userService;
         private readonly IMapper _mapper;
 
@@ -36,7 +35,6 @@ namespace EducationSystem.Controllers
             _prepo = paymentRepository;
             _mapper = mapper;
             _userMapper = new UserMapper();
-            _roleMapper = new RoleMapper();
             _userService = userService;
         }
 
@@ -110,7 +108,7 @@ namespace EducationSystem.Controllers
             _userService.UpdateUser(userDto);
             return Ok("Обновлено");
         }
-    /*
+    
         // https://localhost:50221/api/user/42
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер")]
@@ -144,7 +142,6 @@ namespace EducationSystem.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить пользователя #{id}!");
         }
-    */
 
         // https://localhost:50221/api/user/payment/payment/name
         [HttpPost("payment/name")]

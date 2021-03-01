@@ -27,5 +27,6 @@ namespace EducationSystem.Data
         List<TutorGroupDto> GetTutorGroups();
         int HardDeleteGroup(int id);
         int UpdateGroup(GroupDto groupDto);
+        List<GroupDto> GetGroupByThemeId(int id);
     }
 }
