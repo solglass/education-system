@@ -5,14 +5,14 @@ using BCrypt.Net;
 
 namespace EducationSystem.Business
 {
-    public class SecurityService
+    public class SecurityService : ISecurityService
     {
 
         private const string _secret = "O560@A5r6AJfqW$VOTp2nh0F";
 
         public string GetHash(string password)
-        { 
-             
+        {
+
             return BCrypt.Net.BCrypt.HashPassword(password + _secret);
         }
 

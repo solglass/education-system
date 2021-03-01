@@ -13,12 +13,12 @@ namespace EducationSystem.API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private AuthenticationService _service;
-        private SecurityService _securityService;
-        public AuthenticationController()
+        private IAuthenticationService _service;
+        private ISecurityService _securityService;
+        public AuthenticationController(IAuthenticationService authenticationService, ISecurityService securityService)
         {
-            _service = new AuthenticationService();
-            _securityService = new SecurityService();
+            _service = authenticationService;
+            _securityService = securityService;
         }
         [HttpPost]
         public ActionResult Authentificate([FromBody] AuthenticationInputModel login)

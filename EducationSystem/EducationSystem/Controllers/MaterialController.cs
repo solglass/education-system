@@ -21,13 +21,13 @@ namespace EducationSystem.Controllers
     public class MaterialController : ControllerBase
     {
 
-        private MaterialService _service;
+        private IMaterialService _service;
         private MaterialMapper _mapper;
 
-        public MaterialController()
+        public MaterialController(IMaterialService materialService)
         {
             _mapper = new MaterialMapper();
-            _service = new MaterialService();
+            _service = materialService;
         }
 
         // https://localhost:44365/api/material/340/group
@@ -76,14 +76,6 @@ namespace EducationSystem.Controllers
             return Ok("success");
         }
 
-        // https://localhost:50221/api/material/2
-        //[HttpDelete("{id}")]
-        //[Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        //public ActionResult DeleteMaterial(int id)
-        //{
-        //    _service.DeleteMaterialById(id);
-        //    return Ok("success");
-        //}
 
         // https://localhost:44365/api/material/id
         [HttpDelete("{id}")]
@@ -108,6 +100,7 @@ namespace EducationSystem.Controllers
             else
                 return Problem($"Ошибка! Не удалось восстановить материал #{id}!");
         }
-       
+
+
     }
 }
