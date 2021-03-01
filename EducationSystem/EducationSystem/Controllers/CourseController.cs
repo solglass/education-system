@@ -1,18 +1,14 @@
-﻿using EducationSystem.API.Mappers;
+﻿using AutoMapper;
+using EducationSystem.API.Mappers;
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
-//using EducationSystem.Controllers;
-//using EducationSystem.Data;
-//using EducationSystem.Data.Models;
+using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-//using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
 
 namespace EducationSystem.API.Controllers
 {
@@ -22,14 +18,12 @@ namespace EducationSystem.API.Controllers
     [Authorize]
     public class CourseController : ControllerBase
     {
-        private CourseMapper _courseMapper;
-        private ThemeMapper _themeMapper;
         private ICourseService _courseService;
-        public CourseController(ICourseService courseService)
+        private IMapper _mapper;
+        public CourseController(ICourseService courseService, IMapper mapper)
         {
-            _courseMapper = new CourseMapper();
-            _themeMapper = new ThemeMapper();
             _courseService = courseService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -38,7 +32,7 @@ namespace EducationSystem.API.Controllers
             List<CourseOutputModel> courses;
             try
             {
-                courses = _courseMapper.FromDtos(_courseService.GetCourses());
+                courses =_mapper.Map<List<CourseOutputModel>>( _courseService.GetCourses());
             }
             catch (Exception ex)
             {
@@ -53,7 +47,7 @@ namespace EducationSystem.API.Controllers
             CourseOutputModel course;
             try
             {
-                 course = _courseMapper.FromDto(_courseService.GetCourseById(id));
+                 course = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
             }
             catch(Exception ex)
             {
@@ -70,7 +64,7 @@ namespace EducationSystem.API.Controllers
             int result;
             try
             {
-                result = _courseService.AddCourse(_courseMapper.ToDto(course));
+                result = _courseService.AddCourse(_mapper.Map<CourseDto>(course));
             }
             catch (Exception ex)
             {
@@ -91,7 +85,7 @@ namespace EducationSystem.API.Controllers
             int result;
             try
             {
-                result = _courseService.UpdateCourse(_courseMapper.ToDto(course));
+                result = _courseService.UpdateCourse(_mapper.Map<CourseDto>(course));
             }
             catch (Exception ex)
             {
@@ -159,7 +153,7 @@ namespace EducationSystem.API.Controllers
             List<ThemeOutputModel> themes;
             try
             {
-                themes = _themeMapper.FromDtos(_courseService.GetThemes());
+                themes = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetThemes());
             }
             catch (Exception ex)
             {
@@ -176,7 +170,7 @@ namespace EducationSystem.API.Controllers
             ThemeOutputModel theme;
             try
             {
-                theme = _themeMapper.FromDto(_courseService.GetThemeById(id));
+                theme = _mapper.Map<ThemeOutputModel>(_courseService.GetThemeById(id));
             }
             catch (Exception ex)
             {
@@ -193,7 +187,7 @@ namespace EducationSystem.API.Controllers
             int result;
             try
             {
-               result = _courseService.AddTheme(_themeMapper.ToDto(inputModel));
+               result = _courseService.AddTheme(_mapper.Map<ThemeDto>(inputModel));
             }
             catch(Exception ex)
             {
