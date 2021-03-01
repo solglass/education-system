@@ -22,65 +22,55 @@ namespace EducationSystem.Controllers
         private TagRepository _repo;
         private TagMapper _tagMapper;
         private TagService _tagService;
-
         public TagController()
         {
-
-            _repo = new TagRepository();
+            _tagService = new TagService();
+            _tagMapper = new TagMapper();
+               _repo = new TagRepository();
         }
-
         // https://localhost:50221/api/tag/
-        [HttpPost]
+        [HttpPost("tag")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult AddNewTag([FromBody] TagInputModel tag)
+        public ActionResult AddTag([FromBody] TagInputModel tag)
         {
             var tagDto = _tagMapper.ToDto(tag);
             var result= _tagService.AddTag(tagDto);
             return Ok($"Тег№{result} добавлен");
         }
-
         // https://localhost:50221/api/tag
-        [HttpGet]
+        [HttpGet("tag")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public ActionResult GetTags()
         {
-            var tags = _tagService.GetTags();
+            var tagsDtos = _tagService.GetTags();
+            var tags = _tagMapper.FromDtos(tagsDtos);
             return Ok(tags);
         }
-
         // https://localhost:50221/api/tag/3
-        [HttpGet("{id}")]
+        [HttpGet("tag/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public ActionResult GetTag(int id)
         {
-            var tag = _tagService.GetTagById(id);
+            var tagDto = _tagService.GetTagById(id);
+            var tag = _tagMapper.FromDto(tagDto);
             return Ok(tag);
         }
-
         // https://localhost:50221/api/tag/3
-        [HttpPut("{id}")]
+        [HttpPut("tag/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult UpdateTag(int id, [FromBody] TagDto data)
+        public ActionResult UpdateTag(int id, [FromBody] TagInputModel tag)
         {
-            _tagService.UpdateTag(id,data);
+            var tagDto = _tagMapper.ToDto(tag);
+            _tagService.UpdateTag(tagDto);
             return Ok("Tag обновлён");
         }
-
         // https://localhost:50221/api/tag/3
-        [HttpDelete("{id}")]
+        [HttpDelete("tag/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteTag(int id)
         {
             _tagService.DeleteTag(id);
             return Ok("Tag удалён");
-        }
-        // https://localhost:50221/api/tag/4
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
-        public dynamic GetThemeTagById(int id)
-        {
-            var tag = _repo.GetThemeTagById(id);
-            return Ok(tag);
         }
     }
 }
