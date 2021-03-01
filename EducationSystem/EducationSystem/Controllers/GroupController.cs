@@ -22,20 +22,20 @@ namespace EducationSystem.Controllers
     public class GroupController : ControllerBase
     {
 
-        private GroupRepository _repo;
+        private IGroupRepository _repo;
         private GroupMapper _groupMapper;
-        private GroupService _service;
+        private IGroupService _service;
         private ThemeMapper _themeMapper;
-        private CourseService _courseService;
+        private ICourseService _courseService;
         private GroupReportMapper _reportMapper;
         private IMapper _mapper;
-        public GroupController(IMapper mapper)
+        public GroupController(IMapper mapper, IGroupRepository groupRepository, IGroupService groupService, ICourseService courseService)
         {
             
-            _repo = new GroupRepository();
+            _repo = groupRepository;
             _groupMapper = new GroupMapper();
-            _service = new GroupService();
-            _courseService = new CourseService();
+            _service = groupService;
+            _courseService = courseService;
             _themeMapper = new ThemeMapper();
             _reportMapper = new GroupReportMapper();
             _mapper = mapper;
@@ -55,6 +55,13 @@ namespace EducationSystem.Controllers
         public ActionResult GetGroupById(int id)
         {
             GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupById(id));
+            return Ok(result);
+        }
+        // https://localhost:44365/api/group/theme/3
+        [HttpGet("theme/{Id}")]
+        public ActionResult<List<GroupOutputModel>> GetGroupByThemeId(int id)
+        {
+            List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroupByThemeId(id));
             return Ok(result);
         }
 
@@ -154,7 +161,7 @@ namespace EducationSystem.Controllers
             return Ok(addGroup);
         }      
         [HttpGet("student-group/{id}")]
-        //[Authorize(Roles = "Админ, Менеджер, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Админ, Менеджер, Преподаватель, Тьютор")]
         public ActionResult GetStudentGroupById(int id)
         {
             var group = _repo.GetStudentGroupById(id);
