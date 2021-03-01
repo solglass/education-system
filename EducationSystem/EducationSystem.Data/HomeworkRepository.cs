@@ -556,7 +556,7 @@ namespace EducationSystem.Data
                     return attachmentEntry;
                 },
                 new { id },
-                splitOn: "AttachmentType",
+                splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return comments;
