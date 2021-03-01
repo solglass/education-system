@@ -17,7 +17,7 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/lesson/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class LessonController : ControllerBase
     {
         private ILessonRepository _repo;
@@ -106,11 +106,11 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:50221/api/feedback/1/2/2
-        [HttpGet("feedback/{lessonId}/{groupId}/{courseId}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetFeedbacks(int lessonId, int groupId, int courseId)
+        [HttpGet("feedback/")]
+        //[Authorize(Roles = "Админ")]
+        public ActionResult GetFeedbacks([FromBody] FeedbackSearchInputModel inputModel)
         {
-            var result = _lessonService.GetFeedbacks(lessonId, groupId, courseId);
+            var result = _lessonService.GetFeedbacks(inputModel.LessonID, inputModel.GroupID, inputModel.CourseID);
             return Ok(result);
         }
 
