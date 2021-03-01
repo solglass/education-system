@@ -22,14 +22,11 @@ namespace EducationSystem.API.Controllers
     [Authorize]
     public class HomeworkController : ControllerBase
     {
-
-        private HomeworkAttemptMapper _homeworkAttemptMapper;
         private HomeworkService _homeworkService;
         private IMapper _mapper;
 
         public HomeworkController(IMapper mapper)
         {
-            _homeworkAttemptMapper = new HomeworkAttemptMapper();
             _homeworkService = new HomeworkService();
             _mapper = mapper;
         }
@@ -59,7 +56,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult GetHomeworkAttemptsByHomeworkId(int id)
         {
-            var result = _homeworkAttemptMapper.FromDtos(_homeworkService.GetHomeworkAttemptsByHomeworkId(id));
+            var result = _mapper.Map<List<HomeworkAttemptOutputModel>>(_homeworkService.GetHomeworkAttemptsByHomeworkId(id));
             return Ok(result);
         }
 
@@ -121,7 +118,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Студент")]
         public ActionResult CreateAttempt(int homeworkId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
-            var dto = _homeworkAttemptMapper.ToDto(inputModel);
+            var dto = _mapper.Map<HomeworkAttemptDto>(inputModel);
             dto.Homework = new HomeworkDto { Id = homeworkId };
             var result = _homeworkService.AddHomeworkAttempt(dto);
 
