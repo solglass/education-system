@@ -34,7 +34,8 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/homework
         [HttpPost]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]        public ActionResult AddHomework([FromBody] HomeworkInputModel homework)
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]        
+        public ActionResult AddHomework([FromBody] HomeworkInputModel homework)
         {
             var result = _homeworkService.AddHomework(_mapper.Map<HomeworkDto>(homework));
             return Ok(result);
