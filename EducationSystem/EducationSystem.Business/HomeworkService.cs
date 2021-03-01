@@ -162,5 +162,10 @@ namespace EducationSystem.Business
         {
             return _homeworkRepository.GetHomeworkAttemptById(id);
         }
+
+        public int AddComment(CommentDto comment)
+        {
+            return _homeworkRepository.AddComment(comment);
+        }
     }
 }

@@ -134,8 +134,8 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-
-        // https://localhost:44365/api/homework/attempt/42
+        //todo: the model is not filled in.
+        // https://localhost:44365/api/homework/attempt/2
         [HttpGet("attempt/{attemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult GetHomeworkAttemptById(int attemptId)
@@ -145,40 +145,38 @@ namespace EducationSystem.API.Controllers
             return Ok(results);
         }
 
-        // https://localhost:44365/api/homework/homeworkAttempts/42
-        [HttpPut("homeworkAttempts/{id}")]
+
+        // https://localhost:44365/api/homework/attempt/2
+        [HttpPut("attempt/{attemptId}")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult UpdateHomeworkAttempt(int id, [FromBody] HomeworkAttemptInputModel inputModel)
+        public ActionResult UpdateHomeworkAttempt(int attemptId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
-            _homeworkService.UpdateHomeworkAttempt(_homeworkAttemptMapper.ToDto(inputModel));
-            return Ok("Изменения сохранены");
+            var dto = _mapper.Map<HomeworkAttemptDto>(inputModel);
+            dto.Id = attemptId;
+            
+            return Ok(_homeworkService.UpdateHomeworkAttempt(dto));
         }
 
-        // https://localhost:44365/api/homework/homeworkAttempts/42
-        [HttpDelete("homeworkAttempts/{id}")]
+        // https://localhost:44365/api/homework/attempt/2
+        [HttpDelete("attempt/{attemptId}")]
         [Authorize(Roles = "Админ")]
-        public ActionResult DeleteHomeworkAttempt(int id)
+        public ActionResult DeleteHomeworkAttempt(int attemptId)
         {
-            var result = _homeworkService.DeleteHomeworkAttempt(id);
+            var result = _homeworkService.DeleteHomeworkAttempt(attemptId);
+
             return Ok(result);
         }
 
-        //https://localhost:44365/api/homework/comment
-        [HttpPost]
+        //https://localhost:44365/api/homework/attempt/2/comment
+        [HttpPost("attempt/{attemptId}/comment")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult AddComment([FromBody] CommentDto comment)
+        public ActionResult AddComment(int attemptId, [FromBody] CommentInputModel comment)
         {
-            _repo.AddComment(comment);
-            return Ok("Комментарий добавлен!");
-        }
+            var dto = _mapper.Map<CommentDto>(comment);
+            dto.HomeworkAttempt = new HomeworkAttemptDto() { Id = attemptId };
+            var result = _homeworkService.AddComment(_mapper.Map<CommentDto>(comment));
 
-        // https://localhost:44365/api/homework/comments
-        [HttpGet("comments")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetComments()
-        {
-            var results = _repo.GetComments();
-            return Ok(results);
+            return Ok(result);
         }
 
         // https://localhost:44365/api/homework/comments/42

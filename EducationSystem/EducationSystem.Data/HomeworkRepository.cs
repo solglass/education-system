@@ -261,9 +261,9 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Comment_Add",
                 new
                 {
-                    message = comment.Message,
-                    author = comment.Author,
-                    attempt = comment.HomeworkAttempt
+                    userId = comment.Author.Id,
+                    homeworkAttemptId = comment.HomeworkAttempt.Id,
+                    message = comment.Message
                 },
                 commandType: CommandType.StoredProcedure);
             return result;

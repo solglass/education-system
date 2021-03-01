@@ -29,7 +29,7 @@ namespace EducationSystem.API
             CreateMap<HomeworkDto, HomeworkSearchOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)))
-                .ForMember(dest=> dest.GroupId, opts => opts.MapFrom(src => src.Group.Id));
+                .ForMember(dest => dest.GroupId, opts => opts.MapFrom(src => src.Group.Id));
             CreateMap<GroupInputModel, GroupDto>();
             CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
@@ -38,7 +38,8 @@ namespace EducationSystem.API
             CreateMap<ThemeDto, ThemeOutputModel>();
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
-            CreateMap<AttachmentDto, AttachmentOutputModel>();
+            CreateMap<AttachmentInputModel, AttachmentDto>()
+                .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => (AttachmentType)src.AttachmentTypeId));
 
             CreateMap<LessonInputModel, LessonDto>();
             CreateMap<LessonDto, LessonOutputModel>()
@@ -61,8 +62,13 @@ namespace EducationSystem.API
                .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
 
             CreateMap<CommentDto, CommentOutputModel>();
+            CreateMap<CommentInputModel, CommentDto>()
+                .ForMember(dest => dest.Author, opts => opts.MapFrom(src => new UserDto() { Id = src.AuthorId }));
+
             CreateMap<AttachmentDto, AttachmentOutputModel>()
-                .ForMember(dest=> dest.AttachmentType, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyAttachmentTypeName(src.AttachmentType)));
+                .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyAttachmentTypeName(src.AttachmentType)));
+            CreateMap<HomeworkAttemptInputModel, HomeworkAttemptDto>()
+                .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => (HomeworkAttemptStatus)src.HomeworkAttemptStatusId));
         }
     }
 }

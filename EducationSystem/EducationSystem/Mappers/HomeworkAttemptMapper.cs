@@ -15,7 +15,6 @@ namespace EducationSystem.API.Mappers
         {
             return new HomeworkAttemptDto
             {
-                Id = inputModel.Id,
                 Author = new UserDto { Id = inputModel.AuthorId},
                 Comment = inputModel.Comment,
                 HomeworkAttemptStatus = (HomeworkAttemptStatus)inputModel.HomeworkAttemptStatusId
