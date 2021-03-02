@@ -23,21 +23,17 @@ namespace EducationSystem.Controllers
     {
 
         private IGroupRepository _repo;
-        private GroupMapper _groupMapper;
         private IGroupService _service;
         private ThemeMapper _themeMapper;
         private ICourseService _courseService;
-        private GroupReportMapper _reportMapper;
         private IMapper _mapper;
         public GroupController(IMapper mapper, IGroupRepository groupRepository, IGroupService groupService, ICourseService courseService)
         {
             
             _repo = groupRepository;
-            _groupMapper = new GroupMapper();
             _service = groupService;
             _courseService = courseService;
             _themeMapper = new ThemeMapper();
-            _reportMapper = new GroupReportMapper();
             _mapper = mapper;
         }
 
@@ -46,7 +42,9 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult GetGroups()
         {
-            List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroups());
+            var groups = _service.GetGroups();
+            List<GroupOutputModel> result = _mapper.Map<List<GroupOutputModel>>(groups);
+
             return Ok(result);
         }
 
@@ -54,14 +52,16 @@ namespace EducationSystem.Controllers
         [HttpGet("{id}")]
         public ActionResult GetGroupById(int id)
         {
-            GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupById(id));
+            var group = _service.GetGroupById(id);
+            GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
             return Ok(result);
         }
         // https://localhost:44365/api/group/theme/3
         [HttpGet("theme/{Id}")]
-        public ActionResult<List<GroupOutputModel>> GetGroupByThemeId(int id)
+        public ActionResult GetGroupByThemeId(int id)
         {
-            List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroupByThemeId(id));
+            var group = _service.GetGroupByThemeId(id);
+            List<GroupOutputModel> result = _mapper.Map<List<GroupOutputModel>>(group);
             return Ok(result);
         }
 
@@ -78,7 +78,8 @@ namespace EducationSystem.Controllers
         [HttpGet("{Id}/programs-group")]        
         public ActionResult GetGroupProgramsByGroupId(int id)
         {
-            GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupProgramsByGroupId(id));
+            var program = _service.GetGroupProgramsByGroupId(id);
+            GroupOutputModel result = _mapper.Map<GroupOutputModel>(program);
             return Ok(result);
         }
 
@@ -87,7 +88,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult AddNewGroup([FromBody] GroupInputModel newGroup)
         {
-            var groupDto = _groupMapper.ToDto(newGroup);
+            var groupDto = _mapper.Map<GroupDto>(newGroup);
             var result = _service.AddGroup(groupDto);
             return Ok($"Группа #{result} добавлена");
         }
@@ -101,7 +102,7 @@ namespace EducationSystem.Controllers
             {
                 return Ok("Ошибка! Отсутствует группа с введенным id!");
             }
-            var groupDto = _groupMapper.ToDto(group);
+            var groupDto = _mapper.Map<GroupDto>(group);
             _service.UpdateGroup(groupDto);
             return Ok("Изменения внесены!");
         }
@@ -229,8 +230,9 @@ namespace EducationSystem.Controllers
 
             try
             {
-                report = _reportMapper.FromDtos(_repo.GenerateReport());
-            }
+                var reportDto = _repo.GenerateReport();
+                report = _mapper.Map<List<GroupReportOutputModel>>(reportDto);
+      }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -241,8 +243,9 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult GetUncoveredThemesByGroupId(int id)
         {
-            var result = _themeMapper.FromDtos(_courseService.GetUncoveredThemesByGroupId(id));
-                 return Ok(result);
+            var theme = _courseService.GetUncoveredThemesByGroupId(id);
+            var result = _mapper.Map<List<ThemeOutputModel>> (theme);
+            return Ok(result);
         }
     }
     
