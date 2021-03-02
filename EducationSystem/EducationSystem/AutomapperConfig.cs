@@ -19,8 +19,11 @@ namespace EducationSystem.API
         {
             CreateMap<UserInputModel, UserDto>();
             CreateMap<UserDto, UserOutputModel>()
-                .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
             CreateMap<UserDto, AuthorOutputModel>();
+                .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
+            CreateMap<PaymentInputModel, PaymentDto>();
+            CreateMap<PaymentDto, PaymentOutputModel>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<AttendanceUpdateInputModel, AttendanceDto>();
 
             CreateMap<HomeworkDto, HomeworkOutputModel>()
