@@ -121,6 +121,6 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-
     }
+
 }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using EducationSystem.Business;
+using AutoMapper;
 
 namespace EducationSystem.Controllers
 {
@@ -20,10 +21,10 @@ namespace EducationSystem.Controllers
     public class TagController : ControllerBase
     {
         private TagMapper _tagMapper;
-        private TagService _tagService;
-        public TagController()
+        private ITagService _tagService;
+        public TagController(IMapper mapper, ITagService tagService)
         {
-            _tagService = new TagService();
+            _tagService = tagService;
             _tagMapper = new TagMapper();
         }
         // https://localhost:50221/api/tag/

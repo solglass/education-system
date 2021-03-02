@@ -123,11 +123,6 @@ namespace EducationSystem.Business
             bool isDeleted = true;
             return _homeworkRepository.DeleteOrRecoverHomeworkAttempt(id, isDeleted);
         }
-        public int DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
-        {
-            return _homeworkAttemptRepository.DeleteHomeworkAttempt_Attachment(homeworkAttemptId, attachmentId);
-        }
-
         public int RecoverHomeworkAttempt(int id)
         {
             bool isDeleted = false;

@@ -77,7 +77,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteAttachment(int id)
         {
             _service.DeleteAttachmentById(id);
-            return Ok("Успех");
+            return Ok("Успешно удалено");
         }
      //   https://localhost:44365/api/attachment/comment/4
         [HttpPost("comment/{commentId}")]
@@ -97,7 +97,26 @@ namespace EducationSystem.API.Controllers
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
             var result = _service.AddAttachmentToHomeworkAttempt(attachmentDto, 
                 homeworkAttemptId);
-            return Ok($"Вложение #{result} добавлено к попытке сдачи #{homeworkAttemptId}");
+           return Ok($"Вложение #{result} добавлено к попытке сдачи #{homeworkAttemptId}");
+        }
+
+
+        // https://localhost:44365/api/attachment/homeworkAttempt/4/5
+        [HttpDelete("homeworkAttempt/{homeworkAttemptId}/{attachmentId}")]
+        public ActionResult DeleteHomeworkAttemptAttachment( int attachmentId, int homeworkAttemptId)
+        {
+            var result = _service.DeleteHomeworkAttemptAttachment(attachmentId,
+                homeworkAttemptId);
+            return Ok("Успешно удалено");
+        }
+
+        //   https://localhost:44365/api/attachment/comment/4/5
+        [HttpDelete("comment/{commentId}/{attachmentId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
+        public ActionResult DeleteCommentAttachment(int attachmentId , int commentId)
+        {
+            var result = _service.DeleteCommentAttachment(attachmentId, commentId);
+            return Ok("Успешно удалено");
         }
 
 
