@@ -17,19 +17,19 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/lesson/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class LessonController : ControllerBase
     {
-        private LessonRepository _repo;
+        private ILessonRepository _repo;
         private LessonMapper _lessonMapper;
-        private LessonService _lessonService;
+        private ILessonService _lessonService;
         private IMapper _mapper;
 
-        public LessonController(IMapper mapper)
+        public LessonController(IMapper mapper, ILessonRepository lessonRepository, ILessonService lessonService)
         {
-            _repo = new LessonRepository();
+            _repo = lessonRepository;
             _lessonMapper = new LessonMapper();
-            _lessonService = new LessonService();
+            _lessonService = lessonService;
             _mapper = mapper;
         }
 
@@ -70,29 +70,47 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
-        // https://localhost:50221/api/lesson/3
+        // https://localhost:50221/api/lesson/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteLesson(int id)
         {
-            _lessonService.DeleteLesson(id);
-            return Ok("Урок удалён");
+            var result = _lessonService.DeleteLesson(id);
+            if (result == 1)
+                return Ok($"Урок #{id} удален!");
+            else
+                return Problem($"Ошибка! Не удалось удалить урок #{id}!");
         }
+
+
+        // https://localhost:50221/api/lesson/id/recovery
+        [HttpPut("{id}/recovery")]
+        [Authorize(Roles = "Админ, Преподаватель")]
+        public ActionResult RecoverLesson(int id)
+        {
+            var result = _lessonService.RecoverLesson(id);
+            if (result == 1)
+                return Ok($"Урок #{id} восстановлен!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить урок #{id}!");
+        }
+
+
         // https://localhost:50221/api/lesson/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult UpdateLesson(int id,[FromBody]LessonDto lessonDto)
+        public ActionResult UpdateLesson(int id, [FromBody] LessonDto lessonDto)
         {
             _repo.UpdateLesson(lessonDto);
             return Ok("Урок обновлён");
         }
 
         // https://localhost:50221/api/feedback/1/2/2
-        [HttpGet("feedback/{lessonId}/{groupId}/{courseId}")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetFeedbacks(int lessonId, int groupId, int courseId)
+        [HttpGet("feedback/")]
+        //[Authorize(Roles = "Админ")]
+        public ActionResult GetFeedbacks([FromBody] FeedbackSearchInputModel inputModel)
         {
-            var result = _lessonService.GetFeedbacks(lessonId, groupId, courseId);
+            var result = _lessonService.GetFeedbacks(inputModel.LessonID, inputModel.GroupID, inputModel.CourseID);
             return Ok(result);
         }
 
@@ -117,7 +135,7 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/feedback/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult UpdateFeedback(int id,[FromBody]FeedbackDto feedbackDto)
+        public ActionResult UpdateFeedback(int id, [FromBody] FeedbackDto feedbackDto)
         {
             _repo.UpdateFeedback(feedbackDto);
             return Ok("Отзыв обновлён");
@@ -137,7 +155,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult GetAttendances()
         {
-            var result =_lessonService.GetAttendances();
+            var result = _lessonService.GetAttendances();
             return Ok(result);
         }
 
@@ -169,8 +187,8 @@ namespace EducationSystem.Controllers
         /// <returns>Updated rows.</returns>
         [HttpPut("{lessonId}/Attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult<int> UpdateAttendance(int lessonId, int attendanceId, [FromBody]AttendanceUpdateInputModel attendance)
-        {            
+        public ActionResult<int> UpdateAttendance(int lessonId, int attendanceId, [FromBody] AttendanceUpdateInputModel attendance)
+        {
             return Ok(_lessonService.UpdateAttendance(_mapper.Map<AttendanceDto>(attendance)));
         }
 
@@ -189,14 +207,14 @@ namespace EducationSystem.Controllers
         /// <param name="id">The identifier of the theme that we want to see all its lessons.</param>
         /// <returns>The list of lessonOutputModel.</returns>
         [HttpGet("Theme/{id}/lessons")]
-       // [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
+        // [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int id)
         {
             var lessons = _mapper.Map<List<LessonOutputModel>>(_lessonService.GetLessonsByThemeId(id));
             return Ok(lessons);
-              
+
         }
-        
+
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpGet("{id}")]
@@ -216,7 +234,7 @@ namespace EducationSystem.Controllers
             return Ok("Тема урока добавлена");
         }
 
-        
+
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpDelete("{id}")]
@@ -225,6 +243,16 @@ namespace EducationSystem.Controllers
         {
             _lessonService.DeleteAttendance(id);
             return Ok("Тема урока удалена");
+        }
+
+        // https://localhost:44365/api/lesson/percent-of-skip/0/by-group/3
+        [HttpGet("percent-of-skip/{percent}/by-group/{groupId}")]
+        [AllowAnonymous]
+        //[Authorize(Roles = "Админ, Преподаватель, Менеджер")]
+        public ActionResult GetStudentsByPercentOfSkip(int percent, int groupId)
+        {
+            return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
+            //return Ok(_lessonService.GetStudentByPercentOfSkip(percent, groupId));
         }
     }
 }
