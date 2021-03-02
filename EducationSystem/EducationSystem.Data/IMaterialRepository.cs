@@ -10,7 +10,7 @@ namespace EducationSystem.Data
         List<MaterialDto> GetMaterials();
         List<MaterialDto> GetMaterialsByGroupId(int id);
         List<MaterialDto> GetMaterialsByTagId(int id);
-        int UpdateMaterial(int id, MaterialDto material);
+        int UpdateMaterial(MaterialDto material);
         int DeleteOrRecoverMaterial(int id, bool isDeleted);
     }
 }
