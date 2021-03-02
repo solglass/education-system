@@ -31,9 +31,8 @@ namespace EducationSystem.Data
                 .QuerySingleOrDefault<TagDto>("dbo.Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int TagUpdate(int id, TagDto tag)
+        public int TagUpdate(TagDto tag)
         {
-            tag.Id = id;
             var result = _connection
                 .Execute("dbo.Tag_Update", new { tag.Id, tag.Name },
                 commandType: System.Data.CommandType.StoredProcedure);
