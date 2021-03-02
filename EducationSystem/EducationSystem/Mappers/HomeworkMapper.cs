@@ -29,7 +29,6 @@ namespace EducationSystem.API.Mappers
 
             var dto = new HomeworkDto
             {
-                Id = inputModel.Id,
                 Description = inputModel.Description,
                 Group = new GroupDto { Id = inputModel.GroupId }, //TODO: Use GroupMapper here
                 IsOptional = inputModel.IsOptional,

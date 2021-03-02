@@ -8,8 +8,12 @@ namespace EducationSystem.Business
     {
         private IHomeworkRepository _homeworkRepository;
         private IHomeworkAttemptRepository _homeworkAttemptRepository;
-        public HomeworkService(IHomeworkRepository homeworkRepository, IHomeworkAttemptRepository homeworkAttemptRepository)
+        private ITagRepository _tagRepository;
+        public HomeworkService(IHomeworkRepository homeworkRepository,
+            IHomeworkAttemptRepository homeworkAttemptRepository,
+            ITagRepository tagRepository)
         {
+            _tagRepository = tagRepository;
             _homeworkRepository = homeworkRepository;
             _homeworkAttemptRepository = homeworkAttemptRepository;
         }

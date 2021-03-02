@@ -22,12 +22,12 @@ namespace EducationSystem.API.Controllers
     [Authorize]
     public class HomeworkController : ControllerBase
     {
-        private HomeworkService _homeworkService;
+        private IHomeworkService _homeworkService;
         private IMapper _mapper;
 
-        public HomeworkController(IMapper mapper)
+        public HomeworkController(IMapper mapper, IHomeworkService homeworkService)
         {
-            _homeworkService = new HomeworkService();
+            _homeworkService = homeworkService;
             _mapper = mapper;
         }
 

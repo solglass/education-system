@@ -27,5 +27,7 @@ namespace EducationSystem.Business
         int RecoverComment(int id);
         int RecoverHomework(int id);
         int RecoverHomeworkAttempt(int id);
+        HomeworkAttemptDto GetHomeworkAttemptById(int id);
+        int AddComment(CommentDto comment);
     }
 }
