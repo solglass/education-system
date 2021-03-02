@@ -1,4 +1,5 @@
-﻿using EducationSystem.API.Mappers;
+﻿using AutoMapper;
+using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
 using EducationSystem.Controllers;
@@ -21,31 +22,32 @@ namespace EducationSystem.Controllers
     public class MaterialController : ControllerBase
     {
 
-        private MaterialService _service;
-        private MaterialMapper _mapper;
+        private MaterialMapper _matMapper;
+        private IMapper _mapper;
+        private IMaterialService _service;
 
-        public MaterialController()
+        public MaterialController(IMapper mapper, IMaterialService materialService)
         {
-            _mapper = new MaterialMapper();
-            _service = new MaterialService();
+            _matMapper = new MaterialMapper();
+            _mapper = mapper;
+            _service = materialService;
         }
 
-        // https://localhost:44365/api/material/340/group
-        [HttpGet("{id}/group")]
+        // https://localhost:44365/api/material/by-group/340
+        [HttpGet("by-group/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetmaterialsByGroupId(int id)
+        public ActionResult GetMaterialsByGroupId(int id)
         {
-            var result = _mapper.FromDtos(_service.GetMaterialsByGroupId(id));
-            return Ok(result);
+            return Ok(_matMapper.FromDtos(_service.GetMaterialsByGroupId(id)));
+
         }
 
-        // https://localhost:44365/api/material/340/tag
-        [HttpGet("{id}/tag")]
+        // https://localhost:44365/api/material/by-tag/340
+        [HttpGet("by-tag/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetmaterialsByTagId(int id)
+        public ActionResult GetMaterialsByTagId(int id)
         {
-            var result =_mapper.FromDtos( _service.GetMaterialsByTagId(id));
-            return Ok(result);
+            return Ok(_matMapper.FromDtos(_service.GetMaterialsByTagId(id)));
         }
 
         // https://localhost:44365/api/material/2
@@ -53,36 +55,53 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialById(int id)
         {
-            var course = _service.GetMaterialById(id);
-            var result = _mapper.FromDto(course);
-            return Ok(result);
+            return Ok(_matMapper.FromDto(_service.GetMaterialById(id)));
         }
 
-        [HttpPost("new-material")]
+        // https://localhost:44365/api/material
+        [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
-            var newMaterial = _mapper.ToDto(materialInputModel);
-            _service.AddMaterial(newMaterial);
+            _service.AddMaterial(_matMapper.ToDto(materialInputModel));
             return Ok("Материалы добавлены");
         }
 
-        // https://localhost:50221/material/2
+        // https://localhost:44365/api/material/8
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
-            _service.UpdateMaterial(id, _mapper.ToDto(material));
-            return Ok("success");
+            var dto = _mapper.Map<MaterialDto>(material);
+            dto.Id = id;
+            _service.UpdateMaterial(dto);
+            return Ok("Данные обновлены");
         }
 
-        // https://localhost:50221/api/material/2
+        // https://localhost:44365/api/material/2
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteMaterial(int id)
         {
-            _service.DeleteMaterialById(id);
-            return Ok("success");
+            var result = _service.DeleteMaterial(id);
+            if (result == 1)
+                return Ok($"Материал #{id} удален!");
+            else
+                return Problem($"Ошибка! Не удалось удалить материал #{id}!");
         }
+
+        // https://localhost:44365/api/material/id/recovery
+        [HttpPut("{id}/recovery")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult RecoverMaterial(int id)
+        {
+            var result = _service.RecoverMaterial(id);
+            if (result == 1)
+                return Ok($"Материал #{id} восстановлен!");
+            else
+                return Problem($"Ошибка! Не удалось восстановить материал #{id}!");
+        }
+
+
     }
 }

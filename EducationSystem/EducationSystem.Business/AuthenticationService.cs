@@ -1,4 +1,5 @@
 ﻿using EducationSystem.Core.Authentication;
+using EducationSystem.Core.Enums;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -10,21 +11,21 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-    public class AuthenticationService
+    public class AuthenticationService : IAuthenticationService
     {
-        private UserRepository _repo;
-        public AuthenticationService()
+        private IUserRepository _repo;
+        public AuthenticationService(IUserRepository userRepository)
         {
-            _repo = new UserRepository();
+            _repo = userRepository;
         }
         public UserDto GetAuthentificatedUser(string login)
-        {         
-             return _repo.CheckUser(login);       
+        {
+            return _repo.CheckUser(login);
         }
         public string GenerateToken(UserDto user)
         {
             var identity = GetIdentity(user);
-            var now = DateTime.UtcNow;        
+            var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
@@ -45,11 +46,11 @@ namespace EducationSystem.Business
         {
             var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)               
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
                 };
-            foreach(RoleDto role in user.Roles)
+            foreach(Role role in user.Roles)
             {
-                claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.Name));
+                claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, FriendlyNames.GetFriendlyRoleName(role)));
             }
             ClaimsIdentity claimsIdentity =
             new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,

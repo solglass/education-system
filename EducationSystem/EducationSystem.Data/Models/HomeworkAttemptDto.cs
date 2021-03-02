@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EducationSystem.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +12,7 @@ namespace EducationSystem.Data.Models
         public bool IsDeleted { get; set; }
         public UserDto Author { get; set; }
         public HomeworkDto Homework { get; set; }
-        public HomeworkAttemptStatusDto HomeworkAttemptStatus { get; set; }
+        public HomeworkAttemptStatus HomeworkAttemptStatus { get; set; }
         public List<AttachmentDto> Attachments { get; set; }
         public List<CommentDto> Comments { get; set; }
 
@@ -32,7 +33,7 @@ namespace EducationSystem.Data.Models
             {
                 return false;
             }
-            if (attemptObj.HomeworkAttemptStatus == null || HomeworkAttemptStatus == null 
+            if (attemptObj.HomeworkAttemptStatus == 0 || HomeworkAttemptStatus == 0 
                 || !attemptObj.HomeworkAttemptStatus.Equals(HomeworkAttemptStatus))
             {
                 return false;
@@ -60,6 +61,10 @@ namespace EducationSystem.Data.Models
                 }
             }
             return true;
+        }
+        public override int GetHashCode()
+        {
+            return Id;
         }
     }
 }
