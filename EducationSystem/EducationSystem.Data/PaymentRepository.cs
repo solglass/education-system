@@ -102,9 +102,8 @@ namespace EducationSystem.Data
         }
 
         // should return affected rows' count, use 'Execute' method
-        public int UpdatePayment(int id, PaymentDto payment)
+        public int UpdatePayment(PaymentDto payment)
         {
-            payment.Id = id;
             var result = _connection
                 .Execute("dbo.Course_Update",
                 new
