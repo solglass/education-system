@@ -56,7 +56,7 @@ namespace EducationSystem.Data
                         return payment;
                     },
                     new { id },
-                    splitOn: "Id, Id",
+                    splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return payment;
