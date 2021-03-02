@@ -274,5 +274,6 @@
     <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Group_Material\Group_Material_SelectById.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByUserId.sql" />
   </ItemGroup>
 </Project>
