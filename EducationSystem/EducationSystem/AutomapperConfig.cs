@@ -31,6 +31,7 @@ namespace EducationSystem.API
             CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
+            CreateMap<TagInputModel, TagDto>();
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<ThemeDto, ThemeOutputModel>();
             CreateMap<LessonInputModel,LessonDto>();
