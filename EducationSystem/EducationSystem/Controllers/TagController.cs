@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using EducationSystem.Business;
+using AutoMapper;
 
 namespace EducationSystem.Controllers
 {
@@ -20,8 +21,9 @@ namespace EducationSystem.Controllers
     public class TagController : ControllerBase
     {
         private TagMapper _tagMapper;
-        private TagService _tagService;
-        public TagController()
+        private ITagService _tagService;
+        private readonly IMapper _mapper;
+        public TagController(ITagRepository tagRepository, ITagService tagService, IMapper _mapper)
         {
             _tagService = new TagService();
             _tagMapper = new TagMapper();
@@ -31,7 +33,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddTag([FromBody] TagInputModel tag)
         {
-            var tagDto = _tagMapper.ToDto(tag);
+            var tagDto = _mapper.Map<TagDto>(tag);
             var result= _tagService.AddTag(tagDto);
             return Ok($"Тег№{result} добавлен");
         }
