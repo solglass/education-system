@@ -12,6 +12,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using EducationSystem.Business;
 using AutoMapper;
+using EducationSystem.API.Models.OutputModels;
 
 namespace EducationSystem.Controllers
 {
@@ -20,19 +21,19 @@ namespace EducationSystem.Controllers
     [Route("api/[controller]")]
     public class TagController : ControllerBase
     {
-        private TagMapper _tagMapper;
         private ITagService _tagService;
-        public TagController(IMapper mapper, ITagService tagService)
+        private readonly IMapper _mapper;
+        public TagController(ITagRepository tagRepository, ITagService tagService, IMapper mapper)
         {
+            _mapper = mapper;
             _tagService = tagService;
-            _tagMapper = new TagMapper();
         }
         // https://localhost:50221/api/tag/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddTag([FromBody] TagInputModel tag)
         {
-            var tagDto = _tagMapper.ToDto(tag);
+            var tagDto = _mapper.Map<TagDto>(tag);
             var result= _tagService.AddTag(tagDto);
             return Ok($"Тег№{result} добавлен");
         }
@@ -42,7 +43,8 @@ namespace EducationSystem.Controllers
         public ActionResult GetTags()
         {
             var tagsDtos = _tagService.GetTags();
-            var tags = _tagMapper.FromDtos(tagsDtos);
+           
+            var tags = _mapper.Map<List<TagOutputModel>>(tagsDtos);
             return Ok(tags);
         }
         // https://localhost:50221/api/tag/3
@@ -51,7 +53,7 @@ namespace EducationSystem.Controllers
         public ActionResult GetTag(int id)
         {
             var tagDto = _tagService.GetTagById(id);
-            var tag = _tagMapper.FromDto(tagDto);
+            var tag = _mapper.Map<TagOutputModel>(tagDto);
             return Ok(tag);
         }
         // https://localhost:50221/api/tag/3
@@ -59,9 +61,8 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateTag(int id, [FromBody] TagInputModel tag)
         {
-            var tagDto = _tagMapper.ToDto(tag);
-            _tagService.UpdateTag(tagDto);
-            return Ok("Tag обновлён");
+            var tagDto = _mapper.Map<TagDto>(tag);
+            _tagService.UpdateTag(tagDto);            return Ok("Tag обновлён");
         }
         // https://localhost:50221/api/tag/3
         [HttpDelete("{id}")]
