@@ -9,8 +9,8 @@ namespace EducationSystem.Business
         MaterialDto GetMaterialById(int id);
         List<MaterialDto> GetMaterialsByGroupId(int id);
         List<MaterialDto> GetMaterialsByTagId(int id);
-        int UpdateMaterial(int id, MaterialDto material);
         int DeleteMaterial(int id);
         int RecoverMaterial(int id);
+        int UpdateMaterial(MaterialDto material);
     }
 }

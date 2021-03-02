@@ -1,4 +1,5 @@
-﻿using EducationSystem.API.Models.InputModels;
+﻿using AutoMapper;
+using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Data.Models;
 using System;
@@ -10,6 +11,7 @@ namespace EducationSystem.API.Mappers
 {
     public class ThemeMapper
     {
+        private readonly IMapper _mapper;
         public ThemeDto ToDto(ThemeInputModel inputModel)
         {
            if(string.IsNullOrEmpty(inputModel.Name))
@@ -49,7 +51,6 @@ namespace EducationSystem.API.Mappers
 
         public ThemeOutputModel FromDto(ThemeDto themeDto)
         {
-            var tagMapper = new TagMapper();
 
             if(themeDto==null)
             {
@@ -58,7 +59,7 @@ namespace EducationSystem.API.Mappers
             var tags = new List<TagOutputModel>();
             if (themeDto.Tags != null && themeDto.Tags.Count > 0)
             {
-                tags = tagMapper.FromDtos(themeDto.Tags);
+                tags = _mapper.Map<List<TagOutputModel>>(tags);
             }
             return new ThemeOutputModel()
             {
