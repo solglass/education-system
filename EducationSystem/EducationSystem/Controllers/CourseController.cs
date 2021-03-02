@@ -88,7 +88,7 @@ namespace EducationSystem.API.Controllers
             int result;
             try
             {
-                result = _courseService.UpdateCourse(_courseMapper.ToDto(course));
+                result = _courseService.UpdateCourse(_courseMapper.ToDto(course, id));
             }
             catch (Exception ex)
             {
