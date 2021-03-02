@@ -281,5 +281,6 @@
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Update.sql" />
     <Build Include="StoredProcedures\Comment\dbo_Comment_SelectByHomeworkId.sql" />
     <Build Include="StoredProcedures\Comment\Comment_SelectByHomeworkAttemptId.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByPeriod.sql" />
   </ItemGroup>
 </Project>

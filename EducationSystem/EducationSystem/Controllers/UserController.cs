@@ -27,14 +27,12 @@ namespace EducationSystem.Controllers
         private UserMapper _userMapper;
         private RoleMapper _roleMapper;
         private UserService _userService;
-        private Converters _converter;
         public UserController()
 
         {
             _userMapper = new UserMapper();
             _roleMapper = new RoleMapper();
-            _userService = new UserService();
-            _converter = new Converters();
+            _userService = new UserService();          
         }
 
         // https://localhost:50221/api/user/register
@@ -190,14 +188,9 @@ namespace EducationSystem.Controllers
         //https://localhost:50221/api/user/payment/payment
         [HttpGet("period")]
         //[Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult GetPayments(string periodFrom, string periodTo)
-        {
-            DateTime perFrom = Converters.StrToDateTime(periodFrom).Item2;
-            DateTime perTo = Converters.StrToDateTime(periodTo).Item2;
-            periodFrom = Converters.PeriodDateToStr(perFrom);
-            periodTo = Converters.PeriodDateToStr(perTo);
-            var payments = _userService.GetPaymentsByPeriod(periodFrom, periodTo);
-            return Ok(payments);
+        public ActionResult GetPayments(PeriodInputModel periodInput)
+        {                             
+            return Ok(_userService.GetPaymentsByPeriod(Converters.StrToDateTimePeriod(periodInput.PeriodFrom), Converters.StrToDateTimePeriod(periodInput.PeriodTo)));
         }
 
         //https://localhost:50221/api/user/payment/payment/32
