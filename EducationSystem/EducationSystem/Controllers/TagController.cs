@@ -25,7 +25,7 @@ namespace EducationSystem.Controllers
         private readonly IMapper _mapper;
         public TagController(ITagRepository tagRepository, ITagService tagService, IMapper _mapper)
         {
-            _tagService = new TagService();
+           
             _tagMapper = new TagMapper();
         }
         // https://localhost:50221/api/tag/

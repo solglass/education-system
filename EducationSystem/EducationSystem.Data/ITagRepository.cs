@@ -16,7 +16,7 @@ namespace EducationSystem.Data
         int MaterialTagDelete(int materialId, int tagId);
         int TagAdd(TagDto tag);
         int TagDelete(int Id);
-        int TagUpdate(int id, TagDto tag);
+        int TagUpdate(TagDto tag);
         int ThemeTagAdd(ThemeTagDto Tag);
         int ThemeTagDelete(int themeId, int tagId);
         int ThemeTagUpdate(ThemeTagDto Tag);
