@@ -2,9 +2,6 @@
 (@groupId int) as
 begin
 	select
-		g.Id,
-		g.CourseID,
-		g.StartDate,
 		t.Id,
 		t.Name
 	from dbo.[Group] g 
