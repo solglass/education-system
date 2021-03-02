@@ -245,7 +245,6 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
- 
         // https://localhost:44365/api/homework/3/theme/1
         [HttpPost("{homeworkId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]

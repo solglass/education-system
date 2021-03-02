@@ -4,16 +4,14 @@ using System.Collections.Generic;
 
 namespace EducationSystem.Business
 {
-    public class HomeworkService
+    public class HomeworkService : IHomeworkService
     {
-        private HomeworkRepository _homeworkRepository;
-        private HomeworkAttemptRepository _homeworkAttemptRepository;
-        private TagRepository _tagRepository;
-        public HomeworkService()
+        private IHomeworkRepository _homeworkRepository;
+        private IHomeworkAttemptRepository _homeworkAttemptRepository;
+        public HomeworkService(IHomeworkRepository homeworkRepository, IHomeworkAttemptRepository homeworkAttemptRepository)
         {
-            _homeworkRepository = new HomeworkRepository();
-            _homeworkAttemptRepository = new HomeworkAttemptRepository();
-            _tagRepository = new TagRepository();
+            _homeworkRepository = homeworkRepository;
+            _homeworkAttemptRepository = homeworkAttemptRepository;
         }
 
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
@@ -147,15 +145,15 @@ namespace EducationSystem.Business
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
         {
-          var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByUserId(id);
-        
-          return dtos;
+            var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByUserId(id);
+
+            return dtos;
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
         {
-          var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
-        
-          return dtos;
+            var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
+
+            return dtos;
         }
 
         public HomeworkAttemptDto GetHomeworkAttemptById(int id)

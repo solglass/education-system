@@ -11,12 +11,12 @@ namespace EducationSystem.Data.Tests
     public class AttachmentsTests
     {
         private List<int> _attachmentId;
+        private AttachmentRepository aRepo;
         [SetUp]
         public void AttachmentsTestsSetup()
         {
             _attachmentId = new List<int>();
             AttachmentDto expected = GetMockAttachment_Add(1);
-            AttachmentRepository aRepo = new AttachmentRepository();
 
 
         }
@@ -25,7 +25,6 @@ namespace EducationSystem.Data.Tests
         public void Attachment_Add(int dtoMockNumber)
         {
             AttachmentDto expected = GetMockAttachment_Add(dtoMockNumber);
-            AttachmentRepository aRepo = new AttachmentRepository();
             _attachmentId.Add(aRepo.AddAttachment(expected));
             if (_attachmentId.Count == 0) { Assert.Fail("Attachment addition failed"); }
             else
@@ -41,7 +40,6 @@ namespace EducationSystem.Data.Tests
         public void Attachment_Delete(int dtoMockNumber)
         {
             AttachmentDto expected = GetMockAttachment_Add(dtoMockNumber);
-            AttachmentRepository aRepo = new AttachmentRepository();
             _attachmentId.Add(aRepo.AddAttachment(expected));
             if (_attachmentId.Count == 0) { Assert.Fail("Attachment addition failed"); }
             else
@@ -58,7 +56,6 @@ namespace EducationSystem.Data.Tests
         public void Attachment_Update(int dtoMockNumber)
         {
             AttachmentDto expected = GetMockAttachment_Add(dtoMockNumber);
-            AttachmentRepository aRepo = new AttachmentRepository();
             _attachmentId.Add(aRepo.AddAttachment(expected));
             if (_attachmentId.Count == 0) { Assert.Fail("Attachment addition failed"); }
 
@@ -77,7 +74,6 @@ namespace EducationSystem.Data.Tests
         [TearDown]
         public void AttachmentsTestsTearDown()
         {
-            AttachmentRepository aRepo = new AttachmentRepository();
             foreach (int elem in _attachmentId)
             {
                 aRepo.DeleteAttachmentById(elem);

@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,9 +11,9 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class HomeworkRepository : BaseRepository
+    public class HomeworkRepository : BaseRepository, IHomeworkRepository
     {
-        public HomeworkRepository()
+        public HomeworkRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }
@@ -119,7 +121,7 @@ namespace EducationSystem.Data
             var homework = new List<HomeworkDto>();
             homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
             return homework;
-        }        
+        }
 
         public int AddHomework(HomeworkDto homework)
         {
@@ -185,7 +187,7 @@ namespace EducationSystem.Data
             //var commentDictionary = new Dictionary<int, CommentDto>();
             var hwAttemptEntry = new HomeworkAttemptDto();
             var hwAttempt = _connection
-                .Query<HomeworkAttemptDto, UserDto,  HomeworkDto, int, HomeworkAttemptDto>(
+                .Query<HomeworkAttemptDto, UserDto, HomeworkDto, int, HomeworkAttemptDto>(
                 "dbo.HomeworkAttempt_SelectById",
                 (attempt, user, homework, hwAttemptStatus) =>
                 {
@@ -238,10 +240,11 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .Execute("dbo.HomeworkAttempt_DeleteOrRecover",
-                new { 
+                new
+                {
                     id,
                     isDeleted
-                    },
+                },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
@@ -319,7 +322,7 @@ namespace EducationSystem.Data
                         {
                             homeworkAttemptEntry = homeworkAttempt;
                             homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus) homeworkAttemptStatus;
+                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
                             commentEntry.HomeworkAttempt = homeworkAttemptEntry;
                             homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
                         }
@@ -382,7 +385,7 @@ namespace EducationSystem.Data
             return comment;
         }
 
-        public List<CommentDto> Comment_SelectByHomeworkId (int id)
+        public List<CommentDto> Comment_SelectByHomeworkId(int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
             var result = _connection.Query<CommentDto, UserDto, HomeworkAttemptDto, CommentDto>(
@@ -398,7 +401,7 @@ namespace EducationSystem.Data
                     }
                     return commentEntry;
                 },
-                new {id},
+                new { id },
                 splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
@@ -419,8 +422,8 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Homework_Theme_Add",
                 new
                 {
-                    homeworkId= homeworkId,
-                    themeId=themeId
+                    homeworkId = homeworkId,
+                    themeId = themeId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -477,7 +480,7 @@ namespace EducationSystem.Data
             return data;
 
         }
-        
+
         // todo: dapper logic
         // method doesn't work =(
         public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
@@ -492,7 +495,7 @@ namespace EducationSystem.Data
                     {
                         attemptEntry = attempt;
                         attemptEntry.Author = user;
-                        attemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus) homeworkAttemptStatus;
+                        attemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
                         hwAttemptDictionary.Add(attemptEntry.Id, attemptEntry);
                     }
                     return attemptEntry;
@@ -503,7 +506,7 @@ namespace EducationSystem.Data
                 .ToList();
             return homeworkAttempts;
         }
-        
+
         public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
@@ -520,7 +523,7 @@ namespace EducationSystem.Data
                     }
                     if (attachment != null)
                     {
-                        attachment.AttachmentType =(AttachmentType) attachmentType;
+                        attachment.AttachmentType = (AttachmentType)attachmentType;
                         commentEntry.Attachments.Add(attachment);
                     }
                     return commentEntry;
@@ -538,7 +541,7 @@ namespace EducationSystem.Data
             var comments = _connection
                 .Query<AttachmentDto, int, AttachmentDto>
                 ("dbo.Attachment_SelectByHomeworkAttemptId",
-                (attachment, type)=> 
+                (attachment, type) =>
                 {
                     if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
                     {

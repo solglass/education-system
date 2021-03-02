@@ -33,7 +33,8 @@ namespace EducationSystem.API
             CreateMap<GroupInputModel, GroupDto>();
             CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
-                .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
+                .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
+            CreateMap<TagInputModel, TagDto>();
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<ThemeDto, ThemeOutputModel>();
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
@@ -47,6 +48,7 @@ namespace EducationSystem.API
             CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
+            CreateMap<MaterialInputModel, MaterialDto>();
 
             CreateMap<HomeworkInputModel, HomeworkDto>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
