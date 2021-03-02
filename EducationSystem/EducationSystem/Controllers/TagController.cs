@@ -19,17 +19,15 @@ namespace EducationSystem.Controllers
     [Route("api/[controller]")]
     public class TagController : ControllerBase
     {
-        private TagRepository _repo;
         private TagMapper _tagMapper;
         private TagService _tagService;
         public TagController()
         {
             _tagService = new TagService();
             _tagMapper = new TagMapper();
-               _repo = new TagRepository();
         }
         // https://localhost:50221/api/tag/
-        [HttpPost("tag")]
+        [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddTag([FromBody] TagInputModel tag)
         {
@@ -38,7 +36,7 @@ namespace EducationSystem.Controllers
             return Ok($"Тег№{result} добавлен");
         }
         // https://localhost:50221/api/tag
-        [HttpGet("tag")]
+        [HttpGet]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public ActionResult GetTags()
         {
@@ -47,7 +45,7 @@ namespace EducationSystem.Controllers
             return Ok(tags);
         }
         // https://localhost:50221/api/tag/3
-        [HttpGet("tag/{id}")]
+        [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public ActionResult GetTag(int id)
         {
@@ -56,7 +54,7 @@ namespace EducationSystem.Controllers
             return Ok(tag);
         }
         // https://localhost:50221/api/tag/3
-        [HttpPut("tag/{id}")]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult UpdateTag(int id, [FromBody] TagInputModel tag)
         {
@@ -65,7 +63,7 @@ namespace EducationSystem.Controllers
             return Ok("Tag обновлён");
         }
         // https://localhost:50221/api/tag/3
-        [HttpDelete("tag/{id}")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteTag(int id)
         {
