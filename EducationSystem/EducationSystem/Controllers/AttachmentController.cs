@@ -21,13 +21,11 @@ namespace EducationSystem.API.Controllers
        
         private AttachmentService _service;
         private AttachmentMapper _attachmentMapper;
-        private AttachmentTypeMapper _attachmentTypeMapper;
 
         public AttachmentController()
         {
             _service = new AttachmentService();
             _attachmentMapper = new AttachmentMapper();
-            _attachmentTypeMapper = new AttachmentTypeMapper();
         }
 
         // https://localhost:44365/api/attachment/
@@ -84,72 +82,7 @@ namespace EducationSystem.API.Controllers
             return Ok("Успех");
         }
 
-        // https://localhost:44365/api/attachment/attachmentType/
-        [HttpPost("attachmentType/{name}")]
-        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult AddAttachmentType(string name)
-        {
-            var result = _service.AddAttachmentType(name);
-            return Ok($"Тип вложения #{result} добавлен");
-        }
-
-
-
-        // https://localhost:44365/api/attachment/attachmentType
-        [HttpGet("attachmentType")]
-        [AllowAnonymous]
-        public ActionResult GetAttachmentTypes()
-        {
-            List<AttachmentTypeOutputModel> attachmentTypes;
-            try
-            {
-                attachmentTypes = _attachmentTypeMapper.FromDtos(_service.GetAttachmentTypes());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok(attachmentTypes);
-        }
-
-        // https://localhost:44365/api/attachment/attachmentType/42
-        [HttpGet("attachmentType/{id}")]
-        [AllowAnonymous]
-
-        public dynamic GetAttachmentType(int id)
-        {
-            var attachmentType = new AttachmentTypeOutputModel();
-            try
-            {
-                attachmentType = _attachmentTypeMapper.FromDto(_service.GetAttachmentTypeById(id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok(attachmentType);
-        }
-
-        // https://localhost:44365/api/attachment/attachmentType/42/IMAGE
-        [HttpPut("attachmentType/{id}/{name}")]
-        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult UpdateAttachmentType(int id, string name)
-        {
-            _service.ModifyAttachmentType(id, name);
-            return Ok("Успех");
-        }
-
-        // https://localhost:44365/api/attachment/attachmentType/42
-        [HttpDelete("attachmentType/{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult DeleteAttachmentType(int id)
-        {
-            _service.DeleteAttachmentTypeById(id);
-            return Ok("Успех");
-        }
-        //  https://localhost:44365/api/attachment/comment/4
-        [HttpPost("comment/{commentId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
+        [HttpGet]
         public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
         {
             var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
