@@ -169,5 +169,20 @@ namespace EducationSystem.Business
         {
             return _homeworkRepository.AddComment(comment);
         }
+
+        public int UpdateComment(CommentDto comment)
+        {
+            return _homeworkRepository.UpdateComment(comment);
+        }
+
+        public int AddHomeworkTag(int homeworkId, int tagId)
+        {
+            return _tagRepository.HomeworkTagAdd(new HomeworkTagDto() { HomeworkId = homeworkId, TagId = tagId });
+        }
+
+        public int DeleteHomeworkTag(int homeworkId, int tagId)
+        {
+            return _tagRepository.HomeworkTagDelete(homeworkId, tagId);
+        }
     }
 }

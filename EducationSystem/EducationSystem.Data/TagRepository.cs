@@ -118,7 +118,7 @@ namespace EducationSystem.Data
         public int HomeworkTagAdd(HomeworkTagDto Tag)
         {
             var result = _connection
-                .QuerySingle<int>("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingle<int>("dbo.Homework_Tag_Add", new { TagId = Tag.TagId, HomeworkId = Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 

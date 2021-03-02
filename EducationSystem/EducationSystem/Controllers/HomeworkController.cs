@@ -166,7 +166,21 @@ namespace EducationSystem.API.Controllers
         {
             var dto = _mapper.Map<CommentDto>(comment);
             dto.HomeworkAttempt = new HomeworkAttemptDto() { Id = attemptId };
-            var result = _homeworkService.AddComment(_mapper.Map<CommentDto>(comment));
+            var result = _homeworkService.AddComment(dto);
+
+            return Ok(result);
+        }
+
+        //todo: Update attachments in service
+        //https://localhost:44365/api/homework/attempt/2/comment/2
+        [HttpPut("attempt/{attemptId}/comment/{commentId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        public ActionResult UpdateComment(int attemptId, int commentId, [FromBody] CommentUpdateInputModel comment)
+        {
+            var dto = _mapper.Map<CommentDto>(comment);
+            dto.Id = commentId;
+            dto.HomeworkAttempt = new HomeworkAttemptDto() { Id = attemptId };
+            var result = _homeworkService.UpdateComment(dto);
 
             return Ok(result);
         }
@@ -185,7 +199,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/homework/3/theme/1
         [HttpDelete("{homeworkId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult DeleteHomework_Theme(int homeworkId, int themeId)
+        public ActionResult DeleteHomeworkTheme(int homeworkId, int themeId)
         {
             var results = _homeworkService.DeleteHomework_Theme(homeworkId, themeId);
 
@@ -251,6 +265,26 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddHomeworkTheme(int homeworkId, int themeId)
         {
             var results = _homeworkService.AddHomework_Theme(homeworkId, themeId); 
+
+            return Ok(results);
+        }
+
+        // https://localhost:44365/api/homework/3/tag/1
+        [HttpPost("{homeworkId}/tag/{tagId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult AddHomeworkTag(int homeworkId, int tagId)
+        {
+            var results = _homeworkService.AddHomeworkTag(homeworkId, tagId);
+
+            return Ok(results);
+        }
+
+        // https://localhost:44365/api/homework/3/tag/1
+        [HttpDelete("{homeworkId}/tag/{tagId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        public ActionResult DeleteHomeworkTag(int homeworkId, int tagId)
+        {
+            var results = _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
 
             return Ok(results);
         }

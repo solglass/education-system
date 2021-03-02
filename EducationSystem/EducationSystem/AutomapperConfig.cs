@@ -67,6 +67,8 @@ namespace EducationSystem.API
             CreateMap<CommentInputModel, CommentDto>()
                 .ForMember(dest => dest.Author, opts => opts.MapFrom(src => new UserDto() { Id = src.AuthorId }));
 
+            CreateMap<CommentUpdateInputModel, CommentDto>();
+
             CreateMap<AttachmentDto, AttachmentOutputModel>()
                 .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyAttachmentTypeName(src.AttachmentType)));
             CreateMap<HomeworkAttemptInputModel, HomeworkAttemptDto>()
