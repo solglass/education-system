@@ -22,7 +22,6 @@ namespace EducationSystem.Controllers
     public class MaterialController : ControllerBase
     {
 
-        private MaterialService _materialService;
         private MaterialMapper _matMapper;
         private IMapper _mapper;
         private IMaterialService _service;
@@ -39,7 +38,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialsByGroupId(int id)
         {
-            return Ok(_matMapper.FromDtos(_materialService.GetMaterialsByGroupId(id)));
+            return Ok(_matMapper.FromDtos(_service.GetMaterialsByGroupId(id)));
 
         }
 
@@ -48,7 +47,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialsByTagId(int id)
         {
-            return Ok(_matMapper.FromDtos(_materialService.GetMaterialsByTagId(id)));
+            return Ok(_matMapper.FromDtos(_service.GetMaterialsByTagId(id)));
         }
 
         // https://localhost:44365/api/material/2
@@ -56,7 +55,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialById(int id)
         {
-            return Ok(_matMapper.FromDto(_materialService.GetMaterialById(id)));
+            return Ok(_matMapper.FromDto(_service.GetMaterialById(id)));
         }
 
         // https://localhost:44365/api/material
@@ -64,7 +63,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
-            _materialService.AddMaterial(_matMapper.ToDto(materialInputModel));
+            _service.AddMaterial(_matMapper.ToDto(materialInputModel));
             return Ok("Материалы добавлены");
         }
 
@@ -75,7 +74,7 @@ namespace EducationSystem.Controllers
         {
             var dto = _mapper.Map<MaterialDto>(material);
             dto.Id = id;
-            _materialService.UpdateMaterial(dto);
+            _service.UpdateMaterial(dto);
             return Ok("Данные обновлены");
         }
 
@@ -84,7 +83,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteMaterial(int id)
         {
-            var result = _materialService.DeleteMaterial(id);
+            var result = _service.DeleteMaterial(id);
             if (result == 1)
                 return Ok($"Материал #{id} удален!");
             else
@@ -96,7 +95,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult RecoverMaterial(int id)
         {
-            var result = _materialService.RecoverMaterial(id);
+            var result = _service.RecoverMaterial(id);
             if (result == 1)
                 return Ok($"Материал #{id} восстановлен!");
             else
