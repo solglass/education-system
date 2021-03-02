@@ -5,28 +5,31 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-
+using EducationSystem.Core.Enums;
+using EducationSystem.Core.Config;
+using Microsoft.Extensions.Options;
 
 namespace EducationSystem.Data
 {
-    public class AttachmentRepository
+    public class AttachmentRepository : BaseRepository, IAttachmentRepository
     {
-        private SqlConnection _connection;
-
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
-        public AttachmentRepository()
+        IHomeworkRepository _homeworkrepo;
+        IHomeworkAttemptRepository _homeworkAttRepo;
+        public AttachmentRepository(IOptions<AppSettingsConfig> options, IHomeworkRepository homeworkRepository, IHomeworkAttemptRepository homeworkAttemptRepository): base(options)
         {
+            _homeworkrepo = homeworkRepository;
+            _homeworkAttRepo = homeworkAttemptRepository;
             _connection = new SqlConnection(_connectionString);
         }
 
         public AttachmentDto GetAttachmentById(int id)
         {
             var data = _connection
-                .Query<AttachmentDto, AttachmentTypeDto, AttachmentDto>(
+                .Query<AttachmentDto, int, AttachmentDto>(
                     "dbo.Attachment_SelectById",
                     (attachment, attachmentType) =>
-                    {                                             
-                        attachment.AttachmentType = attachmentType;                       
+                    {
+                        attachment.AttachmentType = (AttachmentType)attachmentType;
                         return attachment;
                     },
                     new { id },
@@ -40,7 +43,7 @@ namespace EducationSystem.Data
         {
             int id = attachmentDto.Id;
             string path = attachmentDto.Path;
-            int attachmentTypeID = attachmentDto.AttachmentType.Id;
+            int attachmentTypeID = (int)attachmentDto.AttachmentType;
             var data = _connection
                 .Execute("dbo.Attachment_Update", new { id, path, attachmentTypeID }, commandType: System.Data.CommandType.StoredProcedure);
             return data;
@@ -62,86 +65,41 @@ namespace EducationSystem.Data
                 new
                 {
                     path = attachmentDto.Path,
-                    attachmentTypeId = attachmentDto.AttachmentType.Id
+                    attachmentTypeId = (int)attachmentDto.AttachmentType
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return value;
 
         }
-        public List<AttachmentTypeDto> GetAttachmentTypes()
-        {
-            var data = _connection
-                .Query<AttachmentTypeDto>("dbo.AttachmentType_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return data;
 
 
-        }
-
-        public AttachmentTypeDto GetAttachmentTypeById(int id)
-        {
-            var data = _connection
-                .QuerySingleOrDefault<AttachmentTypeDto>("dbo.AttachmentType_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-
-        public int ModifyAttachmentType(int id, string name)
-        {
-            var data = _connection
-                .Execute("dbo.AttachmentType_Update", new { id, name }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-
-        public int DeleteAttachmentTypeById(int id)
-        {
-            var data = _connection
-                .Execute("dbo.AttachmentType_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-
-
-        public int AddAttachmentType(string name)
-        {          
-            var firstRow = _connection
-                .QuerySingleOrDefault("dbo.AttachmentType_Add",
-                new { name = name },
-                commandType: System.Data.CommandType.StoredProcedure);
-            var data = (IDictionary<string, object>)firstRow;
-            int value = Convert.ToInt32(data["LastId"]);
-            return value;
-
-        }
 
         public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
         {
             int attachmentId = AddAttachment(attachmentDto);
-            HomeworkRepository homeworkrepo = new HomeworkRepository();
+            
             Comment_AttachmentDto comment_AttachmentDto = new Comment_AttachmentDto
             {
                 AttachmentId = attachmentId,
                 CommentId = commentId
             };
-            homeworkrepo.AddComment_Attachment(comment_AttachmentDto);
+            _homeworkrepo.AddComment_Attachment(comment_AttachmentDto);
             return attachmentId;
 
         }
 
-        public int AddAttachmentToHomeworkAttempt (AttachmentDto attachmentDto, int homeworkAttemptId)
+        public int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId)
         {
-            int attachmentId = AddAttachment(attachmentDto);
-            HomeworkAttemptRepository homeworkAttRepo = new HomeworkAttemptRepository();
+            int attachmentId = AddAttachment(attachmentDto);            
             HomeworkAttempt_AttachmentDto homework_AttachmentDto = new HomeworkAttempt_AttachmentDto
             {
                 AttachmentId = attachmentId,
                 HomeworkAttemptId = homeworkAttemptId
             };
-            homeworkAttRepo.AddHomeworkAttempt_Attachment(homework_AttachmentDto);
+            _homeworkAttRepo.AddHomeworkAttempt_Attachment(homework_AttachmentDto);
             return attachmentId;
 
         }
-
-
-
     }
 }
 

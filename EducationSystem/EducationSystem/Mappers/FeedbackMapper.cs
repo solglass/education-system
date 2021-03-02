@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EducationSystem.API.Utils;
 using EducationSystem.API.Models.OutputModels;
+using EducationSystem.Core.Enums;
 
 namespace EducationSystem.API.Mappers
 {
@@ -17,7 +18,7 @@ namespace EducationSystem.API.Mappers
             {
                 ID = inputModel.ID,
                 UserID = inputModel.UserID,
-                Messege = inputModel.Messege,
+                Messege = inputModel.Message,
                 LessonID = inputModel.LessonID,
                 UnderstandingLevelID = inputModel.UnderstandingLevelID,
             };
@@ -44,7 +45,7 @@ namespace EducationSystem.API.Mappers
                 UserID = dto.UserID,
                 Messege = dto.Messege,
                 LessonID = dto.LessonID,
-                UnderstandingLevelID = dto.UnderstandingLevelID,
+                UnderstandingLevel = FriendlyNames.GetFriendlyUnderstandingLevelName(dto.UnderstandingLevel)
             };
 
         }

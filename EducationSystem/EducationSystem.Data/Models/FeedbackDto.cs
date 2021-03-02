@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EducationSystem.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +14,7 @@ namespace EducationSystem.Data.Models
         public int UnderstandingLevelID { get; set; }
         public LessonDto Lesson { get; set; }
         public UserDto User { get; set; }
-        public UnderstandingLevelDto UnderstandingLevel { get; set; }
+        public UnderstandingLevel UnderstandingLevel { get; set; }
         
     }
 }

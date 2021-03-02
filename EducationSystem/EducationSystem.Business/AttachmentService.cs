@@ -6,25 +6,33 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-   public class AttachmentService
+    public class AttachmentService : IAttachmentService
     {
 
-        private AttachmentRepository _attachmentRepository;
+        private IAttachmentRepository _attachmentRepository;
 
-        public AttachmentService()
+        public AttachmentService(IAttachmentRepository attachmentRepository)
         {
-            _attachmentRepository = new AttachmentRepository();
+            _attachmentRepository = attachmentRepository;
         }
 
-        public AttachmentDto GetAttachmentById(int id) { return _attachmentRepository.GetAttachmentById(id); }
-        public int ModifyAttachment(AttachmentDto attachmentDto) { return _attachmentRepository.ModifyAttachment(attachmentDto); }
-        public int AddAttachment(AttachmentDto attachmentDto) { return _attachmentRepository.AddAttachment(attachmentDto); }
-        public int DeleteAttachmentById(int id) { return _attachmentRepository.DeleteAttachmentById(id); }
-        public List<AttachmentTypeDto> GetAttachmentTypes() { return _attachmentRepository.GetAttachmentTypes(); }
-        public AttachmentTypeDto GetAttachmentTypeById(int id) { return _attachmentRepository.GetAttachmentTypeById(id); }
-        public int ModifyAttachmentType(int id, string name) { return _attachmentRepository.ModifyAttachmentType(id, name); }
-        public int AddAttachmentType(string name) { return _attachmentRepository.AddAttachmentType(name); }
-        public int DeleteAttachmentTypeById(int id) { return _attachmentRepository.DeleteAttachmentTypeById(id); }
+        public AttachmentDto GetAttachmentById(int id)
+        {
+            return _attachmentRepository.GetAttachmentById(id);
+        }
+        public int ModifyAttachment(AttachmentDto attachmentDto)
+        {
+            return _attachmentRepository.ModifyAttachment(attachmentDto);
+        }
+        public int AddAttachment(AttachmentDto attachmentDto)
+        {
+            return _attachmentRepository.AddAttachment(attachmentDto);
+        }
+        public int DeleteAttachmentById(int id)
+        {
+            return _attachmentRepository.DeleteAttachmentById(id);
+        }
+
         public int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId)
         {
             return _attachmentRepository.AddAttachmentToHomeworkAttempt(attachmentDto, homeworkAttemptId);

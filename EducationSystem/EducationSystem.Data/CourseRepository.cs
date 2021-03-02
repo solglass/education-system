@@ -1,15 +1,17 @@
 ﻿using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Data.Models;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class CourseRepository : BaseRepository
+    public class CourseRepository : BaseRepository, ICourseRepository
     {
 
-        public CourseRepository()
+        public CourseRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }
@@ -29,7 +31,7 @@ namespace EducationSystem.Data
                             courseEntry.Themes = new List<ThemeDto>();
                             courseDictionary.Add(courseEntry.Id, courseEntry);
                         }
-                        
+
                         if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                         {
                             themeEntry = theme;
@@ -50,7 +52,7 @@ namespace EducationSystem.Data
             var themeDictionary = new Dictionary<int, ThemeDto>();
             var courseEntry = new CourseDto();
             var course = _connection
-                .Query<CourseDto, ThemeDto,CourseDto>(
+                .Query<CourseDto, ThemeDto, CourseDto>(
                     "dbo.Course_SelectById",
                     (course, theme) =>
                     {
@@ -59,7 +61,7 @@ namespace EducationSystem.Data
                             courseEntry = course;
                             courseEntry.Themes = new List<ThemeDto>();
                         }
-                        if(theme!=null && !themeDictionary.TryGetValue(theme.Id, out  ThemeDto themeEntry))
+                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                         {
                             themeEntry = theme;
                             courseEntry.Themes.Add(theme);
@@ -88,7 +90,7 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int UpdateCourse( CourseDto course)
+        public int UpdateCourse(CourseDto course)
         {
             var result = _connection
                 .Execute("dbo.Course_Update",
@@ -97,26 +99,26 @@ namespace EducationSystem.Data
                     id = course.Id,
                     name = course.Name,
                     description = course.Description,
-                    duration = course.Duration,
-                    isDeleted = course.IsDeleted
+                    duration = course.Duration
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
-        public int DeleteCourse(int id)
+        public int DeleteOrRecoverCourse(int id, bool isDeleted)
         {
             var result = _connection
-                .Execute("dbo.Course_Delete",
+                .Execute("dbo.Course_DeleteOrRecover",
                 new
                 {
-                    id
+                    id,
+                    isDeleted
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
-        public int HardDeleteCourse (int id)
+        public int HardDeleteCourse(int id)
         {
             var result = _connection
                 .Execute("dbo.Course_HardDelete",
@@ -134,7 +136,9 @@ namespace EducationSystem.Data
             var tagDictionary = new Dictionary<int, TagDto>();
 
             var themes = _connection
-                .Query<ThemeDto, TagDto, ThemeDto>("dbo.Theme_SelectAll",                (theme, tag) =>                {
+                .Query<ThemeDto, TagDto, ThemeDto>("dbo.Theme_SelectAll",
+                (theme, tag) =>
+                {
 
                     if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                     {
@@ -150,7 +154,10 @@ namespace EducationSystem.Data
                         tagDictionary.Add(tagEntry.Id, tagEntry);
                     }
                     return themeEntry;
-                },                splitOn: "Id",                commandType: System.Data.CommandType.StoredProcedure)                .Distinct()
+                },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
             return themes;
         }
@@ -162,7 +169,7 @@ namespace EducationSystem.Data
             var themeEntry = new ThemeDto();
 
             var theme = _connection
-                .Query<ThemeDto,TagDto, ThemeDto>(
+                .Query<ThemeDto, TagDto, ThemeDto>(
                 "dbo.Theme_SelectById",
                 (theme, tag) =>
                 {
@@ -211,7 +218,7 @@ namespace EducationSystem.Data
         public int DeleteTheme(int id)
         {
             var result = _connection
-                .Execute("dbo.Theme_Delete",
+                .Execute("dbo.Theme_SoftDelete",
                 new
                 {
                     id
@@ -251,7 +258,7 @@ namespace EducationSystem.Data
         }
 
 
-       
+
 
         public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
         {
@@ -270,7 +277,7 @@ namespace EducationSystem.Data
             return themes;
         }
 
-       
+
         public List<Course_ThemeDto> GetCourseThemeByThemeId(int id)
         {
             var result = _connection.

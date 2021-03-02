@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EducationSystem.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace EducationSystem.Data.Models
         public int Id { get; set; }     
         public DateTime StartDate { get; set; }
         public CourseDto Course { get; set; }
-        public GroupStatusDto GroupStatus { get; set; }
+        public GroupStatus GroupStatus { get; set; }
 
         public override bool Equals(object obj)
         {
