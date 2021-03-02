@@ -57,16 +57,16 @@ namespace EducationSystem.Controllers
             GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupById(id));
             return Ok(result);
         }
-        // https://localhost:44365/api/group/theme/3
-        [HttpGet("theme/{Id}")]
+        // https://localhost:44365/api/group/by-theme/3
+        [HttpGet("by-theme//{Id}")]
         public ActionResult<List<GroupOutputModel>> GetGroupByThemeId(int id)
         {
             List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroupByThemeId(id));
             return Ok(result);
         }
 
-        // https://localhost:44365/api/group/groups-without-tutors
-        [HttpGet("groups-without-tutors")]
+        // https://localhost:44365/api/group/without-tutors
+        [HttpGet("without-tutors")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult<List<GroupOutputModel>> GetGroupsWithoutTutors()
         {
@@ -74,8 +74,8 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
-        // https://localhost:44365/api/group/3/programs-group
-        [HttpGet("{Id}/programs-group")]        
+        // https://localhost:44365/api/group/3/programs
+        [HttpGet("{Id}/programs")]        
         public ActionResult GetGroupProgramsByGroupId(int id)
         {
             GroupOutputModel result = _groupMapper.FromDto(_service.GetGroupProgramsByGroupId(id));
