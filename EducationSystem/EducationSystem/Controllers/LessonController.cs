@@ -17,7 +17,7 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/lesson/
     [ApiController]
     [Route("api/[controller]")]
-
+    [Authorize]
     public class LessonController : ControllerBase
     {
         private ILessonService _lessonService;
