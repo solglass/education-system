@@ -17,6 +17,7 @@ namespace EducationSystem.Business
         public TagDto GetTagById(int id) { return _tagRepository.GetTagById(id); }
         public int UpdateTag(TagDto tagDto) { return _tagRepository.TagUpdate(tagDto); }
         public int AddTag(TagDto tagDto) { return _tagRepository.TagAdd(tagDto); }
-        public int DeleteTag(int id) { return _tagRepository.TagDelete(id); } 
+        public int DeleteTag(int id) { return _tagRepository.TagDelete(id); }
+        public int DeleteHomeworkTag(int homeworkId, int tagId) { return _tagRepository.HomeworkTagDelete(homeworkId, tagId); }
     }
 }

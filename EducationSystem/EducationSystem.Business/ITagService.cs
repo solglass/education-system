@@ -9,6 +9,7 @@ namespace EducationSystem.Business
         int DeleteTag(int id);
         TagDto GetTagById(int id);
         List<TagDto> GetTags();
-        int UpdateTag( TagDto tagDto);
+        int UpdateTag(TagDto tagDto);
+        int DeleteHomeworkTag(int homeworkId, int tagId);
     }
 }
