@@ -130,6 +130,5 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-
     }
 }
