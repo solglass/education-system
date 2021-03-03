@@ -167,7 +167,7 @@ namespace EducationSystem.Controllers
         }
         //https://localhost:50221/api/user/payment/payment/32
          [HttpGet("payment/{id}")]
-        //[Authorize(Roles = "Админ,Менеджер")]
+        [Authorize(Roles = "Админ,Менеджер")]
         public dynamic GetPayment(int id)
         {
             var payment = _prepo.GetPaymentById(id);
