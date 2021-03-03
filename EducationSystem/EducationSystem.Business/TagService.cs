@@ -6,17 +6,18 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-   public class TagService
+    public class TagService : ITagService
     {
-        private TagRepository _tagRepository;
-        public TagService()
+        private ITagRepository _tagRepository;
+        public TagService(ITagRepository tagRepository)
         {
-            _tagRepository = new TagRepository();
+            _tagRepository = tagRepository;
         }
         public List<TagDto> GetTags() { return _tagRepository.GetTags(); }
         public TagDto GetTagById(int id) { return _tagRepository.GetTagById(id); }
-        public int UpdateTag(int id,TagDto tagDto) { return _tagRepository.TagUpdate(id,tagDto); }
+        public int UpdateTag(TagDto tagDto) { return _tagRepository.TagUpdate(tagDto); }
         public int AddTag(TagDto tagDto) { return _tagRepository.TagAdd(tagDto); }
         public int DeleteTag(int id) { return _tagRepository.TagDelete(id); }
+        public int DeleteHomeworkTag(int homeworkId, int tagId) { return _tagRepository.HomeworkTagDelete(homeworkId, tagId); }
     }
 }

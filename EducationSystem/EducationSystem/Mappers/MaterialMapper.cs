@@ -14,7 +14,6 @@ namespace EducationSystem.API.Mappers
         public MaterialDto ToDto(MaterialInputModel inputModel)
         {
             var materialDto = new MaterialDto();
-            materialDto.Id = inputModel.Id;
             materialDto.Link = inputModel.Link;
             materialDto.Description = inputModel.Description;
             materialDto.IsDeleted = false;

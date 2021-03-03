@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace EducationSystem.Data.Tests
 {
-    class MaterialRepositoryTests
+    class MaterialRepositoryTests : BaseTest
     {
         List<MaterialDto> _materials;
         MaterialDto _materialDto;
@@ -16,8 +16,8 @@ namespace EducationSystem.Data.Tests
         [OneTimeSetUp]
         public void MaterialRepositorySetUp()
         {
+            _materialRepository = new MaterialRepository(_options);
             _materialDto = new MaterialDto();
-            _materialRepository = new MaterialRepository();
             _materials = GetMaterialsMock();
         }
 

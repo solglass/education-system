@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Data.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -7,29 +9,39 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class PaymentRepository
+    public class PaymentRepository : BaseRepository,IPaymentRepository
     {
-
-        private SqlConnection _connection;
-
-        private string _connectionString = "Data Source=80.78.240.16;Initial Catalog=DevEdu;Persist Security Info=True;User ID=student;Password=qwe!23";
-       
-        public PaymentRepository()
-        {           
+        public PaymentRepository(IOptions<AppSettingsConfig> options) : base(options)
+        {
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<PaymentDto> GetPayments()
+        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo)
         {
             var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
-                    "dbo.Payment_SelectAll",
+                    "dbo.Payment_SelectByPeriod",
                     (payment, user) =>
                     {
                         payment.Student = user;
                         return payment;
                     },
                             splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)               
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return payments;
+        }
+        public List<PaymentDto> GetPaymentsByUserId(int id)
+        {
+            var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+                    "dbo.Payment_SelectByUserId",
+                    (payment, user) =>
+                    {
+                        payment.Student = user;
+                        return payment;
+                    },
+                    new { id },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return payments;
         }
@@ -51,7 +63,7 @@ namespace EducationSystem.Data
         }
 
         public PaymentDto GetPaymentByContractNumber(int contractNumber)
-        {           
+        {
             var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
                     "dbo.Payment_SelectByContractNumber",
                     (payment, user) =>
@@ -79,7 +91,7 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Payment_Add",
                 new
                 {
-                   payment.ContractNumber,
+                    payment.ContractNumber,
                     payment.Amount,
                     payment.Date,
                     payment.Period,
@@ -90,9 +102,8 @@ namespace EducationSystem.Data
         }
 
         // should return affected rows' count, use 'Execute' method
-        public int UpdatePayment(int id,PaymentDto payment)
+        public int UpdatePayment(PaymentDto payment)
         {
-            payment.Id = id;
             var result = _connection
                 .Execute("dbo.Course_Update",
                 new
@@ -119,6 +130,6 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-       
+
     }
 }
