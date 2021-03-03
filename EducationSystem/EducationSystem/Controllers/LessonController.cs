@@ -21,14 +21,14 @@ namespace EducationSystem.Controllers
     public class LessonController : ControllerBase
     {
         private ILessonRepository _repo;
-        private LessonMapper _lessonMapper;
+        //private LessonMapper _lessonMapper;
         private ILessonService _lessonService;
         private IMapper _mapper;
 
         public LessonController(IMapper mapper, ILessonRepository lessonRepository, ILessonService lessonService)
         {
             _repo = lessonRepository;
-            _lessonMapper = new LessonMapper();
+           // _lessonMapper = new LessonMapper();
             _lessonService = lessonService;
             _mapper = mapper;
         }
@@ -41,7 +41,7 @@ namespace EducationSystem.Controllers
             LessonDto lesson;
             try
             {
-                lesson = _lessonMapper.ToDto(inputModel);
+                lesson =_mapper.Map<LessonDto>(inputModel);
             }
             catch (Exception ex)
             {

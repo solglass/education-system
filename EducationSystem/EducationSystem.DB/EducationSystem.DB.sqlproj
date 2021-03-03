@@ -225,7 +225,6 @@
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByHomeworkId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Add.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByGroupId.sql" />
-    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByID.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Add.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Delete.sql" />
@@ -264,5 +263,7 @@
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByUserId.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_SoftDelete.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByPeriod.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByThemeId.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByID.sql" />
   </ItemGroup>
 </Project>

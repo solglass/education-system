@@ -6,7 +6,7 @@ namespace EducationSystem.Data.Models
 {
    public  class LessonDto
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public int GroupID { get; set; }
         public string Comment { get; set; }
         public DateTime Date { get; set; }
