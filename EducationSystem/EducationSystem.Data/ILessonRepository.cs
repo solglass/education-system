@@ -22,7 +22,7 @@ namespace EducationSystem.Data
         List<LessonDto> GetLessonsByThemeId(int themeId);
         LessonThemeDto GetLessonThemeById(int id);
         List<LessonThemeDto> GetLessonThemesByThemeId(int id);
-        int UpdateAttendance(AttendanceDto attendance);
+        int UpdateAttendance(int LessonId, int attandanceId, AttendanceDto attendance);
         int UpdateFeedback(FeedbackDto feedbackDto);
         int UpdateLesson(LessonDto lessonDto);
         List<AttendanceReportDto> GetStudentByPercentOfSkip(int percent, int groupId);

@@ -44,6 +44,8 @@ namespace EducationSystem.API
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
             CreateMap<MaterialInputModel, MaterialDto>();
+            CreateMap<LessonThemeInputModel, LessonThemeDto>();
+            CreateMap<LessonThemeDto, LessonThemeOutputModel>();
         }
     }
 }
