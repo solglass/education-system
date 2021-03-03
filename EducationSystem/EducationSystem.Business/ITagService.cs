@@ -10,5 +10,6 @@ namespace EducationSystem.Business
         TagDto GetTagById(int id);
         List<TagDto> GetTags();
         int UpdateTag(TagDto tagDto);
+        int DeleteHomeworkTag(int homeworkId, int tagId);
     }
 }
