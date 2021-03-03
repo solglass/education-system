@@ -160,22 +160,28 @@ namespace EducationSystem.Data
         public int HardDeleteUser(int id)
         {
             return _connection
-                .Execute("dbo.User_HardDelete", new { id },
+                .Execute("dbo.User_HardDelete", 
+                new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 
         public int AddRoleToUser(UserRoleDto userRole)
         {
             return _connection
-               .QuerySingle<int>("dbo.RoleToUser_Add",
-               new { userRole.UserId, userRole.RoleId },
+               .QuerySingle<int>("dbo.User_Role_Add",
+               new 
+               { 
+                   userRole.UserId,
+                   userRole.RoleId 
+               },
                commandType: System.Data.CommandType.StoredProcedure);
         }
 
         public int DeleteRoleToUser(int id)
         {
             return _connection
-                .Execute("dbo.RoleToUser_Delete", new { id },
+                .Execute("dbo.User_Role_Delete", 
+                new { id },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 
