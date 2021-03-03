@@ -261,5 +261,8 @@
     <Build Include="StoredProcedures\Group_Material\Group_Material_SelectById.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectByTheme.sql" />
     <Build Include="Scripts\InitialData.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\Theme\dbo.Theme_SoftDelete.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByPeriod.sql" />
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using EducationSystem.API.Models.OutputModels;
+using EducationSystem.API.Utils;
 
 namespace EducationSystem.Controllers
 {
@@ -152,15 +153,17 @@ namespace EducationSystem.Controllers
         }
 
         //https://localhost:50221/api/user/payment/payment
-         [HttpGet("payment")]
-        [Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult GetPayments()
-        {
-            var payments = _prepo.GetPayments();
-            var outputModels = _mapper.Map<List<PaymentOutputModel>>(payments);
-            return Ok(outputModels);
+        [HttpGet("period")]
+        //[Authorize(Roles = "Админ,Менеджер")]
+        public ActionResult GetPayments(PeriodInputModel periodInput)
+        {                             
+            return Ok(_userService.GetPaymentsByPeriod(Converters.StrToDateTimePeriod(periodInput.PeriodFrom), Converters.StrToDateTimePeriod(periodInput.PeriodTo)));
         }
-
+        [HttpGet("payment/UserId/{id}")]
+        public ActionResult GetPaymentsByUserId(int id)
+        {            
+            return Ok(_userService.GetPaymentsByUserId(id));
+        }
         //https://localhost:50221/api/user/payment/payment/32
          [HttpGet("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
