@@ -19,6 +19,9 @@ namespace EducationSystem.API
             CreateMap<UserInputModel, UserDto>();
             CreateMap<UserDto, UserOutputModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
+            CreateMap<PaymentInputModel, PaymentDto>();
+            CreateMap<PaymentDto, PaymentOutputModel>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<AttendanceUpdateInputModel, AttendanceDto>();
             CreateMap<HomeworkDto, HomeworkOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
@@ -31,6 +34,7 @@ namespace EducationSystem.API
             CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
+            CreateMap<TagInputModel, TagDto>();
             CreateMap<TagDto, TagOutputModel>();
             CreateMap<ThemeDto, ThemeOutputModel>();
             CreateMap<LessonInputModel,LessonDto>();
@@ -39,6 +43,7 @@ namespace EducationSystem.API
             CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
+            CreateMap<MaterialInputModel, MaterialDto>();
         }
     }
 }

@@ -17,19 +17,19 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/lesson/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class LessonController : ControllerBase
     {
-        private LessonRepository _repo;
+        private ILessonRepository _repo;
         private LessonMapper _lessonMapper;
-        private LessonService _lessonService;
+        private ILessonService _lessonService;
         private IMapper _mapper;
 
-        public LessonController(IMapper mapper)
+        public LessonController(IMapper mapper, ILessonRepository lessonRepository, ILessonService lessonService)
         {
-            _repo = new LessonRepository();
+            _repo = lessonRepository;
             _lessonMapper = new LessonMapper();
-            _lessonService = new LessonService();
+            _lessonService = lessonService;
             _mapper = mapper;
         }
 
@@ -82,6 +82,7 @@ namespace EducationSystem.Controllers
                 return Problem($"Ошибка! Не удалось удалить урок #{id}!");
         }
 
+
         // https://localhost:50221/api/lesson/id/recovery
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель")]
@@ -108,7 +109,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ")]
         public ActionResult GetFeedbacks(int lessonId, int groupId, int courseId)
         {
-            var result = _lessonService.GetFeedbacks(lessonId, groupId, courseId);
+            var result = _lessonService.GetFeedbacks(inputModel.LessonID, inputModel.GroupID, inputModel.CourseID);
             return Ok(result);
         }
 

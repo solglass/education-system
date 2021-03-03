@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Data.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -7,10 +9,10 @@ using System.Linq;
 
 namespace EducationSystem.Data
 {
-    public class TagRepository : BaseRepository
+    public class TagRepository : BaseRepository, ITagRepository
     {
 
-        public TagRepository()
+        public TagRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }
@@ -29,9 +31,8 @@ namespace EducationSystem.Data
                 .QuerySingleOrDefault<TagDto>("dbo.Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int TagUpdate(int id,TagDto tag)
+        public int TagUpdate(TagDto tag)
         {
-            tag.Id = id;
             var result = _connection
                 .Execute("dbo.Tag_Update", new { tag.Id, tag.Name },
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -52,18 +53,18 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-       
+
         public MaterialTagDto GetMaterialTagById(int Id)
         {
             var result = _connection
                 .QuerySingleOrDefault<MaterialTagDto>("dbo.Material_Tag_SelectById", new { Id }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-      
+
         public int MaterialTagDelete(int materialId, int tagId)
         {
             var result = _connection
-                .Execute("dbo.Material_Tag_Delete", new { materialId, tagId}, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Material_Tag_Delete", new { materialId, tagId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
         public int MaterialTagAdd(MaterialTagDto Tag)
@@ -72,7 +73,7 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Material_Tag_Add", new { Tag.TagId, Tag.MaterialId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-      
+
         public List<ThemeTagDto> GetThemeTagById(int Id)
         {
             var result = _connection
@@ -92,14 +93,14 @@ namespace EducationSystem.Data
                 .Execute("dbo.Theme_Tag_Delete", new { themeId, tagId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        
+
         public int ThemeTagAdd(ThemeTagDto Tag)
         {
             var result = _connection
                 .QuerySingle<int>("dbo.Theme_Tag_Add", new { Tag.TagId, Tag.ThemeId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        
+
         public List<HomeworkTagDto> GetHomeworkTagById(int Id)
         {
             var result = _connection
@@ -107,7 +108,7 @@ namespace EducationSystem.Data
                 .ToList();
             return result;
         }
-      
+
         public int HomeworkTagDelete(int homeworkId, int tagId)
         {
             var result = _connection
@@ -120,6 +121,6 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-       
+
     }
 }

@@ -24,12 +24,12 @@ namespace EducationSystem.API.Controllers
     {
         private CourseMapper _courseMapper;
         private ThemeMapper _themeMapper;
-        private CourseService _courseService;
-        public CourseController()
+        private ICourseService _courseService;
+        public CourseController(ICourseService courseService)
         {
             _courseMapper = new CourseMapper();
             _themeMapper = new ThemeMapper();
-            _courseService = new CourseService();
+            _courseService = courseService;
         }
 
         [HttpGet]
@@ -111,7 +111,7 @@ namespace EducationSystem.API.Controllers
             if (result == 1)
                 return Ok($"Курс #{id} удален!");
             else
-                return Problem($"Ошибка! Не получилось удалить курс #{id}!") ;
+                return Problem($"Ошибка! Не получилось удалить курс #{id}!");
         }
 
         // https://localhost:XXXXX/api/course/id/recovery
@@ -125,6 +125,7 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не получилось восстановить курс #{id}!");
         }
+
 
         // https://localhost:XXXXX/api/course/3/theme/8
         [HttpPost("{courseId}/theme/{themeId}")]

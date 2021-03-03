@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Models.InputModels
 {
-    public class RoleInputModel
+    public class PeriodInputModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public string PeriodFrom { get; set; }
+        public string PeriodTo { get; set; }
     }
 }
