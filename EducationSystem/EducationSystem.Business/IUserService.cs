@@ -13,7 +13,7 @@ namespace EducationSystem.Business
         UserDto GetUserById(int id);
         List<UserDto> GetUsers();
         int UpdateUser(UserDto userDto);
-        List<PaymentDto> GetPaymentsByPeriod(string v1, string v2);
+        List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string periodTo);
         List<PaymentDto> GetPaymentsByUserId(int id);
     }
 }
