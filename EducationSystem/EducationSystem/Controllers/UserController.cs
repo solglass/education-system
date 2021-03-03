@@ -154,8 +154,8 @@ namespace EducationSystem.Controllers
 
         //https://localhost:50221/api/user/payment/payment
         [HttpGet("period")]
-        //[Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult GetPayments(PeriodInputModel periodInput)
+        [Authorize(Roles = "Админ,Менеджер")]
+        public ActionResult GetPaymentsByPeriod(PeriodInputModel periodInput)
         {                             
             return Ok(_userService.GetPaymentsByPeriod(Converters.StrToDateTimePeriod(periodInput.PeriodFrom), Converters.StrToDateTimePeriod(periodInput.PeriodTo)));
         }
