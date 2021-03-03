@@ -145,5 +145,10 @@ namespace EducationSystem.Business
 
             return dtos;
         }
+        public int AddHomeworkTag(HomeworkTagDto homeworkTagDto)
+        {
+            return _homeworkRepository.HomeworkTagAdd(homeworkTagDto);
+        }
+        public int DeleteHomeworkTag(int homeworkId, int tagId) { return _homeworkRepository.HomeworkTagDelete(homeworkId, tagId); }
     }
 }

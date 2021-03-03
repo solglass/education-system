@@ -73,14 +73,6 @@ namespace EducationSystem.Controllers
         {
             _tagService.DeleteTag(id);
             return Ok("Tag удалён");
-        }
-
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult DeleteHomeworkTag(int homeworkId, int tagId)
-        {
-            _tagService.DeleteHomeworkTag(homeworkId, tagId);
-            return Ok("Tag удалён");
-        }
+        }        
     }
 }
