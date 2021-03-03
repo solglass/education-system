@@ -32,5 +32,7 @@ namespace EducationSystem.Data
         int UpdateComment(CommentDto commentDto);
         int UpdateHomework(HomeworkDto homework);
         int UpdateHomeworkAttempt(HomeworkAttemptDto homeworkAttempt);
+        int HomeworkTagAdd(HomeworkTagDto Tag);
+        int HomeworkTagDelete(int homeworkId, int tagId);
     }
 }
