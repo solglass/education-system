@@ -10,7 +10,6 @@ namespace EducationSystem.Business
         int AddHomework_Theme(int homeworkId, int themeId);
         int DeleteHomework(int id);
         int DeleteHomeworkAttempt(int id);
-        int DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId);
         int DeleteHomework_Theme(int homeworkId, int themeId);
         CommentDto GetCommentById(int id);
         List<CommentDto> GetComments();

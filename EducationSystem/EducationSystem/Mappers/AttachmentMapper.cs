@@ -11,13 +11,16 @@ namespace EducationSystem.API.Mappers
 {
     public class AttachmentMapper
     {
-        public AttachmentDto ToDto(AttachmentInputModel inputModel)
+        public AttachmentDto ToDto(AttachmentInputModel inputModel, int id = 0)
         {
             var attachmentDto = new AttachmentDto();
-            attachmentDto.Id = inputModel.Id;
             attachmentDto.Path = inputModel.Path;
             attachmentDto.AttachmentType = 
                 (AttachmentType) inputModel.AttachmentTypeId ;
+            if (id > 0)
+            {
+                attachmentDto.Id = id;
+            }
             return attachmentDto;
         }
 

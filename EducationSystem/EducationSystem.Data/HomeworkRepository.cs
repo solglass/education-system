@@ -444,16 +444,6 @@ namespace EducationSystem.Data
 
 
 
-        public List<Comment_AttachmentDto> GetComment_Attachments()
-        {
-            var data = _connection
-                .Query<Comment_AttachmentDto>("dbo.Comment_Attachment_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return data;
-
-        }
-
-
         public Comment_AttachmentDto GetComment_AttachmentById(int id)
         {
             var data = _connection
@@ -461,25 +451,7 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public void DeleteComment_AttachmentById(int commentId, int attachmentId)
-        {
-            var data = _connection
-                .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { commentId, attachmentId }, commandType: System.Data.CommandType.StoredProcedure);
-        }
 
-        public int AddComment_Attachment(Comment_AttachmentDto NewObject)
-        {
-            var data = _connection
-                .QuerySingleOrDefault<int>("dbo.Comment_Attachment_Add",
-                new
-                {
-                    commentId = NewObject.CommentId,
-                    attachmentId = NewObject.AttachmentId
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-
-        }
 
         // todo: dapper logic
         // method doesn't work =(
@@ -552,7 +524,7 @@ namespace EducationSystem.Data
                     return attachmentEntry;
                 },
                 new { id },
-                splitOn: "AttachmentType",
+                splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return comments;
