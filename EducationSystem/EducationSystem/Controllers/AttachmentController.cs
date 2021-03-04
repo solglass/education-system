@@ -16,15 +16,13 @@ namespace EducationSystem.API.Controllers
     [Route("api/[controller]")]
     [Authorize]
     public class AttachmentController : ControllerBase
-    {
-
-       
-        private AttachmentService _service;
+    {  
+        private IAttachmentService _service;
         private AttachmentMapper _attachmentMapper;
 
-        public AttachmentController()
+        public AttachmentController(IAttachmentService attachmentService)
         {
-            _service = new AttachmentService();
+            _service = attachmentService;
             _attachmentMapper = new AttachmentMapper();
         }
 

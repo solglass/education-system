@@ -13,28 +13,27 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using EducationSystem.API.Models.OutputModels;
+using EducationSystem.API.Utils;
 
 namespace EducationSystem.Controllers
 {
     // https://localhost:50221/api/user/
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
        
-        private PaymentRepository _prepo;
-        private PaymentMapper _pMapper;
-        private UserMapper _userMapper;
-        private UserService _userService;
+        private IPaymentRepository _prepo;
+        private IUserService _userService;
         private readonly IMapper _mapper;
 
-        public UserController(IMapper mapper)
+        public UserController(IMapper mapper, IPaymentRepository paymentRepository, IUserService userService)
 
         {
+            _prepo = paymentRepository;
             _mapper = mapper;
-            _userMapper = new UserMapper();
-            _userService = new UserService();
+            _userService = userService;
         }
 
         // https://localhost:50221/api/user/register
@@ -42,8 +41,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult Register([FromBody] UserInputModel inputModel)
         {
-            UserDto userDto;
-            userDto = _userMapper.ToDto(inputModel);
+            var userDto = _mapper.Map<UserDto>(inputModel);
             if (String.IsNullOrEmpty(inputModel.Password) && String.IsNullOrEmpty(inputModel.Login))
             {
                 return Problem("Не заполнены поля Password и Login ");
@@ -71,12 +69,13 @@ namespace EducationSystem.Controllers
         public ActionResult GetUsers()
         {
             var users = _userService.GetUsers();
-            return Ok(users);
+            var outputModels = _mapper.Map<List<UserOutputModel>>(users);
+            return Ok(outputModels);
         }
 
         // https://localhost:50221/api/user/42
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
         public ActionResult GetUser(int id)
         {
             var user = _userService.GetUserById(id);
@@ -90,16 +89,17 @@ namespace EducationSystem.Controllers
         public ActionResult GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
             var user = _userService.GetPassedStudentsAttempt_SelectByGroupId(groupId);
-            return Ok(user);
+            var outputModel = _mapper.Map<UserOutputModel>(user);
+            return Ok(outputModel);
         }
 
         // https://localhost:50221/api/user/42
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент")]
-        public ActionResult UpdateUserInfo([FromBody] UserInputModel inputModel)
+        public ActionResult UpdateUserInfo(int id,[FromBody] UserInputModel inputModel)
         {
-            UserDto userDto;
-            userDto = _userMapper.ToDto(inputModel);
+            var userDto = _mapper.Map<UserDto>(inputModel);
+            userDto.Id = id;
             if (_userService.GetUserById(userDto.Id) == null)
             {
                 return Problem("Не найден пользователь");
@@ -107,7 +107,7 @@ namespace EducationSystem.Controllers
             _userService.UpdateUser(userDto);
             return Ok("Обновлено");
         }
-
+    
         // https://localhost:50221/api/user/42
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер")]
@@ -147,34 +147,40 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Менеджер,Студент")]
         public ActionResult AddPayment([FromBody] PaymentInputModel payment)
         {
-            var result = _pMapper.ToDto(payment);
-            _prepo.AddPayment(result);
+            var paymentDto = _mapper.Map<PaymentDto>(payment);
+            _prepo.AddPayment(paymentDto);
             return Ok("Платеж добавлен");
         }
 
         //https://localhost:50221/api/user/payment/payment
-         [HttpGet("payment")]
+        [HttpGet("period")]
         [Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult GetPayments()
-        {
-            var payments = _prepo.GetPayments();
-            return Ok(payments);
+        public ActionResult GetPaymentsByPeriod(PeriodInputModel periodInput)
+        {                             
+            return Ok(_userService.GetPaymentsByPeriod(Converters.StrToDateTimePeriod(periodInput.PeriodFrom), Converters.StrToDateTimePeriod(periodInput.PeriodTo)));
         }
-
+        [HttpGet("payment/UserId/{id}")]
+        public ActionResult GetPaymentsByUserId(int id)
+        {            
+            return Ok(_userService.GetPaymentsByUserId(id));
+        }
         //https://localhost:50221/api/user/payment/payment/32
          [HttpGet("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
         public dynamic GetPayment(int id)
         {
             var payment = _prepo.GetPaymentById(id);
-            return Ok(payment);
+            var outputModel = _mapper.Map<PaymentOutputModel>(payment);
+            return Ok(outputModel);
         }
         //https://localhost:50221/api/user/payment/payment/42
         [HttpPut("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult UpdatePayment(int id, [FromBody] PaymentDto payment)
+        public ActionResult UpdatePayment(int id, [FromBody] PaymentInputModel payment)
         {
-            _prepo.UpdatePayment(id,payment);
+            var paymentDto = _mapper.Map<PaymentDto>(payment);
+            paymentDto.Id = id;
+            _prepo.UpdatePayment(paymentDto);
             return Ok("success");
         }
         // https://localhost:50221/api/group/student-group/02.2020
@@ -183,9 +189,9 @@ namespace EducationSystem.Controllers
         public ActionResult GetStudentsByIsPaidInPeriod(string period)
         {
             var group = _prepo.GetStudentsByIsPaidInPeriod(period);
-            return Ok(group);
+            var outputModel = _mapper.Map<GroupOutputModel>(group);
+            return Ok(outputModel);
         }
-
         //https://localhost:50221/api/user/payment/payment/42
         [HttpDelete("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
@@ -194,10 +200,6 @@ namespace EducationSystem.Controllers
             _prepo.DeletePayment(id);
             return Ok("success");
         }
-
-
-
-
     }
 }
 

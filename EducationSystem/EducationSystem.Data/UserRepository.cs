@@ -1,6 +1,8 @@
 using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,9 +12,9 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class UserRepository : BaseRepository
+    public class UserRepository : BaseRepository, IUserRepository
     {
-        public UserRepository()
+        public UserRepository(IOptions<AppSettingsConfig> options): base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }
@@ -44,7 +46,7 @@ namespace EducationSystem.Data
             return users;
 
         }
-        public List<UserDto> GetPassedStudentsAttempt_SelectByGroupId (int groupId)
+        public List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
             var UserDictionary = new Dictionary<int, UserDto>();
 
@@ -101,7 +103,7 @@ namespace EducationSystem.Data
         //    var UserDictionary = new Dictionary<int, UserDto>();
         //}
 
-        public int ChangeUserPassword (int id, string oldPassword, string newPassword)
+        public int ChangeUserPassword(int id, string oldPassword, string newPassword)
         {
 
             return _connection
@@ -124,7 +126,7 @@ namespace EducationSystem.Data
                     user.LastName,
                     user.BirthDate,
                     user.Login,
-                    user.Password,  
+                    user.Password,
                     user.Phone,
                     user.UserPic,
                     user.Email,
@@ -186,14 +188,14 @@ namespace EducationSystem.Data
         }
 
         public UserDto CheckUser(string login)
-        {         
+        {
             var userEntry = new UserDto();
             var result = _connection.
                 Query<UserDto, int, UserDto>(
                 "dbo.Check_User_Authentication",
                 (user, role) =>
                 {
-                if (userEntry.Id == 0)
+                    if (userEntry.Id == 0)
                     {
                         userEntry = user;
                         userEntry.Roles = new List<Role>();                      
@@ -207,6 +209,6 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return result;
 
-        } 
+        }
     }
 }

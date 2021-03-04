@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using EducationSystem.Core.Config;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,9 +12,9 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class LessonRepository : BaseRepository
+    public class LessonRepository : BaseRepository, ILessonRepository
     {
-        public LessonRepository()
+        public LessonRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
             _connection = new SqlConnection(_connectionString);
         }
@@ -24,11 +26,11 @@ namespace EducationSystem.Data
                (lesson, theme) =>
                {
 
-                   if (!lessonDictionary.TryGetValue(lesson.ID, out LessonDto lessonEntry))
+                   if (!lessonDictionary.TryGetValue(lesson.Id, out LessonDto lessonEntry))
                    {
                        lessonEntry = lesson;
                        lessonEntry.Themes = new List<ThemeDto>();
-                       lessonDictionary.Add(lessonEntry.ID, lessonEntry);
+                       lessonDictionary.Add(lessonEntry.Id, lessonEntry);
                    }
 
                    lessonEntry.Themes.Add(theme);
@@ -50,7 +52,7 @@ namespace EducationSystem.Data
                (lesson, theme) =>
                {
 
-                   if (lessonEntry.ID == 0)
+                   if (lessonEntry.Id == 0)
                    {
                        lessonEntry = lesson;
                        lessonEntry.Themes = new List<ThemeDto>();
@@ -71,7 +73,7 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
-                new { lessonDto.GroupID, lessonDto.Comment, lessonDto.Date, lessonDto.Themes},
+                new { lessonDto.GroupId, lessonDto.Comment, lessonDto.Date, lessonDto.Themes },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -95,11 +97,11 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new {lessonDto.ID, lessonDto.GroupID, lessonDto.Comment, lessonDto.Date,lessonDto.Themes },
+                new { lessonDto.Id, lessonDto.GroupId, lessonDto.Comment, lessonDto.Date, lessonDto.Themes },
                 commandType: CommandType.StoredProcedure);
         }
 
-        public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
+        public List<FeedbackDto> GetFeedbacks(int? lessonId, int? groupId, int? courseId)
         {
             return _connection
                 .Query<FeedbackDto, LessonDto, int, UserDto, FeedbackDto>(
@@ -107,11 +109,11 @@ namespace EducationSystem.Data
                     (feedback, lesson, understendinglevel, user) =>
                     {
                         feedback.Lesson = lesson;
-                        feedback.UnderstandingLevel = (UnderstandingLevel) understendinglevel;
+                        feedback.UnderstandingLevel = (UnderstandingLevel)understendinglevel;
                         feedback.User = user;
                         return feedback;
                     },
-                    new { lessonId, groupId, courseId},
+                    new { lessonId, groupId, courseId },
                     splitOn: "Id",
                     commandType: CommandType.StoredProcedure
                 )
@@ -127,7 +129,7 @@ namespace EducationSystem.Data
                     (feedback, lesson, understendinglevel, user) =>
                     {
                         feedback.Lesson = lesson;
-                        feedback.UnderstandingLevel = (UnderstandingLevel) understendinglevel;
+                        feedback.UnderstandingLevel = (UnderstandingLevel)understendinglevel;
                         feedback.User = user;
                         return feedback;
                     },
@@ -144,7 +146,13 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Feedback_Add",
-                new {feedbackDto.UserID, feedbackDto.Messege, feedbackDto.LessonID, feedbackDto.UnderstandingLevelID},
+                new
+                {
+                    UserId = feedbackDto.User.Id,
+                    feedbackDto.Messege,
+                    LessonId = feedbackDto.Lesson.Id,
+                    UnderstandingLevelId = (int)feedbackDto.UnderstandingLevel
+                },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -152,7 +160,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Feedback_Update",
-                new {feedbackDto.ID, feedbackDto.Messege, feedbackDto.UnderstandingLevelID},
+                new { feedbackDto.ID, feedbackDto.Messege, feedbackDto.UnderstandingLevelID },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -160,18 +168,18 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Feedback_Delete",
-                new {id},
+                new { id },
                 commandType: CommandType.StoredProcedure);
         }
 
 
         public int AddAttendance(AttendanceDto attendance)
         {
-           return _connection
-                .QuerySingleOrDefault<int>(
-                "dbo.Attendance_Add",
-                new {attendance.LessonID,attendance.UserID,attendance.IsAbsent},
-                commandType: CommandType.StoredProcedure);
+            return _connection
+                 .QuerySingleOrDefault<int>(
+                 "dbo.Attendance_Add",
+                 new { attendance.LessonID, attendance.UserID, attendance.IsAbsent },
+                 commandType: CommandType.StoredProcedure);
         }
         public int DeleteAttendance(int id)
         {
@@ -185,7 +193,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Attendance_Update",
-                new {attendance.Id, attendance.IsAbsent},
+                new { attendance.Id, attendance.IsAbsent },
                 commandType: CommandType.StoredProcedure);
         }
         public List<AttendanceDto> GetAttendances()
@@ -218,11 +226,11 @@ namespace EducationSystem.Data
 
         public int AddLessonTheme(LessonThemeDto lessonTheme)
         {
-           return _connection
-                .QuerySingleOrDefault<int>(
-                "dbo.Lesson_Theme_Add",
-                new {lessonTheme.ThemeID,lessonTheme.LessonID },
-                commandType: CommandType.StoredProcedure);
+            return _connection
+                 .QuerySingleOrDefault<int>(
+                 "dbo.Lesson_Theme_Add",
+                 new { lessonTheme.ThemeID, lessonTheme.LessonID },
+                 commandType: CommandType.StoredProcedure);
         }
         public void DeleteLessonTheme(int lessonId, int themeId)
         {
@@ -232,8 +240,8 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-       
-       
+
+
         public LessonThemeDto GetLessonThemeById(int id)
         {
             var lessonTheme = _connection
@@ -256,7 +264,7 @@ namespace EducationSystem.Data
         {
             var result = _connection.
               Query<LessonDto>("dbo.Lesson_SelectByThemeId",
-              new { themeId =themeId},
+              new { themeId = themeId },
               commandType: System.Data.CommandType.StoredProcedure)
               .Distinct()
               .ToList();
@@ -267,7 +275,8 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .Query<AttendanceReportDto>("dbo.Student_SelectByPercentOfSkip",
-                new { 
+                new
+                {
                     percent = percent,
                     groupId = groupId
                 },

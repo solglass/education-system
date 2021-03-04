@@ -6,13 +6,15 @@ using System.Text;
 
 namespace EducationSystem.Business
 {
-    public class UserService
+    public class UserService : IUserService
     {
-        private UserRepository _userRepository;
+        private IUserRepository _userRepository;
+        private IPaymentRepository _paymentRepository;
 
-        public UserService()
+        public UserService(IUserRepository userRepository, IPaymentRepository paymentRepository)
         {
-            _userRepository = new UserRepository();
+            _userRepository = userRepository;
+            _paymentRepository = paymentRepository;
         }
         public List<UserDto> GetUsers()
         {
@@ -30,14 +32,14 @@ namespace EducationSystem.Business
         {
             return _userRepository.GetPassedStudentsAttempt_SelectByGroupId(groupId);
         }
-        public int UpdateUser (UserDto userDto) 
-        { 
-            return _userRepository.UpdateUser(userDto); 
+        public int UpdateUser(UserDto userDto)
+        {
+            return _userRepository.UpdateUser(userDto);
         }
-        public int AddUser(UserDto userDto) 
+        public int AddUser(UserDto userDto)
         {
             userDto.Password = new SecurityService().GetHash(userDto.Password);
-            return _userRepository.AddUser(userDto); 
+            return _userRepository.AddUser(userDto);
         }
 
         public int DeleteUser(int id)
@@ -52,11 +54,19 @@ namespace EducationSystem.Business
             return _userRepository.DeleteOrRecoverUser(id, isDeleted);
         }
 
-        public int ChangePassword(int id,string oldPassword, string password)
+        public int ChangePassword(int id, string oldPassword, string password)
         {
             oldPassword = new SecurityService().GetHash(oldPassword);
             password = new SecurityService().GetHash(password);
             return _userRepository.ChangeUserPassword(id, oldPassword, password);
+        }
+        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo)
+        {
+            return _paymentRepository.GetPaymentsByPeriod(periodFrom, PeriodTo);
+        }
+        public List<PaymentDto> GetPaymentsByUserId(int id)
+        {
+            return _paymentRepository.GetPaymentsByUserId(id);
         }
     }
 }
