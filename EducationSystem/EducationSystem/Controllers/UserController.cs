@@ -198,12 +198,12 @@ namespace EducationSystem.Controllers
             return Ok("success");
         }
 
-        // https://localhost:44365/api/user/payment/by-period
-        [HttpGet("payment/by-period")]
+        // https://localhost:44365/api/user/payment/by-month
+        [HttpGet("payment/by-month")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult GetStudentsByIsPaidInMonth([FromBody] PeriodInputModel periodInput)
+        public ActionResult GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
         {
-            var students = _prepo.GetStudentsNotPaidInMonth();
+            var students = _prepo.GetStudentsNotPaidInMonth(Converters.StrToDateTimePeriod(month.Month));
             var outputModel = _mapper.Map<GroupOutputModel>(students);
             return Ok(outputModel);
         }
