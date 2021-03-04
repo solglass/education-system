@@ -8,8 +8,12 @@ namespace EducationSystem.Business
     {
         private IHomeworkRepository _homeworkRepository;
         private IHomeworkAttemptRepository _homeworkAttemptRepository;
-        public HomeworkService(IHomeworkRepository homeworkRepository, IHomeworkAttemptRepository homeworkAttemptRepository)
+        private ITagRepository _tagRepository;
+        public HomeworkService(IHomeworkRepository homeworkRepository,
+            IHomeworkAttemptRepository homeworkAttemptRepository,
+            ITagRepository tagRepository)
         {
+            _tagRepository = tagRepository;
             _homeworkRepository = homeworkRepository;
             _homeworkAttemptRepository = homeworkAttemptRepository;
         }
@@ -31,7 +35,8 @@ namespace EducationSystem.Business
 
         public HomeworkDto GetHomeworkById(int id)
         {
-            return _homeworkRepository.GetHomeworkById(id);
+            var result = _homeworkRepository.GetHomeworkById(id);
+            return result;
         }
 
         public int UpdateHomework(HomeworkDto homeworkDto)
@@ -41,7 +46,16 @@ namespace EducationSystem.Business
 
         public int AddHomework(HomeworkDto homeworkDto)
         {
-            return _homeworkRepository.AddHomework(homeworkDto);
+            var result = _homeworkRepository.AddHomework(homeworkDto);
+            homeworkDto.Themes.ForEach(theme =>
+            {
+                _homeworkRepository.AddHomework_Theme(result, theme.Id);
+            });
+            homeworkDto.Tags.ForEach(tag =>
+            {
+                _homeworkRepository.HomeworkTagAdd(new HomeworkTagDto() { HomeworkId = result, TagId = tag.Id });
+            });
+            return result;
         }
 
         public int DeleteHomework(int id)
@@ -123,11 +137,6 @@ namespace EducationSystem.Business
             bool isDeleted = true;
             return _homeworkRepository.DeleteOrRecoverHomeworkAttempt(id, isDeleted);
         }
-        public int DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId)
-        {
-            return _homeworkAttemptRepository.DeleteHomeworkAttempt_Attachment(homeworkAttemptId, attachmentId);
-        }
-
         public int RecoverHomeworkAttempt(int id)
         {
             bool isDeleted = false;
@@ -145,6 +154,22 @@ namespace EducationSystem.Business
 
             return dtos;
         }
+
+        public HomeworkAttemptDto GetHomeworkAttemptById(int id)
+        {
+            return _homeworkRepository.GetHomeworkAttemptById(id);
+        }
+
+        public int AddComment(CommentDto comment)
+        {
+            return _homeworkRepository.AddComment(comment);
+        }
+
+        public int UpdateComment(CommentDto comment)
+        {
+            return _homeworkRepository.UpdateComment(comment);
+        }
+
         public int AddHomeworkTag(HomeworkTagDto homeworkTagDto)
         {
             return _homeworkRepository.HomeworkTagAdd(homeworkTagDto);
