@@ -274,7 +274,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTag(int homeworkId, int tagId)
         {
-            var results = _homeworkService.AddHomeworkTag(homeworkId, tagId);
+            var results = _homeworkService.AddHomeworkTag(new HomeworkTagDto() { HomeworkId = homeworkId, TagId = tagId});
 
             return Ok(results);
         }
@@ -309,23 +309,7 @@ namespace EducationSystem.API.Controllers
           var results = _mapper.Map<List<HomeworkAttemptWithCountOutputModel>>(_homeworkService.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId));
 
           return Ok(results);
-        }
-
-        [HttpPost("homework/{id}/tag/{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult AddHomeworkTag(int homeworkId, int tagId)
-        {
-            _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
-            return Ok("Tag удалён");
-        }
-
-        [HttpDelete("homework/{id}/tag/{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult DeleteHomeworkTag(int homeworkId, int tagId)
-        {
-            _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
-            return Ok("Tag удалён");
-        }
+        }    
     }
 
 }

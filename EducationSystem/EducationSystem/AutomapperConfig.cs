@@ -18,8 +18,8 @@ namespace EducationSystem.API
         public AutomapperConfig()
         {
             CreateMap<UserInputModel, UserDto>();
-            CreateMap<UserDto, UserOutputModel>()
             CreateMap<UserDto, AuthorOutputModel>();
+            CreateMap<UserDto, UserOutputModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
             CreateMap<PaymentInputModel, PaymentDto>();
             CreateMap<PaymentDto, PaymentOutputModel>()

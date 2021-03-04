@@ -53,7 +53,7 @@ namespace EducationSystem.Business
             });
             homeworkDto.Tags.ForEach(tag =>
             {
-                _tagRepository.HomeworkTagAdd(new HomeworkTagDto() { HomeworkId = result, TagId = tag.Id });
+                _homeworkRepository.HomeworkTagAdd(new HomeworkTagDto() { HomeworkId = result, TagId = tag.Id });
             });
             return result;
         }
