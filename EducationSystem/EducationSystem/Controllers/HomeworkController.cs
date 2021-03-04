@@ -310,6 +310,22 @@ namespace EducationSystem.API.Controllers
 
           return Ok(results);
         }
+
+        [HttpPost("homework/{id}/tag/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        public ActionResult AddHomeworkTag(int homeworkId, int tagId)
+        {
+            _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
+            return Ok("Tag удалён");
+        }
+
+        [HttpDelete("homework/{id}/tag/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        public ActionResult DeleteHomeworkTag(int homeworkId, int tagId)
+        {
+            _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
+            return Ok("Tag удалён");
+        }
     }
 
 }

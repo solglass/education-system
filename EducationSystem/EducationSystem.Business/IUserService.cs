@@ -10,6 +10,8 @@ namespace EducationSystem.Business
         int DeleteUser(int id);
         int RecoverUser(int id);
         List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId);
+        List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo);
+        List<PaymentDto> GetPaymentsByUserId(int id);
         UserDto GetUserById(int id);
         List<UserDto> GetUsers();
         int UpdateUser(UserDto userDto);

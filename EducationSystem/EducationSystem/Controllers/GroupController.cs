@@ -18,14 +18,13 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/group/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class GroupController : ControllerBase
     {
 
         private IGroupRepository _repo;
         private GroupMapper _groupMapper;
         private IGroupService _service;
-        private ThemeMapper _themeMapper;
         private ICourseService _courseService;
         private GroupReportMapper _reportMapper;
         private IMapper _mapper;
@@ -36,13 +35,12 @@ namespace EducationSystem.Controllers
             _groupMapper = new GroupMapper();
             _service = groupService;
             _courseService = courseService;
-            _themeMapper = new ThemeMapper();
             _reportMapper = new GroupReportMapper();
             _mapper = mapper;
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ, Менеджер")]
+        //[Authorize(Roles = "Админ, Менеджер")]
         public ActionResult GetGroups()
         {
             List<GroupOutputModel> result = _groupMapper.FromDtos(_service.GetGroups());
@@ -205,10 +203,10 @@ namespace EducationSystem.Controllers
         }
 
         [HttpGet("uncovered-themes")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+       // [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult GetUncoveredThemesByGroupId(int id)
         {
-            var result = _themeMapper.FromDtos(_courseService.GetUncoveredThemesByGroupId(id));
+            var result = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetUncoveredThemesByGroupId(id));
                  return Ok(result);
         }
     }
