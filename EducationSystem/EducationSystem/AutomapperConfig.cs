@@ -2,6 +2,7 @@
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
+using EducationSystem.API.Utils;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
@@ -30,7 +31,8 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)))
                 .ForMember(dest=> dest.GroupId, opts => opts.MapFrom(src => src.Group.Id));
-            CreateMap<GroupInputModel, GroupDto>();
+            CreateMap<GroupInputModel, GroupDto>()
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)));
             CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
@@ -42,10 +44,13 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>();
-            CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
-            CreateMap<GroupReportDto, GroupReportOutputModel>();
-
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
+
+      CreateMap<GroupReportDto, GroupReportOutputModel>()
+          .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+          .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
+
+      CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
             CreateMap<MaterialInputModel, MaterialDto>();
         }
     }

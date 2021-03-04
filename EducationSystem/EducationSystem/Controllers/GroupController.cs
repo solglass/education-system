@@ -24,7 +24,6 @@ namespace EducationSystem.Controllers
 
         private IGroupRepository _repo;
         private IGroupService _service;
-        private ThemeMapper _themeMapper;
         private ICourseService _courseService;
         private IMapper _mapper;
         public GroupController(IMapper mapper, IGroupRepository groupRepository, IGroupService groupService, ICourseService courseService)
@@ -33,7 +32,6 @@ namespace EducationSystem.Controllers
             _repo = groupRepository;
             _service = groupService;
             _courseService = courseService;
-            _themeMapper = new ThemeMapper();
             _mapper = mapper;
         }
 
@@ -83,7 +81,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult AddNewGroup([FromBody] GroupInputModel group)
         {
-            var groupDto = _mapper.Map<GroupDto>(newGroup);
+            var groupDto = _mapper.Map<GroupDto>(group);
             var result = _service.AddGroup(groupDto);
             return Ok($"Группа #{result} добавлена");
         }
