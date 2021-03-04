@@ -83,8 +83,8 @@ namespace EducationSystem.Controllers
             return Ok(outputModel);
         }
 
-        // https://localhost:44365/api/user/passed-homework/42/by-group
-        [HttpGet("/passed-homework/{groupId}/by-group")]
+        // https://localhost:44365/api/user/passed-homework/by-group/42
+        [HttpGet("passed-homework/by-group/{groupId}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
         public ActionResult GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
@@ -146,12 +146,13 @@ namespace EducationSystem.Controllers
             return Problem($"Ошибка! Не удалось восстановить пользователя #{id}!");
         }
 
-        // https://localhost:44365/api/user/payment
-        [HttpPost("payment")]
+        // https://localhost:44365/api/user/88/payment
+        [HttpPost("{userId}/payment")]
         [Authorize(Roles = "Админ, Менеджер, Студент")]
-        public ActionResult AddPayment([FromBody] PaymentInputModel payment)
+        public ActionResult AddPayment(int id, [FromBody] PaymentInputModel payment)
         {
             var paymentDto = _mapper.Map<PaymentDto>(payment);
+            paymentDto.Student.Id = id;
             _prepo.AddPayment(paymentDto);
             return Ok("Платеж добавлен");
         }
@@ -159,9 +160,13 @@ namespace EducationSystem.Controllers
         //https://localhost:44365/api/user/payment/by-period
         [HttpGet("payment/by-period")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult GetPaymentsByPeriod(PeriodInputModel periodInput)
+        public ActionResult GetPaymentsByPeriod([FromBody] PeriodInputModel periodInput)
         {                             
-            return Ok(_userService.GetPaymentsByPeriod(Converters.StrToDateTimePeriod(periodInput.PeriodFrom), Converters.StrToDateTimePeriod(periodInput.PeriodTo)));
+            return Ok(_userService
+                .GetPaymentsByPeriod(
+                Converters.StrToDateTimePeriod(periodInput.PeriodFrom), 
+                Converters.StrToDateTimePeriod(periodInput.PeriodTo)
+                ));
         }
 
         //https://localhost:44365/api/user/42/payment
@@ -193,12 +198,12 @@ namespace EducationSystem.Controllers
             return Ok("success");
         }
 
-        // https://localhost:44365/api/user/payment/2020/by-period
-        [HttpGet("payment/{period}/by-period")]
+        // https://localhost:44365/api/user/payment/by-period
+        [HttpGet("payment/by-period")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult GetStudentsByIsPaidInPeriod(string period)
+        public ActionResult GetStudentsByIsPaidInMonth([FromBody] PeriodInputModel periodInput)
         {
-            var students = _prepo.GetStudentsByIsPaidInPeriod(period);
+            var students = _prepo.GetStudentsNotPaidInMonth();
             var outputModel = _mapper.Map<GroupOutputModel>(students);
             return Ok(outputModel);
         }
