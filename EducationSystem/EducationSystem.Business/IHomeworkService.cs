@@ -26,5 +26,10 @@ namespace EducationSystem.Business
         int RecoverComment(int id);
         int RecoverHomework(int id);
         int RecoverHomeworkAttempt(int id);
+        HomeworkAttemptDto GetHomeworkAttemptById(int id);
+        int AddComment(CommentDto comment);
+        int UpdateComment(CommentDto comment);
+        int AddHomeworkTag(HomeworkTagDto homeworkTagDto);
+        int DeleteHomeworkTag(int homeworkId, int tagId);
     }
 }

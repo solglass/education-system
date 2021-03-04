@@ -151,7 +151,6 @@ namespace EducationSystem.Data
                     description = homework.Description,
                     startDate = homework.StartDate,
                     deadlineDate = homework.DeadlineDate,
-                    groupId = homework.Group.Id,
                     isOptional = homework.IsOptional
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -190,15 +189,12 @@ namespace EducationSystem.Data
             var hwAttempt = _connection
                 .Query<HomeworkAttemptDto, UserDto, HomeworkDto, int, HomeworkAttemptDto>(
                 "dbo.HomeworkAttempt_SelectById",
-                (hwAttempt, user, homework, hwAttemptStatus) =>
+                (attempt, user, homework, hwAttemptStatus) =>
                 {
-                    if (hwAttemptEntry.Id == 0)
-                    {
-                        hwAttemptEntry = hwAttempt;
-                        hwAttemptEntry.Author = user;
-                        hwAttemptEntry.Homework = homework;
-                        hwAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)hwAttemptStatus;
-                    }
+                    hwAttemptEntry = attempt;
+                    hwAttemptEntry.Author = user;
+                    hwAttemptEntry.Homework = homework;
+                    hwAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)hwAttemptStatus;
 
                     return hwAttemptEntry;
                 },
@@ -268,9 +264,9 @@ namespace EducationSystem.Data
                 .QuerySingle<int>("dbo.Comment_Add",
                 new
                 {
-                    message = comment.Message,
-                    author = comment.Author,
-                    attempt = comment.HomeworkAttempt
+                    userId = comment.Author.Id,
+                    homeworkAttemptId = comment.HomeworkAttempt.Id,
+                    message = comment.Message
                 },
                 commandType: CommandType.StoredProcedure);
             return result;
@@ -476,8 +472,8 @@ namespace EducationSystem.Data
                     }
                     return attemptEntry;
                 },
-                new { id },
-                splitOn: "id",
+                new {homeworkId = id },
+                splitOn: "id", 
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return homeworkAttempts;
@@ -505,7 +501,7 @@ namespace EducationSystem.Data
                     return commentEntry;
                 },
                 new { AttemptId = id },
-                splitOn: "AttachmentType",
+                splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;
@@ -532,6 +528,18 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return comments;
+        }
+        public int HomeworkTagAdd(HomeworkTagDto Tag)
+        {
+            var result = _connection
+                .QuerySingle<int>("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int HomeworkTagDelete(int homeworkId, int tagId)
+        {
+            var result = _connection
+                .Execute("dbo.Homework_Tag_Delete", new { homeworkId, tagId }, commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
     }
 }
