@@ -177,11 +177,11 @@ namespace EducationSystem.Data
                commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public int DeleteRoleToUser(int id)
+        public int DeleteRoleToUser(int userId, int roleId)
         {
             return _connection
                 .Execute("dbo.User_Role_Delete", 
-                new { id },
+                new { userId, roleId },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 
