@@ -18,7 +18,7 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/group/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class GroupController : ControllerBase
     {
 
@@ -36,7 +36,7 @@ namespace EducationSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Админ, Менеджер")]
+        //[Authorize(Roles = "Админ, Менеджер")]
         public ActionResult GetGroups()
         {
             var groups = _service.GetGroups();
@@ -205,12 +205,11 @@ namespace EducationSystem.Controllers
         }
 
         [HttpGet("uncovered-themes")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+       // [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult GetUncoveredThemesByGroupId(int id)
         {
-            var theme = _courseService.GetUncoveredThemesByGroupId(id);
-            var result = _mapper.Map<List<ThemeOutputModel>> (theme);
-            return Ok(result);
+            var result = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetUncoveredThemesByGroupId(id));
+                 return Ok(result);
         }
     }
     

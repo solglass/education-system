@@ -561,5 +561,17 @@ namespace EducationSystem.Data
                 .ToList();
             return comments;
         }
+        public int HomeworkTagAdd(HomeworkTagDto Tag)
+        {
+            var result = _connection
+                .QuerySingle<int>("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int HomeworkTagDelete(int homeworkId, int tagId)
+        {
+            var result = _connection
+                .Execute("dbo.Homework_Tag_Delete", new { homeworkId, tagId }, commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
     }
 }
