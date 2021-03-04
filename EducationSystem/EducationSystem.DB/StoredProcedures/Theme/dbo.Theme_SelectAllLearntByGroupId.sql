@@ -9,5 +9,5 @@ begin
 	from [dbo].[Lesson] l 
 		inner join dbo.Lesson_Theme lt on lt.LessonID=l.Id
 		inner join dbo.Theme t on t.Id=lt.ThemeID
-	where l.GroupID=@groupId and l.Date<(SELECT SYSDATETIME())
+	where l.GroupID=@groupId and l.Date<(SELECT SYSDATETIME()) and t.IsDeleted=0
 end

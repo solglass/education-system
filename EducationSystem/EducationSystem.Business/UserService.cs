@@ -15,6 +15,7 @@ namespace EducationSystem.Business
         {
             _paymentRepository = paymentRepository;
             _userRepository = userRepository;
+            _paymentRepository = paymentRepository;
         }
         public List<UserDto> GetUsers()
         {
@@ -60,12 +61,10 @@ namespace EducationSystem.Business
             password = new SecurityService().GetHash(password);
             return _userRepository.ChangeUserPassword(id, oldPassword, password);
         }
-
-        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string periodTo)
+        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo)
         {
-            return _paymentRepository.GetPaymentsByPeriod(periodFrom, periodTo);
+            return _paymentRepository.GetPaymentsByPeriod(periodFrom, PeriodTo);
         }
-
         public List<PaymentDto> GetPaymentsByUserId(int id)
         {
             return _paymentRepository.GetPaymentsByUserId(id);
