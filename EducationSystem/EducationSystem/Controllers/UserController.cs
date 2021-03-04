@@ -198,8 +198,8 @@ namespace EducationSystem.Controllers
             return Ok("success");
         }
 
-        // https://localhost:44365/api/user/payment/by-month
-        [HttpGet("payment/by-month")]
+        // https://localhost:44365/api/user/find-debt
+        [HttpGet("find-debt")]
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
         {
