@@ -15,5 +15,6 @@ namespace EducationSystem.Business
         UserDto GetUserById(int id);
         List<UserDto> GetUsers();
         int UpdateUser(UserDto userDto);
+
     }
 }
