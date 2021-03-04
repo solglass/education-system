@@ -207,16 +207,6 @@ namespace EducationSystem.API.Controllers
         }
         
         
-        // https://localhost:44365/api/homework/attempt/3/attachment/1
-        [HttpDelete("attempt/{attemptId}/attachment/{attachmentId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult DeleteHomeworkAttemptAttachment(int attemptId, int attachmentId)
-        {
-            var results = _homeworkService.DeleteHomeworkAttemptAttachment(attemptId, attachmentId);
-
-            return Ok(results);
-        }
-        
 
         // https://localhost:44365/api/homework/2/recovery
         [HttpPut("{homeworkId}/recovery")]
