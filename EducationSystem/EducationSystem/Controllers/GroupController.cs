@@ -78,7 +78,7 @@ namespace EducationSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ, Менеджер")]
+        //[Authorize(Roles = "Админ, Менеджер")]
         public ActionResult AddNewGroup([FromBody] GroupInputModel group)
         {
             var groupDto = _mapper.Map<GroupDto>(group);
