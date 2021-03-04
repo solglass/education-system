@@ -9,10 +9,12 @@ namespace EducationSystem.Business
     public class UserService : IUserService
     {
         private IUserRepository _userRepository;
+        private IPaymentRepository _paymentRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IPaymentRepository paymentRepository)
         {
             _userRepository = userRepository;
+            _paymentRepository = paymentRepository;
         }
         public List<UserDto> GetUsers()
         {
@@ -57,6 +59,14 @@ namespace EducationSystem.Business
             oldPassword = new SecurityService().GetHash(oldPassword);
             password = new SecurityService().GetHash(password);
             return _userRepository.ChangeUserPassword(id, oldPassword, password);
+        }
+        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo)
+        {
+            return _paymentRepository.GetPaymentsByPeriod(periodFrom, PeriodTo);
+        }
+        public List<PaymentDto> GetPaymentsByUserId(int id)
+        {
+            return _paymentRepository.GetPaymentsByUserId(id);
         }
     }
 }

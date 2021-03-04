@@ -10,6 +10,6 @@ select
 from dbo.Theme t 
 	left join dbo.Theme_Tag tt on tt.ThemeId=t.Id
 	left join dbo.Tag tg on tg.Id=tt.TagId
-	where t.Id=@id
+	where t.Id=@id and t.IsDeleted = 0
 
 end
