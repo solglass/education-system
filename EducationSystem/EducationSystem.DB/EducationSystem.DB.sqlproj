@@ -264,6 +264,7 @@
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByPeriod.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
+    <Build Include="Scripts\UniqueConstraints.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
