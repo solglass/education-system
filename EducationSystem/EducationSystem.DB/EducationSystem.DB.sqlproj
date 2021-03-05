@@ -264,5 +264,6 @@
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByUserId.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_SoftDelete.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByPeriod.sql" />
+    <Build Include="StoredProcedures\Student\Student_SelectByPeriodAndIsNotPaid.sql" />
   </ItemGroup>
 </Project>
