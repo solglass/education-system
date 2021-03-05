@@ -1,5 +1,5 @@
 
-﻿using EducationSystem.Data.Models;
+using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -13,12 +13,8 @@ namespace EducationSystem.Data
 {
     public class AttachmentRepository : BaseRepository, IAttachmentRepository
     {
-        IHomeworkRepository _homeworkrepo;
-        IHomeworkAttemptRepository _homeworkAttRepo;
-        public AttachmentRepository(IOptions<AppSettingsConfig> options, IHomeworkRepository homeworkRepository, IHomeworkAttemptRepository homeworkAttemptRepository): base(options)
+        public AttachmentRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
-            _homeworkrepo = homeworkRepository;
-            _homeworkAttRepo = homeworkAttemptRepository;
             _connection = new SqlConnection(_connectionString);
         }
 
@@ -77,29 +73,84 @@ namespace EducationSystem.Data
         public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
         {
             int attachmentId = AddAttachment(attachmentDto);
-            
+
             Comment_AttachmentDto comment_AttachmentDto = new Comment_AttachmentDto
             {
                 AttachmentId = attachmentId,
                 CommentId = commentId
             };
-            _homeworkrepo.AddComment_Attachment(comment_AttachmentDto);
+            AddComment_Attachment(comment_AttachmentDto);
             return attachmentId;
 
         }
 
         public int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId)
         {
-            int attachmentId = AddAttachment(attachmentDto);            
+            int attachmentId = AddAttachment(attachmentDto);
             HomeworkAttempt_AttachmentDto homework_AttachmentDto = new HomeworkAttempt_AttachmentDto
             {
                 AttachmentId = attachmentId,
                 HomeworkAttemptId = homeworkAttemptId
             };
-            _homeworkAttRepo.AddHomeworkAttempt_Attachment(homework_AttachmentDto);
+            AddHomeworkAttempt_Attachment(homework_AttachmentDto);
             return attachmentId;
 
         }
+
+        public int AddHomeworkAttempt_Attachment(HomeworkAttempt_AttachmentDto newObject)
+        {
+            var data = _connection
+                .QueryFirst<int>("dbo.HomeworkAttempt_Attachment_Add",
+                new
+                {
+                    HomeworkAttemptId = newObject.HomeworkAttemptId,
+                    AttachmentId = newObject.AttachmentId
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+        }
+
+        public int DeleteHomeworkAttemptAttachment(int attachmentId, int homeworkAttemptId)
+        {
+            int id = attachmentId;
+            _connection.Execute(
+         "dbo.HomeworkAttempt_Attachment_Delete",
+             new
+             {
+                 homeworkAttemptID = homeworkAttemptId,
+                 attachmentID = attachmentId
+             },
+                 commandType: System.Data.CommandType.StoredProcedure);
+            var data = _connection
+            .Execute("dbo.Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+        }
+
+
+        public int AddComment_Attachment(Comment_AttachmentDto NewObject)
+        {
+            var data = _connection
+                .QuerySingleOrDefault<int>("dbo.Comment_Attachment_Add",
+                new
+                {
+                    commentId = NewObject.CommentId,
+                    attachmentId = NewObject.AttachmentId
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+
+        }
+
+        public int DeleteCommentAttachment(int attachmentId, int commentId)
+        {
+            int id = attachmentId;
+            _connection
+            .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { commentId, attachmentId }, commandType: System.Data.CommandType.StoredProcedure);
+            var data = _connection
+            .Execute("dbo.Attachment_Delete", new { id}, commandType: System.Data.CommandType.StoredProcedure);
+            return data;
+        }
+
     }
 }
 

@@ -14,12 +14,10 @@ namespace EducationSystem.Business
             _lessonRepository = lessonRepository;
         }
         public List<LessonDto> GetLessonsByGroupId(int id)
-        {
-            return _lessonRepository.GetLessonsByGroupId(id);
+        {            return _lessonRepository.GetLessonsByGroupId(id);
         }
         public LessonDto GetLessonById(int id)
-        {
-            return _lessonRepository.GetLessonById(id);
+        {            return _lessonRepository.GetLessonById(id);
         }
 
         public int DeleteLesson(int id)
@@ -37,12 +35,13 @@ namespace EducationSystem.Business
         {
             return _lessonRepository.AddLesson(lesson);
         }
-         public int UpdateLesson(LessonDto lesson)
+
+        public int UpdateLesson(LessonDto lesson)
         {
-           return _lessonRepository.UpdateLesson(lesson);
+            return _lessonRepository.UpdateLesson(lesson);
         }
 
-        public List<FeedbackDto> GetFeedbacks(int lessonId, int groupId, int courseId)
+        public List<FeedbackDto> GetFeedbacks(int? lessonId, int? groupId, int? courseId)
         {
             return _lessonRepository.GetFeedbacks(lessonId, groupId, courseId);
         }
@@ -54,15 +53,17 @@ namespace EducationSystem.Business
         {
             return _lessonRepository.DeleteFeedback(id);
         }
-         public int AddFeedback(FeedbackDto feedback)
+
+        public int AddFeedback(FeedbackDto feedback)
         {
             return _lessonRepository.AddFeedback(feedback);
         }
-         public int UpdateFeedback (FeedbackDto feedback)
+
+        public int UpdateFeedback(FeedbackDto feedback)
         {
             return _lessonRepository.UpdateFeedback(feedback);
         }
-        
+
         public List<AttendanceDto> GetAttendances()
         {
             return _lessonRepository.GetAttendances();
@@ -75,28 +76,15 @@ namespace EducationSystem.Business
         {
            return _lessonRepository.DeleteAttendance(id);
         }
-         public int AddAttendance(AttendanceDto attendance)
-        {
-            return _lessonRepository.AddAttendance(attendance);
-        }
-         public int UpdateAttendance(int lessonId, int attendanceId, AttendanceDto attendance)
-        {
-            return _lessonRepository.UpdateAttendance(lessonId,attendanceId,attendance);
-        }
-        
         public LessonThemeDto GetLessonThemeById(int id)
         {
             return _lessonRepository.GetLessonThemeById(id);
         }
-         public int AddLessonTheme(LessonThemeDto lessonTheme)
-        {
-            return _lessonRepository.AddLessonTheme(lessonTheme);
-        }
-        public List<LessonDto> GetLessonsByThemeId(int themeId)
-        {
-            return _lessonRepository.GetLessonsByThemeId(themeId);
-        }
-        public List<AttendanceReportDto> GetStudentByPercentOfSkip(int percent, int groupId)
+        public int AddAttendance(AttendanceDto attendance)        {            return _lessonRepository.AddAttendance(attendance);        }
+        public int UpdateAttendance(AttendanceDto attendance)        {            return _lessonRepository.UpdateAttendance(attendance);        }        public int AddLessonTheme(LessonThemeDto lessonTheme)        {            return _lessonRepository.AddLessonTheme(lessonTheme);        }
+        public List<LessonDto> GetLessonsByThemeId(int themeId)        {            return _lessonRepository.GetLessonsByThemeId(themeId);        }
+
+        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
         {
             return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
         }

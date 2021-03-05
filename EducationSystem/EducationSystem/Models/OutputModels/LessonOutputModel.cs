@@ -7,7 +7,8 @@ namespace EducationSystem.API.Models.OutputModels
 {
     public class LessonOutputModel
     {
-        public int GroupID { get; set; }
+        public int Id { get; set; }
+        public int GroupId { get; set; }
         public string Comment { get; set; }
         public string LessonDate { get; set; }
         public List<ThemeOutputModel> Themes { get; set; }

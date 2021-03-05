@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Models.InputModels
 {
-    public class LessonThemeInputModel
+    public class AttendanceInputModel
     {
-        public int ThemeId { get; set; }
         public int LessonId { get; set; }
+        public int UserId { get; set; }
+        public bool IsAbsent { get; set; }
     }
 }

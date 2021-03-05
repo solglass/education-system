@@ -6,9 +6,9 @@ namespace EducationSystem.Data.Models
 {
     public class LessonThemeDto
     {
-        public int ID { get; set; }
-        public int ThemeID { get; set; }
-        public int LessonID { get; set; }
+        public int Id { get; set; }
+        public int ThemeId { get; set; }
+        public int LessonId { get; set; }
 
     }
 }

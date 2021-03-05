@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Models.InputModels
 {
-    public class AttendanceUpdateInputModel
+    public class CommentUpdateInputModel
     {
-        public int Id { get; set; }
-        public bool IsAbsent { get; set; }
+        public string Message { get; set; }
+        public List<AttachmentInputModel> Attachments { get; set; }
     }
 }

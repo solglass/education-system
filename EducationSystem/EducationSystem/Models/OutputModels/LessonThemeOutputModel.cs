@@ -7,7 +7,8 @@ namespace EducationSystem.API.Models.OutputModels
 {
     public class LessonThemeOutputModel
     {
-        public int ThemeID { get; set; }
-        public int LessonID { get; set; }
+        public int Id { get; set; }
+        public int ThemeId { get; set; }
+        public int LessonId { get; set; }
     }
 }

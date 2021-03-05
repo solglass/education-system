@@ -89,30 +89,7 @@ namespace EducationSystem.Data
                 "dbo.HomeworkAttempt_Attachment_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
-        public int AddHomeworkAttempt_Attachment(HomeworkAttempt_AttachmentDto newObject)
-        {
-            var data = _connection
-                .QueryFirst<int>("dbo.HomeworkAttempt_Attachment_Add",
-                new
-                {
-                    HomeworkAttemptId = newObject.HomeworkAttemptId,
-                    AttachmentId = newObject.AttachmentId
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return data;
-        }
-        public int DeleteHomeworkAttempt_Attachment(int homeworkAttemptId, int attachmentId)
-        {
-            int rowsAffected = _connection.Execute(
-                "dbo.HomeworkAttempt_Attachment_Delete",
-                new
-                {
-                    homeworkAttemptID = homeworkAttemptId,
-                    attachmentID = attachmentId
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return rowsAffected;
-        }
+
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
         {
             var homeworkAttempt = _connection
