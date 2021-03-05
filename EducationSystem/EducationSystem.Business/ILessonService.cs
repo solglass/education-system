@@ -8,6 +8,7 @@ namespace EducationSystem.Business
         int AddLesson(LessonDto lesson);
         int DeleteAttendance(int id);
         int DeleteFeedback(int id);
+        int DeleteLessonTheme(int lessonId, int themeId);
         AttendanceDto GetAttendanceById(int id);
         List<AttendanceDto> GetAttendances();
         FeedbackDto GetFeedbackById(int id);

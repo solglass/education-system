@@ -231,12 +231,12 @@ namespace EducationSystem.Controllers
             return Ok($"Тема урока #{result} добавлен");
         }
 
-        // https://localhost:44365/api/lesson/theme/3
-        [HttpDelete("theme/{themeId}")]
+        // https://localhost:44365/api/lesson/3/theme/3
+        [HttpDelete("{id}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult DeleteLessonTheme(int id)
+        public ActionResult DeleteLessonTheme(int lessonId,int themeId)
         {
-            _lessonService.DeleteAttendance(id);
+            _lessonService.DeleteLessonTheme(lessonId, themeId);
             return Ok("Тема урока удалена");
         }
 

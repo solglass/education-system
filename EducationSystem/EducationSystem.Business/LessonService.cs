@@ -83,6 +83,10 @@ namespace EducationSystem.Business
         public int AddAttendance(AttendanceDto attendance)        {            return _lessonRepository.AddAttendance(attendance);        }
         public int UpdateAttendance(AttendanceDto attendance)        {            return _lessonRepository.UpdateAttendance(attendance);        }        public int AddLessonTheme(LessonThemeDto lessonTheme)        {            return _lessonRepository.AddLessonTheme(lessonTheme);        }
         public List<LessonDto> GetLessonsByThemeId(int themeId)        {            return _lessonRepository.GetLessonsByThemeId(themeId);        }
+        public int DeleteLessonTheme(int lessonId, int themeId)
+        {
+            return _lessonRepository.DeleteLessonTheme(lessonId, themeId);
+        }
 
         public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
         {
