@@ -13,6 +13,7 @@ namespace EducationSystem.Business
 
         public UserService(IUserRepository userRepository, IPaymentRepository paymentRepository)
         {
+            _paymentRepository = paymentRepository;
             _userRepository = userRepository;
             _paymentRepository = paymentRepository;
         }

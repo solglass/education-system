@@ -42,5 +42,14 @@ namespace EducationSystem.Business
             return _attachmentRepository.AddAttachmentToComment(attachmentDto, commentId);
         }
 
+        public int DeleteHomeworkAttemptAttachment(int attachmentId, int homeworkAttemptId)
+        {
+          return _attachmentRepository.DeleteHomeworkAttemptAttachment(attachmentId, homeworkAttemptId);
+        }
+
+        public int DeleteCommentAttachment(int attachmentId, int commentId)
+        {
+            return _attachmentRepository.DeleteCommentAttachment(attachmentId, commentId);
+        }
     }
 }

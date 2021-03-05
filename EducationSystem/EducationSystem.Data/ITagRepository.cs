@@ -9,9 +9,7 @@ namespace EducationSystem.Data
         MaterialTagDto GetMaterialTagById(int Id);
         TagDto GetTagById(int Id);
         List<TagDto> GetTags();
-        List<ThemeTagDto> GetThemeTagById(int Id);
-        int HomeworkTagAdd(HomeworkTagDto Tag);
-        int HomeworkTagDelete(int homeworkId, int tagId);
+        List<ThemeTagDto> GetThemeTagById(int Id);               
         int MaterialTagAdd(MaterialTagDto Tag);
         int MaterialTagDelete(int materialId, int tagId);
         int TagAdd(TagDto tag);
