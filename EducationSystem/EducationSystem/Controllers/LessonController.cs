@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Controllers
 {
-    // https://localhost:50221/api/lesson/
+    // https://localhost:44365/api/lesson/
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -29,7 +29,7 @@ namespace EducationSystem.Controllers
             _mapper = mapper;
         }
 
-        // https://localhost:50221/api/lesson/
+        // https://localhost:44365/api/lesson/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
         public ActionResult AddNewLesson([FromBody] LessonInputModel inputModel)
@@ -39,7 +39,7 @@ namespace EducationSystem.Controllers
             return Ok($"Урок #{result} добавлен");
         }
 
-        // https://localhost:50221/api/lesson/
+        // https://localhost:44365/api/lesson/
         [HttpGet]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
         public ActionResult GetLessons(int id)
@@ -49,7 +49,7 @@ namespace EducationSystem.Controllers
             return Ok(lessonsList);
         }
 
-        // https://localhost:50221/api/lesson/id
+        // https://localhost:44365/api/lesson/id
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
         public ActionResult GetLessonById(int id)
@@ -59,7 +59,7 @@ namespace EducationSystem.Controllers
             return Ok(lessonModel);
         }
 
-        // https://localhost:50221/api/lesson/id
+        // https://localhost:44365/api/lesson/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteLesson(int id)
@@ -72,7 +72,7 @@ namespace EducationSystem.Controllers
         }
 
 
-        // https://localhost:50221/api/lesson/id/recovery
+        // https://localhost:44365/api/lesson/id/recovery
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult RecoverLesson(int id)
@@ -84,7 +84,7 @@ namespace EducationSystem.Controllers
                 return Problem($"Ошибка! Не удалось восстановить урок #{id}!");
         }
 
-        // https://localhost:50221/api/lesson/id
+        // https://localhost:44365/api/lesson/id
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult UpdateLesson(int lessonId, [FromBody] LessonInputModel lesson)
@@ -94,8 +94,8 @@ namespace EducationSystem.Controllers
             var result = _lessonService.UpdateLesson(lessonDto);
             return Ok($"Урок #{result} обновлён");
         }
-        
-        // https://localhost:50221/api/lesson/feedback
+
+        // https://localhost:44365/api/lesson/feedback
         [HttpGet("feedback")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult GetFeedbacks([FromBody] FeedbackSearchInputModel inputModel)
@@ -104,8 +104,8 @@ namespace EducationSystem.Controllers
             var feedbackList = _mapper.Map<LessonOutputModel>(feedbackDtos);
             return Ok(feedbackList);
         }
-        
-        // https://localhost:50221/api/lesson/feedback/3
+
+        // https://localhost:44365/api/lesson/feedback/3
         [HttpGet("feedback/{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult GetFeedbackById(int id)
@@ -115,8 +115,8 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
-        // https://localhost:50221/api/lesson/id/feedback/
-        [HttpPost("{id}")]
+        // https://localhost:44365/api/lesson/id/feedback/
+        [HttpPost("{id}/feedback")]
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult AddNewFeedback(FeedbackInputModel inputModel)
         {
@@ -125,8 +125,8 @@ namespace EducationSystem.Controllers
             return Ok($"Отзыв #{result} добавлен");
         }
 
-        // https://localhost:50221/api/lesson/5/feedback/5
-        [HttpPut("{id}")]
+        // https://localhost:44365/api/lesson/5/feedback/5
+        [HttpPut("{id}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult UpdateFeedback(int feedbackId, [FromBody] FeedbackInputModel feedbackInputModel)
         {
@@ -136,8 +136,8 @@ namespace EducationSystem.Controllers
             return Ok($"Отзыв #{result} обновлён");
         }
 
-        // https://localhost:50221/api/lesson/feedback/3
-        [HttpDelete("feedback/{id}")]
+        // https://localhost:44365/api/lesson/3/feedback/3
+        [HttpDelete("{id}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult DeleteFeedback(int id)
         {
@@ -145,7 +145,7 @@ namespace EducationSystem.Controllers
             return Ok("Отзыв удалён");
         }
 
-        // https://localhost:50221/api/lesson/5/attendance/
+        // https://localhost:44365/api/lesson/5/attendance/
         [HttpGet("{id}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult GetAttendances()
@@ -155,7 +155,7 @@ namespace EducationSystem.Controllers
             return Ok(listAttendances);
         }
 
-        // https://localhost:50221/api/lesson/5/attendance/3
+        // https://localhost:44365/api/lesson/5/attendance/3
         [HttpGet("{id}/attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult GetAttendanceById(int id)
@@ -165,7 +165,7 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
-        // https://localhost:50221/api/lesson/5/attendance
+        // https://localhost:44365/api/lesson/5/attendance
         [HttpPost("{id}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult AddNewAttendance(AttendanceInputModel inputModel)
@@ -175,9 +175,9 @@ namespace EducationSystem.Controllers
             return Ok($"Посещаемость #{result} добавлен");
         }
 
-        // https://localhost:50221/api/lesson/2/attendance/2
-        
-        [HttpPut("{lessonId}/Attendance/{attendanceId}")]
+        // https://localhost:44365/api/lesson/2/attendance/2
+
+        [HttpPut("{id}/Attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult<int> UpdateAttendance(int attendanceId, [FromBody] AttendanceInputModel attendanceInputModel)
         {
@@ -187,7 +187,7 @@ namespace EducationSystem.Controllers
             return Ok($"Посещаемость #{result} обновлёна");
         }
 
-        // https://localhost:50221/api/attendance/3
+        // https://localhost:44365/api//lesson/attendance/3
         [HttpDelete("attendance/{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteAttendance(int id)
@@ -196,13 +196,13 @@ namespace EducationSystem.Controllers
             return Ok("Посещаемость удалена");
         }
 
-        // https://localhost:50221/api/lesson/theme/3/lessons
+        // https://localhost:44365/api/lesson/lessons-by-theme/3/
         /// <summary>
         /// Get all lessons that belong to one theme and are not deleted.
         /// </summary>
         /// <param name="id">The identifier of the theme that we want to see all its lessons.</param>
         /// <returns>The list of lessonOutputModel.</returns>
-        [HttpGet("lessons/Theme/{id}")]
+        [HttpGet("lessons-by-theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int id)
         {
@@ -211,8 +211,8 @@ namespace EducationSystem.Controllers
         }
 
 
-        // https://localhost:50221/api/lesson-theme/3
-        [HttpGet("lesson-theme/{id}")]
+        // https://localhost:44365/api/lesson/lesson-theme/3
+        [HttpGet("lesson-theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult GetLessonThemeById(int id)
         {
@@ -221,8 +221,8 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
-        // https://localhost:50221/api/lesson-theme/
-        [HttpPost("{id}/theme")]
+        // https://localhost:44365/api/lesson/theme/
+        [HttpPost("{theme")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult AddNewLessonTheme(LessonThemeInputModel lessonThemeModel)
         {
@@ -231,8 +231,8 @@ namespace EducationSystem.Controllers
             return Ok($"Тема урока #{result} добавлен");
         }
 
-        // https://localhost:50221/api/lesson-theme/3
-        [HttpDelete("{id}")]
+        // https://localhost:44365/api/lesson/theme/3
+        [HttpDelete("theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteLessonTheme(int id)
         {

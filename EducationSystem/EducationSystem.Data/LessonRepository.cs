@@ -189,7 +189,7 @@ namespace EducationSystem.Data
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int UpdateAttendance(int LessonId, int attandanceId,AttendanceDto attendance)
+        public int UpdateAttendance(AttendanceDto attendance)
         {
             return _connection.Execute(
                 "dbo.Attendance_Update",
