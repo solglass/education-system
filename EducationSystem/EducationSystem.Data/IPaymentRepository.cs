@@ -8,9 +8,10 @@ namespace EducationSystem.Data
         int AddPayment(PaymentDto payment);
         int DeletePayment(int id);
         PaymentDto GetPaymentByContractNumber(int contractNumber);
-        PaymentDto GetPaymentById(int id);
-        List<PaymentDto> GetPayments();
+        List<PaymentDto> GetPaymentsByUserId(int id);
+        List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo);
+        PaymentDto GetPaymentById(int id);              
         List<UserDto> GetStudentsByIsPaidInPeriod(string period);
-        int UpdatePayment(int id, PaymentDto payment);
+        int UpdatePayment(PaymentDto payment);
     }
 }
