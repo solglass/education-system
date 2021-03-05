@@ -7,5 +7,9 @@ namespace EducationSystem.API.Models.OutputModels
 {
     public class CommentOutputModel
     {
+        public int Id { get; set; }
+        public string Message { get; set; }
+        public UserOutputModel Author { get; set; }
+        public List<AttachmentOutputModel> Attachments { get; set; }
     }
 }

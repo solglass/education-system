@@ -62,9 +62,9 @@ namespace EducationSystem.Data
             return payment;
         }
 
-        public PaymentDto GetPaymentByContractNumber(int contractNumber)
+        public List<PaymentDto> GetPaymentByContractNumber(int contractNumber)
         {
-            var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+            var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
                     "dbo.Payment_SelectByContractNumber",
                     (payment, user) =>
                     {
@@ -74,8 +74,9 @@ namespace EducationSystem.Data
                     new { contractNumber },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return payment;
+                .Distinct()
+                .AsList();
+            return payments;
         }
 
         public List<UserDto> GetStudentsNotPaidInMonth(string month)
