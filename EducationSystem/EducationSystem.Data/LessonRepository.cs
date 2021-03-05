@@ -178,7 +178,7 @@ namespace EducationSystem.Data
             return _connection
                  .QuerySingleOrDefault<int>(
                  "dbo.Attendance_Add",
-                 new { attendance.LessonID, attendance.UserID, attendance.IsAbsent },
+                 new { LessonId = attendance.Lesson.Id, UserId = attendance.User.Id, attendance.IsAbsent },
                  commandType: CommandType.StoredProcedure);
         }
         public int DeleteAttendance(int id)
@@ -232,9 +232,9 @@ namespace EducationSystem.Data
                  new { lessonTheme.ThemeId, lessonTheme.LessonId },
                  commandType: CommandType.StoredProcedure);
         }
-        public void DeleteLessonTheme(int lessonId, int themeId)
+        public int DeleteLessonTheme(int lessonId, int themeId)
         {
-            _connection.Execute(
+            return _connection.Execute(
                 "dbo.Lesson_Theme_Delete",
                 new { lessonId, themeId },
                 commandType: CommandType.StoredProcedure);

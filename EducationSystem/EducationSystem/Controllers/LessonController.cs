@@ -241,9 +241,9 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/lesson-theme/3
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult DeleteLessonTheme(int id)
+        public ActionResult DeleteLessonTheme(int lessonId, int themeId)
         {
-            _lessonService.DeleteAttendance(id);
+            _lessonService.DeleteLessonTheme(lessonId, themeId);
             return Ok("Тема урока удалена");
         }
 
