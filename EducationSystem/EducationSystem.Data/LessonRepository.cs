@@ -149,7 +149,7 @@ namespace EducationSystem.Data
                 new
                 {
                     UserId = feedbackDto.User.Id,
-                    feedbackDto.Messege,
+                    feedbackDto.Message,
                     LessonId = feedbackDto.Lesson.Id,
                     UnderstandingLevelId = (int)feedbackDto.UnderstandingLevel
                 },
@@ -160,7 +160,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Feedback_Update",
-                new { feedbackDto.ID, feedbackDto.Messege, feedbackDto.UnderstandingLevelID },
+                new { feedbackDto.ID, feedbackDto.Message, feedbackDto.UnderstandingLevelID },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -229,7 +229,7 @@ namespace EducationSystem.Data
             return _connection
                  .QuerySingleOrDefault<int>(
                  "dbo.Lesson_Theme_Add",
-                 new { lessonTheme.ThemeID, lessonTheme.LessonID },
+                 new { lessonTheme.ThemeId, lessonTheme.LessonId },
                  commandType: CommandType.StoredProcedure);
         }
         public void DeleteLessonTheme(int lessonId, int themeId)

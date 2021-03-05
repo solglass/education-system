@@ -7,7 +7,6 @@ namespace EducationSystem.API.Models.InputModels
 {
     public class FeedbackInputModel
     {
-        public int ID { get; set; }
         public int UserID { get; set; }
         public string Message { get; set; }
         public int LessonID { get; set; }

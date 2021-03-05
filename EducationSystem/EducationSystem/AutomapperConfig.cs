@@ -24,7 +24,7 @@ namespace EducationSystem.API
             CreateMap<PaymentInputModel, PaymentDto>();
             CreateMap<PaymentDto, PaymentOutputModel>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
-            CreateMap<AttendanceUpdateInputModel, AttendanceDto>();
+            CreateMap<AttendanceInputModel, AttendanceDto>();
 
             CreateMap<HomeworkDto, HomeworkOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
@@ -45,9 +45,17 @@ namespace EducationSystem.API
             CreateMap<AttachmentInputModel, AttachmentDto>()
                 .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => (AttachmentType)src.AttachmentTypeId));
 
-            CreateMap<LessonInputModel, LessonDto>();
+            CreateMap<LessonInputModel, LessonDto>()
+                .ForMember(dest => dest.GroupId, opts => opts.MapFrom(src => new GroupDto() { Id = src.GroupID }))
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => Converters.StrToDateTime(src.LessonDate)))
+                .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemesId.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })));
             CreateMap<LessonDto, LessonOutputModel>()
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
+            CreateMap<FeedbackInputModel, FeedbackDto>();
+            CreateMap<FeedbackDto, FeedbackOutputModel>()
+                .ForMember(dest => dest.UnderstandingLevel, opts=>opts.MapFrom(src=>FriendlyNames.GetFriendlyUnderstandingLevelName(src.UnderstandingLevel)));
+            CreateMap<LessonThemeDto, LessonThemeOutputModel>();
+            CreateMap<LessonThemeInputModel, LessonThemeDto>();
             CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>();
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();

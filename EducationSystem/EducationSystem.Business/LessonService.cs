@@ -14,12 +14,10 @@ namespace EducationSystem.Business
             _lessonRepository = lessonRepository;
         }
         public List<LessonDto> GetLessonsByGroupId(int id)
-        {
-            return _lessonRepository.GetLessonsByGroupId(id);
+        {            return _lessonRepository.GetLessonsByGroupId(id);
         }
         public LessonDto GetLessonById(int id)
-        {
-            return _lessonRepository.GetLessonById(id);
+        {            return _lessonRepository.GetLessonById(id);
         }
 
         public int DeleteLesson(int id)
@@ -33,13 +31,17 @@ namespace EducationSystem.Business
             return _lessonRepository.DeleteOrRecoverLesson(id, isDeleted);
         }
 
-        public void AddLesson(LessonDto lesson)
+        public int AddLesson(LessonDto lesson)
         {
-            _lessonRepository.AddLesson(lesson);
-        }
-        /* public UpdateLesson
-        */
-       public List<FeedbackDto> GetFeedbacks(int? lessonId, int? groupId, int? courseId)
+            return _lessonRepository.AddLesson(lesson);
+        }
+
+        public int UpdateLesson(LessonDto lesson)
+        {
+            return _lessonRepository.UpdateLesson(lesson);
+        }
+
+        public List<FeedbackDto> GetFeedbacks(int? lessonId, int? groupId, int? courseId)
         {
             return _lessonRepository.GetFeedbacks(lessonId, groupId, courseId);
         }
@@ -51,9 +53,17 @@ namespace EducationSystem.Business
         {
             _lessonRepository.DeleteFeedback(id);
         }
-        /* public AddFeedback
-        *  public UpdateFeedback
-        */
+
+        public int AddFeedback(FeedbackDto feedback)
+        {
+            return _lessonRepository.AddFeedback(feedback);
+        }
+
+        public int UpdateFeedback(FeedbackDto feedback)
+        {
+            return _lessonRepository.UpdateFeedback(feedback);
+        }
+
         public List<AttendanceDto> GetAttendances()
         {
             return _lessonRepository.GetAttendances();
@@ -66,26 +76,13 @@ namespace EducationSystem.Business
         {
             _lessonRepository.DeleteAttendance(id);
         }
-        /* public AddAttendance
-        *  public UpdateAttendance
-        */
-
         public LessonThemeDto GetLessonThemeById(int id)
         {
             return _lessonRepository.GetLessonThemeById(id);
         }
-
-        public int UpdateAttendance(AttendanceDto attendance)
-        {
-            return _lessonRepository.UpdateAttendance(attendance);
-        }
-        /* public AddLessonTheme
-*  public UpdateLessonTheme
-*/
-        public List<LessonDto> GetLessonsByThemeId(int themeId)
-        {
-            return _lessonRepository.GetLessonsByThemeId(themeId);
-        }
+        public int AddAttendance(AttendanceDto attendance)        {            return _lessonRepository.AddAttendance(attendance);        }
+        public int UpdateAttendance(AttendanceDto attendance)        {            return _lessonRepository.UpdateAttendance(attendance);        }        public int AddLessonTheme(LessonThemeDto lessonTheme)        {            return _lessonRepository.AddLessonTheme(lessonTheme);        }
+        public List<LessonDto> GetLessonsByThemeId(int themeId)        {            return _lessonRepository.GetLessonsByThemeId(themeId);        }
 
         public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
         {

@@ -5,7 +5,7 @@ namespace EducationSystem.Business
 {
     public interface ILessonService
     {
-        void AddLesson(LessonDto lesson);
+        int AddLesson(LessonDto lesson);
         void DeleteAttendance(int id);
         void DeleteFeedback(int id);
         AttendanceDto GetAttendanceById(int id);
@@ -20,5 +20,10 @@ namespace EducationSystem.Business
         object GetStudentByPercentOfSkip(int percent, int groupId);
         int DeleteLesson(int id);
         int RecoverLesson(int id);
+        int UpdateLesson(LessonDto lesson);
+        int AddFeedback(FeedbackDto feedback);
+        int UpdateFeedback(FeedbackDto feedback);
+        int AddAttendance(AttendanceDto attendance);
+        int AddLessonTheme(LessonThemeDto lessonTheme);
     }
 }
