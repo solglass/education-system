@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
@@ -36,16 +37,15 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/material/by-group/340
         [HttpGet("by-group/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetMaterialsByGroupId(int id)
+        public ActionResult<List<MaterialOutputModel>> GetMaterialsByGroupId(int id)
         {
             return Ok(_matMapper.FromDtos(_service.GetMaterialsByGroupId(id)));
-
         }
 
         // https://localhost:44365/api/material/by-tag/340
         [HttpGet("by-tag/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetMaterialsByTagId(int id)
+        public ActionResult<List<MaterialOutputModel>> GetMaterialsByTagId(int id)
         {
             return Ok(_matMapper.FromDtos(_service.GetMaterialsByTagId(id)));
         }
@@ -53,7 +53,7 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/material/2
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetMaterialById(int id)
+        public ActionResult<List<MaterialOutputModel>> GetMaterialById(int id)
         {
             return Ok(_matMapper.FromDto(_service.GetMaterialById(id)));
         }
