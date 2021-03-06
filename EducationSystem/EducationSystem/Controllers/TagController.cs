@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using EducationSystem.Business;
 using AutoMapper;
 using EducationSystem.API.Models.OutputModels;
+using System.Net;
 
 namespace EducationSystem.Controllers
 {
@@ -32,11 +33,12 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/tag/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult<int> AddTag([FromBody] TagInputModel tag)
+        public ActionResult<TagOutputModel> AddTag([FromBody] TagInputModel tag)
         {
             var tagDto = _mapper.Map<TagDto>(tag);
-            var result= _tagService.AddTag(tagDto);
-            return Ok($"Тег№{result} добавлен");
+            var id= _tagService.AddTag(tagDto);
+           var result= _mapper.Map<TagOutputModel>(_tagService.GetTagById(id));
+            return Ok(result);
         }
         // https://localhost:50221/api/tag
         [HttpGet]
@@ -44,7 +46,6 @@ namespace EducationSystem.Controllers
         public ActionResult<List<TagOutputModel>> GetTags()
         {
             var tagsDtos = _tagService.GetTags();
-           
             var tags = _mapper.Map<List<TagOutputModel>>(tagsDtos);
             return Ok(tags);
         }
@@ -60,20 +61,25 @@ namespace EducationSystem.Controllers
         //https://localhost:50221/api/tag/3
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult<int> UpdateTag(int id, [FromBody] TagInputModel tag)
+        public ActionResult<TagOutputModel> UpdateTag(int id, [FromBody] TagInputModel tag)
         {
             var tagDto = _mapper.Map<TagDto>(tag);
             tagDto.Id = id;
-            var result=_tagService.UpdateTag(tagDto);          
-            return Ok($"Tag №{result}обновлён");
+            _tagService.UpdateTag(tagDto);
+            var result = _mapper.Map<TagOutputModel>(_tagService.GetTagById(id));
+            return Ok(result);
         }
         //https://localhost:50221/api/tag/3
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult<int> DeleteTag(int id)
+        public ActionResult DeleteTag(int id)
         {
             var result=_tagService.DeleteTag(id);
-            return Ok(result);
+            if (result == 0)
+            {
+                return new NoContentResult();
+            }
+            return Ok();
         }
     }
 }
