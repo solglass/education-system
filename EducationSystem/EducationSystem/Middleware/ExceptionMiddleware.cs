@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EducationSystem.Core.CustomExceptions;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,21 +24,43 @@ namespace EducationSystem.API.Middleware
             {
                 await _next(httpContext);
             }
+            catch (ValidationException ex)
+            {
+                await HandleValidationExceptionAsync(httpContext, ex);
+            }
             catch (Exception ex)
             {
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
+
+        private Task HandleValidationExceptionAsync(HttpContext context, ValidationException exception)
+        {
+            ModifyContextResponse(context, exception.StatusCode);
+
+            return ConstructResponse(context, exception.StatusCode, exception.ErrorMessage);
+        }
+
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            context.Response.ContentType = MediaTypeNames.Application.Json;
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            ModifyContextResponse(context, (int)HttpStatusCode.BadRequest);
 
+            return ConstructResponse(context, (int)HttpStatusCode.BadRequest, GlobalErrorMessage);
+        }
+
+        private void ModifyContextResponse(HttpContext context, int statusCode)
+        {
+            context.Response.ContentType = MediaTypeNames.Application.Json;
+            context.Response.StatusCode = statusCode;
+        }
+
+        private Task ConstructResponse(HttpContext context, int statusCode, string message)
+        {
             var errorResponse = JsonSerializer.Serialize(
                 new
                 {
-                    Code = HttpStatusCode.BadRequest,
-                    Message = GlobalErrorMessage
+                    Code = statusCode,
+                    Message = message
                 });
 
             return context.Response.WriteAsync(errorResponse);
