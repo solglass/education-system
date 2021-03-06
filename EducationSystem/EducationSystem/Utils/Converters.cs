@@ -10,11 +10,11 @@ namespace EducationSystem.API.Utils
     {
         private const string _dateFormat = "dd.MM.yyyy";
         private const string _periodDateFormat = "yyyy.MM";
-        public static (bool, DateTime) StrToDateTime(string strDate)
+        public static DateTime StrToDateTime(string strDate)
         {
-            bool isDateParsed = DateTime
-                .TryParseExact(strDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result);
-            return (isDateParsed, result);
+            var date = DateTime
+                .ParseExact(strDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
+            return date;
         }
 
         public static string DateTimeToStr(DateTime date)

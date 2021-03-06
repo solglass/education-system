@@ -19,12 +19,8 @@ namespace EducationSystem.API.Mappers
                 throw new Exception("Ошибка! Не было передано значение LessonDate");
             }
 
-            var (isLessonDateParsed, LessonData) = Converters.StrToDateTime(inputModel.LessonDate);
+            var LessonData = Converters.StrToDateTime(inputModel.LessonDate);
 
-            if (!isLessonDateParsed)
-            {
-                throw new Exception("Ошибка! Неверный формат LessonDate");
-            }
 
             return new LessonDto
             {

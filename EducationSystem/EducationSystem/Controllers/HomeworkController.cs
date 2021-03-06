@@ -4,6 +4,7 @@ using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Controllers;
+using EducationSystem.Core.CustomExceptions;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +38,10 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]        
         public ActionResult AddHomework([FromBody] HomeworkInputModel homework)
         {
+            if(!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var result = _homeworkService.AddHomework(_mapper.Map<HomeworkDto>(homework));
             return Ok(result);
         }
