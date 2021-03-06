@@ -60,20 +60,20 @@ namespace EducationSystem.Controllers
         //https://localhost:50221/api/tag/3
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult UpdateTag(int id, [FromBody] TagInputModel tag)
+        public ActionResult<int> UpdateTag(int id, [FromBody] TagInputModel tag)
         {
             var tagDto = _mapper.Map<TagDto>(tag);
             tagDto.Id = id;
-            _tagService.UpdateTag(tagDto);          
-            return Ok("Tag обновлён");
+            var result=_tagService.UpdateTag(tagDto);          
+            return Ok($"Tag №{result}обновлён");
         }
         //https://localhost:50221/api/tag/3
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult DeleteTag(int id)
+        public ActionResult<int> DeleteTag(int id)
         {
-            _tagService.DeleteTag(id);
-            return Ok("Tag удалён");
+            var result=_tagService.DeleteTag(id);
+            return Ok(result);
         }
     }
 }
