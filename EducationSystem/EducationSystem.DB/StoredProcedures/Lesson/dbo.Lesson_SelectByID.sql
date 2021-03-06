@@ -5,7 +5,7 @@ select l.Id,
 	l.GroupID,
     l.Description,
     l.Date,
-    l.IsDeleted,
+    l.IsDeleted as IsDeleted,
 	t.Id,
 	t.Name
 	from dbo.Lesson l 

@@ -10,7 +10,7 @@ namespace EducationSystem.API.Mappers
 {
     public class CourseMapper
     {
-        public CourseDto ToDto(CourseInputModel inputModel)
+        public CourseDto ToDto(CourseInputModel inputModel, int id = 0)
         {
             var themeMapper = new ThemeMapper();
 
@@ -23,14 +23,14 @@ namespace EducationSystem.API.Mappers
             List<ThemeDto> themes = new List<ThemeDto>();
             if(inputModel.ThemeIds!=null && inputModel.ThemeIds.Count>0)
             {
-                foreach(var id in inputModel.ThemeIds)
+                foreach(var iD in inputModel.ThemeIds)
                 {
-                    themes.Add(new ThemeDto { Id = id });
+                    themes.Add(new ThemeDto { Id = iD });
                 }
             }
             return new CourseDto
             {
-                Id=inputModel.Id,
+                Id=id,
                 Name = inputModel.Name,
                 Description=inputModel.Description,
                 Duration=inputModel.Duration,                

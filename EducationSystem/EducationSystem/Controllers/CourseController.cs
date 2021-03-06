@@ -3,16 +3,10 @@ using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
-//using EducationSystem.Controllers;
-//using EducationSystem.Data;
-//using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-//using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
 
 namespace EducationSystem.API.Controllers
 {
@@ -32,6 +26,7 @@ namespace EducationSystem.API.Controllers
             _courseService = courseService;
         }
 
+        // https://localhost:50221/api/course/
         [HttpGet]
         public ActionResult GetCourses()
         {
@@ -47,6 +42,7 @@ namespace EducationSystem.API.Controllers
             return Ok(courses);
         }
 
+        // https://localhost:50221/api/course/id
        [HttpGet("{id}")]
        public ActionResult GetCourse(int id)       
         {
@@ -62,7 +58,7 @@ namespace EducationSystem.API.Controllers
             return Ok(course);
         }
 
-
+        // https://localhost:50221/api/course/
         [HttpPost]
         [Authorize(Roles ="Админ, Менеджер, Методист")]
         public ActionResult CreateCourse([FromBody] CourseInputModel course)    
@@ -84,6 +80,7 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! К созданному курсу #{-(result+2)} не удалось привязать темы! ") ;
         }
 
+        // https://localhost:50221/api/course/id
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
@@ -91,7 +88,7 @@ namespace EducationSystem.API.Controllers
             int result;
             try
             {
-                result = _courseService.UpdateCourse(_courseMapper.ToDto(course));
+                result = _courseService.UpdateCourse(_courseMapper.ToDto(course, id));
             }
             catch (Exception ex)
             {
@@ -103,6 +100,7 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! Не получилось обновить курс #{id}!");
         }
 
+        // https://localhost:50221/api/course/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult DeleteCourse(int id)
@@ -125,7 +123,6 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не получилось восстановить курс #{id}!");
         }
-
 
         // https://localhost:XXXXX/api/course/3/theme/8
         [HttpPost("{courseId}/theme/{themeId}")]
@@ -150,11 +147,11 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не получилось отвязать тему #{themeId} от курса #{courseId}!");
         }
-       
 
-        [HttpGet("themes")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetThemes()
+        // https://localhost:XXXXX/api/course/theme/
+        [HttpGet("theme")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        public ActionResult GetAllThemes()
         {
             List<ThemeOutputModel> themes;
             try
@@ -168,10 +165,10 @@ namespace EducationSystem.API.Controllers
             return Ok(themes);
         }
 
-       
+        // https://localhost:XXXXX/api/course/theme/id
         [HttpGet("theme/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetTheme(int id)
+        public ActionResult GetThemeById(int id)
         {
             ThemeOutputModel theme;
             try
@@ -185,7 +182,8 @@ namespace EducationSystem.API.Controllers
             return Ok(theme);
 
         }
-        
+
+        // https://localhost:XXXXX/api/course/theme/
         [HttpPost("theme")]
         [Authorize(Roles = "Админ, Методист, Преподаватель")]
         public ActionResult CreateTheme([FromBody] ThemeInputModel inputModel)
@@ -205,6 +203,7 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! К созданной теме #{-(result + 2)} не удалось привязать теги! ");
         }
 
+        // https://localhost:XXXXX/api/course/theme/id/tag/id
         [HttpPost("theme/{themeId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
@@ -216,12 +215,10 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! Не получилось добавить тег  #{tagId} к теме #{themeId}!");
         }
 
-       
-
-
+        // https://localhost:XXXXX/api/course/theme/id/
         [HttpDelete("theme/{id}")]
-        [Authorize(Roles = "Админ, Методист")]
-        public ActionResult RemoveTheme(int id)
+        [Authorize(Roles = "Админ, Методист, Преподаватель")]
+        public ActionResult DeleteTheme(int id)
         {
             var result = _courseService.DeleteTheme(id);
             if (result > 0)
@@ -229,7 +226,5 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не получилось удалить тему #{id}!");
         }
-
-     
     }
 }

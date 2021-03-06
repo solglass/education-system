@@ -7,11 +7,11 @@ namespace EducationSystem.API.Models.OutputModels
 {
     public class FeedbackOutputModel
     {
-        public int ID { get; set; }
-        public int UserID { get; set; }
+        public int Id { get; set; }
+        public  UserOutputModel User { get; set; }
         public string Message { get; set; }
-        public int LessonID { get; set; }
-        public String UnderstandingLevel { get; set; }
+        public LessonOutputModel Lesson { get; set; }
+        public string UnderstandingLevel { get; set; }
        
     }
 }

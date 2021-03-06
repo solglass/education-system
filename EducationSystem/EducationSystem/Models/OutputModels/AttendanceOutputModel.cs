@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EducationSystem.API.Models.InputModels
+namespace EducationSystem.API.Models.OutputModels
 {
-    public class AttendanceInputModel
+    public class AttendanceOutputModel
     {
-        public int LessonId { get; set; }
-        public int UserId { get; set; }
+        public int Id { get; set; }
+        public AuthorOutputModel User { get; set; }
         public bool IsAbsent { get; set; }
         public string ReasonOfAbsence { get; set; }
     }

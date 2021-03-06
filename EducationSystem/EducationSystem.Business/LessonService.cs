@@ -14,10 +14,12 @@ namespace EducationSystem.Business
             _lessonRepository = lessonRepository;
         }
         public List<LessonDto> GetLessonsByGroupId(int id)
-        {            return _lessonRepository.GetLessonsByGroupId(id);
+        {
+            return _lessonRepository.GetLessonsByGroupId(id);
         }
         public LessonDto GetLessonById(int id)
-        {            return _lessonRepository.GetLessonById(id);
+        {
+            return _lessonRepository.GetLessonById(id);
         }
 
         public int DeleteLesson(int id)
@@ -64,9 +66,9 @@ namespace EducationSystem.Business
             return _lessonRepository.UpdateFeedback(feedback);
         }
 
-        public List<AttendanceDto> GetAttendances()
+        public List<AttendanceDto> GetAttendancesByLessonId(int id)
         {
-            return _lessonRepository.GetAttendances();
+            return _lessonRepository.GetAttendancesByLessonId(id);
         }
         public AttendanceDto GetAttendanceById(int id)
         {
@@ -88,15 +90,6 @@ namespace EducationSystem.Business
             return _lessonRepository.DeleteLessonTheme(lessonId, themeId);
         }
 
-
         public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
-        {
-            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
-        }
-
-        object ILessonService.GetStudentByPercentOfSkip(int percent, int groupId)
-        {
-            throw new NotImplementedException();
-        }
-    }
+        {            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);        }    }
 }
