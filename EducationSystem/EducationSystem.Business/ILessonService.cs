@@ -17,7 +17,8 @@ namespace EducationSystem.Business
         List<LessonDto> GetLessonsByThemeId(int themeId);
         LessonThemeDto GetLessonThemeById(int id);
         int UpdateAttendance(AttendanceDto attendance);
-        object GetStudentByPercentOfSkip(int percent, int groupId);
+        // what the fuck is going on here??
+        //object GetStudentByPercentOfSkip(int percent, int groupId);
         int DeleteLesson(int id);
         int RecoverLesson(int id);
     }

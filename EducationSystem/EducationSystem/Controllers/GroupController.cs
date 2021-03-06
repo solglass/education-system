@@ -12,6 +12,7 @@ using EducationSystem.Business;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using EducationSystem.Core.CustomExceptions;
 
 namespace EducationSystem.Controllers
 {
@@ -77,9 +78,12 @@ namespace EducationSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ, Менеджер")]
+        //[Authorize(Roles = "Админ, Менеджер")]
         public ActionResult AddNewGroup([FromBody] GroupInputModel group)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
             var groupDto = _groupMapper.ToDto(group);
             var result = _service.AddGroup(groupDto);
             return Ok($"Группа #{result} добавлена");
