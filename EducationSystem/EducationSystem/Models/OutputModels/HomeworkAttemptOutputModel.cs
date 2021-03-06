@@ -10,9 +10,8 @@ namespace EducationSystem.API.Models.OutputModels
     {
         public int Id { get; set; }
         public string Comment { get; set; }
-        public bool IsDeleted { get; set; }
-        public UserOutputModel Author { get; set; }
-        public String HomeworkAttemptStatus { get; set; }
+        public AuthorOutputModel Author { get; set; }
+        public string HomeworkAttemptStatus { get; set; }
         public List<CommentOutputModel> Comments { get; set; }
         public List<AttachmentOutputModel> Attachments { get; set; }
     }

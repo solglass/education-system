@@ -16,16 +16,31 @@ namespace EducationSystem.Data
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<PaymentDto> GetPayments()
+        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo)
         {
             var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
-                    "dbo.Payment_SelectAll",
+                    "dbo.Payment_SelectByPeriod",
                     (payment, user) =>
                     {
                         payment.Student = user;
                         return payment;
                     },
                             splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return payments;
+        }
+        public List<PaymentDto> GetPaymentsByUserId(int id)
+        {
+            var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+                    "dbo.Payment_SelectByUserId",
+                    (payment, user) =>
+                    {
+                        payment.Student = user;
+                        return payment;
+                    },
+                    new { id },
+                    splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return payments;
@@ -47,9 +62,9 @@ namespace EducationSystem.Data
             return payment;
         }
 
-        public PaymentDto GetPaymentByContractNumber(int contractNumber)
+        public List<PaymentDto> GetPaymentByContractNumber(int contractNumber)
         {
-            var payment = _connection.Query<PaymentDto, UserDto, PaymentDto>(
+            var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
                     "dbo.Payment_SelectByContractNumber",
                     (payment, user) =>
                     {
@@ -59,8 +74,9 @@ namespace EducationSystem.Data
                     new { contractNumber },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return payment;
+                .Distinct()
+                .AsList();
+            return payments;
         }
         public List<UserDto> GetStudentsByIsPaidInPeriod(string period)
         {
@@ -115,6 +131,5 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-
     }
 }
