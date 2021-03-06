@@ -15,7 +15,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:50221/api/course/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class CourseController : ControllerBase
     {
         private ICourseService _courseService;
@@ -58,7 +58,7 @@ namespace EducationSystem.API.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles ="Админ, Менеджер, Методист")]
+       [Authorize(Roles ="Админ, Менеджер, Методист")]
         public ActionResult CreateCourse([FromBody] CourseInputModel course)    
         {
             int result;
@@ -83,6 +83,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
         {
             int result;
+            course.Id = id;
             try
             {
                 result = _courseService.UpdateCourse(_mapper.Map<CourseDto>(course));
