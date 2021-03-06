@@ -51,8 +51,7 @@ namespace EducationSystem.API
             CreateMap<LessonDto, LessonOutputModel>()
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
 
-            CreateMap<CourseDto, CourseOutputModel>();
-                
+            CreateMap<CourseDto, CourseOutputModel>();   
             CreateMap<CourseInputModel, CourseDto>()
                 .ForMember(dest=>dest.Themes, opts=>opts.MapFrom(src=>src.ThemeIds.ConvertAll<ThemeDto>(t=>new ThemeDto { Id = t })));
 
