@@ -20,7 +20,7 @@ namespace EducationSystem.Controllers
     // https://localhost:50221/api/tag/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class TagController : ControllerBase
     {
         private ITagService _tagService;
@@ -42,7 +42,7 @@ namespace EducationSystem.Controllers
         }
         // https://localhost:50221/api/tag
         [HttpGet]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
+        //[Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
         public ActionResult<List<TagOutputModel>> GetTags()
         {
             var tagsDtos = _tagService.GetTags();
@@ -71,15 +71,14 @@ namespace EducationSystem.Controllers
         }
         //https://localhost:50221/api/tag/3
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        //[Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteTag(int id)
         {
             var result=_tagService.DeleteTag(id);
-            if (result == 0)
-            {
+            if (result == 1)
                 return new NoContentResult();
-            }
-            return Ok();
+            else
+                return Problem("Возникла ошибка при удалении тега");
         }
     }
 }
