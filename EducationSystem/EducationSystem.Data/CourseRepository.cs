@@ -28,6 +28,7 @@ namespace EducationSystem.Data
                         if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
                         {
                             courseEntry = course;
+                            //courseEntry = null; 
                             courseEntry.Themes = new List<ThemeDto>();
                             courseDictionary.Add(courseEntry.Id, courseEntry);
                         }

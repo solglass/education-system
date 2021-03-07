@@ -15,7 +15,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:50221/api/course/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class CourseController : ControllerBase
     {
         private ICourseService _courseService;
