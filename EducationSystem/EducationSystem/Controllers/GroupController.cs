@@ -85,7 +85,7 @@ namespace EducationSystem.Controllers
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
 
-            var groupDto = _groupMapper.ToDto(group);
+            var groupDto = _mapper.Map<GroupDto>(group);
             var result = _service.AddGroup(groupDto);
             return Ok($"Группа #{result} добавлена");
         }
