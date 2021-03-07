@@ -7,6 +7,8 @@ using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +19,9 @@ namespace EducationSystem.API
         private const string _dateFormat = "dd.MM.yyyy";
         public AutomapperConfig()
         {
-            CreateMap<UserInputModel, UserDto>();
+            CreateMap<UserInputModel, UserDto>()
+               .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None)))
+               .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.RoleIds.ConvertAll<Enum>(c=>(Role)c)));
             CreateMap<UserDto, AuthorOutputModel>();
             CreateMap<UserDto, UserOutputModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
