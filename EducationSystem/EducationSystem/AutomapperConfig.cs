@@ -36,7 +36,7 @@ namespace EducationSystem.API
                 .ForMember(dest=> dest.GroupId, opts => opts.MapFrom(src => src.Group.Id));
 
             CreateMap<GroupInputModel, GroupDto>()
-                //.ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToJustDateTime(src.StartDate)))
                 .ForMember(dest => dest.Course, opts => opts.MapFrom(src => new CourseDto() { Id = src.CourseId }))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src => (GroupStatus)src.GroupStatusId));
 
