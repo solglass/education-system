@@ -6,8 +6,7 @@ namespace EducationSystem.API.Models.InputModels
     {
         public string StartDate { get; set; }
         [Required]
-        public CourseInputModel Course { get; set; }
-        [Range(1, 1000, ErrorMessage = "Нужен нормальный айдишник группы, ёпта")]
+        public int CourseId { get; set; }
         public int GroupStatusId { get; set; }
     }
 }
