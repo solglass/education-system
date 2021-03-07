@@ -11,4 +11,5 @@ Post-Deployment Script Template
 */
 
 :r .\ForeignKeys.sql
+:r .\UniqueConstraints.sql
 :r .\InitialData.sql

@@ -1,18 +1,14 @@
-﻿using EducationSystem.API.Mappers;
+﻿using AutoMapper;
+using EducationSystem.API.Mappers;
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
-//using EducationSystem.Controllers;
-//using EducationSystem.Data;
-//using EducationSystem.Data.Models;
+using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-//using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
 
 namespace EducationSystem.API.Controllers
 {
@@ -22,23 +18,22 @@ namespace EducationSystem.API.Controllers
     [Authorize]
     public class CourseController : ControllerBase
     {
-        private CourseMapper _courseMapper;
-        private ThemeMapper _themeMapper;
         private ICourseService _courseService;
-        public CourseController(ICourseService courseService)
+        private IMapper _mapper;
+        public CourseController(ICourseService courseService, IMapper mapper)
         {
-            _courseMapper = new CourseMapper();
-            _themeMapper = new ThemeMapper();
             _courseService = courseService;
+            _mapper = mapper;
         }
 
+        // https://localhost:50221/api/course/
         [HttpGet]
         public ActionResult GetCourses()
         {
             List<CourseOutputModel> courses;
             try
             {
-                courses = _courseMapper.FromDtos(_courseService.GetCourses());
+                courses =_mapper.Map<List<CourseOutputModel>>( _courseService.GetCourses());
             }
             catch (Exception ex)
             {
@@ -47,13 +42,14 @@ namespace EducationSystem.API.Controllers
             return Ok(courses);
         }
 
+        // https://localhost:50221/api/course/id
        [HttpGet("{id}")]
        public ActionResult GetCourse(int id)       
         {
             CourseOutputModel course;
             try
             {
-                 course = _courseMapper.FromDto(_courseService.GetCourseById(id));
+                 course = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
             }
             catch(Exception ex)
             {
@@ -62,15 +58,15 @@ namespace EducationSystem.API.Controllers
             return Ok(course);
         }
 
-
+        // https://localhost:50221/api/course/
         [HttpPost]
-        [Authorize(Roles ="Админ, Менеджер, Методист")]
+       [Authorize(Roles ="Админ, Менеджер, Методист")]
         public ActionResult CreateCourse([FromBody] CourseInputModel course)    
         {
             int result;
             try
             {
-                result = _courseService.AddCourse(_courseMapper.ToDto(course));
+                result = _courseService.AddCourse(_mapper.Map<CourseDto>(course));
             }
             catch (Exception ex)
             {
@@ -84,6 +80,7 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! К созданному курсу #{-(result+2)} не удалось привязать темы! ") ;
         }
 
+        // https://localhost:50221/api/course/id
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
@@ -91,7 +88,9 @@ namespace EducationSystem.API.Controllers
             int result;
             try
             {
-                result = _courseService.UpdateCourse(_courseMapper.ToDto(course));
+                var courseDto = _mapper.Map<CourseDto>(course);
+                courseDto.Id = id;
+                result = _courseService.UpdateCourse(courseDto);
             }
             catch (Exception ex)
             {
@@ -103,6 +102,7 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! Не получилось обновить курс #{id}!");
         }
 
+        // https://localhost:50221/api/course/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult DeleteCourse(int id)
@@ -125,7 +125,6 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не получилось восстановить курс #{id}!");
         }
-
 
         // https://localhost:XXXXX/api/course/3/theme/8
         [HttpPost("{courseId}/theme/{themeId}")]
@@ -150,16 +149,16 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не получилось отвязать тему #{themeId} от курса #{courseId}!");
         }
-       
 
-        [HttpGet("themes")]
-        [Authorize(Roles = "Админ")]
-        public ActionResult GetThemes()
+        // https://localhost:XXXXX/api/course/theme/
+        [HttpGet("theme")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        public ActionResult GetAllThemes()
         {
             List<ThemeOutputModel> themes;
             try
             {
-                themes = _themeMapper.FromDtos(_courseService.GetThemes());
+                themes = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetThemes());
             }
             catch (Exception ex)
             {
@@ -168,15 +167,15 @@ namespace EducationSystem.API.Controllers
             return Ok(themes);
         }
 
-       
+        // https://localhost:XXXXX/api/course/theme/id
         [HttpGet("theme/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetTheme(int id)
+        public ActionResult GetThemeById(int id)
         {
             ThemeOutputModel theme;
             try
             {
-                theme = _themeMapper.FromDto(_courseService.GetThemeById(id));
+                theme = _mapper.Map<ThemeOutputModel>(_courseService.GetThemeById(id));
             }
             catch (Exception ex)
             {
@@ -185,7 +184,8 @@ namespace EducationSystem.API.Controllers
             return Ok(theme);
 
         }
-        
+
+        // https://localhost:XXXXX/api/course/theme/
         [HttpPost("theme")]
         [Authorize(Roles = "Админ, Методист, Преподаватель")]
         public ActionResult CreateTheme([FromBody] ThemeInputModel inputModel)
@@ -193,7 +193,7 @@ namespace EducationSystem.API.Controllers
             int result;
             try
             {
-               result = _courseService.AddTheme(_themeMapper.ToDto(inputModel));
+               result = _courseService.AddTheme(_mapper.Map<ThemeDto>(inputModel));
             }
             catch(Exception ex)
             {
@@ -205,6 +205,7 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! К созданной теме #{-(result + 2)} не удалось привязать теги! ");
         }
 
+        // https://localhost:XXXXX/api/course/theme/id/tag/id
         [HttpPost("theme/{themeId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
@@ -216,12 +217,10 @@ namespace EducationSystem.API.Controllers
                 return Problem($"Ошибка! Не получилось добавить тег  #{tagId} к теме #{themeId}!");
         }
 
-       
-
-
+        // https://localhost:XXXXX/api/course/theme/id/
         [HttpDelete("theme/{id}")]
-        [Authorize(Roles = "Админ, Методист")]
-        public ActionResult RemoveTheme(int id)
+        [Authorize(Roles = "Админ, Методист, Преподаватель")]
+        public ActionResult DeleteTheme(int id)
         {
             var result = _courseService.DeleteTheme(id);
             if (result > 0)
@@ -229,7 +228,5 @@ namespace EducationSystem.API.Controllers
             else
                 return Problem($"Ошибка! Не получилось удалить тему #{id}!");
         }
-
-     
     }
 }

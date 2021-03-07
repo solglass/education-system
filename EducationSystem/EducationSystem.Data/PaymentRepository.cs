@@ -78,10 +78,11 @@ namespace EducationSystem.Data
                 .AsList();
             return payments;
         }
-        public List<UserDto> GetStudentsByIsPaidInPeriod(string period)
+
+        public List<UserDto> GetStudentsNotPaidInMonth(string month)
         {
             var result = _connection
-               .Query<UserDto>("dbo.Student_SelectByPeriodAndIsPaid", new { period },
+               .Query<UserDto>("dbo.Student_SelectByPeriodAndIsNotPaid", new { period = month },
                commandType: System.Data.CommandType.StoredProcedure).ToList();
             return result;
         }
