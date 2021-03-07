@@ -23,12 +23,17 @@ namespace EducationSystem.API.Utils
         }
         public static string StrToDateTimePeriod(string period)
         {
-            DateTime.TryParseExact(period, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime periodParsed);
+            DateTime.TryParseExact(period, _periodDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime periodParsed);
             return PeriodDateToStr(periodParsed);
         }
         private static string PeriodDateToStr(DateTime period)
         {
             return (period.ToString(_periodDateFormat));
+        }
+        public static DateTime StrToJustDateTime(string strDate)
+        {
+          DateTime.TryParseExact(strDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result);
+          return ( result);
         }
     }
 }

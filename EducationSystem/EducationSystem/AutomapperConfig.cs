@@ -7,6 +7,8 @@ using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +19,9 @@ namespace EducationSystem.API
         private const string _dateFormat = "dd.MM.yyyy";
         public AutomapperConfig()
         {
-            CreateMap<UserInputModel, UserDto>();
+            CreateMap<UserInputModel, UserDto>()
+               .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None)))
+               .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.RoleIds.ConvertAll<Enum>(c=>(Role)c)));
             CreateMap<UserDto, AuthorOutputModel>();
             CreateMap<UserDto, UserOutputModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
@@ -36,16 +40,22 @@ namespace EducationSystem.API
             CreateMap<HomeworkDto, HomeworkSearchOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)))
-                .ForMember(dest => dest.GroupId, opts => opts.MapFrom(src => src.Group.Id));
+                .ForMember(dest=> dest.GroupId, opts => opts.MapFrom(src => src.Group.Id));
 
-            CreateMap<GroupInputModel, GroupDto>();
-            CreateMap<GroupDto, GroupOutputModel>()
+            CreateMap<GroupInputModel, GroupDto>()
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToJustDateTime(src.StartDate)))
+                .ForMember(dest => dest.Course, opts => opts.MapFrom(src => new CourseDto() { Id = src.CourseId }))
+                .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src => (GroupStatus)src.GroupStatusId));
+
+           CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
 
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TagDto, TagOutputModel>();
 
+            CreateMap<ThemeInputModel, ThemeDto>()
+                .ForMember(dest=>dest.Tags, opts=>opts.MapFrom(src=>src.TagIds.ConvertAll<TagDto>(t=> new TagDto { Id = t })));
             CreateMap<ThemeDto, ThemeOutputModel>();
 
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
@@ -71,8 +81,6 @@ namespace EducationSystem.API
 
             CreateMap<LessonThemeDto, LessonThemeOutputModel>();
             CreateMap<LessonThemeInputModel, LessonThemeDto>();
-            CreateMap<CourseDto, CourseOutputModel>();
-            CreateMap<CourseInputModel, CourseDto>();
 
             CreateMap<AttendanceDto, AttendanceOutputModel>()
                 .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto()
@@ -83,8 +91,16 @@ namespace EducationSystem.API
                     UserPic = src.User.UserPic
                 }));
 
+            CreateMap<CourseDto, CourseOutputModel>();   
+            CreateMap<CourseInputModel, CourseDto>()
+                .ForMember(dest=>dest.Themes, opts=>opts.MapFrom(src=>src.ThemeIds.ConvertAll<ThemeDto>(t=>new ThemeDto { Id = t })));
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
 
+      CreateMap<GroupReportDto, GroupReportOutputModel>()
+          .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+          .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
+
+      CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
             CreateMap<MaterialInputModel, MaterialDto>();
 
             CreateMap<HomeworkInputModel, HomeworkDto>()
