@@ -15,7 +15,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:50221/api/course/
     [ApiController]
     [Route("api/[controller]")]
-   // [Authorize]
+    [Authorize]
     public class CourseController : ControllerBase
     {
         private ICourseService _courseService;
@@ -38,7 +38,6 @@ namespace EducationSystem.API.Controllers
        [HttpGet("{id}")]
        public ActionResult<CourseOutputModel> GetCourse(int id)       
         {
-           
             var  course = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
             return Ok(course);
         }
@@ -50,7 +49,7 @@ namespace EducationSystem.API.Controllers
         {
             var id = _courseService.AddCourse(_mapper.Map<CourseDto>(course));
             var result = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
-            return Ok(result);                                                              //needs CreatedResult 201
+            return Ok(result);                        
         }
 
         // https://localhost:50221/api/course/id
@@ -91,7 +90,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddThemeToCourse(int courseId, int themeId)
         {
             int result = _courseService.AddThemeToCourse(courseId, themeId);
-            return Ok();                                                        //StatusCode 201- Created
+            return Ok();                                                       
         }
 
         // https://localhost:XXXXX/api/course/3/theme/8
@@ -124,13 +123,13 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:XXXXX/api/course/theme/
         [HttpPost("theme")]
-        [Authorize(Roles = "Админ, Методист, Преподаватель")]
+       [Authorize(Roles = "Админ, Методист, Преподаватель")]
         public ActionResult<ThemeOutputModel> CreateTheme([FromBody] ThemeInputModel inputModel)
         {
             var  id = _courseService.AddTheme(_mapper.Map<ThemeDto>(inputModel));
             var result = _mapper.Map<ThemeOutputModel>(_courseService.GetThemeById(id));
-            return Ok(result);                                                                  //needs statusCode 201 - CreatedResult
-           
+            return Ok(result);                        
+
         }
 
         // https://localhost:XXXXX/api/course/theme/id/tag/id
@@ -139,7 +138,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddTagToTheme(int themeId, int tagId)
         {
             var result = _courseService.AddTagToTheme(themeId, tagId);
-            return Ok();                                                        //statusCode 201 - Created
+            return Ok();                                                      
         }
 
         // https://localhost:XXXXX/api/course/theme/id/

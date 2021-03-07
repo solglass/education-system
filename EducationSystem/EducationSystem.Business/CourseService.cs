@@ -121,11 +121,16 @@ namespace EducationSystem.Business
 
 
 
-        public int DeleteTheme(int id)  //  should remove all connections many-to-many
-        {         
-            return _courseRepo.DeleteTheme(id);
+        public int DeleteTheme(int id)  
+        {
+            var isDeleted = true;       
+            return _courseRepo.DeleteOrRecoverTheme(id, isDeleted);
         }
-
+        public int RecoverTheme(int id)
+        {
+            var isDeleted = false;
+            return _courseRepo.DeleteOrRecoverTheme(id, isDeleted);
+        }
         public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
         {
             return _courseRepo.GetUncoveredThemesByGroupId(id);
