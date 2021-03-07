@@ -15,7 +15,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:50221/api/course/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+   // [Authorize]
     public class CourseController : ControllerBase
     {
         private ICourseService _courseService;
@@ -28,7 +28,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:50221/api/course/
         [HttpGet]
-        public ActionResult GetCourses()
+        public ActionResult<List<CourseOutputModel>> GetCourses()
         {
             List<CourseOutputModel> courses;
             try
@@ -44,7 +44,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:50221/api/course/id
        [HttpGet("{id}")]
-       public ActionResult GetCourse(int id)       
+       public ActionResult<CourseOutputModel> GetCourse(int id)       
         {
             CourseOutputModel course;
             try
