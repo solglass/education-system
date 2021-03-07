@@ -8,7 +8,8 @@ begin
 		c.Duration,
 		t.Id,
 		t.Name
-	from dbo.Course c left join dbo.Course_Theme ct on ct.CourseID = c.Id
+	from dbo.Course c 
+		left join dbo.Course_Theme ct on ct.CourseID = c.Id
 		left join dbo.Theme t on   ct.ThemeID=t.Id
-	where c.IsDeleted=0
+	where c.IsDeleted=0 and t.IsDeleted=0
 end
