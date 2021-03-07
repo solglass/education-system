@@ -25,7 +25,6 @@ namespace EducationSystem.API
             CreateMap<PaymentDto, PaymentOutputModel>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<AttendanceUpdateInputModel, AttendanceDto>();
-
             CreateMap<HomeworkDto, HomeworkOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)));
@@ -39,17 +38,23 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TagDto, TagOutputModel>();
+
+            CreateMap<ThemeInputModel, ThemeDto>()
+                .ForMember(dest=>dest.Tags, opts=>opts.MapFrom(src=>src.TagIds.ConvertAll<TagDto>(t=> new TagDto { Id = t })));
             CreateMap<ThemeDto, ThemeOutputModel>();
+
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
             CreateMap<AttachmentInputModel, AttachmentDto>()
                 .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => (AttachmentType)src.AttachmentTypeId));
-
             CreateMap<LessonInputModel, LessonDto>();
             CreateMap<LessonDto, LessonOutputModel>()
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
-            CreateMap<CourseDto, CourseOutputModel>();
-            CreateMap<CourseInputModel, CourseDto>();
+
+            CreateMap<CourseDto, CourseOutputModel>();   
+            CreateMap<CourseInputModel, CourseDto>()
+                .ForMember(dest=>dest.Themes, opts=>opts.MapFrom(src=>src.ThemeIds.ConvertAll<ThemeDto>(t=>new ThemeDto { Id = t })));
+
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
             CreateMap<MaterialInputModel, MaterialDto>();
 
