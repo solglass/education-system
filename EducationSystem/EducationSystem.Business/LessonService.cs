@@ -77,19 +77,41 @@ namespace EducationSystem.Business
         public void DeleteAttendance(int id)
         {
             _lessonRepository.DeleteAttendance(id);
-        }
+        }
+
         public LessonThemeDto GetLessonThemeById(int id)
         {
             return _lessonRepository.GetLessonThemeById(id);
-        }
-        public int AddAttendance(AttendanceDto attendance)        {            return _lessonRepository.AddAttendance(attendance);        }
-        public int UpdateAttendance(AttendanceDto attendance)        {            return _lessonRepository.UpdateAttendance(attendance);        }        public int AddLessonTheme(LessonThemeDto lessonTheme)        {            return _lessonRepository.AddLessonTheme(lessonTheme);        }
-        public List<LessonDto> GetLessonsByThemeId(int themeId)        {            return _lessonRepository.GetLessonsByThemeId(themeId);        }
+        }
+
+        public int AddAttendance(AttendanceDto attendance)
+        {
+            return _lessonRepository.AddAttendance(attendance);
+        }
+
+        public int UpdateAttendance(AttendanceDto attendance)
+        {
+            return _lessonRepository.UpdateAttendance(attendance);
+        }
+
+        public int AddLessonTheme(LessonThemeDto lessonTheme)
+        {
+            return _lessonRepository.AddLessonTheme(lessonTheme);
+        }
+
+        public List<LessonDto> GetLessonsByThemeId(int themeId)
+        {
+            return _lessonRepository.GetLessonsByThemeId(themeId);
+        }
+
         public int DeleteLessonTheme(int lessonId, int themeId)
         {
             return _lessonRepository.DeleteLessonTheme(lessonId, themeId);
         }
 
-        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
-        {            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);        }    }
+        public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
+        {
+            return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
+        }
+    }
 }
