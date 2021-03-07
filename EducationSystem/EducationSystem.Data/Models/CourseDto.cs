@@ -10,7 +10,7 @@ namespace EducationSystem.Data.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int Duration { get; set; }
-        public Nullable<bool> IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
 
 

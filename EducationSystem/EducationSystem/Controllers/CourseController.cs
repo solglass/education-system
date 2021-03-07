@@ -90,7 +90,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddThemeToCourse(int courseId, int themeId)
         {
             int result = _courseService.AddThemeToCourse(courseId, themeId);
-            return Ok();                                                       
+            return NoContent();                                                       
         }
 
         // https://localhost:XXXXX/api/course/3/theme/8
@@ -138,7 +138,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddTagToTheme(int themeId, int tagId)
         {
             var result = _courseService.AddTagToTheme(themeId, tagId);
-            return Ok();                                                      
+            return NoContent();                                                      
         }
 
         // https://localhost:XXXXX/api/course/theme/id/
