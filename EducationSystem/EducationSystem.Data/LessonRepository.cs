@@ -178,7 +178,7 @@ namespace EducationSystem.Data
             return _connection
                  .QuerySingleOrDefault<int>(
                  "dbo.Attendance_Add",
-                 new { attendance.LessonID, attendance.UserID, attendance.IsAbsent },
+                 new { LessonId = attendance.Lesson.Id, UserId = attendance.User.Id, attendance.IsAbsent },
                  commandType: CommandType.StoredProcedure);
         }
         public int DeleteAttendance(int id)
