@@ -6,10 +6,10 @@ namespace EducationSystem.Data
     public interface IPaymentRepository
     {
         List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo);
+        PaymentDto GetPaymentById(int id);              
+        List<UserDto> GetStudentsNotPaidInMonth(string period);
         List<PaymentDto> GetPaymentsByUserId(int id);
-        PaymentDto GetPaymentById(int id);
         List<PaymentDto> GetPaymentByContractNumber(int contractNumber);
-        List<UserDto> GetStudentsByIsPaidInPeriod(string period);
         int AddPayment(PaymentDto payment);
         int UpdatePayment(PaymentDto payment);
         int DeletePayment(int id);

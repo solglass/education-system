@@ -14,7 +14,7 @@ namespace EducationSystem
     public class Startup
     {
         public Startup(IWebHostEnvironment env)
-        {           
+        {
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json");
             if (!env.IsProduction())
@@ -30,7 +30,12 @@ namespace EducationSystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AuthentificationConfigExtention();
-            services.AddControllers();
+            services
+                .AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                });
             services.SwaggerExtention();
             services.RegistrateServicesConfig();
             services.AddAutoMapper(typeof(Startup));

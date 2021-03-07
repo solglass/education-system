@@ -12,13 +12,14 @@ using EducationSystem.Business;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
+using EducationSystem.Core.CustomExceptions;
 
 namespace EducationSystem.Controllers
 {
     // https://localhost:50221/api/group/
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class GroupController : ControllerBase
     {
 
@@ -77,9 +78,12 @@ namespace EducationSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Админ, Менеджер")]
+        //[Authorize(Roles = "Админ, Менеджер")]
         public ActionResult AddNewGroup([FromBody] GroupInputModel group)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
             var groupDto = _groupMapper.ToDto(group);
             var result = _service.AddGroup(groupDto);
             return Ok($"Группа #{result} добавлена");
@@ -203,7 +207,7 @@ namespace EducationSystem.Controllers
         }
 
         [HttpGet("uncovered-themes")]
-       // [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult GetUncoveredThemesByGroupId(int id)
         {
             var result = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetUncoveredThemesByGroupId(id));
