@@ -13,12 +13,14 @@ using Microsoft.AspNetCore.Authorization;
 using EducationSystem.Business;
 using AutoMapper;
 using EducationSystem.API.Models.OutputModels;
+using System.Net;
 
 namespace EducationSystem.Controllers
 {
     // https://localhost:50221/api/tag/
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TagController : ControllerBase
     {
         private ITagService _tagService;
@@ -31,26 +33,26 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/tag/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult AddTag([FromBody] TagInputModel tag)
+        public ActionResult<TagOutputModel> AddTag([FromBody] TagInputModel tag)
         {
             var tagDto = _mapper.Map<TagDto>(tag);
-            var result= _tagService.AddTag(tagDto);
-            return Ok($"Тег№{result} добавлен");
+            var id= _tagService.AddTag(tagDto);
+           var result= _mapper.Map<TagOutputModel>(_tagService.GetTagById(id));
+            return Ok(result);
         }
         // https://localhost:50221/api/tag
         [HttpGet]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
-        public ActionResult GetTags()
+        public ActionResult<List<TagOutputModel>> GetTags()
         {
             var tagsDtos = _tagService.GetTags();
-           
             var tags = _mapper.Map<List<TagOutputModel>>(tagsDtos);
             return Ok(tags);
         }
         // https://localhost:50221/api/tag/3
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
-        public ActionResult GetTag(int id)
+        public ActionResult<TagOutputModel> GetTag(int id)
         {
             var tagDto = _tagService.GetTagById(id);
             var tag = _mapper.Map<TagOutputModel>(tagDto);
@@ -59,20 +61,24 @@ namespace EducationSystem.Controllers
         //https://localhost:50221/api/tag/3
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult UpdateTag(int id, [FromBody] TagInputModel tag)
+        public ActionResult<TagOutputModel> UpdateTag(int id, [FromBody] TagInputModel tag)
         {
             var tagDto = _mapper.Map<TagDto>(tag);
             tagDto.Id = id;
-            _tagService.UpdateTag(tagDto);          
-            return Ok("Tag обновлён");
+            _tagService.UpdateTag(tagDto);
+            var result = _mapper.Map<TagOutputModel>(_tagService.GetTagById(id));
+            return Ok(result);
         }
         //https://localhost:50221/api/tag/3
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteTag(int id)
         {
-            _tagService.DeleteTag(id);
-            return Ok("Tag удалён");
+            var result=_tagService.DeleteTag(id);
+            if (result == 1)
+                return new NoContentResult();
+            else
+                return Problem("Возникла ошибка при удалении тега");
         }
     }
 }
