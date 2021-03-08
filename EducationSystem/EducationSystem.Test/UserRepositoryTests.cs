@@ -7,21 +7,19 @@ using System.Globalization;
 
 namespace EducationSystem.Data.Tests
 {
-    public class UserTests
+    public class UserTests : BaseTest
     {
-        private List<int> _userId;
-        private List<int> _roleId;
-        private List<int> _userRoleId;
+        private List<int> _addedUserDtoIds;
 
         private UserRepository _uRepo;
-        private UserRepository uRepo;
+        private List<int> _addedRoleDtoIds;
+        private UserDto _userDtoMock;
 
         [SetUp]
         public void UserRepositoryTestsSetup()
         {
-            _userId = new List<int>();
-            _roleId = new List<int>();
-            _userRoleId = new List<int>();
+            _addedUserDtoIds = new List<int>();
+            _addedRoleDtoIds = new List<int>();
 
         }
 
@@ -31,13 +29,13 @@ namespace EducationSystem.Data.Tests
         {
             UserDto expected = GetMockUserAdd(dtoMockNumber);
             var added = _uRepo.AddUser(expected);
-            _userId.Add(added);
+            _addedUserDtoIds.Add(added);
             expected.Id = added;
 
-            if (_userId.Count == 0) { Assert.Fail("User addition failed"); }
+            if (_addedUserDtoIds.Count == 0) { Assert.Fail("User addition failed"); }
             else
             {
-                UserDto actual = _uRepo.GetUserById(_userId[_userId.Count - 1]);
+                UserDto actual = _uRepo.GetUserById(_addedUserDtoIds[_addedUserDtoIds.Count - 1]);
                 Assert.AreEqual(expected, actual);
             }
         }
@@ -62,11 +60,11 @@ namespace EducationSystem.Data.Tests
         public void UserUpdate(int dtoMockNumber)
         {
             UserDto expected = GetMockUserAdd(dtoMockNumber);
-            _userId.Add(_uRepo.AddUser(expected));
-            if (_userId.Count == 0) { Assert.Fail("User addition failed"); }
+            _addedUserDtoIds.Add(_uRepo.AddUser(expected));
+            if (_addedUserDtoIds.Count == 0) { Assert.Fail("User addition failed"); }
             else
             {
-                int newId = _userId[_userId.Count - 1];
+                int newId = _addedUserDtoIds[_addedUserDtoIds.Count - 1];
                 expected.Id = newId;
                 _uRepo.UpdateUser(expected);
                 UserDto actual = _uRepo.GetUserById(newId);
