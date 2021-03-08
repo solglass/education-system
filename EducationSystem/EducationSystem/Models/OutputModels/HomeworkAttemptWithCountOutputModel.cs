@@ -12,7 +12,6 @@ namespace EducationSystem.API.Models.OutputModels
     public int CountAttachments { get; set; }
     public int CountComments { get; set; }
     public HomeworkOutputModel Homework { get; set; }
-    public AuthorOutputModel AuthorAttachment { get; set; }
 
   }
 }

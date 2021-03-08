@@ -10,7 +10,6 @@ namespace EducationSystem.Business
         int AddHomework_Theme(int homeworkId, int themeId);
         int DeleteHomework(int id);
         int DeleteHomeworkAttempt(int id);
-        int DeleteHomeworkAttemptAttachment(int homeworkAttemptId, int attachmentId);
         int DeleteHomework_Theme(int homeworkId, int themeId);
         CommentDto GetCommentById(int id);
         List<CommentDto> GetComments();
@@ -27,5 +26,10 @@ namespace EducationSystem.Business
         int RecoverComment(int id);
         int RecoverHomework(int id);
         int RecoverHomeworkAttempt(int id);
+        HomeworkAttemptDto GetHomeworkAttemptById(int id);
+        int AddComment(CommentDto comment);
+        int UpdateComment(CommentDto comment);
+        int AddHomeworkTag(HomeworkTagDto homeworkTagDto);
+        int DeleteHomeworkTag(int homeworkId, int tagId);
     }
 }

@@ -7,9 +7,8 @@ namespace EducationSystem.API.Models.InputModels
 {
     public class CommentInputModel
     {
-        public int Id { get; set; }
-        public int HomeworkAttemptId { get; set; }
-        public string Message { get; set; }
         public int AuthorId { get; set; }
+        public string Message { get; set; }
+        public List<AttachmentInputModel> Attachments { get; set; }
     }
 }

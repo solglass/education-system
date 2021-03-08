@@ -2,10 +2,13 @@
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
+using EducationSystem.API.Utils;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,9 +19,15 @@ namespace EducationSystem.API
         private const string _dateFormat = "dd.MM.yyyy";
         public AutomapperConfig()
         {
-            CreateMap<UserInputModel, UserDto>();
+            CreateMap<UserInputModel, UserDto>()
+               .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None)))
+               .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.RoleIds.ConvertAll<Enum>(c=>(Role)c)));
+            CreateMap<UserDto, AuthorOutputModel>();
             CreateMap<UserDto, UserOutputModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
+            CreateMap<PaymentInputModel, PaymentDto>();
+            CreateMap<PaymentDto, PaymentOutputModel>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
             CreateMap<AttendanceUpdateInputModel, AttendanceDto>();
             CreateMap<HomeworkDto, HomeworkOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
@@ -27,19 +36,71 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)))
                 .ForMember(dest=> dest.GroupId, opts => opts.MapFrom(src => src.Group.Id));
-            CreateMap<GroupInputModel, GroupDto>();
-            CreateMap<GroupDto, GroupOutputModel>()
+
+            CreateMap<GroupInputModel, GroupDto>()
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToJustDateTime(src.StartDate)))
+                .ForMember(dest => dest.Course, opts => opts.MapFrom(src => new CourseDto() { Id = src.CourseId }))
+                .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src => (GroupStatus)src.GroupStatusId));
+
+           CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
+            CreateMap<TagInputModel, TagDto>();
             CreateMap<TagDto, TagOutputModel>();
+
+            CreateMap<ThemeInputModel, ThemeDto>()
+                .ForMember(dest=>dest.Tags, opts=>opts.MapFrom(src=>src.TagIds.ConvertAll<TagDto>(t=> new TagDto { Id = t })));
             CreateMap<ThemeDto, ThemeOutputModel>();
-            CreateMap<LessonInputModel,LessonDto>();
+
+            CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
+                .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
+            CreateMap<AttachmentInputModel, AttachmentDto>()
+                .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => (AttachmentType)src.AttachmentTypeId));
+            CreateMap<LessonInputModel, LessonDto>();
             CreateMap<LessonDto, LessonOutputModel>()
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
-            CreateMap<CourseDto, CourseOutputModel>();
-            CreateMap<CourseInputModel, CourseDto>();
+
+            CreateMap<CourseDto, CourseOutputModel>();   
+            CreateMap<CourseInputModel, CourseDto>()
+                .ForMember(dest=>dest.Themes, opts=>opts.MapFrom(src=>src.ThemeIds.ConvertAll<ThemeDto>(t=>new ThemeDto { Id = t })));
+
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
+
+      CreateMap<GroupReportDto, GroupReportOutputModel>()
+          .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+          .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
+
+      CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
             CreateMap<MaterialInputModel, MaterialDto>();
+
+            CreateMap<HomeworkInputModel, HomeworkDto>()
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
+                .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.DeadlineDate)))
+                .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupDto() { Id = src.GroupId }))
+               .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })))
+               .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
+
+            CreateMap<HomeworkUpdateInputModel, HomeworkDto>()
+               .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
+               .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.DeadlineDate)))
+               .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })))
+               .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
+
+            CreateMap<CommentDto, CommentOutputModel>();
+            CreateMap<CommentInputModel, CommentDto>()
+                .ForMember(dest => dest.Author, opts => opts.MapFrom(src => new UserDto() { Id = src.AuthorId }));
+
+            CreateMap<CommentUpdateInputModel, CommentDto>();
+
+            CreateMap<AttachmentDto, AttachmentOutputModel>()
+                .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyAttachmentTypeName(src.AttachmentType)));
+            CreateMap<HomeworkAttemptInputModel, HomeworkAttemptDto>()
+                .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => (HomeworkAttemptStatus)src.HomeworkAttemptStatusId))
+                .ForMember(dest => dest.Author, opts => opts.MapFrom(src =>new UserDto() { Id = src.AuthorId }));
+
+            CreateMap<HomeworkAttemptWithCountDto, HomeworkAttemptWithCountOutputModel>()
+                .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
+
             CreateMap<MaterialDto, MaterialOutputModel>();
         }
     }

@@ -27,15 +27,28 @@ namespace EducationSystem.API.Mappers
                 throw new Exception("Ошибка! Неверный формат StartDate или DeadlineDate");
             }
 
-            return new HomeworkDto
+            var dto = new HomeworkDto
             {
-                Id = inputModel.Id,
                 Description = inputModel.Description,
-                Group =  new GroupDto { Id = inputModel.GroupId }, //TODO: Use GroupMapper here
+                Group = new GroupDto { Id = inputModel.GroupId }, //TODO: Use GroupMapper here
                 IsOptional = inputModel.IsOptional,
                 StartDate = startDate,
                 DeadlineDate = deadlineDate
             };
+
+            dto.Themes = new List<ThemeDto>();
+            inputModel.ThemeIds.ForEach(themeId =>
+            {
+                dto.Themes.Add(new ThemeDto() { Id = themeId });
+            });
+
+            dto.Tags = new List<TagDto>();
+            inputModel.ThemeIds.ForEach(tagId =>
+            {
+                dto.Tags.Add(new TagDto() { Id = tagId });
+            });
+
+            return dto;
         }
         public List<HomeworkDto> ToDtos(List<HomeworkInputModel> inputModels)
         {

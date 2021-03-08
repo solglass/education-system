@@ -11,77 +11,74 @@ using Microsoft.Extensions.Logging;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using EducationSystem.Business;
+using AutoMapper;
+using EducationSystem.API.Models.OutputModels;
+using System.Net;
 
 namespace EducationSystem.Controllers
 {
     // https://localhost:50221/api/tag/
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TagController : ControllerBase
     {
-        private ITagRepository _repo;
-        private TagMapper _tagMapper;
         private ITagService _tagService;
-
-        public TagController(ITagRepository tagRepository, ITagService tagService)
+        private readonly IMapper _mapper;
+        public TagController(ITagRepository tagRepository, ITagService tagService, IMapper mapper)
         {
-
-            _repo = tagRepository;
+            _mapper = mapper;
             _tagService = tagService;
         }
-
         // https://localhost:50221/api/tag/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult AddNewTag([FromBody] TagInputModel tag)
+        public ActionResult<TagOutputModel> AddTag([FromBody] TagInputModel tag)
         {
-            var tagDto = _tagMapper.ToDto(tag);
-            var result= _tagService.AddTag(tagDto);
-            return Ok($"Тег№{result} добавлен");
+            var tagDto = _mapper.Map<TagDto>(tag);
+            var id= _tagService.AddTag(tagDto);
+           var result= _mapper.Map<TagOutputModel>(_tagService.GetTagById(id));
+            return Ok(result);
         }
-
         // https://localhost:50221/api/tag
         [HttpGet]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
-        public ActionResult GetTags()
+        public ActionResult<List<TagOutputModel>> GetTags()
         {
-            var tags = _tagService.GetTags();
+            var tagsDtos = _tagService.GetTags();
+            var tags = _mapper.Map<List<TagOutputModel>>(tagsDtos);
             return Ok(tags);
         }
-
         // https://localhost:50221/api/tag/3
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
-        public ActionResult GetTag(int id)
+        public ActionResult<TagOutputModel> GetTag(int id)
         {
-            var tag = _tagService.GetTagById(id);
+            var tagDto = _tagService.GetTagById(id);
+            var tag = _mapper.Map<TagOutputModel>(tagDto);
             return Ok(tag);
         }
-
-        // https://localhost:50221/api/tag/3
+        //https://localhost:50221/api/tag/3
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult UpdateTag(int id, [FromBody] TagDto data)
+        public ActionResult<TagOutputModel> UpdateTag(int id, [FromBody] TagInputModel tag)
         {
-            _tagService.UpdateTag(id,data);
-            return Ok("Tag обновлён");
+            var tagDto = _mapper.Map<TagDto>(tag);
+            tagDto.Id = id;
+            _tagService.UpdateTag(tagDto);
+            var result = _mapper.Map<TagOutputModel>(_tagService.GetTagById(id));
+            return Ok(result);
         }
-
-        // https://localhost:50221/api/tag/3
+        //https://localhost:50221/api/tag/3
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteTag(int id)
         {
-            _tagService.DeleteTag(id);
-            return Ok("Tag удалён");
-        }
-        // https://localhost:50221/api/tag/4
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
-        public dynamic GetThemeTagById(int id)
-        {
-            var tag = _repo.GetThemeTagById(id);
-            return Ok(tag);
+            var result=_tagService.DeleteTag(id);
+            if (result == 1)
+                return new NoContentResult();
+            else
+                return Problem("Возникла ошибка при удалении тега");
         }
     }
 }

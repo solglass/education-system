@@ -191,8 +191,6 @@
     <Build Include="StoredProcedures\User\dbo.User_Update.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Add.sql" />
     <Build Include="StoredProcedures\User\dbo.User_HardDelete.sql" />
-    <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
-    <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Change_Password.sql" />
     <Build Include="StoredProcedures\User_Role\dbo.User_Role_Add.sql" />
     <Build Include="StoredProcedures\User_Role\dbo.User_Role_Delete.sql" />
@@ -260,6 +258,16 @@
     <Build Include="StoredProcedures\Student\Student_SelectByPercentOfSkip.sql" />
     <Build Include="StoredProcedures\Group_Material\Group_Material_SelectById.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectByTheme.sql" />
-    <Build Include="Scripts\InitialData.sql" />
+    <None Include="Scripts\InitialData.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\Theme\dbo.Theme_SoftDelete.sql" />
+    <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByPeriod.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
+    <Build Include="Scripts\UniqueConstraints.sql" />
+    <Build Include="StoredProcedures\Student\Student_SelectByPeriodAndIsNotPaid.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\PostDeployment.sql" />
   </ItemGroup>
 </Project>
