@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
+using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Controllers;
 using EducationSystem.Data;
@@ -22,13 +23,11 @@ namespace EducationSystem.Controllers
     public class MaterialController : ControllerBase
     {
 
-        private MaterialMapper _matMapper;
         private IMapper _mapper;
         private IMaterialService _service;
 
         public MaterialController(IMapper mapper, IMaterialService materialService)
         {
-            _matMapper = new MaterialMapper();
             _mapper = mapper;
             _service = materialService;
         }
@@ -38,7 +37,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialsByGroupId(int id)
         {
-            return Ok(_matMapper.FromDtos(_service.GetMaterialsByGroupId(id)));
+            return Ok(_mapper.Map<MaterialOutputModel>(_service.GetMaterialsByGroupId(id)));
 
         }
 
@@ -47,7 +46,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialsByTagId(int id)
         {
-            return Ok(_matMapper.FromDtos(_service.GetMaterialsByTagId(id)));
+            return Ok(_mapper.Map<MaterialOutputModel>(_service.GetMaterialsByTagId(id)));
         }
 
         // https://localhost:44365/api/material/2
@@ -55,7 +54,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult GetMaterialById(int id)
         {
-            return Ok(_matMapper.FromDto(_service.GetMaterialById(id)));
+            return Ok(_mapper.Map<MaterialOutputModel>(_service.GetMaterialById(id)));
         }
 
         // https://localhost:44365/api/material
@@ -63,7 +62,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
-            _service.AddMaterial(_matMapper.ToDto(materialInputModel));
+            _service.AddMaterial(_mapper.Map<MaterialDto>(materialInputModel));
             return Ok("Материалы добавлены");
         }
 
