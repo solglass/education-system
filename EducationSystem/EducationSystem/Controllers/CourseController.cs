@@ -15,7 +15,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:50221/api/course/
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class CourseController : ControllerBase
     {
         private ICourseService _courseService;
@@ -36,51 +36,51 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:50221/api/course/id
        [HttpGet("{id}")]
-       public ActionResult<CourseOutputModel> GetCourse(int id)       
+       public ActionResult<CourseExtendedOutputModel> GetCourse(int id)       
         {
-            var  course = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
+            var  course = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
             return Ok(course);
         }
 
         // https://localhost:50221/api/course/
         [HttpPost]
        [Authorize(Roles ="Админ, Менеджер, Методист")]
-        public ActionResult<CourseOutputModel> CreateCourse([FromBody] CourseInputModel course)    
+        public ActionResult<CourseExtendedOutputModel> CreateCourse([FromBody] CourseInputModel course)    
         {
             var id = _courseService.AddCourse(_mapper.Map<CourseDto>(course));
-            var result = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
+            var result = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
             return Ok(result);                        
         }
 
         // https://localhost:50221/api/course/id
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult<CourseOutputModel> UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
+        public ActionResult<CourseExtendedOutputModel> UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
         {
             var courseDto = _mapper.Map<CourseDto>(course);
             courseDto.Id = id;
             var result = _courseService.UpdateCourse(courseDto);
-            var updateResult = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
+            var updateResult = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
             return Ok(updateResult);
         }
 
         // https://localhost:50221/api/course/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult<CourseOutputModel> DeleteCourse(int id)
+        public ActionResult<CourseExtendedOutputModel> DeleteCourse(int id)
         {
             var result = _courseService.DeleteCourse(id);
-            var deleteResult = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
+            var deleteResult = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
             return Ok(deleteResult);
         }
 
         // https://localhost:XXXXX/api/course/id/recovery
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult<CourseOutputModel> RecoverCourse(int id)
+        public ActionResult<CourseExtendedOutputModel> RecoverCourse(int id)
         {
             var result = _courseService.RecoverCourse(id);
-            var recoverResult = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
+            var recoverResult = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
             return Ok(recoverResult);
         }
 
@@ -114,9 +114,9 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/id
         [HttpGet("theme/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult<ThemeOutputModel> GetThemeById(int id)
+        public ActionResult<ThemeExtendedOutputModel> GetThemeById(int id)
         {
-            var theme = _mapper.Map<ThemeOutputModel>(_courseService.GetThemeById(id));
+            var theme = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
             return Ok(theme);
 
         }
@@ -124,10 +124,10 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/
         [HttpPost("theme")]
        [Authorize(Roles = "Админ, Методист, Преподаватель")]
-        public ActionResult<ThemeOutputModel> CreateTheme([FromBody] ThemeInputModel inputModel)
+        public ActionResult<ThemeExtendedOutputModel> CreateTheme([FromBody] ThemeInputModel inputModel)
         {
             var  id = _courseService.AddTheme(_mapper.Map<ThemeDto>(inputModel));
-            var result = _mapper.Map<ThemeOutputModel>(_courseService.GetThemeById(id));
+            var result = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
             return Ok(result);                        
 
         }
@@ -144,19 +144,19 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/id/
         [HttpDelete("theme/{id}")]
         [Authorize(Roles = "Админ, Методист, Преподаватель")]
-        public ActionResult<ThemeOutputModel> DeleteTheme(int id)
+        public ActionResult<ThemeExtendedOutputModel> DeleteTheme(int id)
         {
             var result = _courseService.DeleteTheme(id);
-            var deleteResult = _mapper.Map<ThemeOutputModel>(_courseService.GetThemeById(id));
+            var deleteResult = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
             return Ok(deleteResult);
         }
 
         [HttpPut("theme/{id}")]
         [Authorize(Roles = "Админ, Методист, Преподаватель")]
-        public ActionResult<ThemeOutputModel> RecoverTheme(int id)
+        public ActionResult<ThemeExtendedOutputModel> RecoverTheme(int id)
         {
             var result = _courseService.RecoverTheme(id);
-            var recoverResult = _mapper.Map<ThemeOutputModel>(_courseService.GetThemeById(id));
+            var recoverResult = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
             return Ok(recoverResult);
         }
     }

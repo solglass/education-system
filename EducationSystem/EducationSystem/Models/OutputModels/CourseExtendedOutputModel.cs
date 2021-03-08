@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Models.OutputModels
 {
-    public class ThemeOutputModel
+    public class CourseExtendedOutputModel: CourseOutputModel
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public List<TagOutputModel> Tags { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

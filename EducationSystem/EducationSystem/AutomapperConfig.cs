@@ -42,6 +42,7 @@ namespace EducationSystem.API
             CreateMap<ThemeInputModel, ThemeDto>()
                 .ForMember(dest=>dest.Tags, opts=>opts.MapFrom(src=>src.TagIds.ConvertAll<TagDto>(t=> new TagDto { Id = t })));
             CreateMap<ThemeDto, ThemeOutputModel>();
+            CreateMap<ThemeDto, ThemeExtendedOutputModel>();
 
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
@@ -51,7 +52,8 @@ namespace EducationSystem.API
             CreateMap<LessonDto, LessonOutputModel>()
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
 
-            CreateMap<CourseDto, CourseOutputModel>();   
+            CreateMap<CourseDto, CourseExtendedOutputModel>();
+            CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>()
                 .ForMember(dest=>dest.Themes, opts=>opts.MapFrom(src=>src.ThemeIds.ConvertAll<ThemeDto>(t=>new ThemeDto { Id = t })));
 
@@ -86,6 +88,7 @@ namespace EducationSystem.API
             CreateMap<HomeworkAttemptWithCountDto, HomeworkAttemptWithCountOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
 
+            
         }
     }
 }
