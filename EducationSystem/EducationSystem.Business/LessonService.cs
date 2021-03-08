@@ -51,9 +51,9 @@ namespace EducationSystem.Business
         {
             return _lessonRepository.GetFeedbackById(id);
         }
-        public void DeleteFeedback(int id)
+        public int DeleteFeedback(int id)
         {
-            _lessonRepository.DeleteFeedback(id);
+            return _lessonRepository.DeleteFeedback(id);
         }
 
         public int AddFeedback(FeedbackDto feedback)
@@ -74,9 +74,9 @@ namespace EducationSystem.Business
         {
             return _lessonRepository.GetAttendanceById(id);
         }
-        public void DeleteAttendance(int id)
+        public int DeleteAttendance(int id)
         {
-            _lessonRepository.DeleteAttendance(id);
+            return _lessonRepository.DeleteAttendance(id);
         }
 
         public LessonThemeDto GetLessonThemeById(int id)
