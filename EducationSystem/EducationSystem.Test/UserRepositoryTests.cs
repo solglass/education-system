@@ -10,16 +10,13 @@ namespace EducationSystem.Data.Tests
     public class UserTests : BaseTest
     {
         private List<int> _addedUserDtoIds;
-
         private UserRepository _uRepo;
-        private List<int> _addedRoleDtoIds;
         private UserDto _userDtoMock;
 
         [SetUp]
         public void UserRepositoryTestsSetup()
         {
             _addedUserDtoIds = new List<int>();
-            _addedRoleDtoIds = new List<int>();
 
         }
 
@@ -182,5 +179,16 @@ namespace EducationSystem.Data.Tests
         //            throw new Exception();
         //    }
         //}
+
+
+        public static class MockGetter
+        {
+            public static UserDto GetSampleDtoMock(int id)
+            {
+                // switch
+                return new UserDto();
+            }
+
+        }
     }
 }
