@@ -251,7 +251,7 @@ namespace EducationSystem.Controllers
         //[Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult GetStudentsByPercentOfSkip(int percent, int groupId)
         {
-            return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
+            return Ok(/*_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId))*/);
             //return Ok(_lessonService.GetStudentByPercentOfSkip(percent, groupId));
         }
     }
