@@ -70,6 +70,12 @@ namespace EducationSystem.Business
         {
             return _lessonRepository.GetAttendancesByLessonId(id);
         }
+
+        public List<AttendanceDto> GetAttendancesByUserId(int id)
+        {
+            return _lessonRepository.GetAttendancesByUserId(id);
+        }
+
         public AttendanceDto GetAttendanceById(int id)
         {
             return _lessonRepository.GetAttendanceById(id);

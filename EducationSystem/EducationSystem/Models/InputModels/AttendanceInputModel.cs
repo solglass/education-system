@@ -7,7 +7,6 @@ namespace EducationSystem.API.Models.InputModels
 {
     public class AttendanceInputModel
     {
-        public int LessonId { get; set; }
         public int UserId { get; set; }
         public bool IsAbsent { get; set; }
         public string ReasonOfAbsence { get; set; }
