@@ -16,16 +16,14 @@ namespace EducationSystem.Business
         LessonDto GetLessonById(int id);
         List<LessonDto> GetLessonsByGroupId(int id);
         List<LessonDto> GetLessonsByThemeId(int themeId);
-        LessonThemeDto GetLessonThemeById(int id);
-        int UpdateAttendance(AttendanceDto attendance);
+        int UpdateAttendance(int lessonId, int attendanceId, AttendanceDto attendance);
         List<AttendanceReportDto> GetStudentByPercentOfSkip(int percent, int groupId);
         int DeleteLesson(int id);
         int RecoverLesson(int id);
         int UpdateLesson(LessonDto lesson);
-        int AddFeedback(FeedbackDto feedback);
-        int UpdateFeedback(FeedbackDto feedback);
-        int AddAttendance(AttendanceDto attendance);
-        int AddLessonTheme(LessonThemeDto lessonTheme);
+        int AddFeedback(int lessonId, FeedbackDto feedback);
+        int UpdateFeedback(int lessonId, int feedbackId, FeedbackDto feedback);
+        int AddAttendance(int lessonId, AttendanceDto attendance);
         int DeleteLessonTheme(int lessonId, int themeId);
     }
 }

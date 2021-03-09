@@ -79,7 +79,6 @@
     <Folder Include="StoredProcedures\GroupStatus" />
     <Folder Include="StoredProcedures\Group_Material" />
     <Folder Include="StoredProcedures\Lesson" />
-    <Folder Include="StoredProcedures\Lesson_Theme" />
     <Folder Include="StoredProcedures\Material" />
     <Folder Include="StoredProcedures\Material_Tag" />
     <Folder Include="StoredProcedures\Payment" />
@@ -223,9 +222,6 @@
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByHomeworkId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Add.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByGroupId.sql" />
-    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Add.sql" />
-    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Delete.sql" />
-    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_SelectByID.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Add.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Delete.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Search.sql" />
@@ -268,6 +264,7 @@
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPeriodAndIsNotPaid.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByThemeId.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />

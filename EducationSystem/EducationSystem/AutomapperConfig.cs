@@ -73,14 +73,10 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupDto() { Id = src.Group.Id}));
 
             CreateMap<FeedbackInputModel, FeedbackDto>()
-                .ForMember(dest => dest.Lesson, opts => opts.MapFrom(src => new LessonDto() { Id = src.LessonId }))
                 .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto() { Id = src.UserId }))
                 .ForMember(dest => dest.UnderstandingLevel, opts => opts.MapFrom(src => (UnderstandingLevel)src.UnderstandingLevelId));
             CreateMap<FeedbackDto, FeedbackOutputModel>()
                 .ForMember(dest => dest.UnderstandingLevel, opts=>opts.MapFrom(src=>FriendlyNames.GetFriendlyUnderstandingLevelName(src.UnderstandingLevel)));
-
-            CreateMap<LessonThemeDto, LessonThemeOutputModel>();
-            CreateMap<LessonThemeInputModel, LessonThemeDto>();
 
             CreateMap<AttendanceDto, AttendanceOutputModel>()
                 .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto()
