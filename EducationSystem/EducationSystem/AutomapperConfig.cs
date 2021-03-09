@@ -100,6 +100,8 @@ namespace EducationSystem.API
 
             CreateMap<HomeworkAttemptWithCountDto, HomeworkAttemptWithCountOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
+            CreateMap<AttachmentInputModel, AttachmentDto>()
+                
 
         }
     }

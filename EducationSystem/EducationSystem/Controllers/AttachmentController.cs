@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+using EducationSystem.Data.Models;
 
 namespace EducationSystem.API.Controllers
 {
@@ -18,21 +20,20 @@ namespace EducationSystem.API.Controllers
     public class AttachmentController : ControllerBase
     {  
         private IAttachmentService _service;
-        private AttachmentMapper _attachmentMapper;
+        private IMapper _mapper;
 
-        public AttachmentController(IAttachmentService attachmentService)
+        public AttachmentController(IAttachmentService attachmentService, IMapper mapper)
         {
             _service = attachmentService;
-            _attachmentMapper = new AttachmentMapper();
+            _mapper = mapper;
         }
 
         // https://localhost:44365/api/attachment/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
-        {
-            var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
-            var result = _service.AddAttachment(attachmentDto);
+        {      
+            var result = _service.AddAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel));
             return Ok($"Вложение #{result} добавлено");
         }
 
@@ -45,7 +46,7 @@ namespace EducationSystem.API.Controllers
            var attachment = new AttachmentOutputModel();
             try
             {
-                attachment = _attachmentMapper.FromDto(_service.GetAttachmentById(id));
+                attachment = _mapper.Map<AttachmentOutputModel>(_service.GetAttachmentById(id));
             }
             catch (Exception ex)
             {
@@ -61,7 +62,7 @@ namespace EducationSystem.API.Controllers
         {
             try
             {
-                _service.ModifyAttachment(_attachmentMapper.ToDto(attachmentInputModel, id));
+                _service.ModifyAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel), id);
             }
             catch (Exception ex)
             {
@@ -84,8 +85,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
         {
-            var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
-            var result = _service.AddAttachmentToComment(attachmentDto, commentId);
+            var result = _service.AddAttachmentToComment(_mapper.Map<AttachmentDto>(attachmentInputModel), commentId);
             return Ok($"Вложение #{result} добавлено к комментарию #{commentId}");
         }
 
@@ -93,9 +93,8 @@ namespace EducationSystem.API.Controllers
         [HttpPost("homeworkAttempt/{homeworkAttemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachmentToHomeworkAttempt([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
-        {
-            var attachmentDto = _attachmentMapper.ToDto(attachmentInputModel);
-            var result = _service.AddAttachmentToHomeworkAttempt(attachmentDto, 
+        {         
+            var result = _service.AddAttachmentToHomeworkAttempt(_mapper.Map<AttachmentDto>(attachmentInputModel), 
                 homeworkAttemptId);
            return Ok($"Вложение #{result} добавлено к попытке сдачи #{homeworkAttemptId}");
         }
