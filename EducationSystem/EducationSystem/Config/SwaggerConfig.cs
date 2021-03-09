@@ -2,7 +2,9 @@
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace EducationSystem.API.Config
@@ -14,6 +16,9 @@ namespace EducationSystem.API.Config
             services.AddSwaggerGen(swagger =>
             {
                 swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "EducationSystem" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                swagger.IncludeXmlComments(xmlPath);
                 swagger.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
