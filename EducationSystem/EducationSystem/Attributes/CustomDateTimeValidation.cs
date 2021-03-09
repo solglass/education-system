@@ -13,8 +13,12 @@ namespace EducationSystem.API.Attributes
         private const string _dateFormat = "dd.MM.yyyy";
         public override bool IsValid(object value)
         {
-            DateTime dt;
-            return DateTime.TryParseExact((string)value, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result);           
+            return DateTime.TryParseExact(
+                (string)value,
+                _dateFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime result);           
         }
     }
 }

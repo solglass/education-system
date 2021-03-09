@@ -46,7 +46,6 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        //todo: the model is not filled in.
         // https://localhost:44365/api/homework/42
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]

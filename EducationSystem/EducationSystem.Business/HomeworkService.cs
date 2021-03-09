@@ -9,13 +9,17 @@ namespace EducationSystem.Business
         private IHomeworkRepository _homeworkRepository;
         private IHomeworkAttemptRepository _homeworkAttemptRepository;
         private ITagRepository _tagRepository;
+        private IGroupRepository _groupRepository;
+
         public HomeworkService(IHomeworkRepository homeworkRepository,
             IHomeworkAttemptRepository homeworkAttemptRepository,
-            ITagRepository tagRepository)
+            ITagRepository tagRepository,
+            IGroupRepository groupRepository)
         {
             _tagRepository = tagRepository;
             _homeworkRepository = homeworkRepository;
             _homeworkAttemptRepository = homeworkAttemptRepository;
+            _groupRepository = groupRepository;
         }
 
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
@@ -36,6 +40,8 @@ namespace EducationSystem.Business
         public HomeworkDto GetHomeworkById(int id)
         {
             var result = _homeworkRepository.GetHomeworkById(id);
+            result.Group = _groupRepository.GetGroupById(result.Group.Id);
+            result.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(id);
             return result;
         }
 

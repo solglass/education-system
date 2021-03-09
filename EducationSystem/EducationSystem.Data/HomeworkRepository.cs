@@ -503,6 +503,7 @@ namespace EducationSystem.Data
                 new { AttemptId = id },
                 splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
             return result;
         }
