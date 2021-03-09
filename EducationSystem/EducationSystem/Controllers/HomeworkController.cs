@@ -55,7 +55,8 @@ namespace EducationSystem.API.Controllers
             return Ok(results);
         }
 
-        //todo: doesn't work. Error in GetCommentsByHomeworkAttemptId
+        // todo: doesn't work. Error in GetCommentsByHomeworkAttemptId
+        // still doesnt work
         // https://localhost:44365/api/homework/2/attempts
         [HttpGet("{id}/attempts")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
@@ -95,12 +96,15 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        //todo: Automapper doesn't work
         // https://localhost:44365/api/homework/42
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult UpdateHomework(int id, [FromBody] HomeworkUpdateInputModel homework)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var dto = _mapper.Map<HomeworkDto>(homework);
             dto.Id = id;
             var result = _homeworkService.UpdateHomework(dto);
