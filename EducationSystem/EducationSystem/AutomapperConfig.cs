@@ -31,8 +31,7 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
 
             CreateMap<AttendanceInputModel, AttendanceDto>()
-                .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto() { Id = src.UserId }))
-                .ForMember(dest => dest.Lesson, opts => opts.MapFrom(src => new LessonDto() { Id = src.LessonId }));
+                .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto() { Id = src.UserId }));
 
             CreateMap<HomeworkDto, HomeworkOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))

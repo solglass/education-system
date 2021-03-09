@@ -212,6 +212,22 @@ namespace EducationSystem.Data
             return attendance;
         }
 
+        public List<AttendanceDto> GetAttendancesByUserId(int id)
+        {
+            var attendance = _connection.Query<AttendanceDto, UserDto, AttendanceDto>(
+            "dbo.Attendance_SelectByUserId",
+            (attendance, user) =>
+            {
+                attendance.User = user;
+                return attendance;
+            },
+            new { userId = id },
+            splitOn: "Id", commandType: CommandType.StoredProcedure)
+            .Distinct()
+            .ToList();
+            return attendance;
+        }
+
 
 
         public AttendanceDto GetAttendanceById(int id)

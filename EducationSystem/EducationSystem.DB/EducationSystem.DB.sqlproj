@@ -267,6 +267,7 @@
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByLessonId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPeriodAndIsNotPaid.sql" />
+    <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByUserId.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
