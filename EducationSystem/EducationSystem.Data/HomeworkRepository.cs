@@ -482,7 +482,7 @@ namespace EducationSystem.Data
         public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
-            var result = _connection.Query<CommentDto, UserDto, AttachmentDto, int, CommentDto>(
+            var result = _connection.Query<CommentDto, UserDto, AttachmentDto, int?, CommentDto>(
                 "dbo.Comment_SelectByHomeworkAttemptId",
                 (comment, user, attachment, attachmentType) =>
                 {
