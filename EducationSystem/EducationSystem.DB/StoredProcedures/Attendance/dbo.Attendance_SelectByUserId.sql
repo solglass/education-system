@@ -2,11 +2,11 @@
 as
 begin
 select
-	a.Id as AttendanceId,
+	a.Id,
     a.LessonId,
     a.IsAbsent,
 	a.ReasonOfAbsence,
-	u.Id as UserId,
+	u.Id,
 	u.FirstName,
 	u.LastName,
 	u.UserPic
