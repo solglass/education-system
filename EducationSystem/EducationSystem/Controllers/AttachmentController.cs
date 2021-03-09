@@ -26,6 +26,10 @@ namespace EducationSystem.API.Controllers
             _attachmentMapper = new AttachmentMapper();
         }
 
+        /// <summary>
+        /// Create new Attachment
+        /// </summary>
+        /// <returns>Return OutputModel of created attachment</returns>
         // https://localhost:44365/api/attachment/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
@@ -36,7 +40,11 @@ namespace EducationSystem.API.Controllers
             return Ok($"Вложение #{result} добавлено");
         }
 
-        
+        /// <summary>
+        /// Get Attachment
+        /// </summary>
+        /// <param name="id">Id of the attachment to be returned</param>
+        /// <returns>Return AttachmentOutputModel</returns>
         // https://localhost:44365/api/attachment/42
         [HttpGet("{id}")]
         [AllowAnonymous]
@@ -54,6 +62,12 @@ namespace EducationSystem.API.Controllers
             return Ok(attachment);
         }
 
+        /// <summary>
+        /// Update Attachment
+        /// </summary>
+        /// <param name="id">Id of the attachment to be updated</param>
+        /// <param name="attachmentInputModel">Model object of attachment with new parameters</param>
+        /// <returns>Return updated AttachmentOutputModel</returns>
         // https://localhost:44365/api/attachment/42
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
@@ -71,6 +85,11 @@ namespace EducationSystem.API.Controllers
             return Ok("Обновлено успешно");
         }
 
+        /// <summary>
+        /// Delete Attachment(by Id)
+        /// </summary>
+        /// <param name="id">Id of the attachment to be deleted</param>
+        /// <returns>Return deleted AttachmentOutputModel</returns>
         // https://localhost:44365/api/attachment/42
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
@@ -79,7 +98,14 @@ namespace EducationSystem.API.Controllers
             _service.DeleteAttachmentById(id);
             return Ok("Успешно удалено");
         }
-     //   https://localhost:44365/api/attachment/comment/4
+
+        /// <summary>
+        /// Create new Attachment into Comment(by Id)
+        /// </summary>
+        /// <param name="attachmentInputModel">Model object of attachment to be created</param>
+        /// <param name="commentId">Id of the comment where attachment to be created</param>
+        /// <returns>Return OutputModel of created attachment</returns>
+        // https://localhost:44365/api/attachment/comment/4
         [HttpPost("comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
@@ -89,7 +115,13 @@ namespace EducationSystem.API.Controllers
             return Ok($"Вложение #{result} добавлено к комментарию #{commentId}");
         }
 
-       // https://localhost:44365/api/attachment/homeworkAttempt/4
+        /// <summary>
+        /// Create new Attachment into Homework attempt(by Id)
+        /// </summary>
+        /// <param name="attachmentInputModel">Model object of attachment to be created</param>
+        /// <param name="homeworkAttemptId">Id of the homework attempt where attachment to be created</param>
+        /// <returns>Return OutputModel of created attachment</returns>
+        // https://localhost:44365/api/attachment/homeworkAttempt/4
         [HttpPost("homeworkAttempt/{homeworkAttemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachmentToHomeworkAttempt([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
@@ -100,7 +132,12 @@ namespace EducationSystem.API.Controllers
            return Ok($"Вложение #{result} добавлено к попытке сдачи #{homeworkAttemptId}");
         }
 
-
+        /// <summary>
+        /// Delete Attachment(by Id) from Homework attempt(by Id)
+        /// </summary>
+        /// <param name="attachmentId">Id of the attachment to be deleted</param>
+        /// <param name="homeworkAttemptId">Id of the homework attempt where attachment to be deleted</param>
+        /// <returns>Return deleted AttachmentOutputModel</returns>
         // https://localhost:44365/api/attachment/homeworkAttempt/4/5
         [HttpDelete("homeworkAttempt/{homeworkAttemptId}/{attachmentId}")]
         public ActionResult DeleteHomeworkAttemptAttachment( int attachmentId, int homeworkAttemptId)
@@ -110,6 +147,12 @@ namespace EducationSystem.API.Controllers
             return Ok("Успешно удалено");
         }
 
+        /// <summary>
+        /// Delete Attachment(by Id) from Comment(by Id)
+        /// </summary>
+        /// <param name="attachmentId">Id of the attachment to be deleted</param>
+        /// <param name="commentId">Id of the comment where attachment to be deleted</param>
+        /// <returns>Return deleted AttachmentOutputModel</returns>
         //   https://localhost:44365/api/attachment/comment/4/5
         [HttpDelete("comment/{commentId}/{attachmentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
