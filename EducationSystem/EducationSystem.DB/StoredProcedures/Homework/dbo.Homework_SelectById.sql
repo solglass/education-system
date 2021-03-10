@@ -34,6 +34,6 @@ begin
   inner join dbo.[Group] g on h.GroupID = g.id
 
   
-  where h.IsDeleted = 0 and h.Id = @id
+  where h.Id = @id
 
 end

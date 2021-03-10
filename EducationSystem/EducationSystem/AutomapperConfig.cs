@@ -25,10 +25,14 @@ namespace EducationSystem.API
             CreateMap<UserDto, AuthorOutputModel>();
             CreateMap<UserDto, UserOutputModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
+
             CreateMap<PaymentInputModel, PaymentDto>();
             CreateMap<PaymentDto, PaymentOutputModel>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
-            CreateMap<AttendanceUpdateInputModel, AttendanceDto>();
+
+            CreateMap<AttendanceInputModel, AttendanceDto>()
+                .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto() { Id = src.UserId }));
+
             CreateMap<HomeworkDto, HomeworkOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => src.DeadlineDate.ToString(_dateFormat)));
@@ -45,23 +49,52 @@ namespace EducationSystem.API
            CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
+
             CreateMap<TagInputModel, TagDto>();
             CreateMap<TagDto, TagOutputModel>();
 
             CreateMap<ThemeInputModel, ThemeDto>()
                 .ForMember(dest=>dest.Tags, opts=>opts.MapFrom(src=>src.TagIds.ConvertAll<TagDto>(t=> new TagDto { Id = t })));
             CreateMap<ThemeDto, ThemeOutputModel>();
+            CreateMap<ThemeDto, ThemeExtendedOutputModel>();
 
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
-            CreateMap<LessonInputModel, LessonDto>();
-            CreateMap<LessonDto, LessonOutputModel>()
-                .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
 
-            CreateMap<CourseDto, CourseOutputModel>();   
+            CreateMap<AttachmentInputModel, AttachmentDto>()
+                .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => (AttachmentType)src.AttachmentTypeId));
+
+            CreateMap<LessonInputModel, LessonDto>()
+                .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupDto() { Id = src.GroupId }))
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => Converters.StrToDateTime(src.LessonDate)))
+                .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemesId.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })));
+            CreateMap<LessonDto, LessonOutputModel>()
+                .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)))
+                .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupDto() { Id = src.Group.Id}));
+
+            CreateMap<FeedbackInputModel, FeedbackDto>()
+                .ForMember(dest => dest.Lesson, opts => opts.MapFrom(src => new LessonDto() { Id = src.LessonId }))
+                .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto() { Id = src.UserId }))
+                .ForMember(dest => dest.UnderstandingLevel, opts => opts.MapFrom(src => (UnderstandingLevel)src.UnderstandingLevelId));
+            CreateMap<FeedbackDto, FeedbackOutputModel>()
+                .ForMember(dest => dest.UnderstandingLevel, opts=>opts.MapFrom(src=>FriendlyNames.GetFriendlyUnderstandingLevelName(src.UnderstandingLevel)));
+
+            CreateMap<LessonThemeDto, LessonThemeOutputModel>();
+            CreateMap<LessonThemeInputModel, LessonThemeDto>();
+
+            CreateMap<AttendanceDto, AttendanceOutputModel>()
+                .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto()
+                {
+                    Id = src.User.Id,
+                    FirstName = src.User.FirstName,
+                    LastName = src.User.LastName,
+                    UserPic = src.User.UserPic
+                }));
+
+            CreateMap<CourseDto, CourseExtendedOutputModel>();
+            CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>()
                 .ForMember(dest=>dest.Themes, opts=>opts.MapFrom(src=>src.ThemeIds.ConvertAll<ThemeDto>(t=>new ThemeDto { Id = t })));
-
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
 
       CreateMap<GroupReportDto, GroupReportOutputModel>()
@@ -103,7 +136,7 @@ namespace EducationSystem.API
             CreateMap<AttachmentDto, AttachmentOutputModel>()
                 .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyAttachmentTypeName(src.AttachmentType)));
 
-
+            
         }
     }
 }
