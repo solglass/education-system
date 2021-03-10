@@ -23,13 +23,11 @@ namespace EducationSystem.Controllers
     public class MaterialController : ControllerBase
     {
 
-        private MaterialMapper _matMapper;
         private IMapper _mapper;
         private IMaterialService _service;
 
         public MaterialController(IMapper mapper, IMaterialService materialService)
         {
-            _matMapper = new MaterialMapper();
             _mapper = mapper;
             _service = materialService;
         }
@@ -39,7 +37,8 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByGroupId(int id)
         {
-            return Ok(_matMapper.FromDtos(_service.GetMaterialsByGroupId(id)));
+            return Ok(_mapper.Map<List<MaterialOutputModel>>(_service.GetMaterialsByGroupId(id)));
+
         }
 
         // https://localhost:44365/api/material/by-tag/340
@@ -47,7 +46,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByTagId(int id)
         {
-            return Ok(_matMapper.FromDtos(_service.GetMaterialsByTagId(id)));
+            return Ok(_mapper.Map<List<MaterialOutputModel>>(_service.GetMaterialsByTagId(id)));
         }
 
         // https://localhost:44365/api/material/2
@@ -55,7 +54,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<MaterialOutputModel> GetMaterialById(int id)
         {
-            return Ok(_matMapper.FromDto(_service.GetMaterialById(id)));
+            return Ok(_mapper.Map<MaterialOutputModel>(_service.GetMaterialById(id)));
         }
 
         // https://localhost:44365/api/material
@@ -63,9 +62,8 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
         public ActionResult<MaterialOutputModel> AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
-            var id = _service.AddMaterial(_matMapper.ToDto(materialInputModel));
-            var result = _mapper.Map<MaterialOutputModel>(_service.GetMaterialById(id));
-            return Ok(result);
+            var id = _service.AddMaterial(_mapper.Map<MaterialDto>(materialInputModel));
+            return Ok(_mapper.Map<MaterialOutputModel>(_service.GetMaterialById(id)));
         }
 
         // https://localhost:44365/api/material/8
