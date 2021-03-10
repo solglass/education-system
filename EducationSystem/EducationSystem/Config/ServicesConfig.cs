@@ -34,6 +34,8 @@ namespace EducationSystem.API.Config
             services.AddScoped<IAttachmentRepository, AttachmentRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IHomeworkAttemptRepository, HomeworkAttemptRepository>();
+
+            services.AddSingleton<EmailService>();
         }
     }
 }
