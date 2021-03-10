@@ -10,6 +10,6 @@ namespace EducationSystem.Data.Models
         public LessonDto Lesson { get; set; }
         public UserDto User { get; set; }
         public bool IsAbsent { get; set; }
-        public string AbsenceReason { get; set; }  // ToDo: add to DB
+        public string ReasonOfAbsence { get; set; } 
     }
 }

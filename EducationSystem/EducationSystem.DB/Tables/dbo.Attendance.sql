@@ -3,6 +3,7 @@
 	[LessonId] [int] NOT NULL,
 	[UserId] [int] NOT NULL,
 	[IsAbsent] [bit] NOT NULL,
+	[ReasonOfAbsence] nvarchar(max) DEFAULT null,
  CONSTRAINT [PK_ATTENDANCE] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
