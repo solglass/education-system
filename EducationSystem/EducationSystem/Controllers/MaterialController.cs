@@ -60,9 +60,10 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/material
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult<MaterialDto> AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
+        public ActionResult<MaterialOutputModel> AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
-            return Ok(_service.AddMaterial(_mapper.Map<MaterialDto>(materialInputModel)));
+            var id = _service.AddMaterial(_mapper.Map<MaterialDto>(materialInputModel));
+            return Ok(_mapper.Map<MaterialOutputModel>(_service.GetMaterialById(id)));
         }
 
         // https://localhost:44365/api/material/8
