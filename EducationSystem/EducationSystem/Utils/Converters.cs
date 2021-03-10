@@ -30,10 +30,5 @@ namespace EducationSystem.API.Utils
         {
             return (period.ToString(_periodDateFormat));
         }
-        public static DateTime StrToJustDateTime(string strDate)
-        {
-          DateTime.TryParseExact(strDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result);
-          return ( result);
-        }
     }
 }

@@ -185,10 +185,6 @@ namespace EducationSystem.Business
             comment.Id = commentId;
             comment.HomeworkAttempt = new HomeworkAttemptDto { Id = attemptId };
             var result = _homeworkRepository.UpdateComment(comment);
-            comment.Attachments.ForEach(att =>
-            {
-                _attachmentRepository.AddAttachmentToComment(att, commentId);
-            });
             return result;
         }
 
