@@ -8,7 +8,7 @@ namespace EducationSystem.Data
         int AddAttendance(AttendanceDto attendance);
         int AddFeedback(FeedbackDto feedbackDto);
         int AddLesson(LessonDto lessonDto);
-        int AddLessonTheme(LessonThemeDto lessonTheme);
+        int AddLessonTheme(int lessonId, int themeId);
         int DeleteAttendance(int id);
         int DeleteFeedback(int id);
         int DeleteLessonTheme(int lessonId, int themeId);

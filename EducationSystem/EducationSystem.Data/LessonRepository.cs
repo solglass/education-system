@@ -242,12 +242,12 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
         }
 
-        public int AddLessonTheme(LessonThemeDto lessonTheme)
+        public int AddLessonTheme(int lessonId, int themeId)
         {
             return _connection
                  .QuerySingleOrDefault<int>(
-                 "dbo.Lesson_Theme_Add",
-                 new { lessonTheme.ThemeId, lessonTheme.LessonId },
+                 "dbo.Lesson_AddTheme",
+                 new { lessonId = lessonId, themeId = themeId },
                  commandType: CommandType.StoredProcedure);
         }
 
@@ -255,7 +255,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Theme_Delete",
-                new { lessonId, themeId },
+                new { lessonId = lessonId, themeId = themeId },
                 commandType: CommandType.StoredProcedure);
         }
 

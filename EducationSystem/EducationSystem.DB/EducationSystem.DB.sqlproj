@@ -265,6 +265,8 @@
     <Build Include="StoredProcedures\Student\Student_SelectByPeriodAndIsNotPaid.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByUserId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByThemeId.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_AddTheme.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_DeleteTheme.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />

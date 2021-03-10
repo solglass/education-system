@@ -106,6 +106,11 @@ namespace EducationSystem.Business
             return _lessonRepository.GetLessonsByThemeId(themeId);
         }
 
+        public int AddLessonTheme(int lessonId, int themeId)
+        {
+            return _lessonRepository.AddLessonTheme(lessonId, themeId);
+        }
+
         public int DeleteLessonTheme(int lessonId, int themeId)
         {
             return _lessonRepository.DeleteLessonTheme(lessonId, themeId);

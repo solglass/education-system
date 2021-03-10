@@ -25,5 +25,6 @@ namespace EducationSystem.Business
         int UpdateFeedback(int lessonId, int feedbackId, FeedbackDto feedback);
         int AddAttendance(int lessonId, AttendanceDto attendance);
         int DeleteLessonTheme(int lessonId, int themeId);
+        int AddLessonTheme(int lessonId, int themeId);
     }
 }
