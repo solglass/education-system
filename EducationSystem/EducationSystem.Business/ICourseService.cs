@@ -7,6 +7,7 @@ namespace EducationSystem.Business
     {
         int AddCourse(CourseDto course);
         int AddTagToTheme(int themeId, int tagId);
+        int RemoveTagFromTheme(int themeId, int tagId);
         int AddTheme(ThemeDto theme);
         int AddThemeToCourse(int courseId, int themeId);
         int DeleteTheme(int id);

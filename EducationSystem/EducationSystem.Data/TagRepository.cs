@@ -81,12 +81,7 @@ namespace EducationSystem.Data
                 .ToList();
             return result;
         }
-        public int ThemeTagUpdate(ThemeTagDto Tag)
-        {
-            var result = _connection
-                .Execute("dbo.Theme_Tag_Update", new { Tag.Id, Tag.TagId, Tag.ThemeId }, commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
+      
         public int ThemeTagDelete(int themeId, int tagId)
         {
             var result = _connection
@@ -94,10 +89,10 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int ThemeTagAdd(ThemeTagDto Tag)
+        public int ThemeTagAdd(int themeId, int tagId)
         {
             var result = _connection
-                .QuerySingle<int>("dbo.Theme_Tag_Add", new { Tag.TagId, Tag.ThemeId }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingle<int>("dbo.Theme_Tag_Add", new { tagId, themeId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 
