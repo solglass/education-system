@@ -60,7 +60,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkAttemptOutputModel>> GetHomeworkAttemptsByHomeworkId(int homeworkId)
         {
-            var result = _mapper.Map<List<HomeworkAttemptOutputModel>>(_homeworkService.GetHomeworkAttemptsByHomeworkId(id));
+            var result = _mapper.Map<List<HomeworkAttemptOutputModel>>(_homeworkService.GetHomeworkAttemptsByHomeworkId(homeworkId));
             return Ok(result);
         }
 
