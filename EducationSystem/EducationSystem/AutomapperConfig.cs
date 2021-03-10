@@ -102,7 +102,6 @@ namespace EducationSystem.API
           .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
 
       CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
-            CreateMap<MaterialInputModel, MaterialDto>();
 
             CreateMap<HomeworkInputModel, HomeworkDto>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
@@ -131,8 +130,14 @@ namespace EducationSystem.API
 
             CreateMap<HomeworkAttemptWithCountDto, HomeworkAttemptWithCountOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
+            CreateMap<AttachmentInputModel, AttachmentDto>()
+                .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => (AttachmentType)src.AttachmentTypeId));
+            CreateMap<AttachmentDto, AttachmentOutputModel>()
+                .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyAttachmentTypeName(src.AttachmentType)));
 
-            
+
+            CreateMap<MaterialInputModel, MaterialDto>();
+            CreateMap<MaterialDto, MaterialOutputModel>();
         }
     }
 }
