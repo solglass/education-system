@@ -84,7 +84,7 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/material/8
-        /// <summary>Get all materials related to tag</summary>
+        /// <summary>Update material</summary>
         /// <param name="id">Id of update material</param>
         /// <param name="material">All info about update material</param>
         /// <returns>Update material</returns>
