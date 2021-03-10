@@ -98,7 +98,7 @@ namespace EducationSystem.Data.Tests
             foreach (int themeId in _themeIdList)
             {
                 _courseRepo.DeleteCourse_Theme(_courseId, themeId);
-                _courseRepo.DeleteTheme(themeId);
+                //_courseRepo.DeleteTheme(themeId);
             }
             _courseRepo.HardDeleteCourse(_courseId);
         }

@@ -62,7 +62,7 @@ namespace EducationSystem.Data.Tests
             int newId = _attachmentId[_attachmentId.Count - 1];
             expected.Path = "B\\TESTCASE2";
             expected.Id = newId;
-            aRepo.ModifyAttachment(expected);
+            //aRepo.ModifyAttachment(expected);
             AttachmentDto actual = aRepo.GetAttachmentById(newId);
 
             Assert.AreEqual(expected, actual);

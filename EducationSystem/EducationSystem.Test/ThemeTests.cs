@@ -73,7 +73,7 @@ namespace EducationSystem.Data.Tests
             int deletedId;
             foreach (int themeId in _themeIdList)
             {
-                deletedId = _courseRepo.DeleteTheme(themeId);
+                //deletedId = _courseRepo.DeleteTheme(themeId);
 
                 List<ThemeDto> newThemeFromDb = _courseRepo.GetThemes();
 
