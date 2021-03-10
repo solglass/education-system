@@ -10,7 +10,7 @@ namespace EducationSystem.Data
         int AddTheme(ThemeDto theme);
         int DeleteCourse_Theme(int courseId, int themeId);
         int DeleteOrRecoverCourse(int id, bool isDeleted);
-        int DeleteTheme(int id);
+        int DeleteOrRecoverTheme(int id, bool isDeleted);
         CourseDto GetCourseById(int id);
         List<CourseDto> GetCourses();
         List<Course_ThemeDto> GetCourseThemeByThemeId(int id);
