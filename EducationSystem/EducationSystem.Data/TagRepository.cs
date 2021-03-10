@@ -94,10 +94,10 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int ThemeTagAdd(ThemeTagDto Tag)
+        public int ThemeTagAdd(int themeId, int tagId)
         {
             var result = _connection
-                .QuerySingle<int>("dbo.Theme_Tag_Add", new { Tag.TagId, Tag.ThemeId }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingle<int>("dbo.Theme_Tag_Add", new { tagId, themeId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
 

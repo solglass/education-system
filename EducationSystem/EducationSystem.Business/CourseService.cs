@@ -101,7 +101,7 @@ namespace EducationSystem.Business
             {
                 foreach (var tag in theme.Tags)
                 {
-                    if (_tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = index, TagId = tag.Id }) <= 0)
+                    if (_tagRepo.ThemeTagAdd(index, tag.Id) <= 0)
                     {
 
                         return -2 - index;
@@ -113,7 +113,7 @@ namespace EducationSystem.Business
 
         public int AddTagToTheme(int themeId, int tagId)
         {
-            return _tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = themeId, TagId = tagId });
+            return _tagRepo.ThemeTagAdd(themeId, tagId);
         }
 
 
