@@ -98,7 +98,7 @@
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Add.sql" />
-    <Build Include="StoredProcedures\Theme\dbo.Theme_Delete.sql" />
+    <Build Include="StoredProcedures\Theme\dbo.Theme_HardDelete.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_SelectAll.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Update.sql" />
@@ -223,8 +223,6 @@
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByHomeworkId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Add.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByGroupId.sql" />
-    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByID.sql" />
-    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Add.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_SelectByID.sql" />
@@ -260,12 +258,16 @@
     <Build Include="StoredProcedures\Group\Group_SelectByTheme.sql" />
     <None Include="Scripts\InitialData.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByUserId.sql" />
-    <Build Include="StoredProcedures\Theme\dbo.Theme_SoftDelete.sql" />
+    <Build Include="StoredProcedures\Theme\dbo.Theme_DeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Payment\dbo_Payment_SelectByPeriod.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectById.sql" />
     <Build Include="Scripts\UniqueConstraints.sql" />
+    <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByLessonId.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPeriodAndIsNotPaid.sql" />
+    <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByUserId.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />

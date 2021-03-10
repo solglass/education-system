@@ -33,14 +33,17 @@ namespace EducationSystem.Business
             return _lessonRepository.DeleteOrRecoverLesson(id, isDeleted);
         }
 
-        public void AddLesson(LessonDto lesson)
+        public int AddLesson(LessonDto lesson)
         {
-            _lessonRepository.AddLesson(lesson);
+            return _lessonRepository.AddLesson(lesson);
         }
 
-        /* public UpdateLesson
-        */
-       public List<FeedbackDto> GetFeedbacks(int? lessonId, int? groupId, int? courseId)
+        public int UpdateLesson(LessonDto lesson)
+        {
+            return _lessonRepository.UpdateLesson(lesson);
+        }
+
+        public List<FeedbackDto> GetFeedbacks(int? lessonId, int? groupId, int? courseId)
         {
             return _lessonRepository.GetFeedbacks(lessonId, groupId, courseId);
         }
@@ -48,34 +51,70 @@ namespace EducationSystem.Business
         {
             return _lessonRepository.GetFeedbackById(id);
         }
-        public void DeleteFeedback(int id)
+        public int DeleteFeedback(int id)
         {
-            _lessonRepository.DeleteFeedback(id);
-        }        
-        public List<AttendanceDto> GetAttendances()
-        {
-            return _lessonRepository.GetAttendances();
+            return _lessonRepository.DeleteFeedback(id);
         }
+
+        public int AddFeedback(FeedbackDto feedback)
+        {
+            return _lessonRepository.AddFeedback(feedback);
+        }
+
+        public int UpdateFeedback(FeedbackDto feedback)
+        {
+            return _lessonRepository.UpdateFeedback(feedback);
+        }
+
+        public List<AttendanceDto> GetAttendancesByLessonId(int id)
+        {
+            return _lessonRepository.GetAttendancesByLessonId(id);
+        }
+
+        public List<AttendanceDto> GetAttendancesByUserId(int id)
+        {
+            return _lessonRepository.GetAttendancesByUserId(id);
+        }
+
         public AttendanceDto GetAttendanceById(int id)
         {
             return _lessonRepository.GetAttendanceById(id);
         }
-        public void DeleteAttendance(int id)
+        public int DeleteAttendance(int id)
         {
-            _lessonRepository.DeleteAttendance(id);
+            return _lessonRepository.DeleteAttendance(id);
         }
+
         public LessonThemeDto GetLessonThemeById(int id)
         {
             return _lessonRepository.GetLessonThemeById(id);
         }
+
+        public int AddAttendance(AttendanceDto attendance)
+        {
+            return _lessonRepository.AddAttendance(attendance);
+        }
+
         public int UpdateAttendance(AttendanceDto attendance)
         {
             return _lessonRepository.UpdateAttendance(attendance);
         }
+
+        public int AddLessonTheme(LessonThemeDto lessonTheme)
+        {
+            return _lessonRepository.AddLessonTheme(lessonTheme);
+        }
+
         public List<LessonDto> GetLessonsByThemeId(int themeId)
         {
             return _lessonRepository.GetLessonsByThemeId(themeId);
         }
+
+        public int DeleteLessonTheme(int lessonId, int themeId)
+        {
+            return _lessonRepository.DeleteLessonTheme(lessonId, themeId);
+        }
+
         public List<AttendanceReportDto> GetStudentByPercentOfSkip (int percent, int groupId)
         {
             return _lessonRepository.GetStudentByPercentOfSkip(percent, groupId);
