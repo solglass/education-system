@@ -54,7 +54,6 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        //todo: doesn't work. Error in GetCommentsByHomeworkAttemptId
         // https://localhost:44365/api/homework/2/attempts
         [HttpGet("{homeworkId}/attempts")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
