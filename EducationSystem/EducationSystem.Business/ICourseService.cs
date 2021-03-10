@@ -10,6 +10,7 @@ namespace EducationSystem.Business
         int AddTheme(ThemeDto theme);
         int AddThemeToCourse(int courseId, int themeId);
         int DeleteTheme(int id);
+        int RecoverTheme(int id);
         CourseDto GetCourseById(int id);
         List<CourseDto> GetCourses();
         ThemeDto GetThemeById(int id);

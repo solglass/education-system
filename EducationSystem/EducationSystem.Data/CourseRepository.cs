@@ -215,13 +215,14 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int DeleteTheme(int id)
+        public int DeleteOrRecoverTheme(int id, bool isDeleted)
         {
             var result = _connection
-                .Execute("dbo.Theme_SoftDelete",
+                .Execute("dbo.Theme_DeleteOrRecover",
                 new
                 {
-                    id
+                    id,
+                    isDeleted
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
