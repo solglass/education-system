@@ -40,6 +40,7 @@ namespace EducationSystem
             services.RegistrateServicesConfig();
             services.AddAutoMapper(typeof(Startup));
             services.Configure<AppSettingsConfig>(Configuration);
+            services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
