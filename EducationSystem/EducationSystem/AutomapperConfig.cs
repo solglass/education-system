@@ -54,8 +54,6 @@ namespace EducationSystem.API
 
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
-            CreateMap<AttachmentInputModel, AttachmentDto>()
-                .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => (AttachmentType)src.AttachmentTypeId));
             CreateMap<LessonInputModel, LessonDto>();
             CreateMap<LessonDto, LessonOutputModel>()
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
@@ -100,7 +98,8 @@ namespace EducationSystem.API
 
             CreateMap<HomeworkAttemptWithCountDto, HomeworkAttemptWithCountOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
-            CreateMap<AttachmentInputModel, AttachmentDto>();
+            CreateMap<AttachmentInputModel, AttachmentDto>()
+                .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => (AttachmentType)src.AttachmentTypeId));
             CreateMap<AttachmentDto, AttachmentOutputModel>();
 
 
