@@ -37,7 +37,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByGroupId(int id)
         {
-            return Ok(_mapper.Map<MaterialOutputModel>(_service.GetMaterialsByGroupId(id)));
+            return Ok(_mapper.Map<List<MaterialOutputModel>>(_service.GetMaterialsByGroupId(id)));
 
         }
 
@@ -46,7 +46,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByTagId(int id)
         {
-            return Ok(_mapper.Map<MaterialOutputModel>(_service.GetMaterialsByTagId(id)));
+            return Ok(_mapper.Map<List<MaterialOutputModel>>(_service.GetMaterialsByTagId(id)));
         }
 
         // https://localhost:44365/api/material/2
@@ -60,7 +60,7 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/material
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult<MaterialOutputModel> AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
+        public ActionResult<MaterialDto> AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
             _service.AddMaterial(_mapper.Map<MaterialDto>(materialInputModel));
             return Ok("Материалы добавлены");

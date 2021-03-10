@@ -58,8 +58,7 @@ namespace EducationSystem.Data
                 new
                 {
                     material.Link,
-                    material.Description,
-                    material.IsDeleted
+                    material.Description
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return rows;
