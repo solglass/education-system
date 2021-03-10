@@ -10,16 +10,19 @@ namespace EducationSystem.Business
         private IHomeworkAttemptRepository _homeworkAttemptRepository;
         private ITagRepository _tagRepository;
         private IGroupRepository _groupRepository;
+        private IAttachmentRepository _attachmentRepository;
 
         public HomeworkService(IHomeworkRepository homeworkRepository,
             IHomeworkAttemptRepository homeworkAttemptRepository,
             ITagRepository tagRepository,
-            IGroupRepository groupRepository)
+            IGroupRepository groupRepository,
+            IAttachmentRepository attachmentRepository)
         {
             _tagRepository = tagRepository;
             _homeworkRepository = homeworkRepository;
             _homeworkAttemptRepository = homeworkAttemptRepository;
             _groupRepository = groupRepository;
+            _attachmentRepository = attachmentRepository;
         }
 
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
@@ -181,12 +184,17 @@ namespace EducationSystem.Business
 
             comment.Id = commentId;
             comment.HomeworkAttempt = new HomeworkAttemptDto { Id = attemptId };
-            return _homeworkRepository.UpdateComment(comment);
+            var result = _homeworkRepository.UpdateComment(comment);
+            comment.Attachments.ForEach(att =>
+            {
+                _attachmentRepository.AddAttachmentToComment(att, commentId);
+            });
+            return result;
         }
 
         public int AddHomeworkTag(int homeworkId, int tagId)
         {
-            var dto = new HomeworkTagDto { HomeworkId = homeworkId, TagId = tagId }
+            var dto = new HomeworkTagDto { HomeworkId = homeworkId, TagId = tagId };
             return _homeworkRepository.HomeworkTagAdd(dto);
         }
         public int DeleteHomeworkTag(int homeworkId, int tagId) { return _homeworkRepository.HomeworkTagDelete(homeworkId, tagId); }

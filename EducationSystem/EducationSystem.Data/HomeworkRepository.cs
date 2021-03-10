@@ -351,7 +351,7 @@ namespace EducationSystem.Data
 
 
             var comment = _connection
-                .Query<CommentDto, UserDto, HomeworkAttemptDto, int, CommentDto>(
+                .Query<CommentDto, UserDto, HomeworkAttemptDto, int?, CommentDto>(
                     "dbo.Homework_SelectById",
                     (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
                     {

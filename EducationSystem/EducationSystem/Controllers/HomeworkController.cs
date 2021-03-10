@@ -46,19 +46,19 @@ namespace EducationSystem.API.Controllers
 
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/42
-        [HttpGet("{id}")]
+        [HttpGet("{homeworkId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<HomeworkOutputModel> GetHomeworkById(int id)
+        public ActionResult<HomeworkOutputModel> GetHomeworkById(int homeworkId)
         {
-            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(id));
+            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(homeworkId));
             return Ok(result);
         }
 
         //todo: doesn't work. Error in GetCommentsByHomeworkAttemptId
         // https://localhost:44365/api/homework/2/attempts
-        [HttpGet("{id}/attempts")]
+        [HttpGet("{homeworkId}/attempts")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkAttemptOutputModel>> GetHomeworkAttemptsByHomeworkId(int id)
+        public ActionResult<List<HomeworkAttemptOutputModel>> GetHomeworkAttemptsByHomeworkId(int homeworkId)
         {
             var result = _mapper.Map<List<HomeworkAttemptOutputModel>>(_homeworkService.GetHomeworkAttemptsByHomeworkId(id));
             return Ok(result);
@@ -135,9 +135,9 @@ namespace EducationSystem.API.Controllers
 
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/attempt/2
-        [HttpGet("attempt/{attemptId}")]
+        [HttpGet("{homeworkId}/attempt/{attemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<HomeworkAttemptOutputModel> GetHomeworkAttemptById(int attemptId)
+        public ActionResult<HomeworkAttemptOutputModel> GetHomeworkAttemptById(int homeworkId, int attemptId)
         {
             var result = _mapper.Map<HomeworkAttemptOutputModel>( _homeworkService.GetHomeworkAttemptById(attemptId));
 
@@ -180,7 +180,6 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        //todo: Update attachments in service
         //https://localhost:44365/api/homework/2/attempt/2/comment/2
         [HttpPut("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
@@ -193,7 +192,6 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        // how check attemptId?
         //https://localhost:44365/api/homework/2/attempt/2/comment/2
         [HttpGet("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
