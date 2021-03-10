@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class UserDto
+    public class UserDto: ICloneable
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -18,6 +18,22 @@ namespace EducationSystem.Data.Models
         public string Email { get; set; }
         public bool IsDeleted { get; set; }
         public List<Role> Roles { get; set; }
+
+        public object Clone()
+        {
+            return new UserDto()
+            {
+                Email = Email,
+                FirstName = FirstName,
+                BirthDate = BirthDate,
+                IsDeleted = IsDeleted,
+                LastName = LastName,
+                Password = Password,
+                Phone = Phone,
+                UserPic = UserPic,
+                Login = Login,
+            };
+        }
 
         public override bool Equals(object obj)
         {
