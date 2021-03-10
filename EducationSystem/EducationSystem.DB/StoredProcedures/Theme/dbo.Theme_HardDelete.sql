@@ -1,4 +1,4 @@
-﻿CREATE proc [dbo].[Theme_Delete]
+﻿CREATE proc [dbo].[Theme_HardDelete]
 (@id int)
 as
 begin
