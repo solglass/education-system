@@ -103,7 +103,7 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/material/2
         /// <summary>Change value of parametr "IsDeleted" to 1(Deleted)</summary>
         /// <param name="id">Id of material</param>
-        /// <returns>Update material</returns>
+        /// <returns>Update material, which is deleted</returns>
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
@@ -117,7 +117,7 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/material/id/recovery
         /// <summary>Change value of parametr "IsDeleted" to 0(Not deleted)</summary>
         /// <param name="id">Id of material</param>
-        /// <returns>Update material</returns>
+        /// <returns>Update material, which is recovered</returns>
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
