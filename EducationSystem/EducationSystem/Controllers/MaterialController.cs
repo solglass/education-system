@@ -53,7 +53,7 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/material/2
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult<List<MaterialOutputModel>> GetMaterialById(int id)
+        public ActionResult<MaterialOutputModel> GetMaterialById(int id)
         {
             return Ok(_matMapper.FromDto(_service.GetMaterialById(id)));
         }
