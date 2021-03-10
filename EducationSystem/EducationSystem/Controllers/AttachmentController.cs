@@ -31,17 +31,20 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/attachment/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
-        {      
-            var result = _service.AddAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel));
-            return Ok($"Вложение #{result} добавлено");
+        public ActionResult <AttachmentOutputModel> AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
+        {
+            var attachmentDto = _mapper.Map<AttachmentDto>(attachmentInputModel);
+            var newEntityId = _service.AddAttachment(attachmentDto);
+            var newAttachmentDto = _service.GetAttachmentById(newEntityId);
+            var result = _mapper.Map<AttachmentOutputModel>(newAttachmentDto);
+            return Ok(result);
         }
 
         
         // https://localhost:44365/api/attachment/42
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public dynamic GetAttachment(int id)
+        public ActionResult<AttachmentOutputModel> GetAttachment(int id)
         {
            var attachment = new AttachmentOutputModel();
             try
@@ -58,18 +61,20 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/attachment/42
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel, int id)
+        public ActionResult<AttachmentOutputModel> UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel, int id)
         {
             try
             {
-                _service.ModifyAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel), id);
+                var attDto = _mapper.Map<AttachmentDto>(attachmentInputModel);
+                _service.ModifyAttachment(attDto, id);
+                var attachment = _service.GetAttachmentById(id);
+                var result = _mapper.Map<AttachmentOutputModel>(attachment);
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
-            return Ok("Обновлено успешно");
         }
 
         // https://localhost:44365/api/attachment/42
