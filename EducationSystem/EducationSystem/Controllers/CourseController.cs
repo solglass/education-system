@@ -130,15 +130,15 @@ namespace EducationSystem.API.Controllers
         /// </summary>
         /// <param name="courseId"> is used to find the course user wants to connect with theme</param>
         /// <param name="themeId"> is used to find the theme user wants to connect with course</param>
-        /// <returns>Returns NoContent result</returns>
+        /// <returns>Returns Created result</returns>
         // https://localhost:XXXXX/api/course/3/theme/8
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("{courseId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult AddThemeToCourse(int courseId, int themeId)
         {
             int result = _courseService.AddThemeToCourse(courseId, themeId);
-            return NoContent();                                                       
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace EducationSystem.API.Controllers
         }
 
         /// <summary>
-        /// Creates Course
+        /// Creates Theme
         /// </summary>
         /// <param name="theme"> is used to get all the information about new theme that is necessary to create it</param>
         /// <returns>Returns the ThemeExtendedOutputModel which includes IsDeleted-property</returns>
@@ -209,15 +209,15 @@ namespace EducationSystem.API.Controllers
         /// </summary>
         /// <param name="themeId"> is used to find the theme user wants to connect with tag</param>
         /// <param name="tagId"> is used to find the tag user wants to connect with theme</param>
-        /// <returns>Returns NoContent result</returns>
+        /// <returns>Returns Created result</returns>
         // https://localhost:XXXXX/api/course/theme/id/tag/id
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("theme/{themeId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
         {
             var result = _courseService.AddTagToTheme(themeId, tagId);
-            return NoContent();                                                      
+            return StatusCode(StatusCodes.Status201Created);                                                      
         }
 
         /// <summary>
