@@ -88,10 +88,10 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/user/passed-homework/by-group/42
         [HttpGet("passed-homework/by-group/{groupId}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
-        public ActionResult<UserOutputModel> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
+        public ActionResult<List<UserOutputModel>> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
-            var user = _userService.GetPassedStudentsAttempt_SelectByGroupId(groupId);
-            var outputModel = _mapper.Map<UserOutputModel>(user);
+            var users = _userService.GetPassedStudentsAttempt_SelectByGroupId(groupId);
+            var outputModel = _mapper.Map<List<UserOutputModel>>(users);
             return Ok(outputModel);
         }
 
