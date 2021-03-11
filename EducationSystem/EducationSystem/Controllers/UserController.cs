@@ -40,8 +40,8 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/user/register
         /// <summary>user registration</summary>
         /// <param name="inputModel">information about registered user</param>
-        /// <returns>List of attached materials to tag</returns>
-        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
+        /// <returns>Status200OK response</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost("register")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
         public ActionResult Register([FromBody] UserInputModel inputModel)
@@ -56,6 +56,12 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user/change-password
+        /// <summary>changing password of user</summary>
+        /// <param name="id">id of user for whom we are changing the password</param>
+        /// /// <param name="oldPassword">old password of user</param>
+        /// /// <param name="newPassword">new password of user</param>
+        /// <returns>Info of user with new password</returns>
+        [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [HttpPut("change-password")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
         public ActionResult ChangePassword(int id, string oldPassword, string newPassword)
@@ -69,6 +75,9 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user
+        /// <summary>Get info of all users</summary>
+        /// <returns>List of all users, but not deleted</returns>
+        [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
         public ActionResult GetUsers()
@@ -79,6 +88,10 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user/42
+        /// <summary>Get info of current user</summary>
+        /// <param name="id">id of current user</param>
+        /// <returns>Info of user</returns>
+        [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
         public ActionResult GetUser(int id)
@@ -89,16 +102,24 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user/passed-homework/by-group/42
+        /// <summary>Get info of student who have submitted their homework</summary>
+        /// <param name="groupId">id of group in which students study</param>
+        /// <returns>Info of students</returns>
+        [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("passed-homework/by-group/{groupId}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
         public ActionResult GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
-            var user = _userService.GetPassedStudentsAttempt_SelectByGroupId(groupId);
-            var outputModel = _mapper.Map<UserOutputModel>(user);
+            var users = _userService.GetPassedStudentsAttempt_SelectByGroupId(groupId);
+            var outputModel = _mapper.Map<List<UserOutputModel>>(users);
             return Ok(outputModel);
         }
 
         // https://localhost:44365/api/user/42
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
         public ActionResult UpdateUserInfo(int id,[FromBody] UserInputModel inputModel)
@@ -114,6 +135,10 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user/42
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult DeleteUser(int id)
@@ -133,6 +158,10 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user/42/recovery
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult RecoverUser(int id)
@@ -152,6 +181,10 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user/88/payment
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpPost("{userId}/payment")]
         [Authorize(Roles = "Админ, Менеджер, Студент")]
         public ActionResult AddPayment(int id, [FromBody] PaymentInputModel payment)
@@ -163,6 +196,10 @@ namespace EducationSystem.Controllers
         }
 
         //https://localhost:44365/api/user/payment/by-period
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("payment/by-period")]
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult GetPaymentsByPeriod([FromBody] PeriodInputModel periodInput)
@@ -175,6 +212,10 @@ namespace EducationSystem.Controllers
         }
 
         //https://localhost:44365/api/user/42/payment
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("{id}/payment")]
         [Authorize(Roles = "Админ,Менеджер")]
         public ActionResult GetPaymentsByUserId(int id)
@@ -183,6 +224,10 @@ namespace EducationSystem.Controllers
         }
 
         //https://localhost:44365/api/user/payment/32
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
         public dynamic GetPayment(int id)
@@ -193,6 +238,10 @@ namespace EducationSystem.Controllers
         }
 
         //https://localhost:44365/api/user/payment/42
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpPut("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
         public ActionResult UpdatePayment(int id, [FromBody] PaymentInputModel payment)
@@ -204,6 +253,10 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user/find-debt
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("find-debt")]
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
@@ -214,6 +267,10 @@ namespace EducationSystem.Controllers
         }
 
         //https://localhost:44365/api/user/payment/42
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpDelete("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
         public ActionResult DeletePayment(int id)
