@@ -29,7 +29,7 @@ namespace EducationSystem.Business
         HomeworkAttemptDto GetHomeworkAttemptById(int id);
         int AddComment(CommentDto comment);
         int UpdateComment(CommentDto comment);
-        int AddHomeworkTag(HomeworkTagDto homeworkTagDto);
+        int AddHomeworkTag(int homeworkId, int tagId);
         int DeleteHomeworkTag(int homeworkId, int tagId);
     }
 }

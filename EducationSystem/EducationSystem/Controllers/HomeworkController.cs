@@ -278,7 +278,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTag(int homeworkId, int tagId)
         {
-            _homeworkService.AddHomeworkTag(new HomeworkTagDto { HomeworkId = homeworkId, TagId = tagId});
+            _homeworkService.AddHomeworkTag(homeworkId, tagId);
 
             return StatusCode(StatusCodes.Status201Created);
         }
