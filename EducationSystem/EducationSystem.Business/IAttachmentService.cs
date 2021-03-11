@@ -5,8 +5,8 @@ namespace EducationSystem.Business
     public interface IAttachmentService
     {
         int AddAttachment(AttachmentDto attachmentDto);
-        int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId);
-        int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId);
+        int AddCommentAttachment(AttachmentDto attachmentDto, int commentId);
+        int AddHomeworkAttemptAttachment(AttachmentDto attachmentDto, int homeworkAttemptId);
         int DeleteAttachmentById(int id);
 
         int DeleteHomeworkAttemptAttachment(int attachmentId, int attemptId);
