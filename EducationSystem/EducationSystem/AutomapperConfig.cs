@@ -25,6 +25,8 @@ namespace EducationSystem.API
             CreateMap<UserDto, AuthorOutputModel>();
             CreateMap<UserDto, UserOutputModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
+            CreateMap<UserDto, UserOutputExtendedModel>()
+                .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
 
             CreateMap<PaymentInputModel, PaymentDto>();
             CreateMap<PaymentDto, PaymentOutputModel>()
