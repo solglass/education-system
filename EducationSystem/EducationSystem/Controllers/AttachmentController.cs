@@ -1,16 +1,13 @@
-﻿using EducationSystem.API.Mappers;
-using EducationSystem.API.Models;
+﻿using EducationSystem.API.Models;
 using EducationSystem.API.Models.OutputModels;
-using EducationSystem.Controllers;
 using EducationSystem.Business;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using AutoMapper;
-using EducationSystem.Data.Models;
-
+using AutoMapper;
+using EducationSystem.Data.Models;
+using Microsoft.AspNetCore.Http;
+
 namespace EducationSystem.API.Controllers
 {
     // https://localhost:44365/api/attachment/
@@ -35,10 +32,13 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/attachment/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
-        {      
-            var result = _service.AddAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel));
-            return Ok($"Вложение #{result} добавлено");
+        public ActionResult <AttachmentOutputModel> AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
+        {
+            var attachmentDto = _mapper.Map<AttachmentDto>(attachmentInputModel);
+            var newEntityId = _service.AddAttachment(attachmentDto);
+            var newAttachmentDto = _service.GetAttachmentById(newEntityId);
+            var result = _mapper.Map<AttachmentOutputModel>(newAttachmentDto);
+            return Ok(result);
         }
 
         /// <summary>
@@ -49,17 +49,10 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/attachment/42
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public dynamic GetAttachment(int id)
+        public ActionResult<AttachmentOutputModel> GetAttachment(int id)
         {
-           var attachment = new AttachmentOutputModel();
-            try
-            {
-                attachment = _mapper.Map<AttachmentOutputModel>(_service.GetAttachmentById(id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var attDto = _service.GetAttachmentById(id);
+            var attachment = _mapper.Map<AttachmentOutputModel>(attDto);
             return Ok(attachment);
         }
 
@@ -72,18 +65,14 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/attachment/42
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel, int id)
+        public ActionResult<AttachmentOutputModel> UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel, int id)
         {
-            try
-            {
-                _service.ModifyAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel), id);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            
-            return Ok("Обновлено успешно");
+            var attDto = _mapper.Map<AttachmentDto>(attachmentInputModel);
+            attDto.Id = id;
+            _service.ModifyAttachment(attDto, id);
+            var attachment = _service.GetAttachmentById(id);
+            var result = _mapper.Map<AttachmentOutputModel>(attachment);
+            return Ok(result);
         }
 
         /// <summary>
@@ -97,7 +86,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteAttachment(int id)
         {
             _service.DeleteAttachmentById(id);
-            return Ok("Успешно удалено");
+            return NoContent();
         }
 
         /// <summary>
@@ -111,8 +100,8 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
         {
-            var result = _service.AddAttachmentToComment(_mapper.Map<AttachmentDto>(attachmentInputModel), commentId);
-            return Ok($"Вложение #{result} добавлено к комментарию #{commentId}");
+            var result = _service.AddCommentAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel), commentId);
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         /// <summary>
@@ -124,7 +113,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/attachment/homeworkAttempt/4
         [HttpPost("homeworkAttempt/{homeworkAttemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult AddAttachmentToHomeworkAttempt([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
+        public ActionResult AddHomeworkAttemptAttachment([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
         {         
             var result = _service.AddAttachmentToHomeworkAttempt(_mapper.Map<AttachmentDto>(attachmentInputModel), 
                 homeworkAttemptId);
@@ -139,13 +128,15 @@ namespace EducationSystem.API.Controllers
         /// <returns>Return deleted AttachmentOutputModel</returns>
         // https://localhost:44365/api/attachment/homeworkAttempt/4/5
         [HttpDelete("homeworkAttempt/{homeworkAttemptId}/{attachmentId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult DeleteHomeworkAttemptAttachment( int attachmentId, int homeworkAttemptId)
         {
             var result = _service.DeleteHomeworkAttemptAttachment(attachmentId,
                 homeworkAttemptId);
-            return Ok("Успешно удалено");
+            return NoContent();
         }
 
+        //   https://localhost:44365/api/attachment/comment/4/5
         /// <summary>
         /// Delete Attachment(by Id) from Comment(by Id)
         /// </summary>
@@ -158,11 +149,8 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteCommentAttachment(int attachmentId , int commentId)
         {
             var result = _service.DeleteCommentAttachment(attachmentId, commentId);
-            return Ok("Успешно удалено");
+            return NoContent();
         }
-
-
-
     }
 }
 

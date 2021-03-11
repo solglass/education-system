@@ -125,9 +125,9 @@
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Update.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Add.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Delete .sql" />
-    <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Add.sql" />
-    <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Delete.sql" />
-    <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Select by id.sql" />
+    <Build Include="StoredProcedures\CommentAttachment\dbo_Comment_Attachment_Add.sql" />
+    <Build Include="StoredProcedures\CommentAttachment\dbo_Comment_Attachment_Delete.sql" />
+    <Build Include="StoredProcedures\CommentAttachment\dbo_Comment_Attachment_Select by id.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_Add.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_Delete.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_SelectAll.sql" />
