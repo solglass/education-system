@@ -6,11 +6,11 @@ namespace EducationSystem.Data
     public interface IAttachmentRepository
     {
         int AddAttachment(AttachmentDto attachmentDto);
-        int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId);
-        int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId);
+        int AddAttachmentToComment(int commentId, int attachmentId);
+        int AddAttachmentToHomeworkAttempt(int homeworkAttemptId, int attachmentId);
         int DeleteAttachmentById(int id);
-        int DeleteHomeworkAttemptAttachment(int attachmentId, int homeworkAttemptId);
-        int DeleteCommentAttachment(int attachmentId, int commentId);
+        int DeleteAttachmentFromHomeworkAttempt(int attachmentId, int homeworkAttemptId);
+        int DeleteAttachmentFromComment(int attachmentId, int commentId);
         AttachmentDto GetAttachmentById(int id);
         int ModifyAttachment(AttachmentDto attachmentDto);
 

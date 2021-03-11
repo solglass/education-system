@@ -1,10 +1,10 @@
 create proc [dbo].[Comment_Attachment_Add] (
-@commentID int,
-@attachmentID int)
+@commentId int,
+@attachmentId int)
  as
 begin
 
-	insert into [dbo].[Comment_Attachment] (CommentID, AttachmentID) 
-	values (@commentID, @attachmentID)
+	insert into [dbo].[Comment_Attachment] (CommentId, AttachmentId) 
+	values (@commentId, @attachmentId)
 	select SCOPE_IDENTITY()
 end 
