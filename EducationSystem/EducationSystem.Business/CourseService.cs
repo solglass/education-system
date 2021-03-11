@@ -10,21 +10,18 @@ namespace EducationSystem.Business
     {
         private ICourseRepository _courseRepo;
         private ITagRepository _tagRepo;
-        private ILessonRepository _lessonRepo;
-        private IHomeworkRepository _homeworkRepo;
+        
 
         public CourseService
             (
             ICourseRepository courseRepository, 
-            ITagRepository tagRepository, 
-            ILessonRepository lessonRepository, 
-            IHomeworkRepository homeworkRepository
+            ITagRepository tagRepository
+           
             )
         {
             _courseRepo = courseRepository;
             _tagRepo =  tagRepository;
-            _homeworkRepo = homeworkRepository;
-            _lessonRepo = lessonRepository;
+           
         }
 
         public List<CourseDto> GetCourses()
@@ -104,7 +101,7 @@ namespace EducationSystem.Business
             {
                 foreach (var tag in theme.Tags)
                 {
-                    if (_tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = index, TagId = tag.Id }) <= 0)
+                    if (_tagRepo.ThemeTagAdd( index,  tag.Id ) <= 0)
                     {
 
                         return -2 - index;
@@ -116,16 +113,24 @@ namespace EducationSystem.Business
 
         public int AddTagToTheme(int themeId, int tagId)
         {
-            return _tagRepo.ThemeTagAdd(new ThemeTagDto { ThemeId = themeId, TagId = tagId });
+            return _tagRepo.ThemeTagAdd( themeId,  tagId );
         }
 
-
-
-        public int DeleteTheme(int id)  //  should remove all connections many-to-many
-        {         
-            return _courseRepo.DeleteTheme(id);
+        public int RemoveTagFromTheme(int themeId, int tagId)
+        {
+            return _tagRepo.ThemeTagDelete( themeId,  tagId );
         }
 
+        public int DeleteTheme(int id)  
+        {
+            var isDeleted = true;       
+            return _courseRepo.DeleteOrRecoverTheme(id, isDeleted);
+        }
+        public int RecoverTheme(int id)
+        {
+            var isDeleted = false;
+            return _courseRepo.DeleteOrRecoverTheme(id, isDeleted);
+        }
         public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
         {
             return _courseRepo.GetUncoveredThemesByGroupId(id);

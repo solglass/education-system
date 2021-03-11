@@ -10,7 +10,7 @@ namespace EducationSystem.Data.Models
         public string Name { get; set; }
         public List<TagDto> Tags { get; set; }
 
-
+        public bool IsDeleted { get; set; }
         public override bool Equals(object obj)
         {
             ThemeDto themeObj = (ThemeDto)obj;

@@ -6,6 +6,7 @@ using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -26,207 +27,245 @@ namespace EducationSystem.API.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets all the courses with their themes
+        /// </summary>
+        /// <returns>Returns the list of CourseOutputModels</returns>
         // https://localhost:50221/api/course/
+        [ProducesResponseType(typeof(List<CourseOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
-        public ActionResult GetCourses()
+        public ActionResult<List<CourseOutputModel>> GetCourses()
         {
-            List<CourseOutputModel> courses;
-            try
-            {
-                courses =_mapper.Map<List<CourseOutputModel>>( _courseService.GetCourses());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var courses =_mapper.Map<List<CourseOutputModel>>( _courseService.GetCourses());
             return Ok(courses);
         }
 
+
+        /// <summary>
+        /// Gets only one course by its id with its IsDeleted property and the list of its themes
+        /// </summary>
+        /// <param name="id"> is used to find necessary course</param>
+        /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:50221/api/course/id
-       [HttpGet("{id}")]
-       public ActionResult GetCourse(int id)       
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
+        [HttpGet("{id}")]
+       public ActionResult<CourseExtendedOutputModel> GetCourse(int id)       
         {
-            CourseOutputModel course;
-            try
-            {
-                 course = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var  course = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
             return Ok(course);
         }
 
+
+        /// <summary>
+        /// Creates Course
+        /// </summary>
+        /// <param name="course"> is used to get all the information about new course that is necessary to create it</param>
+        /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:50221/api/course/
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpPost]
        [Authorize(Roles ="Админ, Менеджер, Методист")]
-        public ActionResult CreateCourse([FromBody] CourseInputModel course)    
+        public ActionResult<CourseExtendedOutputModel> CreateCourse([FromBody] CourseInputModel course)    
         {
-            int result;
-            try
-            {
-                result = _courseService.AddCourse(_mapper.Map<CourseDto>(course));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            if (result > 0)
-                return Ok($"Курс №{result} добавлен!");
-            else if (result == -1)
-                return Problem("Ошибка! Не получилось добавить курс!");
-            else
-                return Problem($"Ошибка! К созданному курсу #{-(result+2)} не удалось привязать темы! ") ;
+            var id = _courseService.AddCourse(_mapper.Map<CourseDto>(course));
+            var result = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
+            return Ok(result);                        
         }
 
+
+        /// <summary>
+        /// Updates Course
+        /// </summary>
+        /// /// <param name="id"> is used to find the course user wants to update</param>
+        /// <param name="course"> is used to provide new information about selected course</param>
+        /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:50221/api/course/id
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)] 
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
+        public ActionResult<CourseExtendedOutputModel> UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
         {
-            int result;
-            try
-            {
-                var courseDto = _mapper.Map<CourseDto>(course);
-                courseDto.Id = id;
-                result = _courseService.UpdateCourse(courseDto);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            if (result == 0)
-                return Ok($"Курс #{id} обновлен!");
-            else 
-                return Problem($"Ошибка! Не получилось обновить курс #{id}!");
+            var courseDto = _mapper.Map<CourseDto>(course);
+            courseDto.Id = id;
+            var result = _courseService.UpdateCourse(courseDto);
+            var updateResult = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
+            return Ok(updateResult);
         }
 
+
+        /// <summary>
+        /// Deletes Course
+        /// </summary>
+        /// /// <param name="id"> is used to find the course user wants to delete</param>
+        /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:50221/api/course/id
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult DeleteCourse(int id)
+        public ActionResult<CourseExtendedOutputModel> DeleteCourse(int id)
         {
             var result = _courseService.DeleteCourse(id);
-            if (result == 1)
-                return Ok($"Курс #{id} удален!");
-            else
-                return Problem($"Ошибка! Не получилось удалить курс #{id}!");
+            var deleteResult = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
+            return Ok(deleteResult);
         }
 
+        /// <summary>
+        /// Recovers Course
+        /// </summary>
+        /// /// <param name="id"> is used to find the course user wants to recover</param>
+        /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:XXXXX/api/course/id/recovery
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult RecoverCourse(int id)
+        public ActionResult<CourseExtendedOutputModel> RecoverCourse(int id)
         {
             var result = _courseService.RecoverCourse(id);
-            if (result == 1)
-                return Ok($"Курс #{id} восстановлен!");
-            else
-                return Problem($"Ошибка! Не получилось восстановить курс #{id}!");
+            var recoverResult = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
+            return Ok(recoverResult);
         }
 
+        /// <summary>
+        /// Creates the connection between one theme and one course
+        /// </summary>
+        /// <param name="courseId"> is used to find the course user wants to connect with theme</param>
+        /// <param name="themeId"> is used to find the theme user wants to connect with course</param>
+        /// <returns>Returns Created result</returns>
         // https://localhost:XXXXX/api/course/3/theme/8
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("{courseId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult AddThemeToCourse(int courseId, int themeId)
         {
             int result = _courseService.AddThemeToCourse(courseId, themeId);
-            if (result > 0) 
-                return Ok($"Тема {themeId} добавлена к курсу #{courseId}");
-            else 
-                return Problem($"Ошибка! Не получилось добавить к курсу #{courseId} тему #{themeId}!");
+            return StatusCode(StatusCodes.Status201Created);
         }
 
+        /// <summary>
+        /// Deletes the connection between one theme and one course
+        /// </summary>
+        /// <param name="courseId"> is used to find the course user wants to break the connection with theme</param>
+        /// <param name="themeId"> is used to find the theme user wants to break the connection with course</param>
+        /// <returns>Returns NoContent result</returns>
         // https://localhost:XXXXX/api/course/3/theme/8
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("{courseId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult RemoveThemeFromCourse(int courseId, int themeId)
         {
             var result = _courseService.RemoveThemeFromCourse(courseId, themeId);
-            if (result== 0)
-                return Ok($"Тема {themeId} отвязана от курса #{courseId}");
-            else
-                return Problem($"Ошибка! Не получилось отвязать тему #{themeId} от курса #{courseId}!");
+            return NoContent();
         }
 
+        /// <summary>
+        /// Gets all the themes with their tags
+        /// </summary>
+        /// <returns>Returns the list of ThemeOutputModels</returns>
         // https://localhost:XXXXX/api/course/theme/
+        [ProducesResponseType(typeof(List<ThemeOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("theme")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult GetAllThemes()
+        public ActionResult<List<ThemeOutputModel>> GetAllThemes()
         {
-            List<ThemeOutputModel> themes;
-            try
-            {
-                themes = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetThemes());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var themes = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetThemes());
             return Ok(themes);
         }
 
+        /// <summary>
+        /// Gets only one theme by its id with its IsDeleted property and the list of its tags
+        /// </summary>
+        /// <param name="id"> is used to find necessary theme</param>
+        /// <returns>Returns the ThemeExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:XXXXX/api/course/theme/id
+        [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpGet("theme/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
-        public ActionResult GetThemeById(int id)
+        public ActionResult<ThemeExtendedOutputModel> GetThemeById(int id)
         {
-            ThemeOutputModel theme;
-            try
-            {
-                theme = _mapper.Map<ThemeOutputModel>(_courseService.GetThemeById(id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var theme = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
             return Ok(theme);
 
         }
 
+        /// <summary>
+        /// Creates Theme
+        /// </summary>
+        /// <param name="theme"> is used to get all the information about new theme that is necessary to create it</param>
+        /// <returns>Returns the ThemeExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:XXXXX/api/course/theme/
+        [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpPost("theme")]
         [Authorize(Roles = "Админ, Методист, Преподаватель")]
-        public ActionResult CreateTheme([FromBody] ThemeInputModel inputModel)
+        public ActionResult<ThemeExtendedOutputModel> CreateTheme([FromBody] ThemeInputModel theme)
         {
-            int result;
-            try
-            {
-               result = _courseService.AddTheme(_mapper.Map<ThemeDto>(inputModel));
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            if (result > 0)
-                return Ok($"Тема №{result} добавлена!");
-            else
-                return Problem($"Ошибка! К созданной теме #{-(result + 2)} не удалось привязать теги! ");
+            var  id = _courseService.AddTheme(_mapper.Map<ThemeDto>(theme));
+            var result = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
+            return Ok(result);                        
+
         }
 
+        /// <summary>
+        /// Creates the connection between one theme and one tag
+        /// </summary>
+        /// <param name="themeId"> is used to find the theme user wants to connect with tag</param>
+        /// <param name="tagId"> is used to find the tag user wants to connect with theme</param>
+        /// <returns>Returns Created result</returns>
         // https://localhost:XXXXX/api/course/theme/id/tag/id
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("theme/{themeId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
         {
             var result = _courseService.AddTagToTheme(themeId, tagId);
-            if (result > 0)
-                return Ok($"Тег #{tagId} добавлен к теме #{themeId}!");
-            else
-                return Problem($"Ошибка! Не получилось добавить тег  #{tagId} к теме #{themeId}!");
+            return StatusCode(StatusCodes.Status201Created);                                                      
         }
 
+        /// <summary>
+        /// Deletes the connection between one theme and one course
+        /// </summary>
+        /// <param name="themeId"> is used to find the theme user wants to to break the connection with tag</param>
+        /// <param name="tagId"> is used to find the tag user wants to break the connection with theme</param>
+        /// <returns>Returns NoContent result</returns>
+        // https://localhost:XXXXX/api/course/theme/id/tag/id
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpDelete("theme/{themeId}/tag/{tagId}")]
+        [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
+        public ActionResult RemoveTagFromTheme(int themeId, int tagId)
+        {
+            var result = _courseService.RemoveTagFromTheme(themeId, tagId);
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Deletes Theme
+        /// </summary>
+        /// /// <param name="id"> is used to find the theme user wants to delete</param>
+        /// <returns>Returns the ThemeExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:XXXXX/api/course/theme/id/
+        [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpDelete("theme/{id}")]
         [Authorize(Roles = "Админ, Методист, Преподаватель")]
-        public ActionResult DeleteTheme(int id)
+        public ActionResult<ThemeExtendedOutputModel> DeleteTheme(int id)
         {
             var result = _courseService.DeleteTheme(id);
-            if (result > 0)
-                return Ok($"Тема удалена #{id}!");
-            else
-                return Problem($"Ошибка! Не получилось удалить тему #{id}!");
+            var deleteResult = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
+            return Ok(deleteResult);
+        }
+
+        /// <summary>
+        /// Recovers Theme
+        /// </summary>
+        /// /// <param name="id"> is used to find the theme user wants to recover</param>
+        /// <returns>Returns the ThemeExtendedOutputModel which includes IsDeleted-property</returns>
+        // https://localhost:XXXXX/api/course/theme/id/
+        [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
+        [HttpPut("theme/{id}")]
+        [Authorize(Roles = "Админ, Методист, Преподаватель")]
+        public ActionResult<ThemeExtendedOutputModel> RecoverTheme(int id)
+        {
+            var result = _courseService.RecoverTheme(id);
+            var recoverResult = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
+            return Ok(recoverResult);
         }
     }
 }

@@ -20,9 +20,9 @@ namespace EducationSystem.Business
         {
             return _attachmentRepository.GetAttachmentById(id);
         }
-        public int ModifyAttachment(AttachmentDto attachmentDto)
+        public int ModifyAttachment(AttachmentDto attachmentDto, int id)
         {
-            return _attachmentRepository.ModifyAttachment(attachmentDto);
+            return _attachmentRepository.ModifyAttachment(attachmentDto, id);
         }
         public int AddAttachment(AttachmentDto attachmentDto)
         {
@@ -33,11 +33,11 @@ namespace EducationSystem.Business
             return _attachmentRepository.DeleteAttachmentById(id);
         }
 
-        public int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId)
+        public int AddHomeworkAttemptAttachment(AttachmentDto attachmentDto, int homeworkAttemptId)
         {
             return _attachmentRepository.AddAttachmentToHomeworkAttempt(attachmentDto, homeworkAttemptId);
         }
-        public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
+        public int AddCommentAttachment(AttachmentDto attachmentDto, int commentId)
         {
             return _attachmentRepository.AddAttachmentToComment(attachmentDto, commentId);
         }
