@@ -61,8 +61,8 @@ namespace EducationSystem.Controllers
                 return Problem("Не найден пользователь");
             }
             _userService.ChangePassword(id, oldPassword,newPassword);
-            var result = _mapper.Map<UserOutputModel>(_userService.GetUserById(id));
-            return Ok(result);
+            var outputModel = _mapper.Map<UserOutputModel>(_userService.GetUserById(id));
+            return Ok(outputModel);
         }
 
         // https://localhost:44365/api/user
@@ -107,8 +107,8 @@ namespace EducationSystem.Controllers
                 return Problem("Не найден пользователь");
             }
             _userService.UpdateUser(userDto);
-            var result = _mapper.Map<UserOutputModel>(_userService.GetUserById(id));
-            return Ok(result);
+            var outputModel = _mapper.Map<UserOutputModel>(_userService.GetUserById(id));
+            return Ok(outputModel);
         }
 
         // https://localhost:44365/api/user/42
@@ -124,8 +124,8 @@ namespace EducationSystem.Controllers
             var result = _userService.DeleteUser(id);
             if (result == 1)
             {
-                var resultModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
-                return Ok(resultModel);
+                var outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
+                return Ok(outputModel);
             }
 
             return Problem($"Ошибка! Не удалось удалить пользователя #{id}!");
@@ -144,8 +144,8 @@ namespace EducationSystem.Controllers
             var result = _userService.RecoverUser(id);
             if (result == 1)
             {
-                var resultModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
-                return Ok(resultModel);
+                var outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
+                return Ok(outputModel);
             }
 
             return Problem($"Ошибка! Не удалось восстановить пользователя #{id}!");
