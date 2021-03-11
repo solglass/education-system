@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace EducationSystem.API.Controllers
 {
@@ -28,8 +29,10 @@ namespace EducationSystem.API.Controllers
         /// <summary>
         /// Create new Attachment
         /// </summary>
+        /// <param name="attachmentInputModel">Model object of attachment to be created</param>
         /// <returns>Return OutputModel of created attachment</returns>
         // https://localhost:44365/api/attachment/
+        [ProducesResponseType(typeof(AttachmentOutputModel), StatusCodes.Status200OK)]
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult <AttachmentOutputModel> AddAttachment([FromBody] AttachmentInputModel attachmentInputModel)
@@ -47,6 +50,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="id">Id of the attachment to be returned</param>
         /// <returns>Return AttachmentOutputModel</returns>
         // https://localhost:44365/api/attachment/42
+        [ProducesResponseType(typeof(AttachmentOutputModel), StatusCodes.Status200OK)]
         [HttpGet("{id}")]
         [AllowAnonymous]
         public ActionResult<AttachmentOutputModel> GetAttachment(int id)
@@ -63,6 +67,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="attachmentInputModel">Model object of attachment with new parameters</param>
         /// <returns>Return updated AttachmentOutputModel</returns>
         // https://localhost:44365/api/attachment/42
+        [ProducesResponseType(typeof(AttachmentOutputModel), StatusCodes.Status200OK)]
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult<AttachmentOutputModel> UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel, int id)
@@ -81,6 +86,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="id">Id of the attachment to be deleted</param>
         /// <returns>Return deleted AttachmentOutputModel</returns>
         // https://localhost:44365/api/attachment/42
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult DeleteAttachment(int id)
@@ -96,9 +102,10 @@ namespace EducationSystem.API.Controllers
         /// <param name="commentId">Id of the comment where attachment to be created</param>
         /// <returns>Return OutputModel of created attachment</returns>
         // https://localhost:44365/api/attachment/comment/4
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
+        public ActionResult AddCommentAttachment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
         {
             var result = _service.AddCommentAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel), commentId);
             return StatusCode(StatusCodes.Status201Created);
@@ -111,13 +118,15 @@ namespace EducationSystem.API.Controllers
         /// <param name="homeworkAttemptId">Id of the homework attempt where attachment to be created</param>
         /// <returns>Return OutputModel of created attachment</returns>
         // https://localhost:44365/api/attachment/homeworkAttempt/4
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("homeworkAttempt/{homeworkAttemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddHomeworkAttemptAttachment([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
         {         
-            var result = _service.AddAttachmentToHomeworkAttempt(_mapper.Map<AttachmentDto>(attachmentInputModel), 
-                homeworkAttemptId);
-           return Ok($"Вложение #{result} добавлено к попытке сдачи #{homeworkAttemptId}");
+            var result = _service.AddHomeworkAttemptAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel), 
+                homeworkAttemptId);
+
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         /// <summary>
@@ -127,6 +136,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="homeworkAttemptId">Id of the homework attempt where attachment to be deleted</param>
         /// <returns>Return deleted AttachmentOutputModel</returns>
         // https://localhost:44365/api/attachment/homeworkAttempt/4/5
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("homeworkAttempt/{homeworkAttemptId}/{attachmentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult DeleteHomeworkAttemptAttachment( int attachmentId, int homeworkAttemptId)
@@ -136,7 +146,6 @@ namespace EducationSystem.API.Controllers
             return NoContent();
         }
 
-        //   https://localhost:44365/api/attachment/comment/4/5
         /// <summary>
         /// Delete Attachment(by Id) from Comment(by Id)
         /// </summary>
@@ -144,6 +153,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="commentId">Id of the comment where attachment to be deleted</param>
         /// <returns>Return deleted AttachmentOutputModel</returns>
         //   https://localhost:44365/api/attachment/comment/4/5
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("comment/{commentId}/{attachmentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult DeleteCommentAttachment(int attachmentId , int commentId)
