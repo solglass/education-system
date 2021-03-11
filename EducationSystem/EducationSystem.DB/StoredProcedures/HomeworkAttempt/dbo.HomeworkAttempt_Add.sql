@@ -6,7 +6,7 @@
 )
 as
 begin
-	insert into dbo.HomeworkAttempt (Comment, UserID, HomeworkID, StatusID)
-	values (@comment, @userId, @homeworkId, @statusId)
+	insert into dbo.HomeworkAttempt (Comment, UserID, HomeworkID, StatusID, IsDeleted)
+	values (@comment, @userId, @homeworkId, @statusId, 0)
 	select SCOPE_IDENTITY()
 end
