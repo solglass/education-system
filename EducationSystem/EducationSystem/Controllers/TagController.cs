@@ -58,17 +58,7 @@ namespace EducationSystem.Controllers
             var tag = _mapper.Map<TagOutputModel>(tagDto);
             return Ok(tag);
         }
-        //https://localhost:50221/api/tag/3
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult<TagOutputModel> UpdateTag(int id, [FromBody] TagInputModel tag)
-        {
-            var tagDto = _mapper.Map<TagDto>(tag);
-            tagDto.Id = id;
-            _tagService.UpdateTag(tagDto);
-            var result = _mapper.Map<TagOutputModel>(_tagService.GetTagById(id));
-            return Ok(result);
-        }
+        
         //https://localhost:50221/api/tag/3
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
