@@ -42,7 +42,7 @@ namespace EducationSystem.API
                 .ForMember(dest=> dest.GroupId, opts => opts.MapFrom(src => src.Group.Id));
 
             CreateMap<GroupInputModel, GroupDto>()
-                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToJustDateTime(src.StartDate)))
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
                 .ForMember(dest => dest.Course, opts => opts.MapFrom(src => new CourseDto() { Id = src.CourseId }))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src => (GroupStatus)src.GroupStatusId));
 
@@ -102,20 +102,19 @@ namespace EducationSystem.API
           .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
 
       CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
-            CreateMap<MaterialInputModel, MaterialDto>();
 
             CreateMap<HomeworkInputModel, HomeworkDto>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.DeadlineDate)))
                 .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupDto() { Id = src.GroupId }))
                .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })))
-               .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
+               .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.TagIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
 
             CreateMap<HomeworkUpdateInputModel, HomeworkDto>()
                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
                .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.DeadlineDate)))
                .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })))
-               .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
+               .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.TagIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
 
             CreateMap<CommentDto, CommentOutputModel>();
             CreateMap<CommentInputModel, CommentDto>()
@@ -136,7 +135,9 @@ namespace EducationSystem.API
             CreateMap<AttachmentDto, AttachmentOutputModel>()
                 .ForMember(dest => dest.AttachmentType, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyAttachmentTypeName(src.AttachmentType)));
 
-            
+
+            CreateMap<MaterialInputModel, MaterialDto>();
+            CreateMap<MaterialDto, MaterialOutputModel>();
         }
     }
 }

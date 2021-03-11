@@ -4,6 +4,7 @@ using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Controllers;
+using EducationSystem.Core.CustomExceptions;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -45,21 +46,20 @@ namespace EducationSystem.API.Controllers
 
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/42
-        [HttpGet("{id}")]
+        [HttpGet("{homeworkId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<HomeworkOutputModel> GetHomeworkById(int id)
+        public ActionResult<HomeworkOutputModel> GetHomeworkById(int homeworkId)
         {
-            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(id));
+            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(homeworkId));
             return Ok(result);
         }
 
-        //todo: doesn't work. Error in GetCommentsByHomeworkAttemptId
         // https://localhost:44365/api/homework/2/attempts
-        [HttpGet("{id}/attempts")]
+        [HttpGet("{homeworkId}/attempts")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkAttemptOutputModel>> GetHomeworkAttemptsByHomeworkId(int id)
+        public ActionResult<List<HomeworkAttemptOutputModel>> GetHomeworkAttemptsByHomeworkId(int homeworkId)
         {
-            var result = _mapper.Map<List<HomeworkAttemptOutputModel>>(_homeworkService.GetHomeworkAttemptsByHomeworkId(id));
+            var result = _mapper.Map<List<HomeworkAttemptOutputModel>>(_homeworkService.GetHomeworkAttemptsByHomeworkId(homeworkId));
             return Ok(result);
         }
 
@@ -93,27 +93,29 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        //todo: Automapper doesn't work
         // https://localhost:44365/api/homework/42
-        [HttpPut("{id}")]
+        [HttpPut("{homeworkId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult<HomeworkOutputModel> UpdateHomework(int id, [FromBody] HomeworkUpdateInputModel homework)
+        public ActionResult UpdateHomework(int homeworkId, [FromBody] HomeworkUpdateInputModel homework)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var dto = _mapper.Map<HomeworkDto>(homework);
-            dto.Id = id;
-            var changedRows = _homeworkService.UpdateHomework(dto);
-            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(id));
+            var changedRows = _homeworkService.UpdateHomework(homeworkId, dto);
+            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(homeworkId));
 
             return Ok(result);
         }
 
         // https://localhost:44365/api/homework/42
-        [HttpDelete("{id}")]
+        [HttpDelete("{homeworkId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult<HomeworkOutputModel> DeleteHomework(int id)
+        public ActionResult<HomeworkOutputModel> DeleteHomework(int homeworkId)
         {
-            var deletedRows = _homeworkService.DeleteHomework(id);
-            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(id));
+            var deletedRows = _homeworkService.DeleteHomework(homeworkId);
+            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(homeworkId));
 
             return Ok(result);
         }
@@ -124,8 +126,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult<HomeworkAttemptOutputModel> CreateAttempt(int homeworkId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
             var dto = _mapper.Map<HomeworkAttemptDto>(inputModel);
-            dto.Homework = new HomeworkDto { Id = homeworkId };
-            var addedAttemptId = _homeworkService.AddHomeworkAttempt(dto);
+            var addedAttemptId = _homeworkService.AddHomeworkAttempt(homeworkId, dto);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(addedAttemptId));
 
             return Ok(result);
@@ -133,9 +134,9 @@ namespace EducationSystem.API.Controllers
 
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/attempt/2
-        [HttpGet("attempt/{attemptId}")]
+        [HttpGet("{homeworkId}/attempt/{attemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<HomeworkAttemptOutputModel> GetHomeworkAttemptById(int attemptId)
+        public ActionResult<HomeworkAttemptOutputModel> GetHomeworkAttemptById(int homeworkId, int attemptId)
         {
             var result = _mapper.Map<HomeworkAttemptOutputModel>( _homeworkService.GetHomeworkAttemptById(attemptId));
 
@@ -143,23 +144,22 @@ namespace EducationSystem.API.Controllers
         }
 
 
-        // https://localhost:44365/api/homework/attempt/2
-        [HttpPut("attempt/{attemptId}")]
+        // https://localhost:44365/api/homework/2/attempt/2
+        [HttpPut("{homeworkId}/attempt/{attemptId}")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult<HomeworkAttemptOutputModel> UpdateHomeworkAttempt(int attemptId, [FromBody] HomeworkAttemptInputModel inputModel)
+        public ActionResult<HomeworkAttemptOutputModel> UpdateHomeworkAttempt(int homeworkId, int attemptId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
             var dto = _mapper.Map<HomeworkAttemptDto>(inputModel);
-            dto.Id = attemptId;
-            var changedRows = _homeworkService.UpdateHomeworkAttempt(dto);
+            var changedRows = _homeworkService.UpdateHomeworkAttempt(attemptId, dto);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
 
             return Ok(result);
         }
 
-        // https://localhost:44365/api/homework/attempt/2
-        [HttpDelete("attempt/{attemptId}")]
+        // https://localhost:44365/api/homework/2/attempt/2
+        [HttpDelete("{homeworkId}/attempt/{attemptId}")]
         [Authorize(Roles = "Админ")]
-        public ActionResult<HomeworkAttemptOutputModel> DeleteHomeworkAttempt(int attemptId)
+        public ActionResult<HomeworkAttemptOutputModel> DeleteHomeworkAttempt(int homeworkId, int attemptId)
         {
             var deletedRows = _homeworkService.DeleteHomeworkAttempt(attemptId);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
@@ -167,39 +167,34 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        //https://localhost:44365/api/homework/attempt/2/comment
-        [HttpPost("attempt/{attemptId}/comment")]
+        //https://localhost:44365/api/homework/2/attempt/2/comment
+        [HttpPost("{homeworkId}/attempt/{attemptId}/comment")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<CommentOutputModel> AddComment(int attemptId, [FromBody] CommentInputModel comment)
+        public ActionResult<CommentOutputModel> AddComment(int homeworkId, int attemptId, [FromBody] CommentInputModel comment)
         {
             var dto = _mapper.Map<CommentDto>(comment);
-            dto.HomeworkAttempt = new HomeworkAttemptDto() { Id = attemptId };
-            var addedCommentId = _homeworkService.AddComment(dto);
+            var addedCommentId = _homeworkService.AddComment(attemptId, dto);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(addedCommentId));
 
             return Ok(result);
         }
 
-        //todo: Update attachments in service
-        //https://localhost:44365/api/homework/attempt/2/comment/2
-        [HttpPut("attempt/{attemptId}/comment/{commentId}")]
+        //https://localhost:44365/api/homework/2/attempt/2/comment/2
+        [HttpPut("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<CommentOutputModel> UpdateComment(int attemptId, int commentId, [FromBody] CommentUpdateInputModel comment)
+        public ActionResult<CommentOutputModel> UpdateComment(int homeworkId, int attemptId, int commentId, [FromBody] CommentUpdateInputModel comment)
         {
             var dto = _mapper.Map<CommentDto>(comment);
-            dto.Id = commentId;
-            dto.HomeworkAttempt = new HomeworkAttemptDto() { Id = attemptId };
-            var changedRows = _homeworkService.UpdateComment(dto);
+            var changedRows = _homeworkService.UpdateComment(attemptId, commentId, dto);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
 
             return Ok(result);
         }
 
-        // how check attemptId?
-        //https://localhost:44365/api/homework/attempt/2/comment/2
-        [HttpGet("attempt/{attemptId}/comment/{commentId}")]
+        //https://localhost:44365/api/homework/2/attempt/2/comment/2
+        [HttpGet("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<CommentOutputModel> GetCommentById(int attemptId, int commentId)
+        public ActionResult<CommentOutputModel> GetCommentById(int homeworkId, int attemptId, int commentId)
         {
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
 
@@ -229,10 +224,10 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        // https://localhost:44365/api/homework/attempt/3/recovery
-        [HttpPut("attempt/{attemptId}/recovery")]
+        // https://localhost:44365/api/homework/2/attempt/3/recovery
+        [HttpPut("{homeworkId}/attempt/{attemptId}/recovery")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult<HomeworkAttemptOutputModel> RecoverHomeworkAttempt(int attemptId)
+        public ActionResult<HomeworkAttemptOutputModel> RecoverHomeworkAttempt(int homeworkId, int attemptId)
         {
             var recoveredRows = _homeworkService.RecoverHomeworkAttempt(attemptId);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
@@ -241,10 +236,10 @@ namespace EducationSystem.API.Controllers
         }
 
 
-        //https://localhost:44365/api/homework/attempt/2/comment/2
-        [HttpDelete("attempt/{attemptId}/comment/{commentId}")]
+        //https://localhost:44365/api/homework/2/attempt/2/comment/2
+        [HttpDelete("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult<CommentOutputModel> DeleteComment(int attemptId, int commentId)
+        public ActionResult<CommentOutputModel> DeleteComment(int homeworkId, int attemptId, int commentId)
         {
             var deletedRows = _homeworkService.DeleteComment(commentId);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
@@ -252,10 +247,10 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        // https://localhost:44365/api/homework/attempt/2/comment/2/recovery
-        [HttpPut("attempt/{attemptId}/comment/{commentId}/recovery")]
+        // https://localhost:44365/api/homework/2/attempt/2/comment/2/recovery
+        [HttpPut("{homeworkId}/attempt/{attemptId}/comment/{commentId}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult<CommentOutputModel> RecoverComment(int attemptId, int commentId)
+        public ActionResult<CommentOutputModel> RecoverComment(int homeworkId, int attemptId, int commentId)
         {
             var recoveredRows = _homeworkService.RecoverComment(commentId);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
@@ -278,7 +273,7 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTag(int homeworkId, int tagId)
         {
-            _homeworkService.AddHomeworkTag(new HomeworkTagDto { HomeworkId = homeworkId, TagId = tagId});
+            _homeworkService.AddHomeworkTag(homeworkId, tagId);
 
             return StatusCode(StatusCodes.Status201Created);
         }
