@@ -1,15 +1,12 @@
-﻿using EducationSystem.API.Mappers;
-using EducationSystem.API.Models;
+﻿using EducationSystem.API.Models;
 using EducationSystem.API.Models.OutputModels;
-using EducationSystem.Controllers;
 using EducationSystem.Business;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using EducationSystem.Data.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace EducationSystem.API.Controllers
 {
@@ -39,7 +36,6 @@ namespace EducationSystem.API.Controllers
             var result = _mapper.Map<AttachmentOutputModel>(newAttachmentDto);
             return Ok(result);
         }
-
         
         // https://localhost:44365/api/attachment/42
         [HttpGet("{id}")]
@@ -66,6 +62,7 @@ namespace EducationSystem.API.Controllers
             try
             {
                 var attDto = _mapper.Map<AttachmentDto>(attachmentInputModel);
+                attDto.Id = id;
                 _service.ModifyAttachment(attDto, id);
                 var attachment = _service.GetAttachmentById(id);
                 var result = _mapper.Map<AttachmentOutputModel>(attachment);
@@ -83,27 +80,27 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteAttachment(int id)
         {
             _service.DeleteAttachmentById(id);
-            return Ok("Успешно удалено");
+
+            return NoContent();
         }
-     //   https://localhost:44365/api/attachment/comment/4
+        // https://localhost:44365/api/attachment/comment/4
         [HttpPost("comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult AddAttachmentToComment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
+        public ActionResult AddCommentAttachment([FromBody] AttachmentInputModel attachmentInputModel,  int commentId)
         {
-            var result = _service.AddAttachmentToComment(_mapper.Map<AttachmentDto>(attachmentInputModel), commentId);
-            return Ok($"Вложение #{result} добавлено к комментарию #{commentId}");
+            var result = _service.AddCommentAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel), commentId);
+            return StatusCode(StatusCodes.Status201Created);
         }
 
        // https://localhost:44365/api/attachment/homeworkAttempt/4
         [HttpPost("homeworkAttempt/{homeworkAttemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult AddAttachmentToHomeworkAttempt([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
+        public ActionResult AddHomeworkAttemptAttachment([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
         {         
-            var result = _service.AddAttachmentToHomeworkAttempt(_mapper.Map<AttachmentDto>(attachmentInputModel), 
+            var result = _service.AddHomeworkAttemptAttachment(_mapper.Map<AttachmentDto>(attachmentInputModel), 
                 homeworkAttemptId);
-           return Ok($"Вложение #{result} добавлено к попытке сдачи #{homeworkAttemptId}");
+            return StatusCode(StatusCodes.Status201Created);
         }
-
 
         // https://localhost:44365/api/attachment/homeworkAttempt/4/5
         [HttpDelete("homeworkAttempt/{homeworkAttemptId}/{attachmentId}")]
@@ -111,7 +108,7 @@ namespace EducationSystem.API.Controllers
         {
             var result = _service.DeleteHomeworkAttemptAttachment(attachmentId,
                 homeworkAttemptId);
-            return Ok("Успешно удалено");
+            return NoContent();
         }
 
         //   https://localhost:44365/api/attachment/comment/4/5
@@ -120,11 +117,8 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteCommentAttachment(int attachmentId , int commentId)
         {
             var result = _service.DeleteCommentAttachment(attachmentId, commentId);
-            return Ok("Успешно удалено");
+            return NoContent();
         }
-
-
-
     }
 }
 
