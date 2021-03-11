@@ -42,15 +42,8 @@ namespace EducationSystem.API.Controllers
         [AllowAnonymous]
         public ActionResult<AttachmentOutputModel> GetAttachment(int id)
         {
-           var attachment = new AttachmentOutputModel();
-            try
-            {
-                attachment = _mapper.Map<AttachmentOutputModel>(_service.GetAttachmentById(id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var attDto = _service.GetAttachmentById(id);
+            var attachment = _mapper.Map<AttachmentOutputModel>(attDto);
             return Ok(attachment);
         }
 
@@ -59,19 +52,12 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult<AttachmentOutputModel> UpdateAttachment([FromBody] AttachmentInputModel attachmentInputModel, int id)
         {
-            try
-            {
-                var attDto = _mapper.Map<AttachmentDto>(attachmentInputModel);
-                attDto.Id = id;
-                _service.ModifyAttachment(attDto, id);
-                var attachment = _service.GetAttachmentById(id);
-                var result = _mapper.Map<AttachmentOutputModel>(attachment);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var attDto = _mapper.Map<AttachmentDto>(attachmentInputModel);
+            attDto.Id = id;
+            _service.ModifyAttachment(attDto, id);
+            var attachment = _service.GetAttachmentById(id);
+            var result = _mapper.Map<AttachmentOutputModel>(attachment);
+            return Ok(result);
         }
 
         // https://localhost:44365/api/attachment/42
@@ -80,9 +66,9 @@ namespace EducationSystem.API.Controllers
         public ActionResult DeleteAttachment(int id)
         {
             _service.DeleteAttachmentById(id);
-
             return NoContent();
         }
+
         // https://localhost:44365/api/attachment/comment/4
         [HttpPost("comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
@@ -92,7 +78,7 @@ namespace EducationSystem.API.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
-       // https://localhost:44365/api/attachment/homeworkAttempt/4
+        // https://localhost:44365/api/attachment/homeworkAttempt/4
         [HttpPost("homeworkAttempt/{homeworkAttemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult AddHomeworkAttemptAttachment([FromBody] AttachmentInputModel attachmentInputModel,  int homeworkAttemptId)
@@ -104,6 +90,7 @@ namespace EducationSystem.API.Controllers
 
         // https://localhost:44365/api/attachment/homeworkAttempt/4/5
         [HttpDelete("homeworkAttempt/{homeworkAttemptId}/{attachmentId}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult DeleteHomeworkAttemptAttachment( int attachmentId, int homeworkAttemptId)
         {
             var result = _service.DeleteHomeworkAttemptAttachment(attachmentId,
