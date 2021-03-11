@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using AutoMapper;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Utils;
+using Microsoft.AspNetCore.Http;
 
 namespace EducationSystem.Controllers
 {
@@ -37,6 +38,10 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user/register
+        /// <summary>user registration</summary>
+        /// <param name="inputModel">information about registered user</param>
+        /// <returns>List of attached materials to tag</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpPost("register")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
         public ActionResult Register([FromBody] UserInputModel inputModel)
