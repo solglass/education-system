@@ -8,8 +8,8 @@ namespace EducationSystem.Data
         int AddGroup(GroupDto groupDto);
         int AddGroup_Material(int groupId, int materialId);
         int AddStudentGroup(StudentGroupDto studentGroup);
-        int AddTeacherGroup(TeacherGroupDto teacherGroup);
-        int AddTutorToGroup(TutorGroupDto tutorGroup);
+        int AddTeacherGroup(int groupId,int teacherId);
+        int AddTutorToGroup(int userId,int groupId);
         int DeleteGroup(int id);
         int DeleteGroup_Material(int groupId, int materialId);
         int DeleteStudentGroupById(int userId, int groupId);
@@ -19,12 +19,9 @@ namespace EducationSystem.Data
         GroupDto GetGroupById(int id);
         GroupDto GetGroupProgramsByGroupId(int id);
         List<GroupDto> GetGroups();
-        List<GroupDto> GetGroupsByCourseId(int id);
+        List<GroupDto> GetGroupsByCourseId(int id);
         List<GroupDto> GetGroupsWithoutTutors();
         StudentGroupDto GetStudentGroupById(int id);
-        TeacherGroupDto GetTeacherGroupById(int id);
-        TutorGroupDto GetTutorGroupById(int id);
-        List<TutorGroupDto> GetTutorGroups();
         int HardDeleteGroup(int id);
         int UpdateGroup(GroupDto groupDto);
         List<GroupDto> GetGroupByThemeId(int id);

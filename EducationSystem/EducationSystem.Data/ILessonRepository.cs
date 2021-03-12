@@ -8,7 +8,7 @@ namespace EducationSystem.Data
         int AddAttendance(AttendanceDto attendance);
         int AddFeedback(FeedbackDto feedbackDto);
         int AddLesson(LessonDto lessonDto);
-        int AddLessonTheme(LessonThemeDto lessonTheme);
+        int AddLessonTheme(int lessonId, int themeId);
         int DeleteAttendance(int id);
         int DeleteFeedback(int id);
         int DeleteLessonTheme(int lessonId, int themeId);
@@ -21,7 +21,6 @@ namespace EducationSystem.Data
         List<LessonDto> GetLessonsByGroupId(int id);
         int DeleteOrRecoverLesson(int id, bool isDeleted);
         List<LessonDto> GetLessonsByThemeId(int themeId);
-        List<LessonThemeDto> GetLessonThemesByThemeId(int id);
         int UpdateAttendance(AttendanceDto attendance);
         int UpdateFeedback(FeedbackDto feedbackDto);
         int UpdateLesson(LessonDto lessonDto);

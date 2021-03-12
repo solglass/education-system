@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AutoMapper;
-using EducationSystem.API;
-using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
-using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Controllers
 {
     // https://localhost:50221/api/lesson/
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class LessonController : ControllerBase
     {
         private ILessonService _lessonService;
@@ -84,7 +79,7 @@ namespace EducationSystem.Controllers
 
 
         // https://localhost:50221/api/lesson/5
-        [HttpPut("{id}")]
+        [HttpPut("{lessonId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult<LessonOutputModel> UpdateLesson(int lessonId, [FromBody] LessonInputModel lesson)
         {
@@ -95,22 +90,25 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
         
-        // https://localhost:50221/api/lesson/feedback
-        [HttpGet("feedback")]
+        // https://localhost:50221/api/lesson/5/feedback
+        [HttpGet("{lessonId}/feedback")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult<List<FeedbackOutputModel>> GetFeedbacks([FromBody] FeedbackSearchInputModel inputModel)
+        public ActionResult GetFeedbacks(int lessonId, [FromBody] FeedbackSearchInputModel inputModel)
         {
             var feedbackDtos = _lessonService.GetFeedbacks(inputModel.LessonID, inputModel.GroupID, inputModel.CourseID);
             var feedbackList = _mapper.Map<List<FeedbackOutputModel>>(feedbackDtos);
+            var feedbackDtos = _lessonService.GetFeedbacks(inputModel.LessonId, inputModel.GroupId, inputModel.CourseId);
+            var feedbackList = _mapper.Map<LessonOutputModel>(feedbackDtos);
             return Ok(feedbackList);
         }
         
-        // https://localhost:50221/api/lesson/feedback/3
-        [HttpGet("feedback/{id}")]
-        [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult<FeedbackOutputModel> GetFeedbackById(int id)
+        // https://localhost:50221/api/lesson/5/feedback/3
+        [HttpGet("{lessonId}/feedback/{feedbackId}")]
+        [Authorize(Roles = "Админ, Менеджер, Методист, Преподаватель")]
+        public ActionResult GetFeedbackById(int lessonId, int feedbackId)
         {
-            var feedbackDto = _lessonService.GetFeedbackById(id);
+            var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
             var result = _mapper.Map<FeedbackOutputModel>(feedbackDto);
             return Ok(result);
         }
@@ -120,32 +118,28 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult<FeedbackOutputModel> AddNewFeedback(int lessonId, FeedbackInputModel inputModel)
         {
-            inputModel.LessonId = lessonId;
             var feedbackDto = _mapper.Map<FeedbackDto>(inputModel);
-            var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(_lessonService.AddFeedback(feedbackDto)));
-            return Ok(result);
+            var result = _lessonService.AddFeedback(lessonId, feedbackDto);
+            return Ok($"Отзыв #{result} добавлен");
         }
 
         // https://localhost:50221/api/lesson/5/feedback/5
-        [HttpPut("{id}/feedback/{feedbackId}")]
+        [HttpPut("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult<FeedbackOutputModel> UpdateFeedback(int feedbackId, int lessonId, [FromBody] FeedbackInputModel feedbackInputModel)
+        public ActionResult UpdateFeedback(int lessonId, int feedbackId, [FromBody] FeedbackInputModel feedbackInputModel)
         {
-            feedbackInputModel.LessonId = lessonId;
             var feedbackDto = _mapper.Map<FeedbackDto>(feedbackInputModel);
-            feedbackDto.Id = feedbackId;
-             _lessonService.UpdateFeedback(feedbackDto);
-            var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(feedbackId));
-            return Ok(result);
+            var result = _lessonService.UpdateFeedback(lessonId, feedbackId, feedbackDto);
+            return Ok($"Отзыв #{result} обновлён");
         }
 
         // https://localhost:44365/api/lesson/3/feedback/3
-        [HttpDelete("{id}/feedback/{feedbackId}")]
+        [HttpDelete("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult DeleteFeedback(int id)
+        public ActionResult DeleteFeedback(int lessonId, int feedbackId)
         {
-             _lessonService.DeleteFeedback(id);
-            return StatusCode(StatusCodes.Status204NoContent);
+            _lessonService.DeleteFeedback(feedbackId);
+            return NoContent();
         }
 
         // https://localhost:50221/api/lesson/5/attendance/
@@ -158,23 +152,12 @@ namespace EducationSystem.Controllers
             return Ok(listAttendances);
         }
 
-        // https://localhost:50221/attendance-by-user/userId
-        [HttpGet("attendance-by-user")]
-        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
-        public ActionResult<List<AttendanceOutputModel>> GetAttendancesByUserId(int userId)
-        {
-            var attendanceDtos = _lessonService.GetAttendancesByUserId(userId);
-            var listAttendances = _mapper.Map<List<AttendanceOutputModel>>(attendanceDtos);
-            return Ok(listAttendances);
-        }
-
         // https://localhost:50221/api/lesson/5/attendance/3
         [HttpGet("{id}/attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult<AttendanceOutputModel> GetAttendanceById(int lessonId, int attendanceId)
         {
             var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
-            attendanceDto.Lesson = new LessonDto { Id = lessonId };
             var result = _mapper.Map<AttendanceOutputModel>(attendanceDto);
             return Ok(result);
         }
@@ -182,11 +165,11 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/lesson/5/attendance
         [HttpPost("{id}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult<AttendanceOutputModel> AddNewAttendance(AttendanceInputModel inputModel)
+        public ActionResult AddNewAttendance(int lessonId, [FromBody] AttendanceInputModel inputModel)
         {
             var attendanceDto = _mapper.Map<AttendanceDto>(inputModel);
-            var result =  _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(_lessonService.AddAttendance(attendanceDto)));
-            return Ok(result);
+            var result = _lessonService.AddAttendance(lessonId, attendanceDto);
+            return Ok($"Посещаемость #{result} добавлен");
         }
 
         // https://localhost:50221/api/lesson/2/attendance/2
@@ -202,65 +185,49 @@ namespace EducationSystem.Controllers
         public ActionResult<AttendanceOutputModel> UpdateAttendance(int lessonId, int attendanceId, [FromBody] AttendanceInputModel attendanceInputModel)
         {
             var attendanceDto = _mapper.Map<AttendanceDto>(attendanceInputModel);
-            attendanceDto.Id = attendanceId;
-            attendanceDto.Lesson = new LessonDto { Id = lessonId };
-            _lessonService.UpdateAttendance(attendanceDto);
-            var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(attendanceId));
-            return Ok(result);
+            var result = _lessonService.UpdateAttendance(lessonId, attendanceId, attendanceDto);
+            return Ok($"Посещаемость #{result} обновлёна");
         }
 
-        // https://localhost:50221/api/lessoniD/
-        [HttpDelete("{id}")]
+        // https://localhost:50221/api/lesson/iD/
+        [HttpDelete("{lessonId}/attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult DeleteAttendance(int id)
+        public ActionResult DeleteAttendance(int lessonId, int attendanceId)
         {
-            _lessonService.DeleteAttendance(id);
-            return StatusCode(StatusCodes.Status204NoContent);
+            _lessonService.DeleteAttendance(attendanceId);
+            return Ok("Посещаемость удалена");
         }
 
-        // https://localhost:50221/api/lesson/theme/3/lessons
+        // https://localhost:50221/api/lesson/by-theme/14
         /// <summary>
         /// Get all lessons that belong to one theme and are not deleted.
         /// </summary>
         /// <param name="id">The identifier of the theme that we want to see all its lessons.</param>
         /// <returns>The list of lessonOutputModel.</returns>
-        [HttpGet("Theme/{id}/lessons")]
-        // [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
+        [HttpGet("by-theme/{id}")]
+        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int themeId)
         {
             var lessons = _mapper.Map<List<LessonOutputModel>>(_lessonService.GetLessonsByThemeId(themeId));
             return Ok(lessons);
         }
 
-
-        // https://localhost:50221/api/lesson/id/lesson-theme/
-        [HttpPost("{id}/lesson-theme")]
+        // https://localhost:50221/api/lesson/45/theme/54
+        [HttpPost("{lessonId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult AddNewLessonTheme(int lessonId, LessonThemeInputModel lessonThemeModel)
+        public ActionResult AddNewLessonTheme(int lessonId, int themeId)
         {
-            lessonThemeModel.LessonId = lessonId;
-            var lessonThemeDto = _mapper.Map<LessonThemeDto>(lessonThemeModel);
-            _lessonService.AddLessonTheme(lessonThemeDto);
-
-            return StatusCode(StatusCodes.Status201Created);
+            var result = _lessonService.AddLessonTheme(lessonId, themeId);
+            return Ok($"Тема урока #{result} добавлен");
         }
 
-        // https://localhost:50221/api/lesson-theme/3
-        [HttpDelete("{id}")]
+        // https://localhost:50221/api/lesson/45/theme/54
+        [HttpDelete("{lessonId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteLessonTheme(int lessonId, int themeId)
         {
              _lessonService.DeleteLessonTheme(lessonId, themeId);
             return StatusCode(StatusCodes.Status204NoContent);
-        }
-
-        // https://localhost:44365/api/lesson/percent-of-skip/0/by-group/3
-        [HttpGet("percent-of-skip/{percent}/by-group/{groupId}")]
-        [AllowAnonymous]
-        //[Authorize(Roles = "Админ, Преподаватель, Менеджер")]
-        public ActionResult <List<AttendanceReportOutputModel>> GetStudentsByPercentOfSkip(int percent, int groupId)
-        {
-            return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
         }
     }
 }

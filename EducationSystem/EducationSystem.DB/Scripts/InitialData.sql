@@ -1,4 +1,11 @@
-﻿INSERT INTO dbo.AttachmentType VALUES
+﻿declare @DbVersion int
+
+select top 1 @DbVersion = version
+from dbo.DbVersion order by id desc
+
+if @DbVersion is not null set noexec on
+
+INSERT INTO dbo.AttachmentType VALUES
 	(1, 'File'),
 	(2, 'Link')
 GO
@@ -33,5 +40,8 @@ INSERT INTO dbo.UnderstandingLevel VALUES
 	(2,'Medium'),
 	(3, 'Good')
 GO
+INSERT INTO dbo.DbVersion VALUES
+	(1)
+GO
 
-	
+set noexec off

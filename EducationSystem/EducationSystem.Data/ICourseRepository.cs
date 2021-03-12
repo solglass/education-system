@@ -13,7 +13,6 @@ namespace EducationSystem.Data
         int DeleteOrRecoverTheme(int id, bool isDeleted);
         CourseDto GetCourseById(int id);
         List<CourseDto> GetCourses();
-        List<Course_ThemeDto> GetCourseThemeByThemeId(int id);
         ThemeDto GetThemeById(int id);
         List<ThemeDto> GetThemes();
         List<ThemeDto> GetThemesByCourseId(int id);
