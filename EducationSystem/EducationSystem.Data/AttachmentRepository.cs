@@ -67,7 +67,6 @@ namespace EducationSystem.Data
             return data;
         }
 
-
         public int AddAttachment(AttachmentDto attachmentDto)
         {
             var value = _connection
@@ -107,7 +106,6 @@ namespace EducationSystem.Data
            
             return result;
         }
-
 
         public int AddAttachmentToComment(int commentId, int attachmentId)
         {
