@@ -241,7 +241,7 @@ namespace EducationSystem.Controllers
             lessonThemeModel.LessonId = lessonId;
             var lessonThemeDto = _mapper.Map<LessonThemeDto>(lessonThemeModel);
             _lessonService.AddLessonTheme(lessonThemeDto);
-            var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
+
             return StatusCode(StatusCodes.Status201Created);
         }
 
