@@ -21,9 +21,7 @@ namespace EducationSystem.Data.Tests
         private List<int> _homeworkAttemptIdList;
         private List<int> _homeworkAttemptStatusIdList;
 
-        private HomeworkDto _expectedHomework;
-        private List<HomeworkDto> _homeworkFromDb;
-        private List<HomeworkAttemptDto> _homeworkAttemptFromDb;
+        private GroupDto _groupDtoMock;
 
 
         [OneTimeSetUp]
@@ -34,10 +32,6 @@ namespace EducationSystem.Data.Tests
             _userRepo = new UserRepository(_options);
             _courseRepo = new CourseRepository(_options);
 
-            _homeworkFromDb = new List<HomeworkDto>();
-            _homeworkAttemptFromDb = new List<HomeworkAttemptDto>();
-            _expectedHomework = new HomeworkDto();
-
             _groupIdList = new List<int>();
             _courseIdList = new List<int>();
             _userIdList = new List<int>();
@@ -45,6 +39,14 @@ namespace EducationSystem.Data.Tests
             _homeworkAttemptIdList = new List<int>();
             _homeworkAttemptStatusIdList = new List<int>();
 
+            _groupDtoMock = GroupMockGetter.GetGroupDtoMock(1);
+            _groupDtoMock.Course = CourseMockGetter.GetCourseDtoMock(1);
+            var addedCourseId = _courseRepo.AddCourse(_groupDtoMock.Course);
+            _courseIdList.Add(addedCourseId);
+            _groupDtoMock.Course.Id = addedCourseId;
+            var addedGroupId = _groupRepo.AddGroup(_groupDtoMock);
+            _groupIdList.Add(addedGroupId);
+            _groupDtoMock.Id = addedGroupId;
         }
 
         [TestCase(1)]
@@ -52,18 +54,38 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
-            dto.Group = GroupMockGetter.GetGroupDtoMock(1);
-            dto.Group.Course = CourseMockGetter.GetCourseDtoMock(1);
-            var addedCourseId = _courseRepo.AddCourse(dto.Group.Course);
-            _courseIdList.Add(addedCourseId);
-            dto.Group.Course.Id = addedCourseId;
-            var addedGroupId = _groupRepo.AddGroup(dto.Group);
-            _groupIdList.Add(addedGroupId);
-            dto.Group.Id = addedGroupId;
+            dto.Group = _groupDtoMock;
 
             var addedHomeworkId = _homeworkRepo.AddHomework(dto);
             _homeworkIdList.Add(addedHomeworkId);
             dto.Id = addedHomeworkId;
+
+            //When
+            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId);
+
+            //Then
+            Assert.AreEqual(dto, actual);
+
+        }
+
+        [TestCase(1)]
+        public void HomeworkUpdatePositiveTest(int mockId)
+        {
+            //Given
+            var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
+            dto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            dto = new HomeworkDto
+            {
+                Id = addedHomeworkId,
+                Description = "Homework Updated Test",
+                StartDate = DateTime.Now.AddDays(1),
+                DeadlineDate = DateTime.Now.AddDays(2),
+                IsOptional = false
+            };
+            _homeworkRepo.UpdateHomework(dto);
 
             //When
             var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId);
