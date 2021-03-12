@@ -142,7 +142,7 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/lesson/3/feedback/3
         [HttpDelete("{id}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult<int> DeleteFeedback(int id)
+        public ActionResult DeleteFeedback(int id)
         {
              _lessonService.DeleteFeedback(id);
             return StatusCode(StatusCodes.Status204NoContent);
@@ -212,7 +212,7 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/lessoniD/
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult <int> DeleteAttendance(int id)
+        public ActionResult DeleteAttendance(int id)
         {
             _lessonService.DeleteAttendance(id);
             return StatusCode(StatusCodes.Status204NoContent);
