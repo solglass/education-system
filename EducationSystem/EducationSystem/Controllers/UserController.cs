@@ -40,29 +40,29 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/user/register
         [HttpPost("register")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
-        public ActionResult Register([FromBody] UserInputModel inputModel)
+        public ActionResult<UserOutputModel> Register([FromBody] UserInputModel inputModel)
         {
             var userDto = _mapper.Map<UserDto>(inputModel);
             if (String.IsNullOrEmpty(inputModel.Password) && String.IsNullOrEmpty(inputModel.Login))
             {
                 return Problem("Не заполнены поля Password и Login ");
             }
-            _userService.AddUser(userDto);
-            return Ok();
+            var user = _userService.AddUser(userDto);
+            var outputModel = _mapper.Map<UserOutputModel>(user);
+            return Ok(outputModel);
         }
 
         // https://localhost:44365/api/user/change-password
         [HttpPut("change-password")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
-        public ActionResult<UserOutputModel> ChangePassword(int id, string oldPassword, string newPassword)
+        public ActionResult ChangePassword(int id, string oldPassword, string newPassword)
         {
            if(_userService.GetUserById(id) == null)
             {
                 return Problem("Не найден пользователь");
             }
             _userService.ChangePassword(id, oldPassword,newPassword);
-            var outputModel = _mapper.Map<UserOutputModel>(_userService.GetUserById(id));
-            return Ok(outputModel);
+            return NoContent();
         }
 
         // https://localhost:44365/api/user
