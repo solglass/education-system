@@ -57,6 +57,8 @@ namespace EducationSystem.Data.Tests
             dto.Group = _groupDtoMock;
 
             var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+            Assert.Greater(addedHomeworkId, 0);
+
             _homeworkIdList.Add(addedHomeworkId);
             dto.Id = addedHomeworkId;
 
@@ -91,6 +93,29 @@ namespace EducationSystem.Data.Tests
             var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId);
 
             //Then
+            Assert.AreEqual(dto, actual);
+
+        }
+
+        [TestCase(1, true)]
+        [TestCase(1, false)]
+        public void HomeworkDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
+        {
+            //Given
+            var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
+            dto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+            _homeworkIdList.Add(addedHomeworkId);
+            dto.Id = addedHomeworkId;
+            dto.IsDeleted = isDeleted;
+
+            //When
+            var affectedRowsCount = _homeworkRepo.DeleteOrRecoverHomework(addedHomeworkId, isDeleted);
+
+            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId);
+
+            //Then
+            Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
 
         }

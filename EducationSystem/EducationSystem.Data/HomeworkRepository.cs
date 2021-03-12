@@ -453,8 +453,6 @@ namespace EducationSystem.Data
 
 
 
-        // todo: dapper logic
-        // method doesn't work =(
         public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
         {
             var hwAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
