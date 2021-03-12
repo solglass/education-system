@@ -24,7 +24,7 @@ namespace EducationSystem.Data
             var lessons = _connection
                 .Query<LessonDto, ThemeDto, LessonDto>("dbo.Lesson_SelectByGroupId",
                (lesson, theme) =>
-               {
+               { 
 
                    if (!lessonDictionary.TryGetValue(lesson.Id, out LessonDto lessonEntry))
                    {
