@@ -263,14 +263,6 @@ namespace EducationSystem.Data
 
 
 
-        public LessonThemeDto GetLessonThemeById(int id)
-        {
-            var lessonTheme = _connection
-                .Query<LessonThemeDto>("dbo.Lesson_Theme_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return lessonTheme;
-        }
-
         public List<LessonThemeDto> GetLessonThemesByThemeId(int id)
         {
             var result = _connection.

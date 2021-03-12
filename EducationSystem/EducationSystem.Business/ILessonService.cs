@@ -16,7 +16,6 @@ namespace EducationSystem.Business
         LessonDto GetLessonById(int id);
         List<LessonDto> GetLessonsByGroupId(int id);
         List<LessonDto> GetLessonsByThemeId(int themeId);
-        LessonThemeDto GetLessonThemeById(int id);
         int UpdateAttendance(AttendanceDto attendance);
         List<AttendanceReportDto> GetStudentByPercentOfSkip(int percent, int groupId);
         int DeleteLesson(int id);

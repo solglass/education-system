@@ -85,10 +85,6 @@ namespace EducationSystem.Business
             return _lessonRepository.DeleteAttendance(id);
         }
 
-        public LessonThemeDto GetLessonThemeById(int id)
-        {
-            return _lessonRepository.GetLessonThemeById(id);
-        }
 
         public int AddAttendance(AttendanceDto attendance)
         {

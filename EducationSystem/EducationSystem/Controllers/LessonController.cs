@@ -144,8 +144,8 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult<int> DeleteFeedback(int id)
         {
-            var result = _lessonService.DeleteFeedback(id);
-            return Ok(result);
+             _lessonService.DeleteFeedback(id);
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         // https://localhost:50221/api/lesson/5/attendance/
@@ -214,8 +214,8 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult <int> DeleteAttendance(int id)
         {
-            var result = _lessonService.DeleteAttendance(id);
-            return Ok(result);
+            _lessonService.DeleteAttendance(id);
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         // https://localhost:50221/api/lesson/theme/3/lessons
@@ -248,10 +248,10 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/lesson-theme/3
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult<int> DeleteLessonTheme(int lessonId, int themeId)
+        public ActionResult DeleteLessonTheme(int lessonId, int themeId)
         {
-            var result = _lessonService.DeleteLessonTheme(lessonId, themeId);
-            return Ok(result);
+             _lessonService.DeleteLessonTheme(lessonId, themeId);
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         // https://localhost:44365/api/lesson/percent-of-skip/0/by-group/3

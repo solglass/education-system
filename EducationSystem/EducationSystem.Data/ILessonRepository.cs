@@ -21,7 +21,6 @@ namespace EducationSystem.Data
         List<LessonDto> GetLessonsByGroupId(int id);
         int DeleteOrRecoverLesson(int id, bool isDeleted);
         List<LessonDto> GetLessonsByThemeId(int themeId);
-        LessonThemeDto GetLessonThemeById(int id);
         List<LessonThemeDto> GetLessonThemesByThemeId(int id);
         int UpdateAttendance(AttendanceDto attendance);
         int UpdateFeedback(FeedbackDto feedbackDto);
