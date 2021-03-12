@@ -88,7 +88,7 @@ namespace EducationSystem.Controllers
 
             var addedGroupId = _service.AddGroup(_mapper.Map<GroupDto>(group));
             var result = _mapper.Map<GroupOutputModel>(_service.GetGroupById(addedGroupId));
-            return Ok($"{result} Группа  добавлена");
+            return Ok(result);
         }
         // https://localhost:44365/api/group/2
         [HttpPut("{id}")]
@@ -102,7 +102,7 @@ namespace EducationSystem.Controllers
           var groupDto = _mapper.Map<GroupDto>(group);
           var changedRows = _service.UpdateGroup(groupDto);
           var result = _mapper.Map<GroupOutputModel>(_service.GetGroupById(id));
-          return Ok($"{result} Изменения  внесены!");
+          return Ok(result);
         }
         // https://localhost:44365/api/group/2
         [HttpDelete("{id}")]
@@ -110,8 +110,7 @@ namespace EducationSystem.Controllers
         public ActionResult DeleteGroup(int id)
         {
             var deleteRows = _service.DeleteGroup(id);
-            var result = _mapper.Map<HomeworkOutputModel>(_service.GetGroupById(id));
-            return Ok($"{result}Группа удалена");
+            return NoContent();
         }
 
         [HttpPost("{groupId}/material/{materialId}")]
