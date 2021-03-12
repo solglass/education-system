@@ -259,6 +259,7 @@
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByThemeId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_AddTheme.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_DeleteTheme.sql" />
+    <Build Include="StoredProcedures\Comment\jopa.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
