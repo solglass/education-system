@@ -120,6 +120,35 @@ namespace EducationSystem.Data.Tests
 
         }
 
+        [TestCase(new int[] { 1,2,3})]
+        public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
+        {
+            //Given
+            var addedGroupId = _groupRepo.AddGroup(_groupDtoMock);
+            _groupIdList.Add(addedGroupId);
+            var groupDto = (GroupDto)_groupDtoMock.Clone();
+            groupDto.Id = addedGroupId;
+
+            var expected = new List<HomeworkDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
+                dto.Group = groupDto;
+                var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+                _homeworkIdList.Add(addedHomeworkId);
+                dto.Id = addedHomeworkId;
+                expected.Add(dto);
+            }
+
+            //When
+
+            var actual = _homeworkRepo.SearchHomeworks(groupDto.Id, null, null);
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+
+        }
+
         //[Test, Order(2)]
         //public void TestUpdateHomework()
         //{

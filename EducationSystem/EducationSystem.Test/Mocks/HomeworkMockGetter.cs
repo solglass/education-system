@@ -20,6 +20,24 @@ namespace EducationSystem.Data.Tests.Mocks
                         IsOptional = true
                     };
                     break;
+                case 2:
+                    return new HomeworkDto
+                    {
+                        Description = "Test 2 mock",
+                        StartDate = DateTime.Now,
+                        DeadlineDate = DateTime.Now,
+                        IsOptional = false
+                    };
+                    break;
+                case 3:
+                    return new HomeworkDto
+                    {
+                        Description = "Test 3 mock",
+                        StartDate = DateTime.Now.AddDays(1),
+                        DeadlineDate = DateTime.Now.AddDays(2),
+                        IsOptional = true
+                    };
+                    break;
                 default:
                     return null;
             }
