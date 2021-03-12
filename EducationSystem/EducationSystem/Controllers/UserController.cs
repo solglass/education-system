@@ -40,8 +40,8 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/user/register
         /// <summary>user registration</summary>
         /// <param name="inputModel">information about registered user</param>
-        /// <returns>Status200OK response</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        /// <returns>rReturn information about added user</returns>
+        [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [HttpPost("register")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
         public ActionResult Register([FromBody] UserInputModel inputModel)
@@ -60,8 +60,8 @@ namespace EducationSystem.Controllers
         /// <param name="id">Id of user for whom we are changing the password</param>
         /// /// <param name="oldPassword">Old password of user</param>
         /// /// <param name="newPassword">New password of user</param>
-        /// <returns>Info of user with new password</returns>
-        [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
+        /// <returns>Status204NoContent response</returns>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpPut("change-password")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
         public ActionResult ChangePassword(int id, string oldPassword, string newPassword)
@@ -272,6 +272,7 @@ namespace EducationSystem.Controllers
         //https://localhost:44365/api/user/payment/42
         /// <summary>Hard delete payment</summary>
         /// <param name="id">Id of deleted payment</param>
+        /// <returns>Status204NoContent response</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
