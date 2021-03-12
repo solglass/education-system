@@ -71,7 +71,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="homeworkId">Id Homework for searchable attempts</param>
         /// <returns>Return list HomeworkAttemptOutputModel</returns>
         // https://localhost:44365/api/homework/2/attempts
-        [ProducesResponseType(typeof(HomeworkAttemptOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<HomeworkAttemptOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("{homeworkId}/attempts")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkAttemptOutputModel>> GetHomeworkAttemptsByHomeworkId(int homeworkId)
@@ -85,7 +85,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="groupId">Group Id</param>
         /// <returns>List HomeworkSearchOutputModel for Group</returns>
         // https://localhost:44365/api/homework/by-group/2
-        [ProducesResponseType(typeof(HomeworkSearchOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<HomeworkSearchOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("by-group/{groupId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByGroupId(int groupId)
@@ -100,7 +100,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="tagId">Tag Id</param>
         /// <returns>Return list HomeworkSearchOutputModel which has this Tag</returns>
         // https://localhost:44365/api/homework/by-tag/2
-        [ProducesResponseType(typeof(HomeworkSearchOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<HomeworkSearchOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("by-tag/{tagId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByTagId(int tagId)
@@ -115,7 +115,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="themeId">Theme Id</param>
         /// <returns>Return list HomeworkSearchOutputModel which has this Theme</returns>
         // https://localhost:44365/api/homework/by-theme/2
-        [ProducesResponseType(typeof(HomeworkSearchOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<HomeworkSearchOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("by-theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByThemeId(int themeId)
@@ -295,14 +295,14 @@ namespace EducationSystem.API.Controllers
         /// <param name="themeId">Theme Id</param>
         /// <returns>Status code no content</returns>
         // https://localhost:44365/api/homework/3/theme/1
-        [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("{homeworkId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteHomeworkTheme(int homeworkId, int themeId)
         {
             _homeworkService.DeleteHomework_Theme(homeworkId, themeId);
 
-            return StatusCode(StatusCodes.Status204NoContent);
+            return NoContent();
         }
         /// <summary>
         /// Recover homework
@@ -378,7 +378,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="themeId">Theme Id</param>
         /// <returns>Return status code 201</returns>
         // https://localhost:44365/api/homework/3/theme/1
-        [ProducesResponseType(typeof(StatusCodes), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("{homeworkId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTheme(int homeworkId, int themeId)
@@ -394,7 +394,7 @@ namespace EducationSystem.API.Controllers
         /// <param name="tagId">Tag Id</param>
         /// <returns>Return status code 201</returns>
         // https://localhost:44365/api/homework/3/tag/1
-        [ProducesResponseType(typeof(StatusCodes), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("{homeworkId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTag(int homeworkId, int tagId)
@@ -410,23 +410,23 @@ namespace EducationSystem.API.Controllers
         /// <param name="tagId">Tag Id</param>
         /// <returns>Return no content response</returns>
         // https://localhost:44365/api/homework/3/tag/1
-        [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("{homeworkId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteHomeworkTag(int homeworkId, int tagId)
         {
             _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
 
-            return StatusCode(StatusCodes.Status204NoContent);
+            return NoContent();
         }
-        /// <summary>
+        /// <summary> 
         /// Get homeworkAttempt by user Id
         /// </summary>
         /// <param name="userId">User Id</param>
         /// <returns>Return searchable homeworkAttempt</returns>
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/attempt/by-user/2
-        [ProducesResponseType(typeof(HomeworkAttemptWithCountOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<HomeworkAttemptWithCountOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("attempt/by-user/{userId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkAttemptWithCountOutputModel>> GetHomeworkAttemptsByUserId(int userId)
@@ -443,7 +443,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Return searchable homeworkAttempt</returns>
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/attempt/by-group/2/by-status/1
-        [ProducesResponseType(typeof(HomeworkAttemptWithCountOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<HomeworkAttemptWithCountOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("attempt/by-group/{groupId}/by-status/{statusId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkAttemptWithCountOutputModel>> GetHomeworkAttemptByStatusIdAndGroupId(int statusId, int groupId)
