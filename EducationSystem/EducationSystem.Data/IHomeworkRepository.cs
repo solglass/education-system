@@ -18,7 +18,6 @@ namespace EducationSystem.Data
         CommentDto GetCommentById(int id);
         List<CommentDto> GetComments();
         List<CommentDto> GetCommentsByHomeworkAttemptId(int id);
-        Comment_AttachmentDto GetComment_AttachmentById(int id);
         HomeworkAttemptDto GetHomeworkAttemptById(int id);
         List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id);
         HomeworkDto GetHomeworkById(int id);
@@ -29,7 +28,11 @@ namespace EducationSystem.Data
         int UpdateComment(CommentDto commentDto);
         int UpdateHomework(HomeworkDto homework);
         int UpdateHomeworkAttempt(HomeworkAttemptDto homeworkAttempt);
-        int HomeworkTagAdd(HomeworkTagDto Tag);
+        int HomeworkTagAdd(int homeworkId, int tagId);
         int HomeworkTagDelete(int homeworkId, int tagId);
+
+        List<HomeworkAttemptDto> GetHomeworkAttempts();
+        List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id);
+        List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId);
     }
 }

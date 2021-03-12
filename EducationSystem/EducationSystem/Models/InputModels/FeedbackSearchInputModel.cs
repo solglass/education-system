@@ -7,9 +7,9 @@ namespace EducationSystem.API.Models.InputModels
 {
     public class FeedbackSearchInputModel
     {
-        public int? LessonID { get; set; }
-        public int? GroupID { get; set; }
-        public int? CourseID { get; set; }
+        public int? LessonId { get; set; }
+        public int? GroupId { get; set; }
+        public int? CourseId { get; set; }
 
     }
 }

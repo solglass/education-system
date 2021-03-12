@@ -1,10 +1,6 @@
-﻿
-using EducationSystem.API.Models;
-using EducationSystem.API.Mappers;
-using EducationSystem.Data;
+﻿using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Models.InputModels;
@@ -23,17 +19,18 @@ namespace EducationSystem.Controllers
     [Authorize]
     public class GroupController : ControllerBase
     {
-
         private IGroupRepository _repo;
         private IGroupService _service;
         private ICourseService _courseService;
+        private ILessonService _lessonService;
         private IMapper _mapper;
-        public GroupController(IMapper mapper, IGroupRepository groupRepository, IGroupService groupService, ICourseService courseService)
+        public GroupController(IMapper mapper, IGroupRepository groupRepository, IGroupService groupService, 
+            ICourseService courseService, ILessonService lessonService)
         {
-            
             _repo = groupRepository;
             _service = groupService;
             _courseService = courseService;
+            _lessonService = lessonService;
             _mapper = mapper;
         }
         // https://localhost:44365/api/group/
@@ -159,7 +156,7 @@ namespace EducationSystem.Controllers
 
         [HttpPost("{groupId}/student/{userId}")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult AddStudentGroup(int groupId, int userId)
+        public ActionResult AddStudentGroup(StudentGroupInputModel studentGroupInputModel)
         {
             var addGroup = _repo.AddStudentGroup(new StudentGroupDto { GroupID = groupId, UserID = userId });
             return StatusCode(StatusCodes.Status201Created);
@@ -207,6 +204,15 @@ namespace EducationSystem.Controllers
         {
             var result = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetUncoveredThemesByGroupId(id));
                  return Ok(result);
+        }
+
+        // https://localhost:44365/api/group/3/percent-of-skip/0
+        [HttpGet("{groupId}/percent-of-skip/{percent}")]
+        [AllowAnonymous]
+        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
+        public ActionResult GetStudentsByPercentOfSkip(int groupId, int percent)
+        {
+            return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
         }
     }
     
