@@ -47,7 +47,8 @@ namespace EducationSystem.Controllers
             {
                 return Problem("Не заполнены поля Password и Login ");
             }
-            var user = _userService.AddUser(userDto);
+            var id = _userService.AddUser(userDto);
+            var user = _userService.GetUserById(id);
             var outputModel = _mapper.Map<UserOutputModel>(user);
             return Ok(outputModel);
         }
