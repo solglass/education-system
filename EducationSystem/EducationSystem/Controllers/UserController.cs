@@ -20,15 +20,12 @@ namespace EducationSystem.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-       
-        private IPaymentRepository _prepo;
+        private readonly IMapper _mapper;
         private IUserService _userService;
         private ILessonService _lessonService;
-        private readonly IMapper _mapper;
-
-        public UserController(IMapper mapper, IPaymentRepository paymentRepository, IUserService userService, ILessonService lessonService)
+        
+        public UserController(IMapper mapper, IUserService userService, ILessonService lessonService)
         {
-            _prepo = paymentRepository;
             _mapper = mapper;
             _userService = userService;
             _lessonService = lessonService;
@@ -125,12 +122,11 @@ namespace EducationSystem.Controllers
         public ActionResult<UserOutputModel> UpdateUserInfo(int id,[FromBody] UserInputModel inputModel)
         {
             var userDto = _mapper.Map<UserDto>(inputModel);
-            userDto.Id = id;
-            if (_userService.GetUserById(userDto.Id) == null)
+            if (_userService.GetUserById(id) == null)
             {
                 return Problem("Не найден пользователь");
             }
-            _userService.UpdateUser(userDto);
+            _userService.UpdateUser(id, userDto);
             var outputModel = _mapper.Map<UserOutputModel>(_userService.GetUserById(id));
             return Ok(outputModel);
         }
@@ -194,9 +190,8 @@ namespace EducationSystem.Controllers
         public ActionResult<PaymentOutputModel> AddPayment(int id, [FromBody] PaymentInputModel payment)
         {
             var paymentDto = _mapper.Map<PaymentDto>(payment);
-            paymentDto.Student.Id = id;
-            _prepo.AddPayment(paymentDto);
-            var outputModel = _mapper.Map<PaymentOutputModel>(_prepo.GetPaymentById(id));
+            _userService.AddPayment(id, paymentDto);
+            var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(id));
             return Ok(outputModel);
         }
 
@@ -237,7 +232,8 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ,Менеджер")]
         public ActionResult<PaymentOutputModel> GetPayment(int id)
         {
-            var payment = _prepo.GetPaymentById(id);
+
+            var payment = _userService.GetPaymentById(id);
             var outputModel = _mapper.Map<PaymentOutputModel>(payment);
             return Ok(outputModel);
         }
@@ -253,9 +249,8 @@ namespace EducationSystem.Controllers
         public ActionResult<PaymentOutputModel> UpdatePayment(int id, [FromBody] PaymentInputModel payment)
         {
             var paymentDto = _mapper.Map<PaymentDto>(payment);
-            paymentDto.Id = id;
-            _prepo.UpdatePayment(paymentDto);
-            var outputModel = _mapper.Map<PaymentOutputModel>(_prepo.GetPaymentById(id));
+            _userService.UpdatePayment(id, paymentDto);
+            var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(id));
             return Ok(outputModel);
         }
 
@@ -268,7 +263,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult<List<UserOutputModel>> GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
         {
-            var students = _prepo.GetStudentsNotPaidInMonth(Converters.StrToDateTimePeriod(month.Month));
+            var students = _userService.GetStudentsNotPaidInMonth(Converters.StrToDateTimePeriod(month.Month));
             var outputModel = _mapper.Map<List<UserOutputModel>>(students);
             return Ok(outputModel);
         }
@@ -282,18 +277,22 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ,Менеджер")]
         public ActionResult DeletePayment(int id)
         {
-            _prepo.DeletePayment(id);
+            _userService.DeletePayment(id);
             return NoContent();
         }
 
         // https://localhost:50221/user/42/attendances
+        /// <summary>Get attandenced of user</summary>
+        /// <param name="userId">Id of user</param>
+        /// <returns>List of attandences of current user</returns>
+        [ProducesResponseType(typeof(List<AttendanceOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("{userId}/attendances")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult GetAttendancesByUserId(int userId)
         {
-            var attendanceDtos = _lessonService.GetAttendancesByUserId(userId);
-            var listAttendances = _mapper.Map<List<AttendanceOutputModel>>(attendanceDtos);
-            return Ok(listAttendances);
+            var attendanceDto = _lessonService.GetAttendancesByUserId(userId);
+            var outputModel = _mapper.Map<List<AttendanceOutputModel>>(attendanceDto);
+            return Ok(outputModel);
         }
     }
 }
