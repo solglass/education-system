@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace EducationSystem.Data.Models
 {
     public class TagDto : ICloneable
