@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EducationSystem.API.Mappers;
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
@@ -10,7 +7,6 @@ using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Logging;
 using AutoMapper;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Utils;
@@ -27,14 +23,15 @@ namespace EducationSystem.Controllers
        
         private IPaymentRepository _prepo;
         private IUserService _userService;
+        private ILessonService _lessonService;
         private readonly IMapper _mapper;
 
-        public UserController(IMapper mapper, IPaymentRepository paymentRepository, IUserService userService)
-
+        public UserController(IMapper mapper, IPaymentRepository paymentRepository, IUserService userService, ILessonService lessonService)
         {
             _prepo = paymentRepository;
             _mapper = mapper;
             _userService = userService;
+            _lessonService = lessonService;
         }
 
         // https://localhost:44365/api/user/register
@@ -287,6 +284,16 @@ namespace EducationSystem.Controllers
         {
             _prepo.DeletePayment(id);
             return NoContent();
+        }
+
+        // https://localhost:50221/user/42/attendances
+        [HttpGet("{userId}/attendances")]
+        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
+        public ActionResult GetAttendancesByUserId(int userId)
+        {
+            var attendanceDtos = _lessonService.GetAttendancesByUserId(userId);
+            var listAttendances = _mapper.Map<List<AttendanceOutputModel>>(attendanceDtos);
+            return Ok(listAttendances);
         }
     }
 }

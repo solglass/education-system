@@ -28,7 +28,7 @@ namespace EducationSystem.Business
         int RecoverHomeworkAttempt(int id);
         HomeworkAttemptDto GetHomeworkAttemptById(int id);
         int AddComment(int attemptId, CommentDto comment);
-        int UpdateComment(int attemptId, int commentId, CommentDto comment);
+        int UpdateComment(int attemptId, int commentId, CommentDto comment);
         int AddHomeworkTag(int homeworkId,int tagId);
         int DeleteHomeworkTag(int homeworkId, int tagId);
     }

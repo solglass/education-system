@@ -56,13 +56,16 @@ namespace EducationSystem.Business
             return _lessonRepository.DeleteFeedback(id);
         }
 
-        public int AddFeedback(FeedbackDto feedback)
+        public int AddFeedback(int lessonId, FeedbackDto feedback)
         {
+            feedback.Lesson = new LessonDto { Id = lessonId };
             return _lessonRepository.AddFeedback(feedback);
         }
 
-        public int UpdateFeedback(FeedbackDto feedback)
+        public int UpdateFeedback(int lessonId, int feedbackId, FeedbackDto feedback)
         {
+            feedback.Lesson = new LessonDto { Id = lessonId };
+            feedback.Id = feedbackId;
             return _lessonRepository.UpdateFeedback(feedback);
         }
 
@@ -85,29 +88,27 @@ namespace EducationSystem.Business
             return _lessonRepository.DeleteAttendance(id);
         }
 
-        public LessonThemeDto GetLessonThemeById(int id)
+        public int AddAttendance(int lessonId, AttendanceDto attendance)
         {
-            return _lessonRepository.GetLessonThemeById(id);
-        }
-
-        public int AddAttendance(AttendanceDto attendance)
-        {
+            attendance.Lesson = new LessonDto { Id = lessonId };
             return _lessonRepository.AddAttendance(attendance);
         }
 
-        public int UpdateAttendance(AttendanceDto attendance)
+        public int UpdateAttendance(int lessonId, int attendanceId, AttendanceDto attendance)
         {
+            attendance.Id = attendanceId;
+            attendance.Lesson = new LessonDto { Id = lessonId };
             return _lessonRepository.UpdateAttendance(attendance);
-        }
-
-        public int AddLessonTheme(LessonThemeDto lessonTheme)
-        {
-            return _lessonRepository.AddLessonTheme(lessonTheme);
         }
 
         public List<LessonDto> GetLessonsByThemeId(int themeId)
         {
             return _lessonRepository.GetLessonsByThemeId(themeId);
+        }
+
+        public int AddLessonTheme(int lessonId, int themeId)
+        {
+            return _lessonRepository.AddLessonTheme(lessonId, themeId);
         }
 
         public int DeleteLessonTheme(int lessonId, int themeId)

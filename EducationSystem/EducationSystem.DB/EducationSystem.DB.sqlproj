@@ -80,7 +80,6 @@
     <Folder Include="StoredProcedures\GroupStatus" />
     <Folder Include="StoredProcedures\Group_Material" />
     <Folder Include="StoredProcedures\Lesson" />
-    <Folder Include="StoredProcedures\Lesson_Theme" />
     <Folder Include="StoredProcedures\Material" />
     <Folder Include="StoredProcedures\Material_Tag" />
     <Folder Include="StoredProcedures\Payment" />
@@ -112,7 +111,6 @@
     <Build Include="StoredProcedures\Course\dbo.Course_Update.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Add.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Delete.sql" />
-    <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectById.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Add.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Search.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectById.sql" />
@@ -122,7 +120,6 @@
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_Update.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Delete.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_Add.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt_Attachment\HomeworkAttempt_Attachment_SelectById.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Update.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Add.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Delete .sql" />
@@ -175,19 +172,14 @@
     <Build Include="StoredProcedures\Group\dbo.Group_SelectAllByCourseId.sql" />
     <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_Add.sql" />
     <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_Delete.sql" />
-    <Build Include="StoredProcedures\Theme_Tag\dbo.Theme_Tag_SelectById.sql" />
     <Build Include="StoredProcedures\Tag\dbo.Tag_Add.sql" />
     <Build Include="StoredProcedures\Tag\dbo.Tag_Delete.sql" />
     <Build Include="StoredProcedures\Tag\dbo.Tag_SelectAll.sql" />
     <Build Include="StoredProcedures\Tag\dbo.Tag_SelectById.sql" />
-    <Build Include="StoredProcedures\Tag\dbo.Tag_Update.sql" />
     <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Add.sql" />
     <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_Delete.sql" />
-    <Build Include="StoredProcedures\Material_Tag\dbo.Material_Tag_SelectById.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Add.sql" />
     <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_Delete.sql" />
-    <Build Include="StoredProcedures\Homework_Tag\dbo.Homework_Tag_SelectById.sql" />
-    <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_SelectAllByThemeId.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Update.sql" />
     <Build Include="StoredProcedures\User\dbo.User_Add.sql" />
     <Build Include="StoredProcedures\User\dbo.User_HardDelete.sql" />
@@ -223,9 +215,6 @@
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByHomeworkId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Add.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByGroupId.sql" />
-    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Add.sql" />
-    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Delete.sql" />
-    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_SelectByID.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Add.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Delete.sql" />
     <Build Include="StoredProcedures\Feedback\dbo.Feedback_Search.sql" />
@@ -268,6 +257,8 @@
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPeriodAndIsNotPaid.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_AddTheme.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_DeleteTheme.sql" />
     <Build Include="Tables\DbVersion.sql" />
     <Build Include="StoredProcedures\User\dbo.PassedStudentsAttempt_SelectByGroupId.sql" />
   </ItemGroup>
