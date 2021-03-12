@@ -63,7 +63,7 @@ namespace EducationSystem.Business
             });
             homeworkDto.Tags.ForEach(tag =>
             {
-                _homeworkRepository.HomeworkTagAdd(new HomeworkTagDto() { HomeworkId = result, TagId = tag.Id });
+                _homeworkRepository.HomeworkTagAdd(result, tag.Id);
             });
             return result;
         }
@@ -190,8 +190,7 @@ namespace EducationSystem.Business
 
         public int AddHomeworkTag(int homeworkId, int tagId)
         {
-            var dto = new HomeworkTagDto { HomeworkId = homeworkId, TagId = tagId };
-            return _homeworkRepository.HomeworkTagAdd(dto);
+            return _homeworkRepository.HomeworkTagAdd(homeworkId, tagId);
         }
         public int DeleteHomeworkTag(int homeworkId, int tagId) { return _homeworkRepository.HomeworkTagDelete(homeworkId, tagId); }
     }

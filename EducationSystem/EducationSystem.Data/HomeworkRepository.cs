@@ -528,10 +528,10 @@ namespace EducationSystem.Data
                 .ToList();
             return comments;
         }
-        public int HomeworkTagAdd(HomeworkTagDto Tag)
+        public int HomeworkTagAdd(int homeworkId, int tagId)
         {
             var result = _connection
-                .QuerySingle<int>("dbo.Homework_Tag_Add", new { Tag.TagId, Tag.HomeworkId }, commandType: System.Data.CommandType.StoredProcedure);
+                .QuerySingle<int>("dbo.Homework_Tag_Add", new { TagId = tagId, HomeworkId = homeworkId }, commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
         public int HomeworkTagDelete(int homeworkId, int tagId)

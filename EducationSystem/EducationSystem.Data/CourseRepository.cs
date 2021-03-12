@@ -288,5 +288,17 @@ namespace EducationSystem.Data
                .ToList();
             return result;
         }
+
+        public int HardDeleteTheme(int id)
+        {
+            var result = _connection
+                .Execute("dbo.Theme_HardDelete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
     }
 }

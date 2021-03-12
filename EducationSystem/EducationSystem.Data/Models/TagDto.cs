@@ -4,10 +4,19 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class TagDto
+    public class TagDto : ICloneable
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public object Clone()
+        {
+            return new TagDto
+            {
+                Id = Id,
+                Name = Name
+            };
+        }
 
         public override bool Equals(object obj)
         {
