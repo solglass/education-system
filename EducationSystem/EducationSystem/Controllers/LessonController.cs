@@ -9,6 +9,7 @@ using EducationSystem.Business;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -46,7 +47,7 @@ namespace EducationSystem.Controllers
         public ActionResult<List<LessonOutputModel>> GetLessons(int id)
         {
             var lessonDtos = _lessonService.GetLessonsByGroupId(id);
-            var lessonsList = _mapper.Map<LessonOutputModel>(lessonDtos);
+            var lessonsList = _mapper.Map<List<LessonOutputModel>>(lessonDtos);
             return Ok(lessonsList);
         }
 
@@ -100,7 +101,7 @@ namespace EducationSystem.Controllers
         public ActionResult<List<FeedbackOutputModel>> GetFeedbacks([FromBody] FeedbackSearchInputModel inputModel)
         {
             var feedbackDtos = _lessonService.GetFeedbacks(inputModel.LessonID, inputModel.GroupID, inputModel.CourseID);
-            var feedbackList = _mapper.Map<FeedbackOutputModel>(feedbackDtos);
+            var feedbackList = _mapper.Map<List<FeedbackOutputModel>>(feedbackDtos);
             return Ok(feedbackList);
         }
         
@@ -141,10 +142,9 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/lesson/3/feedback/3
         [HttpDelete("{id}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult <FeedbackOutputModel> DeleteFeedback(int id)
+        public ActionResult<int> DeleteFeedback(int id)
         {
-            _lessonService.DeleteFeedback(id);
-            var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(id));
+            var result = _lessonService.DeleteFeedback(id);
             return Ok(result);
         }
 
@@ -212,10 +212,9 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/lessoniD/
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult <AttendanceOutputModel> DeleteAttendance(int id)
+        public ActionResult <int> DeleteAttendance(int id)
         {
-            _lessonService.DeleteAttendance(id);
-            var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(id));
+            var result = _lessonService.DeleteAttendance(id);
             return Ok(result);
         }
 
@@ -234,34 +233,25 @@ namespace EducationSystem.Controllers
         }
 
 
-        // https://localhost:50221/api/lesson/lesson-theme/3
-        [HttpGet("lesson-theme/{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
-        public ActionResult<LessonThemeOutputModel> GetLessonThemeById(int lessonId)
-        {
-            var result = _mapper.Map <LessonThemeOutputModel>(_lessonService.GetLessonThemeById(lessonId));
-            return Ok(result);
-        }
-
         // https://localhost:50221/api/lesson/id/lesson-theme/
         [HttpPost("{id}/lesson-theme")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult<LessonOutputModel> AddNewLessonTheme(int lessonId, LessonThemeInputModel lessonThemeModel)
+        public ActionResult AddNewLessonTheme(int lessonId, LessonThemeInputModel lessonThemeModel)
         {
             lessonThemeModel.LessonId = lessonId;
             var lessonThemeDto = _mapper.Map<LessonThemeDto>(lessonThemeModel);
             _lessonService.AddLessonTheme(lessonThemeDto);
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
-            return Ok(result);
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         // https://localhost:50221/api/lesson-theme/3
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult DeleteLessonTheme(int lessonId, int themeId)
+        public ActionResult<int> DeleteLessonTheme(int lessonId, int themeId)
         {
-            _lessonService.DeleteLessonTheme(lessonId, themeId);
-            return Ok("Тема урока удалена");
+            var result = _lessonService.DeleteLessonTheme(lessonId, themeId);
+            return Ok(result);
         }
 
         // https://localhost:44365/api/lesson/percent-of-skip/0/by-group/3
