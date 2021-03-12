@@ -93,20 +93,17 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/lesson/5/feedback
         [HttpGet("{lessonId}/feedback")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
-        public ActionResult<List<FeedbackOutputModel>> GetFeedbacks([FromBody] FeedbackSearchInputModel inputModel)
-        public ActionResult GetFeedbacks(int lessonId, [FromBody] FeedbackSearchInputModel inputModel)
+        public ActionResult<List<FeedbackOutputModel>> GetFeedbacks(int lessonId, [FromBody] FeedbackSearchInputModel inputModel)
         {
-            var feedbackDtos = _lessonService.GetFeedbacks(inputModel.LessonID, inputModel.GroupID, inputModel.CourseID);
-            var feedbackList = _mapper.Map<List<FeedbackOutputModel>>(feedbackDtos);
             var feedbackDtos = _lessonService.GetFeedbacks(inputModel.LessonId, inputModel.GroupId, inputModel.CourseId);
-            var feedbackList = _mapper.Map<LessonOutputModel>(feedbackDtos);
+            var feedbackList = _mapper.Map<List<FeedbackOutputModel>>(feedbackDtos);
             return Ok(feedbackList);
         }
         
         // https://localhost:50221/api/lesson/5/feedback/3
         [HttpGet("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Менеджер, Методист, Преподаватель")]
-        public ActionResult GetFeedbackById(int lessonId, int feedbackId)
+        public ActionResult<FeedbackOutputModel> GetFeedbackById(int lessonId, int feedbackId)
         {
             var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
             var result = _mapper.Map<FeedbackOutputModel>(feedbackDto);
@@ -119,8 +116,8 @@ namespace EducationSystem.Controllers
         public ActionResult<FeedbackOutputModel> AddNewFeedback(int lessonId, FeedbackInputModel inputModel)
         {
             var feedbackDto = _mapper.Map<FeedbackDto>(inputModel);
-            var result = _lessonService.AddFeedback(lessonId, feedbackDto);
-            return Ok($"Отзыв #{result} добавлен");
+            var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(_lessonService.AddFeedback(lessonId, feedbackDto)));
+            return Ok(result);
         }
 
         // https://localhost:50221/api/lesson/5/feedback/5
@@ -129,8 +126,10 @@ namespace EducationSystem.Controllers
         public ActionResult UpdateFeedback(int lessonId, int feedbackId, [FromBody] FeedbackInputModel feedbackInputModel)
         {
             var feedbackDto = _mapper.Map<FeedbackDto>(feedbackInputModel);
-            var result = _lessonService.UpdateFeedback(lessonId, feedbackId, feedbackDto);
-            return Ok($"Отзыв #{result} обновлён");
+            feedbackDto.Id = feedbackId;
+            _lessonService.UpdateFeedback(lessonId, feedbackId, feedbackDto);
+            var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(feedbackId));
+            return Ok(result);
         }
 
         // https://localhost:44365/api/lesson/3/feedback/3
@@ -139,7 +138,7 @@ namespace EducationSystem.Controllers
         public ActionResult DeleteFeedback(int lessonId, int feedbackId)
         {
             _lessonService.DeleteFeedback(feedbackId);
-            return NoContent();
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         // https://localhost:50221/api/lesson/5/attendance/
@@ -165,11 +164,11 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/lesson/5/attendance
         [HttpPost("{id}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult AddNewAttendance(int lessonId, [FromBody] AttendanceInputModel inputModel)
+        public ActionResult <AttendanceOutputModel> AddNewAttendance(int lessonId, [FromBody] AttendanceInputModel inputModel)
         {
             var attendanceDto = _mapper.Map<AttendanceDto>(inputModel);
-            var result = _lessonService.AddAttendance(lessonId, attendanceDto);
-            return Ok($"Посещаемость #{result} добавлен");
+            var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(_lessonService.AddAttendance(lessonId, attendanceDto)));
+            return Ok(result);
         }
 
         // https://localhost:50221/api/lesson/2/attendance/2
@@ -185,8 +184,9 @@ namespace EducationSystem.Controllers
         public ActionResult<AttendanceOutputModel> UpdateAttendance(int lessonId, int attendanceId, [FromBody] AttendanceInputModel attendanceInputModel)
         {
             var attendanceDto = _mapper.Map<AttendanceDto>(attendanceInputModel);
-            var result = _lessonService.UpdateAttendance(lessonId, attendanceId, attendanceDto);
-            return Ok($"Посещаемость #{result} обновлёна");
+            _lessonService.UpdateAttendance(lessonId, attendanceId, attendanceDto);
+            var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(attendanceId));
+            return Ok(result);
         }
 
         // https://localhost:50221/api/lesson/iD/
@@ -195,7 +195,7 @@ namespace EducationSystem.Controllers
         public ActionResult DeleteAttendance(int lessonId, int attendanceId)
         {
             _lessonService.DeleteAttendance(attendanceId);
-            return Ok("Посещаемость удалена");
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
         // https://localhost:50221/api/lesson/by-theme/14
@@ -218,7 +218,7 @@ namespace EducationSystem.Controllers
         public ActionResult AddNewLessonTheme(int lessonId, int themeId)
         {
             var result = _lessonService.AddLessonTheme(lessonId, themeId);
-            return Ok($"Тема урока #{result} добавлен");
+            return StatusCode(StatusCodes.Status201Created);
         }
 
         // https://localhost:50221/api/lesson/45/theme/54
