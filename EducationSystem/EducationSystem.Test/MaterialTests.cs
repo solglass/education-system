@@ -33,7 +33,7 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
-        [TestCase(1)]
+        [TestCase(2)]
         public void MaterialUpdatePositiveTest(int caseId)
         {
             var dto = MaterialMock.GetMaterialMock(caseId);
@@ -44,6 +44,26 @@ namespace EducationSystem.Data.Tests
             dto.Description = $"Description { caseId} update";
 
             var affectedRows = _materialRepository.UpdateMaterial(dto);
+            var actual = _materialRepository.GetMaterialById(addedId);
+
+            Assert.AreEqual(1, affectedRows);
+            Assert.AreEqual(dto, actual);
+        }
+
+        [TestCase(1, true)]
+        [TestCase(1, false)]
+        [TestCase(2, true)]
+        [TestCase(2, false)]
+        public void MaterialDeleteOrRecoverPositiveTest(int caseId, bool isDeleted)
+        {
+            var dto = MaterialMock.GetMaterialMock(caseId);
+            int addedId = _materialRepository.AddMaterial(dto);
+            dto.Id = addedId;
+            _addedMaterialMockIds.Add(addedId);
+
+            dto.IsDeleted = isDeleted;
+
+            var affectedRows = _materialRepository.DeleteOrRecoverMaterial(dto.Id, dto.IsDeleted);
             var actual = _materialRepository.GetMaterialById(addedId);
 
             Assert.AreEqual(1, affectedRows);

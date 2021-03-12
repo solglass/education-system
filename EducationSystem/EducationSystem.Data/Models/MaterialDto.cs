@@ -19,7 +19,7 @@ namespace EducationSystem.Data.Models
             }
             if (!(obj is MaterialDto material))
                 return false;
-            if (Link != materialDto.Link || Description != materialDto.Description)
+            if (Link != materialDto.Link || Description != materialDto.Description || IsDeleted !=materialDto.IsDeleted)
             {
                 return false;
             }
