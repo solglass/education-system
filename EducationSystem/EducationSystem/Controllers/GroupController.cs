@@ -139,7 +139,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult AddTeacherGroup(int groupId, int userId)
         {
-            var addGroup = _repo.AddTeacherGroup(new TeacherGroupDto { GroupID = groupId, UserID = userId});
+            var addGroup = _repo.AddTeacherGroup(groupId,userId);
             return Ok(addGroup);
         }      
 
@@ -154,20 +154,14 @@ namespace EducationSystem.Controllers
 
         [HttpPost("{groupId}/student/{userId}")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult AddStudentGroup(int groupId, int userId)
+        public ActionResult AddStudentGroup(StudentGroupInputModel studentGroupInputModel)
         {
-            var addGroup = _repo.AddStudentGroup(new StudentGroupDto { GroupID = groupId, UserID = userId });
+            var studentGroupDto=_mapper.Map<StudentGroupDto>(studentGroupInputModel);
+            var addGroup = _repo.AddStudentGroup(new StudentGroupDto { User=studentGroupDto.User, Group=studentGroupDto.Group });
             return Ok(addGroup);
         }
 
-        [HttpGet("by-tutor/{id}")]
-        [Authorize(Roles = "Админ, Менеджер, Тьютор")]
-        public ActionResult GetTutorGroupById(int id)
-        {
-            var group = _repo.GetTutorGroupById(id);
-            return Ok(group);
-        }
-
+        
 
         [HttpDelete("{groupId}/tutor/{userId}")]
         [Authorize(Roles = "Админ, Менеджер")]
@@ -183,7 +177,7 @@ namespace EducationSystem.Controllers
 
         public ActionResult AddTutorToGroup(int groupId, int userId)
         {
-            var addGroup = _repo.AddTutorToGroup(new TutorGroupDto { GroupID = groupId, UserID = userId});
+            var addGroup = _repo.AddTutorToGroup(groupId,userId);
             return Ok(addGroup);
         }
 
