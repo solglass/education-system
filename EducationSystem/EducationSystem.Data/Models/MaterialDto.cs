@@ -13,11 +13,17 @@ namespace EducationSystem.Data.Models
         public override bool Equals(object obj)
         {
             MaterialDto materialDto = (MaterialDto)obj;
-            if (Link == materialDto.Link && Description == materialDto.Description)
+            if (obj == null)
             {
-                return true;
+                return false;
             }
-            return false;
+            if (!(obj is MaterialDto material))
+                return false;
+            if (Link != materialDto.Link || Description != materialDto.Description)
+            {
+                return false;
+            }
+            return true;
         }
         public override int GetHashCode()
         {
