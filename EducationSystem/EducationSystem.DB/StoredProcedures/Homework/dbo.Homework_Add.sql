@@ -4,16 +4,15 @@
 	@deadlineDate datetime2(7),
 	@groupId int,
 	@isOptional bit
-
-
  ) as
  begin
 	insert into dbo.[Homework] ([Description]
            ,[StartDate]
            ,[DeadlineDate]
            ,[GroupID]
-           ,[IsOptional])
-	values (@description, @startDate, @deadlineDate, @groupId, @isOptional)
-	select SCOPE_IDENTITY()
+           ,[IsOptional]
+		   ,[IsDeleted])
+	values (@description, @startDate, @deadlineDate, @groupId, @isOptional, 0)
+	select	SCOPE_IDENTITY()
  end
 
