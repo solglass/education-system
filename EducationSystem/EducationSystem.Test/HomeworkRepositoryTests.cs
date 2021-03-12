@@ -124,9 +124,9 @@ namespace EducationSystem.Data.Tests
         public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
         {
             //Given
-            var addedGroupId = _groupRepo.AddGroup(_groupDtoMock);
-            _groupIdList.Add(addedGroupId);
             var groupDto = (GroupDto)_groupDtoMock.Clone();
+            var addedGroupId = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(addedGroupId);
             groupDto.Id = addedGroupId;
 
             var expected = new List<HomeworkDto>();
