@@ -8,13 +8,21 @@ namespace EducationSystem.Data.Tests
     public class MaterialTests : BaseTest
     {
         private MaterialRepository _materialRepository;
+        private TagRepository _tagRepository;
+
         private List<int> _addedMaterialMockIds;
+        private List<int> _addedTagMockIds;
+        private List<int> _addedMaterialTagIds;
 
         [OneTimeSetUp]
         public void MaterialOneTimeSetUp()
         {
             _materialRepository = new MaterialRepository(_options);
+            _tagRepository = new TagRepository(_options);
+
             _addedMaterialMockIds = new List<int>();
+            _addedTagMockIds = new List<int>();
+            _addedMaterialTagIds = new List<int>();
         }
 
         [TestCase(1)]
@@ -68,6 +76,37 @@ namespace EducationSystem.Data.Tests
 
             Assert.AreEqual(1, affectedRows);
             Assert.AreEqual(dto, actual);
+        }
+
+        [TestCase(5)]
+        public void MaterialsGetByTagIdPositiveTest(int caseId)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                var dto = MaterialMock.GetMaterialMock(i);
+                int addedId = _materialRepository.AddMaterial(dto);
+                dto.Id = addedId;
+                _addedMaterialMockIds.Add(addedId);
+            }
+
+            var dtoTag = TagMock.GetTagMock(caseId);
+            int addedTagId = _tagRepository.TagAdd(dtoTag);
+            dtoTag.Id = addedTagId;
+            _addedTagMockIds.Add(addedTagId);
+
+            for (int i = 0; i < 4; i++)
+            {
+                var dto = MaterialMock.GetMaterialMock(i);
+                int addedId = _materialRepository.AddMaterial(dto);
+                dto.Id = addedId;
+                _addedMaterialMockIds.Add(addedId);
+            }
+
+        }
+
+        public void AddMaterials()
+        {
+
         }
 
         [OneTimeTearDown]
