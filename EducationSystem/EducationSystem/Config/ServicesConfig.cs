@@ -33,7 +33,6 @@ namespace EducationSystem.API.Config
             services.AddScoped<IGroupRepository, GroupRepository>();           
             services.AddScoped<IAttachmentRepository, AttachmentRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddScoped<IHomeworkAttemptRepository, HomeworkAttemptRepository>();
         }
     }
 }
