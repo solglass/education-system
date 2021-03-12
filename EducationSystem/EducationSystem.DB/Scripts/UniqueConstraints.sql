@@ -1,5 +1,12 @@
-﻿ALTER TABLE [dbo].[Material_Tag] 
-ADD CONSTRAINT UC_MaterialId_TagId UNIQUE(MaterialId, TagId)
+﻿declare @DbVersion int
+
+select top 1 @DbVersion = version
+from dbo.DbVersion order by id desc
+
+if @DbVersion is not null set noexec on
+
+ALTER TABLE [dbo].[Material_Tag] 
+ADD CONSTRAINT UC_MaterialId_TagId_Script UNIQUE(MaterialId, TagId)
 GO
 ALTER TABLE [dbo].[Theme_Tag] 
 ADD CONSTRAINT UC_TagId_ThemeId UNIQUE(TagId, ThemeId)
@@ -43,3 +50,6 @@ GO
 ALTER TABLE [dbo].[HomeworkAttempt_Attachment]
 ADD CONSTRAINT UC_HomeworkAttemptId_AttachmentId UNIQUE(HomeworkAttemptId, AttachmentId)
 GO
+
+
+set noexec off
