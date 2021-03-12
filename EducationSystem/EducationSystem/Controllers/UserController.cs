@@ -216,8 +216,8 @@ namespace EducationSystem.Controllers
         //https://localhost:44365/api/user/42/payment
         /// <summary>Get payments by student id</summary>
         /// <param name="id">Id of student</param>
-        /// <returns>Information about payments of student</returns>
-        [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
+        /// <returns>List of payments of student</returns>
+        [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("{id}/payment")]
         [Authorize(Roles = "Админ,Менеджер")]
         public ActionResult GetPaymentsByUserId(int id)
@@ -226,8 +226,8 @@ namespace EducationSystem.Controllers
         }
 
         //https://localhost:44365/api/user/payment/32
-        /// <summary>user registration</summary>
-        /// <param name="inputModel">information about registered user</param>
+        /// <summary>Get payment by paymentId</summary>
+        /// <param name="id">Id of payment</param>
         /// <returns>List of attached materials to tag</returns>
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [HttpGet("payment/{id}")]
@@ -240,9 +240,10 @@ namespace EducationSystem.Controllers
         }
 
         //https://localhost:44365/api/user/payment/42
-        /// <summary>user registration</summary>
-        /// <param name="inputModel">information about registered user</param>
-        /// <returns>List of attached materials to tag</returns>
+        /// <summary>Update information about payment</summary>
+        /// <param name="id">Id of payment</param>
+        /// <param name="payment">Nonupdated info about user </param>
+        /// <returns>Updated info about payment</returns>
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [HttpPut("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
@@ -255,23 +256,22 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/user/find-debt
-        /// <summary>user registration</summary>
-        /// <param name="inputModel">information about registered user</param>
-        /// <returns>List of attached materials to tag</returns>
-        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
+        /// <summary>Get students who not paid in selected month</summary>
+        /// <param name="month">month as selected period</param>
+        /// <returns>List of students who not paid in selected month</returns>
+        [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("find-debt")]
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
         {
             var students = _prepo.GetStudentsNotPaidInMonth(Converters.StrToDateTimePeriod(month.Month));
-            var outputModel = _mapper.Map<GroupOutputModel>(students);
+            var outputModel = _mapper.Map<List<UserOutputModel>>(students);
             return Ok(outputModel);
         }
 
         //https://localhost:44365/api/user/payment/42
-        /// <summary>user registration</summary>
-        /// <param name="inputModel">information about registered user</param>
-        /// <returns>List of attached materials to tag</returns>
+        /// <summary>Hard delete payment</summary>
+        /// <param name="id">Id of deleted payment</param>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
