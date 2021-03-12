@@ -14,7 +14,7 @@ namespace EducationSystem.Data.Tests.Mocks
             {
                 case 1:
                     return new GroupDto
-                    {
+                    {                        
                         GroupStatus = GroupStatus.InProgress,
                         StartDate = DateTime.Now                    
                     };
