@@ -208,10 +208,10 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/user/find-debt
         [HttpGet("find-debt")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult<GroupOutputModel> GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
+        public ActionResult<List<UserOutputModel>> GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
         {
             var students = _prepo.GetStudentsNotPaidInMonth(Converters.StrToDateTimePeriod(month.Month));
-            var outputModel = _mapper.Map<GroupOutputModel>(students);
+            var outputModel = _mapper.Map<List<UserOutputModel>>(students);
             return Ok(outputModel);
         }
 
