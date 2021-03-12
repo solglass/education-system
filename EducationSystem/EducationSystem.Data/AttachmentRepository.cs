@@ -38,9 +38,8 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public int ModifyAttachment(AttachmentDto attachmentDto)
-        {
-            int id = attachmentDto.Id;
+        public int ModifyAttachment(AttachmentDto attachmentDto, int id)
+        {          
             string path = attachmentDto.Path;
             int attachmentTypeID = (int)attachmentDto.AttachmentType;
             var data = _connection
@@ -81,11 +80,6 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return value;
         }
-
-
-
-        
-        
 
         public int AddAttachmentToHomeworkAttempt(int homeworkAttemptId, int attachmentId)
         {

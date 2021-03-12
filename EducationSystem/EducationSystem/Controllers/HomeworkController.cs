@@ -4,6 +4,7 @@ using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
 using EducationSystem.Controllers;
+using EducationSystem.Core.CustomExceptions;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -32,8 +33,13 @@ namespace EducationSystem.API.Controllers
             _mapper = mapper;
         }
 
-
+        /// <summary>
+        /// Add Homework
+        /// </summary>
+        /// <param name="homework">Data about the extracted entity</param>
+        /// <returns>Returns HomeworkOutPutModel</returns>
         // https://localhost:44365/api/homework
+        [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]        
         public ActionResult<HomeworkOutputModel> AddHomework([FromBody] HomeworkInputModel homework)
@@ -43,27 +49,43 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Get one Homework by id
+        /// </summary>
+        /// <param name="homeworkId">Id Homework</param>
+        /// <returns>Return one searchable HomeworkOutputModel </returns>
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/42
-        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
+        [HttpGet("{homeworkId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<HomeworkOutputModel> GetHomeworkById(int id)
+        public ActionResult<HomeworkOutputModel> GetHomeworkById(int homeworkId)
         {
-            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(id));
+            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(homeworkId));
             return Ok(result);
         }
 
-        //todo: doesn't work. Error in GetCommentsByHomeworkAttemptId
+        /// <summary>
+        /// Get list of HomeworkAttempts
+        /// </summary>
+        /// <param name="homeworkId">Id Homework for searchable attempts</param>
+        /// <returns>Return list HomeworkAttemptOutputModel</returns>
         // https://localhost:44365/api/homework/2/attempts
-        [HttpGet("{id}/attempts")]
+        [ProducesResponseType(typeof(List<HomeworkAttemptOutputModel>), StatusCodes.Status200OK)]
+        [HttpGet("{homeworkId}/attempts")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkAttemptOutputModel>> GetHomeworkAttemptsByHomeworkId(int id)
+        public ActionResult<List<HomeworkAttemptOutputModel>> GetHomeworkAttemptsByHomeworkId(int homeworkId)
         {
-            var result = _mapper.Map<List<HomeworkAttemptOutputModel>>(_homeworkService.GetHomeworkAttemptsByHomeworkId(id));
+            var result = _mapper.Map<List<HomeworkAttemptOutputModel>>(_homeworkService.GetHomeworkAttemptsByHomeworkId(homeworkId));
             return Ok(result);
         }
-
+        /// <summary>
+        /// Get Homework by Group
+        /// </summary>
+        /// <param name="groupId">Group Id</param>
+        /// <returns>List HomeworkSearchOutputModel for Group</returns>
         // https://localhost:44365/api/homework/by-group/2
+        [ProducesResponseType(typeof(List<HomeworkSearchOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("by-group/{groupId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByGroupId(int groupId)
@@ -72,8 +94,13 @@ namespace EducationSystem.API.Controllers
             
             return Ok(result);
         }
-
+        /// <summary>
+        /// Get Homeworks by Tag
+        /// </summary>
+        /// <param name="tagId">Tag Id</param>
+        /// <returns>Return list HomeworkSearchOutputModel which has this Tag</returns>
         // https://localhost:44365/api/homework/by-tag/2
+        [ProducesResponseType(typeof(List<HomeworkSearchOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("by-tag/{tagId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByTagId(int tagId)
@@ -82,8 +109,13 @@ namespace EducationSystem.API.Controllers
             
             return Ok(result);
         }
-
+        /// <summary>
+        /// Get Homeworks by Theme
+        /// </summary>
+        /// <param name="themeId">Theme Id</param>
+        /// <returns>Return list HomeworkSearchOutputModel which has this Theme</returns>
         // https://localhost:44365/api/homework/by-theme/2
+        [ProducesResponseType(typeof(List<HomeworkSearchOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("by-theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByThemeId(int themeId)
@@ -92,121 +124,178 @@ namespace EducationSystem.API.Controllers
 
             return Ok(result);
         }
-
-        //todo: Automapper doesn't work
+        /// <summary>
+        /// Update Homework
+        /// </summary>
+        /// <param name="homeworkId">Id Homework which we want to update</param>
+        /// <param name="homework">Params which we want update</param>
+        /// <returns>Returrn updated Homework</returns>
         // https://localhost:44365/api/homework/42
-        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
+        [HttpPut("{homeworkId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult<HomeworkOutputModel> UpdateHomework(int id, [FromBody] HomeworkUpdateInputModel homework)
+        public ActionResult UpdateHomework(int homeworkId, [FromBody] HomeworkUpdateInputModel homework)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var dto = _mapper.Map<HomeworkDto>(homework);
-            dto.Id = id;
-            var changedRows = _homeworkService.UpdateHomework(dto);
-            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(id));
+            var changedRows = _homeworkService.UpdateHomework(homeworkId, dto);
+            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(homeworkId));
 
             return Ok(result);
         }
-
+        /// <summary>
+        /// Delete homework
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <returns>Return deleted homework</returns>
         // https://localhost:44365/api/homework/42
-        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
+        [HttpDelete("{homeworkId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult<HomeworkOutputModel> DeleteHomework(int id)
+        public ActionResult<HomeworkOutputModel> DeleteHomework(int homeworkId)
         {
-            var deletedRows = _homeworkService.DeleteHomework(id);
-            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(id));
+            var deletedRows = _homeworkService.DeleteHomework(homeworkId);
+            var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(homeworkId));
 
             return Ok(result);
         }
-
+        /// <summary>
+        /// Create Attempt
+        /// </summary>
+        /// <param name="homeworkId">Homework id</param>
+        /// <param name="inputModel">Params for Attempt</param>
+        /// <returns>Return added Attempt</returns>
         // https://localhost:44365/api/homework/2/attempt
+        [ProducesResponseType(typeof(HomeworkAttemptOutputModel), StatusCodes.Status200OK)]
         [HttpPost("{homeworkId}/attempt")]
         [Authorize(Roles = "Студент")]
         public ActionResult<HomeworkAttemptOutputModel> CreateAttempt(int homeworkId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
             var dto = _mapper.Map<HomeworkAttemptDto>(inputModel);
-            dto.Homework = new HomeworkDto { Id = homeworkId };
-            var addedAttemptId = _homeworkService.AddHomeworkAttempt(dto);
+            var addedAttemptId = _homeworkService.AddHomeworkAttempt(homeworkId, dto);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(addedAttemptId));
 
             return Ok(result);
         }
-
+        /// <summary>
+        /// Get homework attempt
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>
+        /// <returns>Return searchable attempt</returns>
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/attempt/2
-        [HttpGet("attempt/{attemptId}")]
+        [ProducesResponseType(typeof(HomeworkAttemptOutputModel), StatusCodes.Status200OK)]
+        [HttpGet("{homeworkId}/attempt/{attemptId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<HomeworkAttemptOutputModel> GetHomeworkAttemptById(int attemptId)
+        public ActionResult<HomeworkAttemptOutputModel> GetHomeworkAttemptById(int homeworkId, int attemptId)
         {
             var result = _mapper.Map<HomeworkAttemptOutputModel>( _homeworkService.GetHomeworkAttemptById(attemptId));
 
             return Ok(result);
         }
-
-
-        // https://localhost:44365/api/homework/attempt/2
-        [HttpPut("attempt/{attemptId}")]
+        /// <summary>
+        /// Update HomeworkAttempt
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>
+        /// <param name="inputModel">Params for update</param>
+        /// <returns>Return updated HomeworkAttempt</returns>
+        // https://localhost:44365/api/homework/2/attempt/2
+        [ProducesResponseType(typeof(HomeworkAttemptOutputModel), StatusCodes.Status200OK)]
+        [HttpPut("{homeworkId}/attempt/{attemptId}")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult<HomeworkAttemptOutputModel> UpdateHomeworkAttempt(int attemptId, [FromBody] HomeworkAttemptInputModel inputModel)
+        public ActionResult<HomeworkAttemptOutputModel> UpdateHomeworkAttempt(int homeworkId, int attemptId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
             var dto = _mapper.Map<HomeworkAttemptDto>(inputModel);
-            dto.Id = attemptId;
-            var changedRows = _homeworkService.UpdateHomeworkAttempt(dto);
+            var changedRows = _homeworkService.UpdateHomeworkAttempt(attemptId, dto);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
-
             return Ok(result);
         }
-
-        // https://localhost:44365/api/homework/attempt/2
-        [HttpDelete("attempt/{attemptId}")]
+        /// <summary>
+        /// Delete HomeworkAttempt
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>
+        /// <returns>Return deleted HomeworkAttempt</returns>
+        // https://localhost:44365/api/homework/2/attempt/2
+        [ProducesResponseType(typeof(HomeworkAttemptOutputModel), StatusCodes.Status200OK)]
+        [HttpDelete("{homeworkId}/attempt/{attemptId}")]
         [Authorize(Roles = "Админ")]
-        public ActionResult<HomeworkAttemptOutputModel> DeleteHomeworkAttempt(int attemptId)
+        public ActionResult<HomeworkAttemptOutputModel> DeleteHomeworkAttempt(int homeworkId, int attemptId)
         {
             var deletedRows = _homeworkService.DeleteHomeworkAttempt(attemptId);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
 
             return Ok(result);
         }
-
-        //https://localhost:44365/api/homework/attempt/2/comment
-        [HttpPost("attempt/{attemptId}/comment")]
+        /// <summary>
+        /// Add comment
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>
+        /// <param name="comment">Comment</param>
+        /// <returns>Return added comment</returns>
+        //https://localhost:44365/api/homework/2/attempt/2/comment
+        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
+        [HttpPost("{homeworkId}/attempt/{attemptId}/comment")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<CommentOutputModel> AddComment(int attemptId, [FromBody] CommentInputModel comment)
+        public ActionResult<CommentOutputModel> AddComment(int homeworkId, int attemptId, [FromBody] CommentInputModel comment)
         {
             var dto = _mapper.Map<CommentDto>(comment);
-            dto.HomeworkAttempt = new HomeworkAttemptDto() { Id = attemptId };
-            var addedCommentId = _homeworkService.AddComment(dto);
+            var addedCommentId = _homeworkService.AddComment(attemptId, dto);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(addedCommentId));
 
             return Ok(result);
         }
-
-        //todo: Update attachments in service
-        //https://localhost:44365/api/homework/attempt/2/comment/2
-        [HttpPut("attempt/{attemptId}/comment/{commentId}")]
+        /// <summary>
+        /// Update comment
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>      
+        /// <param name="commentId">Comment Id</param>
+        /// <param name="comment">Params for update</param>
+        /// <returns>Return updated comment</returns>
+        //https://localhost:44365/api/homework/2/attempt/2/comment/2
+        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
+        [HttpPut("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<CommentOutputModel> UpdateComment(int attemptId, int commentId, [FromBody] CommentUpdateInputModel comment)
+        public ActionResult<CommentOutputModel> UpdateComment(int homeworkId, int attemptId, int commentId, [FromBody] CommentUpdateInputModel comment)
         {
             var dto = _mapper.Map<CommentDto>(comment);
-            dto.Id = commentId;
-            dto.HomeworkAttempt = new HomeworkAttemptDto() { Id = attemptId };
-            var changedRows = _homeworkService.UpdateComment(dto);
+            var changedRows = _homeworkService.UpdateComment(attemptId, commentId, dto);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
 
             return Ok(result);
         }
-
-        // how check attemptId?
-        //https://localhost:44365/api/homework/attempt/2/comment/2
-        [HttpGet("attempt/{attemptId}/comment/{commentId}")]
+        /// <summary>
+        /// Get comment by Id
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>      
+        /// <param name="commentId">Comment Id</param>
+        /// <returns>Return searchable comment</returns>
+        //https://localhost:44365/api/homework/2/attempt/2/comment/2
+        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
+        [HttpGet("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
-        public ActionResult<CommentOutputModel> GetCommentById(int attemptId, int commentId)
+        public ActionResult<CommentOutputModel> GetCommentById(int homeworkId, int attemptId, int commentId)
         {
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
 
             return Ok(result);
         }
-
+        /// <summary>
+        /// Delete homework theme
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="themeId">Theme Id</param>
+        /// <returns>Status code no content</returns>
         // https://localhost:44365/api/homework/3/theme/1
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("{homeworkId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteHomeworkTheme(int homeworkId, int themeId)
@@ -215,10 +304,13 @@ namespace EducationSystem.API.Controllers
 
             return NoContent();
         }
-        
-        
-
+        /// <summary>
+        /// Recover homework
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <returns>Return recovered homework</returns>
         // https://localhost:44365/api/homework/2/recovery
+        [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
         [HttpPut("{homeworkId}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult<HomeworkOutputModel> RecoverHomework(int homeworkId)
@@ -228,42 +320,65 @@ namespace EducationSystem.API.Controllers
 
             return Ok(result);
         }
-
-        // https://localhost:44365/api/homework/attempt/3/recovery
-        [HttpPut("attempt/{attemptId}/recovery")]
+        /// <summary>
+        /// Recover homework attempt
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>
+        /// <returns>Return recovered homework attempt</returns>
+        // https://localhost:44365/api/homework/2/attempt/3/recovery
+        [ProducesResponseType(typeof(HomeworkAttemptOutputModel), StatusCodes.Status200OK)]
+        [HttpPut("{homeworkId}/attempt/{attemptId}/recovery")]
         [Authorize(Roles = "Админ, Студент")]
-        public ActionResult<HomeworkAttemptOutputModel> RecoverHomeworkAttempt(int attemptId)
+        public ActionResult<HomeworkAttemptOutputModel> RecoverHomeworkAttempt(int homeworkId, int attemptId)
         {
             var recoveredRows = _homeworkService.RecoverHomeworkAttempt(attemptId);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
 
             return Ok(result);
         }
-
-
-        //https://localhost:44365/api/homework/attempt/2/comment/2
-        [HttpDelete("attempt/{attemptId}/comment/{commentId}")]
+        /// <summary>
+        /// Delete comment
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>      
+        /// <param name="commentId">Comment Id</param>
+        /// <returns>Return deleted comment</returns>
+        //https://localhost:44365/api/homework/2/attempt/2/comment/2
+        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
+        [HttpDelete("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult<CommentOutputModel> DeleteComment(int attemptId, int commentId)
+        public ActionResult<CommentOutputModel> DeleteComment(int homeworkId, int attemptId, int commentId)
         {
             var deletedRows = _homeworkService.DeleteComment(commentId);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
-
             return Ok(result);
         }
-
-        // https://localhost:44365/api/homework/attempt/2/comment/2/recovery
-        [HttpPut("attempt/{attemptId}/comment/{commentId}/recovery")]
+        /// <summary>
+        /// Recover comment
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>      
+        /// <param name="commentId">Comment Id</param>
+        /// <returns>Return recovered comment</returns>
+        // https://localhost:44365/api/homework/2/attempt/2/comment/2/recovery
+        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
+        [HttpPut("{homeworkId}/attempt/{attemptId}/comment/{commentId}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
-        public ActionResult<CommentOutputModel> RecoverComment(int attemptId, int commentId)
+        public ActionResult<CommentOutputModel> RecoverComment(int homeworkId, int attemptId, int commentId)
         {
             var recoveredRows = _homeworkService.RecoverComment(commentId);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
-
             return Ok(result);
         }
-
+        /// <summary>
+        /// Add homework theme
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="themeId">Theme Id</param>
+        /// <returns>Return status code 201</returns>
         // https://localhost:44365/api/homework/3/theme/1
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("{homeworkId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTheme(int homeworkId, int themeId)
@@ -272,8 +387,14 @@ namespace EducationSystem.API.Controllers
 
             return StatusCode(StatusCodes.Status201Created);
         }
-
+        /// <summary>
+        /// Add homework tag
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="tagId">Tag Id</param>
+        /// <returns>Return status code 201</returns>
         // https://localhost:44365/api/homework/3/tag/1
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("{homeworkId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTag(int homeworkId, int tagId)
@@ -282,8 +403,14 @@ namespace EducationSystem.API.Controllers
 
             return StatusCode(StatusCodes.Status201Created);
         }
-
+        /// <summary>
+        /// Delete homework tag
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="tagId">Tag Id</param>
+        /// <returns>Return no content response</returns>
         // https://localhost:44365/api/homework/3/tag/1
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("{homeworkId}/tag/{tagId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
         public ActionResult DeleteHomeworkTag(int homeworkId, int tagId)
@@ -292,9 +419,14 @@ namespace EducationSystem.API.Controllers
 
             return NoContent();
         }
-
+        /// <summary> 
+        /// Get homeworkAttempt by user Id
+        /// </summary>
+        /// <param name="userId">User Id</param>
+        /// <returns>Return searchable homeworkAttempt</returns>
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/attempt/by-user/2
+        [ProducesResponseType(typeof(List<HomeworkAttemptWithCountOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("attempt/by-user/{userId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkAttemptWithCountOutputModel>> GetHomeworkAttemptsByUserId(int userId)
@@ -303,9 +435,15 @@ namespace EducationSystem.API.Controllers
 
           return Ok(result);
         }
-
+        /// <summary>
+        /// Get homeworkAttempt by status Id and group Id
+        /// </summary>
+        /// <param name="statusId"></param>
+        /// <param name="groupId"></param>
+        /// <returns>Return searchable homeworkAttempt</returns>
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/attempt/by-group/2/by-status/1
+        [ProducesResponseType(typeof(List<HomeworkAttemptWithCountOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("attempt/by-group/{groupId}/by-status/{statusId}")]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkAttemptWithCountOutputModel>> GetHomeworkAttemptByStatusIdAndGroupId(int statusId, int groupId)

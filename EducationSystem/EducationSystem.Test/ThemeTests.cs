@@ -66,34 +66,34 @@ namespace EducationSystem.Data.Tests
             }
             Assert.Pass();
         }
-        [Test, Order(3)]
-        public void TestDeleteTheme()
-        {
-            _themeFromDb = _courseRepo.GetThemes();
-            int deletedId;
-            //foreach (int themeId in _themeIdList)
-            //{
-            //    deletedId = _courseRepo.(themeId);
+        //[Test, Order(3)]
+        //public void TestDeleteTheme()
+        //{
+        //    _themeFromDb = _courseRepo.GetThemes();
+        //    int deletedId;
+        //    foreach (int themeId in _themeIdList)
+        //    {
+        //        deletedId = _courseRepo.DeleteTheme(themeId);
 
-            //    List<ThemeDto> newThemeFromDb = _courseRepo.GetThemes();
+        //        List<ThemeDto> newThemeFromDb = _courseRepo.GetThemes();
 
-            //    if (_themeFromDb.Count == newThemeFromDb.Count)
-            //    {
+        //        if (_themeFromDb.Count == newThemeFromDb.Count)
+        //        {
 
-            //        Assert.Fail("Nothing was deleted");
-            //    }
-            //    else
-            //    {
-            //        _themeFromDb = newThemeFromDb;
-            //    }
-            //    if (_courseRepo.GetThemeById(themeId) != null)
-            //    {
-            //        Assert.Fail("Something wrong was deleted");
-            //    }
-            //}
-            Assert.Pass();
+        //            Assert.Fail("Nothing was deleted");
+        //        }
+        //        else
+        //        {
+        //            _themeFromDb = newThemeFromDb;
+        //        }
+        //        if (_courseRepo.GetThemeById(themeId) != null)
+        //        {
+        //            Assert.Fail("Something wrong was deleted");
+        //        }
+        //    }
+        //    Assert.Pass();
 
-        }
+        //}
         public ThemeDto GetThemeMock(int n)
         {
             ThemeDto result = new ThemeDto();

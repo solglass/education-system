@@ -92,16 +92,16 @@ namespace EducationSystem.Data.Tests
        
        
 
-        [OneTimeTearDown]
-        public void TearDowTest()
-        {
-            foreach (int themeId in _themeIdList)
-            {
-                _courseRepo.DeleteCourse_Theme(_courseId, themeId);
-                //_courseRepo.DeleteTheme(themeId);
-            }
-            _courseRepo.HardDeleteCourse(_courseId);
-        }
+        //[OneTimeTearDown]
+        //public void TearDowTest()
+        //{
+        //    foreach (int themeId in _themeIdList)
+        //    {
+        //        _courseRepo.DeleteCourse_Theme(_courseId, themeId);
+        //        _courseRepo.DeleteTheme(themeId);
+        //    }
+        //    _courseRepo.HardDeleteCourse(_courseId);
+        //}
 
         public List<ThemeDto> GetThemeMock(int n)
         {

@@ -353,7 +353,7 @@ namespace EducationSystem.Data
 
 
             var comment = _connection
-                .Query<CommentDto, UserDto, HomeworkAttemptDto, int, CommentDto>(
+                .Query<CommentDto, UserDto, HomeworkAttemptDto, int?, CommentDto>(
                     "dbo.Homework_SelectById",
                     (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
                     {
@@ -477,7 +477,7 @@ namespace EducationSystem.Data
         public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
-            var result = _connection.Query<CommentDto, UserDto, AttachmentDto, int, CommentDto>(
+            var result = _connection.Query<CommentDto, UserDto, AttachmentDto, int?, CommentDto>(
                 "dbo.Comment_SelectByHomeworkAttemptId",
                 (comment, user, attachment, attachmentType) =>
                 {
@@ -498,6 +498,7 @@ namespace EducationSystem.Data
                 new { AttemptId = id },
                 splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
                 .ToList();
             return result;
         }

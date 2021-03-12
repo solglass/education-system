@@ -7,13 +7,13 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{326cb266-0799-4b96-aa90-e1191605251d}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
     <RootNamespace>EducationSystem.DB</RootNamespace>
     <AssemblyName>EducationSystem.DB</AssemblyName>
-    <ModelCollation>1033, CI</ModelCollation>
+    <ModelCollation>1049,CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -22,6 +22,8 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <GenerateCreateScript>True</GenerateCreateScript>
+    <DefaultCollation>Cyrillic_General_CI_AS</DefaultCollation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -122,8 +124,8 @@
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Update.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Add.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_Delete .sql" />
-    <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Add.sql" />
-    <Build Include="StoredProcedures\CommentAttachment\dbo_CommentAttachment_Delete.sql" />
+    <Build Include="StoredProcedures\CommentAttachment\dbo_Comment_Attachment_Add.sql" />
+    <Build Include="StoredProcedures\CommentAttachment\dbo_Comment_Attachment_Delete.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_Add.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_Delete.sql" />
     <Build Include="StoredProcedures\Group\dbo.Group_SelectAll.sql" />
@@ -251,12 +253,11 @@
     <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectById.sql" />
-    <Build Include="Scripts\UniqueConstraints.sql" />
+    <None Include="Scripts\UniqueConstraints.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByLessonId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPeriodAndIsNotPaid.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByUserId.sql" />
-    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByThemeId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_AddTheme.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_DeleteTheme.sql" />
   </ItemGroup>
