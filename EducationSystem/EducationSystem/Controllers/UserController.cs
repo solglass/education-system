@@ -207,7 +207,7 @@ namespace EducationSystem.Controllers
         /// <summary>Get payments for period</summary>
         /// <param name="periodInput">information about period</param>
         /// <returns>List of payments for period</returns>
-        [ProducesResponseType(typeof(List<PeriodInputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("payment/by-period")]
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult<List<PaymentOutputModel>> GetPaymentsByPeriod([FromBody] PeriodInputModel periodInput)
