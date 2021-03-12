@@ -80,7 +80,6 @@ namespace EducationSystem.Data
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return value;
-
         }
 
 
@@ -127,7 +126,6 @@ namespace EducationSystem.Data
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return data;
-
         }
 
         public int DeleteAttachmentFromComment(int attachmentId, int commentId)
@@ -142,7 +140,6 @@ namespace EducationSystem.Data
             },
             commandType: System.Data.CommandType.StoredProcedure);
             return result;
-           
         }
     }
 }
