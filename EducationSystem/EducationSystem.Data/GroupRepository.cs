@@ -210,30 +210,18 @@ namespace EducationSystem.Data
                 .ToList();
             return groups;
         }
-        public List<TutorGroupDto> GetTutorGroups()
-        {
-            return _connection
-                .Query<TutorGroupDto>("dbo.Tutor_Group_SelectAll", commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-
-        }
-        public TutorGroupDto GetTutorGroupById(int id)
-        {
-            return _connection
-                   .QuerySingleOrDefault<TutorGroupDto>("dbo.Tutor_Group_SelectAll", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-        }
         public int DeleteTutorGroupsByIds(int userId, int groupId)
         {
             return _connection.Execute("dbo.Tutor_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);
         }
-        public int AddTutorToGroup(TutorGroupDto tutorGroup)
+        public int AddTutorToGroup(int userId, int groupId)
         {
 
             return _connection.Execute("dbo.Tutor_Group_Add",
                 new
                 {
-                    userID = tutorGroup.UserID,
-                    groupID = tutorGroup.GroupID,
+                    userId,
+                   groupId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
         }
@@ -260,20 +248,14 @@ namespace EducationSystem.Data
                 return connection.QuerySingleOrDefault<int>("dbo.Student_Group_Add",
                     new
                     {
-                        usertID = studentGroup.UserID,
-                        groupID = studentGroup.GroupID,
+                        studentGroup.User,
+                        studentGroup.Group,
                         contractNumber = studentGroup.ContractNumber
                     },
                     commandType: System.Data.CommandType.StoredProcedure);
             }
         }
-        public TeacherGroupDto GetTeacherGroupById(int id)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                return connection.QuerySingleOrDefault<TeacherGroupDto>("dbo.Teacher_Group_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            }
-        }
+        
         public int DeleteTeacherGroup(int userId, int groupId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -281,15 +263,15 @@ namespace EducationSystem.Data
                 return connection.Execute("dbo.Teacher_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
-        public int AddTeacherGroup(TeacherGroupDto teacherGroup)
+        public int AddTeacherGroup(int userId, int groupId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 return connection.QuerySingleOrDefault<int>("dbo.Teacher_Group_Add",
                     new
                     {
-                        userID = teacherGroup.UserID,
-                        groupID = teacherGroup.GroupID
+                        userId,
+                        groupId
                     },
                     commandType: System.Data.CommandType.StoredProcedure);
             }
