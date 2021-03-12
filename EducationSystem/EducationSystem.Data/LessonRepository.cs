@@ -207,28 +207,25 @@ namespace EducationSystem.Data
             },
             new { lessonid = id },
             splitOn: "Id", commandType: CommandType.StoredProcedure)
-            .Distinct()
             .ToList();
             return attendance;
         }
 
         public List<AttendanceDto> GetAttendancesByUserId(int id)
         {
-            var attendance = _connection.Query<AttendanceDto, UserDto, AttendanceDto>(
+            var attendance = _connection.Query<AttendanceDto, UserDto, LessonDto, AttendanceDto>(
             "dbo.Attendance_SelectByUserId",
-            (attendance, user) =>
+            (attendance, user, lesson) =>
             {
                 attendance.User = user;
+                attendance.Lesson = lesson;
                 return attendance;
             },
             new { userId = id },
             splitOn: "Id", commandType: CommandType.StoredProcedure)
-            .Distinct()
             .ToList();
             return attendance;
         }
-
-
 
         public AttendanceDto GetAttendanceById(int id)
         {
@@ -245,48 +242,29 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
         }
 
-        public int AddLessonTheme(LessonThemeDto lessonTheme)
+        public int AddLessonTheme(int lessonId, int themeId)
         {
             return _connection
                  .QuerySingleOrDefault<int>(
-                 "dbo.Lesson_Theme_Add",
-                 new { lessonTheme.ThemeId, lessonTheme.LessonId },
+                 "dbo.Lesson_AddTheme",
+                 new { lessonId = lessonId, themeId = themeId },
                  commandType: CommandType.StoredProcedure);
         }
+
         public int DeleteLessonTheme(int lessonId, int themeId)
         {
             return _connection.Execute(
                 "dbo.Lesson_Theme_Delete",
-                new { lessonId, themeId },
+                new { lessonId = lessonId, themeId = themeId },
                 commandType: CommandType.StoredProcedure);
-        }
-
-
-
-        public LessonThemeDto GetLessonThemeById(int id)
-        {
-            var lessonTheme = _connection
-                .Query<LessonThemeDto>("dbo.Lesson_Theme_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return lessonTheme;
-        }
-
-        public List<LessonThemeDto> GetLessonThemesByThemeId(int id)
-        {
-            var result = _connection.
-               Query<LessonThemeDto>("dbo.Lesson_Theme_SelectAllByThemeId",
-               new { id }, commandType: System.Data.CommandType.StoredProcedure)
-               .Distinct()
-               .ToList();
-            return result;
         }
 
         public List<LessonDto> GetLessonsByThemeId(int themeId)
         {
             var result = _connection.
               Query<LessonDto>("dbo.Lesson_SelectByThemeId",
-              new { themeId = themeId },
-              commandType: System.Data.CommandType.StoredProcedure)
+              new {  themeId },
+              commandType: CommandType.StoredProcedure)
               .Distinct()
               .ToList();
             return result;

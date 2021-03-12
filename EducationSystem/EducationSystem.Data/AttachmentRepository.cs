@@ -28,7 +28,10 @@ namespace EducationSystem.Data
                         attachment.AttachmentType = (AttachmentType)attachmentType;
                         return attachment;
                     },
-                    new { id },
+                    new 
+                    {
+                        id 
+                    },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
@@ -40,7 +43,14 @@ namespace EducationSystem.Data
             string path = attachmentDto.Path;
             int attachmentTypeID = (int)attachmentDto.AttachmentType;
             var data = _connection
-                .Execute("dbo.Attachment_Update", new { id, path, attachmentTypeID }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Attachment_Update",
+                new 
+                { 
+                    id,
+                    path,
+                    attachmentTypeID 
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
 
@@ -48,10 +58,14 @@ namespace EducationSystem.Data
         public int DeleteAttachmentById(int id)
         {
             var data = _connection
-                .Execute("dbo.Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                .Execute("dbo.Attachment_Delete",
+                new
+                { 
+                    id 
+                }, 
+                commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
-
 
         public int AddAttachment(AttachmentDto attachmentDto)
         {
@@ -64,92 +78,61 @@ namespace EducationSystem.Data
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return value;
-
         }
 
-
-
-        public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
-        {
-            int attachmentId = AddAttachment(attachmentDto);
-
-            Comment_AttachmentDto comment_AttachmentDto = new Comment_AttachmentDto
-            {
-                AttachmentId = attachmentId,
-                CommentId = commentId
-            };
-            AddComment_Attachment(comment_AttachmentDto);
-            return attachmentId;
-
-        }
-
-        public int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId)
-        {
-            int attachmentId = AddAttachment(attachmentDto);
-            HomeworkAttempt_AttachmentDto homework_AttachmentDto = new HomeworkAttempt_AttachmentDto
-            {
-                AttachmentId = attachmentId,
-                HomeworkAttemptId = homeworkAttemptId
-            };
-            AddHomeworkAttempt_Attachment(homework_AttachmentDto);
-            return attachmentId;
-
-        }
-
-        public int AddHomeworkAttempt_Attachment(HomeworkAttempt_AttachmentDto newObject)
+        public int AddAttachmentToHomeworkAttempt(int homeworkAttemptId, int attachmentId)
         {
             var data = _connection
                 .QueryFirst<int>("dbo.HomeworkAttempt_Attachment_Add",
                 new
                 {
-                    HomeworkAttemptId = newObject.HomeworkAttemptId,
-                    AttachmentId = newObject.AttachmentId
+                    homeworkAttemptId ,
+                    attachmentId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return data;
         }
 
-        public int DeleteHomeworkAttemptAttachment(int attachmentId, int homeworkAttemptId)
+        public int DeleteAttachmentFromHomeworkAttempt(int attachmentId, int homeworkAttemptId)
         {
             int id = attachmentId;
-            _connection.Execute(
-         "dbo.HomeworkAttempt_Attachment_Delete",
+          var result=  _connection.Execute("dbo.HomeworkAttempt_Attachment_Delete",
              new
              {
-                 homeworkAttemptID = homeworkAttemptId,
-                 attachmentID = attachmentId
+                  homeworkAttemptId,
+                  attachmentId
              },
                  commandType: System.Data.CommandType.StoredProcedure);
-            var data = _connection
-            .Execute("dbo.Attachment_Delete", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
+           
+            return result;
         }
 
-
-        public int AddComment_Attachment(Comment_AttachmentDto NewObject)
+        public int AddAttachmentToComment(int commentId, int attachmentId)
         {
             var data = _connection
                 .QuerySingleOrDefault<int>("dbo.Comment_Attachment_Add",
                 new
                 {
-                    commentId = NewObject.CommentId,
-                    attachmentId = NewObject.AttachmentId
+                    commentId ,
+                    attachmentId
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return data;
-
         }
 
-        public int DeleteCommentAttachment(int attachmentId, int commentId)
+        public int DeleteAttachmentFromComment(int attachmentId, int commentId)
         {
             int id = attachmentId;
-            _connection
-            .QuerySingleOrDefault<Comment_AttachmentDto>("dbo.Comment_Attachment_Delete", new { commentId, attachmentId }, commandType: System.Data.CommandType.StoredProcedure);
-            var data = _connection
-            .Execute("dbo.Attachment_Delete", new { id}, commandType: System.Data.CommandType.StoredProcedure);
-            return data;
+           var result= _connection
+            .Execute("dbo.Comment_Attachment_Delete",
+            new
+            {
+                commentId,
+                attachmentId 
+            },
+            commandType: System.Data.CommandType.StoredProcedure);
+            return result;
         }
-
     }
 }
 

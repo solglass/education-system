@@ -277,18 +277,6 @@ namespace EducationSystem.Data
                 .ToList();
             return themes;
         }
-
-
-        public List<Course_ThemeDto> GetCourseThemeByThemeId(int id)
-        {
-            var result = _connection.
-               Query<Course_ThemeDto>("dbo.Course_Theme_SelectAllByThemeId",
-               new { id }, commandType: System.Data.CommandType.StoredProcedure)
-               .Distinct()
-               .ToList();
-            return result;
-        }
-
         public int HardDeleteTheme(int id)
         {
             var result = _connection
