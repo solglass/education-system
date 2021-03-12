@@ -44,15 +44,17 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [HttpPost("register")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
-        public ActionResult Register([FromBody] UserInputModel inputModel)
+        public ActionResult<UserOutputModel> Register([FromBody] UserInputModel inputModel)
         {
             var userDto = _mapper.Map<UserDto>(inputModel);
             if (String.IsNullOrEmpty(inputModel.Password) && String.IsNullOrEmpty(inputModel.Login))
             {
                 return Problem("Не заполнены поля Password и Login ");
             }
-            _userService.AddUser(userDto);
-            return Ok("Пользователь зарегистрирован");
+            var id = _userService.AddUser(userDto);
+            var user = _userService.GetUserById(id);
+            var outputModel = _mapper.Map<UserOutputModel>(user);
+            return Ok(outputModel);
         }
 
         // https://localhost:44365/api/user/change-password
@@ -71,7 +73,7 @@ namespace EducationSystem.Controllers
                 return Problem("Не найден пользователь");
             }
             _userService.ChangePassword(id, oldPassword,newPassword);
-            return Ok("Пароль обновлён");
+            return NoContent();
         }
 
         // https://localhost:44365/api/user
@@ -80,7 +82,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
-        public ActionResult GetUsers()
+        public ActionResult<List<UserOutputModel>> GetUsers()
         {
             var users = _userService.GetUsers();
             var outputModels = _mapper.Map<List<UserOutputModel>>(users);
@@ -94,7 +96,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
-        public ActionResult GetUser(int id)
+        public ActionResult<UserOutputModel> GetUser(int id)
         {
             var user = _userService.GetUserById(id);
             var outputModel = _mapper.Map<UserOutputModel>(user);
@@ -108,7 +110,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("passed-homework/by-group/{groupId}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
-        public ActionResult GetPassedStudentsAttempt_SelectByGroupId(int groupId)
+        public ActionResult<List<UserOutputModel>> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
             var users = _userService.GetPassedStudentsAttempt_SelectByGroupId(groupId);
             var outputModel = _mapper.Map<List<UserOutputModel>>(users);
@@ -123,7 +125,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [HttpPut("{id}")]
         [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
-        public ActionResult UpdateUserInfo(int id,[FromBody] UserInputModel inputModel)
+        public ActionResult<UserOutputModel> UpdateUserInfo(int id,[FromBody] UserInputModel inputModel)
         {
             var userDto = _mapper.Map<UserDto>(inputModel);
             userDto.Id = id;
@@ -132,7 +134,8 @@ namespace EducationSystem.Controllers
                 return Problem("Не найден пользователь");
             }
             _userService.UpdateUser(userDto);
-            return Ok("Обновлено");
+            var outputModel = _mapper.Map<UserOutputModel>(_userService.GetUserById(id));
+            return Ok(outputModel);
         }
 
         // https://localhost:44365/api/user/42
@@ -142,7 +145,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<UserOutputExtendedModel>), StatusCodes.Status200OK)]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult DeleteUser(int id)
+        public ActionResult<UserOutputExtendedModel> DeleteUser(int id)
         {
             if (_userService.GetUserById(id) == null)
             {
@@ -152,7 +155,8 @@ namespace EducationSystem.Controllers
             var result = _userService.DeleteUser(id);
             if (result == 1)
             {
-                return Ok($"Пользователь #{id} удален!");
+                var outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
+                return Ok(outputModel);
             }
 
             return Problem($"Ошибка! Не удалось удалить пользователя #{id}!");
@@ -165,7 +169,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<UserOutputExtendedModel>), StatusCodes.Status200OK)]
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult RecoverUser(int id)
+        public ActionResult<UserOutputExtendedModel> RecoverUser(int id)
         {
             if (_userService.GetUserById(id) == null)
             {
@@ -175,7 +179,8 @@ namespace EducationSystem.Controllers
             var result = _userService.RecoverUser(id);
             if (result == 1)
             {
-                return Ok($"Пользователь #{id} восстановлен!");
+                var outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
+                return Ok(outputModel);
             }
 
             return Problem($"Ошибка! Не удалось восстановить пользователя #{id}!");
@@ -189,12 +194,13 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [HttpPost("{userId}/payment")]
         [Authorize(Roles = "Админ, Менеджер, Студент")]
-        public ActionResult AddPayment(int id, [FromBody] PaymentInputModel payment)
+        public ActionResult<PaymentOutputModel> AddPayment(int id, [FromBody] PaymentInputModel payment)
         {
             var paymentDto = _mapper.Map<PaymentDto>(payment);
             paymentDto.Student.Id = id;
             _prepo.AddPayment(paymentDto);
-            return Ok("Платеж добавлен");
+            var outputModel = _mapper.Map<PaymentOutputModel>(_prepo.GetPaymentById(id));
+            return Ok(outputModel);
         }
 
         //https://localhost:44365/api/user/payment/by-period
@@ -204,13 +210,11 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<PeriodInputModel>), StatusCodes.Status200OK)]
         [HttpGet("payment/by-period")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult GetPaymentsByPeriod([FromBody] PeriodInputModel periodInput)
-        {                             
-            return Ok(_userService
-                .GetPaymentsByPeriod(
-                Converters.StrToDateTimePeriod(periodInput.PeriodFrom), 
-                Converters.StrToDateTimePeriod(periodInput.PeriodTo)
-                ));
+        public ActionResult<List<PaymentOutputModel>> GetPaymentsByPeriod([FromBody] PeriodInputModel periodInput)
+        {
+            var payments = _userService.GetPaymentsByPeriod(Converters.StrToDateTimePeriod(periodInput.PeriodFrom), Converters.StrToDateTimePeriod(periodInput.PeriodTo));
+            var outputModels = _mapper.Map<List<PaymentOutputModel>>(payments);
+            return Ok(outputModels);
         }
 
         //https://localhost:44365/api/user/42/payment
@@ -220,9 +224,11 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("{id}/payment")]
         [Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult GetPaymentsByUserId(int id)
-        {            
-            return Ok(_userService.GetPaymentsByUserId(id));
+        public ActionResult<List<PaymentOutputModel>> GetPaymentsByUserId(int id)
+        {
+            var payments = _userService.GetPaymentsByUserId(id);
+            var outputModel = _mapper.Map<List<PaymentOutputModel>>(payments);
+            return Ok(outputModel);
         }
 
         //https://localhost:44365/api/user/payment/32
@@ -232,7 +238,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [HttpGet("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
-        public dynamic GetPayment(int id)
+        public ActionResult<PaymentOutputModel> GetPayment(int id)
         {
             var payment = _prepo.GetPaymentById(id);
             var outputModel = _mapper.Map<PaymentOutputModel>(payment);
@@ -247,12 +253,13 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [HttpPut("payment/{id}")]
         [Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult UpdatePayment(int id, [FromBody] PaymentInputModel payment)
+        public ActionResult<PaymentOutputModel> UpdatePayment(int id, [FromBody] PaymentInputModel payment)
         {
             var paymentDto = _mapper.Map<PaymentDto>(payment);
             paymentDto.Id = id;
             _prepo.UpdatePayment(paymentDto);
-            return Ok("success");
+            var outputModel = _mapper.Map<PaymentOutputModel>(_prepo.GetPaymentById(id));
+            return Ok(outputModel);
         }
 
         // https://localhost:44365/api/user/find-debt
@@ -262,7 +269,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("find-debt")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
+        public ActionResult<List<UserOutputModel>> GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
         {
             var students = _prepo.GetStudentsNotPaidInMonth(Converters.StrToDateTimePeriod(month.Month));
             var outputModel = _mapper.Map<List<UserOutputModel>>(students);
@@ -279,7 +286,7 @@ namespace EducationSystem.Controllers
         public ActionResult DeletePayment(int id)
         {
             _prepo.DeletePayment(id);
-            return Ok("Платеж удален");
+            return NoContent();
         }
     }
 }
