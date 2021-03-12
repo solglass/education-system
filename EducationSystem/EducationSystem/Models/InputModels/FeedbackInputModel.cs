@@ -9,7 +9,6 @@ namespace EducationSystem.API.Models.InputModels
     {
         public int UserId { get; set; }
         public string Message { get; set; }
-        public int LessonId { get; set; }
         public int UnderstandingLevelId { get; set; }
         
     }
