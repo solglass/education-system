@@ -217,11 +217,6 @@ namespace EducationSystem.Data
                 .ToList();
 
         }
-        public TutorGroupDto GetTutorGroupById(int id)
-        {
-            return _connection
-                   .QuerySingleOrDefault<TutorGroupDto>("dbo.Tutor_Group_SelectAll", new { id }, commandType: System.Data.CommandType.StoredProcedure);
-        }
         public int DeleteTutorGroupsByIds(int userId, int groupId)
         {
             return _connection.Execute("dbo.Tutor_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);
