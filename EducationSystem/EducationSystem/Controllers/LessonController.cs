@@ -24,7 +24,11 @@ namespace EducationSystem.Controllers
             _lessonService = lessonService;
             _mapper = mapper;
         }
-
+        /// <summary>
+        /// Adds new lesson
+        /// </summary>
+        /// <param name="inputModel">Input model with all the properties for the new lesson</param>
+        /// <returns>Output model of the added lesson</returns>
         // https://localhost:50221/api/lesson/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
@@ -35,7 +39,11 @@ namespace EducationSystem.Controllers
 
             return Ok(result);
         }
-
+        /// <summary>
+        /// Gets all lessons of the Group
+        /// </summary>
+        /// <param name="">Group id </param>
+        /// <returns>List of Output models of the found Lessons </returns>
         // https://localhost:50221/api/lesson/
         [HttpGet]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
@@ -46,6 +54,11 @@ namespace EducationSystem.Controllers
             return Ok(lessonsList);
         }
 
+        /// <summary>
+        /// Gets lesson by id 
+        /// </summary>
+        /// <param name="id"> Id of the lesson</param>
+        /// <returns>Output model of the found Lesson </returns>
         // https://localhost:50221/api/lesson/3
         [HttpGet("{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
@@ -55,7 +68,11 @@ namespace EducationSystem.Controllers
             var lessonModel = _mapper.Map<LessonOutputModel>(lessonDto);
             return Ok(lessonModel);
         }
-
+        /// <summary>
+        /// Deletes lesson (soft-delete)
+        /// </summary>
+        /// <param name="id"> Id of the lesson</param>
+        /// <returns>Output model of the soft-deleted Lesson</returns>
         // https://localhost:50221/api/lesson/id
         [HttpDelete("{id}")]
         [Authorize(Roles = "Админ, Преподаватель")]
@@ -66,7 +83,11 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
-
+        /// <summary>
+        /// Recovers deleted lesson
+        /// </summary>
+        /// <param name="id"> Id of the lesson</param>
+        /// <returns>Output model of the recovered Lesson</returns>
         // https://localhost:50221/api/lesson/id/recovery
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель")]
@@ -77,7 +98,11 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
-
+        /// <summary>
+        /// Updates lesson's properties
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <returns>Output model of the updated Lesson</returns>
         // https://localhost:50221/api/lesson/5
         [HttpPut("{lessonId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
@@ -89,7 +114,12 @@ namespace EducationSystem.Controllers
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
         }
-        
+
+        /// <summary>
+        /// Gets all feedbacks for the lesson
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <returns>List of feedback output models for the lesson</returns>
         // https://localhost:50221/api/lesson/5/feedback
         [HttpGet("{lessonId}/feedback")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
@@ -99,7 +129,13 @@ namespace EducationSystem.Controllers
             var feedbackList = _mapper.Map<List<FeedbackOutputModel>>(feedbackDtos);
             return Ok(feedbackList);
         }
-        
+
+        /// <summary>
+        /// Gets feedback by id and lesson
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="feedbackId">Id of the feedback</param>
+        /// <returns>Output model of the found feedback</returns>
         // https://localhost:50221/api/lesson/5/feedback/3
         [HttpGet("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Менеджер, Методист, Преподаватель")]
@@ -110,6 +146,13 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Adds new feedback to the lesson
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="inputModel">>Input model with all the properties for the new feedback</param>
+        /// <returns>Output model of the created feedback</returns>
         // https://localhost:50221/api/lesson/id/feedback/
         [HttpPost("{id}")]
         [Authorize(Roles = "Админ, Студент")]
@@ -120,6 +163,13 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Updates feedback for the lesson
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="feedbackId">Id of the feedback</param>
+        /// <param name="feedbackInputModel">Input model with all the properties for the feedback to update</param>
+        /// <returns>Output model of the updated feedback</returns>
         // https://localhost:50221/api/lesson/5/feedback/5
         [HttpPut("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
@@ -132,6 +182,12 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Deletes feedback for the lesson (hard-delete)
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="feedbackId">Id of the feedback</param>
+        /// <returns>Status code 204 (no content) </returns>
         // https://localhost:44365/api/lesson/3/feedback/3
         [HttpDelete("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
@@ -141,6 +197,11 @@ namespace EducationSystem.Controllers
             return StatusCode(StatusCodes.Status204NoContent);
         }
 
+        /// <summary>
+        /// Gets attendences for the lesson
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <returns>List of attendences output models for the lesson</returns>
         // https://localhost:50221/api/lesson/5/attendance/
         [HttpGet("{id}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
@@ -151,6 +212,12 @@ namespace EducationSystem.Controllers
             return Ok(listAttendances);
         }
 
+        /// <summary>
+        /// Gets attendence for the lesson by id
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="attendanceId">Id of attendance</param>
+        /// <returns>Attendence output model for the lesson</returns>
         // https://localhost:50221/api/lesson/5/attendance/3
         [HttpGet("{id}/attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
@@ -161,6 +228,12 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Adds attendence for the lesson
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="inputModel">Input model with all the properties for the attendence</param>
+        /// <returns>Added attendence output model </returns>
         // https://localhost:50221/api/lesson/5/attendance
         [HttpPost("{id}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель")]
@@ -173,12 +246,12 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson/2/attendance/2
         /// <summary>
-        /// Update Attendance.
+        /// Updates Attendance.
         /// </summary>
-        /// <param name="lessonId">Which lesson the attendance belongs to.</param>
-        /// <param name="attendanceId">Attendance changed Id</param>
-        /// <param name="attendance">From body attendance object with parameter isAbsent</param>
-        /// <returns>Updated rows.</returns>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="attendanceId">Id of Attendance </param>
+        /// <param name="attendanceInputModel">Input model with all the properties for the attendence</param>
+        /// <returns>Updated attendence output model</returns>
         [HttpPut("{lessonId}/Attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult<AttendanceOutputModel> UpdateAttendance(int lessonId, int attendanceId, [FromBody] AttendanceInputModel attendanceInputModel)
@@ -189,6 +262,12 @@ namespace EducationSystem.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Deletes Attendance (hard-delete).
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="attendanceId">Id of Attendance </param>
+        /// <returns>Status code 204 (no content)</returns>
         // https://localhost:50221/api/lesson/iD/
         [HttpDelete("{lessonId}/attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
@@ -200,10 +279,10 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson/by-theme/14
         /// <summary>
-        /// Get all lessons that belong to one theme and are not deleted.
+        /// Gets all lessons that belong to one theme and are not deleted.
         /// </summary>
-        /// <param name="id">The identifier of the theme that we want to see all its lessons.</param>
-        /// <returns>The list of lessonOutputModel.</returns>
+        /// <param name="id">Id of the theme</param>
+        /// <returns>The list of Lesson output models</returns>
         [HttpGet("by-theme/{id}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int themeId)
@@ -212,6 +291,12 @@ namespace EducationSystem.Controllers
             return Ok(lessons);
         }
 
+        /// <summary>
+        /// Adds new theme for the lesson
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="themeId">Id of the theme</param>
+        /// <returns>Status code 201 (created)</returns>
         // https://localhost:50221/api/lesson/45/theme/54
         [HttpPost("{lessonId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
@@ -221,6 +306,12 @@ namespace EducationSystem.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
+        /// <summary>
+        /// Deletes theme of the lesson (hard-delete).
+        /// </summary>
+        /// <param name="lessonId">Id of the lesson</param>
+        /// <param name="themeId">Id of the theme</param>
+        /// <returns>Status code 204 (no content)</returns>
         // https://localhost:50221/api/lesson/45/theme/54
         [HttpDelete("{lessonId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
