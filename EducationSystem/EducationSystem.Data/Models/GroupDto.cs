@@ -5,12 +5,23 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class GroupDto
+    public class GroupDto : ICloneable
     {
         public int Id { get; set; }     
         public DateTime StartDate { get; set; }
         public CourseDto Course { get; set; }
         public GroupStatus GroupStatus { get; set; }
+
+        public object Clone()
+        {
+            return new GroupDto
+            {
+                Id = Id,
+                StartDate = StartDate,
+                Course = Course,
+                GroupStatus = GroupStatus
+            };
+        }
 
         public override bool Equals(object obj)
         {
