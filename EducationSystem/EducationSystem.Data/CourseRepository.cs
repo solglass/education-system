@@ -277,15 +277,15 @@ namespace EducationSystem.Data
                 .ToList();
             return themes;
         }
-
-
-        public List<Course_ThemeDto> GetCourseThemeByThemeId(int id)
+        public int HardDeleteTheme(int id)
         {
-            var result = _connection.
-               Query<Course_ThemeDto>("dbo.Course_Theme_SelectAllByThemeId",
-               new { id }, commandType: System.Data.CommandType.StoredProcedure)
-               .Distinct()
-               .ToList();
+            var result = _connection
+                .Execute("dbo.Theme_HardDelete",
+                new
+                {
+                    id
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
     }

@@ -20,10 +20,11 @@ namespace EducationSystem.Business
         {
             return _attachmentRepository.GetAttachmentById(id);
         }
-        public int ModifyAttachment(AttachmentDto attachmentDto)
+        public int ModifyAttachment(AttachmentDto attachmentDto, int id)
         {
-            return _attachmentRepository.ModifyAttachment(attachmentDto);
+            return _attachmentRepository.ModifyAttachment(attachmentDto, id);
         }
+
         public int AddAttachment(AttachmentDto attachmentDto)
         {
             return _attachmentRepository.AddAttachment(attachmentDto);
@@ -33,23 +34,28 @@ namespace EducationSystem.Business
             return _attachmentRepository.DeleteAttachmentById(id);
         }
 
-        public int AddAttachmentToHomeworkAttempt(AttachmentDto attachmentDto, int homeworkAttemptId)
+        public int AddHomeworkAttemptAttachment(AttachmentDto attachmentDto, int homeworkAttemptId)
         {
-            return _attachmentRepository.AddAttachmentToHomeworkAttempt(attachmentDto, homeworkAttemptId);
+            var attachmentId = _attachmentRepository.AddAttachment(attachmentDto);
+            return _attachmentRepository.AddAttachmentToHomeworkAttempt(attachmentId, homeworkAttemptId);
         }
-        public int AddAttachmentToComment(AttachmentDto attachmentDto, int commentId)
+        public int AddCommentAttachment(AttachmentDto attachmentDto, int commentId)
         {
-            return _attachmentRepository.AddAttachmentToComment(attachmentDto, commentId);
-        }
-
-        public int DeleteHomeworkAttemptAttachment(int attachmentId, int homeworkAttemptId)
-        {
-          return _attachmentRepository.DeleteHomeworkAttemptAttachment(attachmentId, homeworkAttemptId);
-        }
-
-        public int DeleteCommentAttachment(int attachmentId, int commentId)
-        {
-            return _attachmentRepository.DeleteCommentAttachment(attachmentId, commentId);
+            var attachmentId = _attachmentRepository.AddAttachment(attachmentDto);
+            return _attachmentRepository.AddAttachmentToComment(attachmentId, commentId);
+        }
+
+        public int DeleteHomeworkAttemptAttachment(int attachmentId, int homeworkAttemptId)
+        {
+            var result = _attachmentRepository.DeleteAttachmentFromHomeworkAttempt(attachmentId, homeworkAttemptId);
+            return _attachmentRepository.DeleteAttachmentById(attachmentId);
+                
+        }
+
+        public int DeleteCommentAttachment(int attachmentId, int commentId)
+        {
+            var result = _attachmentRepository.DeleteAttachmentFromComment(attachmentId, commentId);
+            return _attachmentRepository.DeleteAttachmentById(attachmentId);
         }
     }
 }

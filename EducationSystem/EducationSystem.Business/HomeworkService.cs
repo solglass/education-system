@@ -7,15 +7,18 @@ namespace EducationSystem.Business
     public class HomeworkService : IHomeworkService
     {
         private IHomeworkRepository _homeworkRepository;
-        private IHomeworkAttemptRepository _homeworkAttemptRepository;
         private ITagRepository _tagRepository;
+        private IGroupRepository _groupRepository;
+        private IAttachmentRepository _attachmentRepository;
         public HomeworkService(IHomeworkRepository homeworkRepository,
-            IHomeworkAttemptRepository homeworkAttemptRepository,
-            ITagRepository tagRepository)
+            ITagRepository tagRepository,
+            IGroupRepository groupRepository,
+            IAttachmentRepository attachmentRepository)
         {
             _tagRepository = tagRepository;
             _homeworkRepository = homeworkRepository;
-            _homeworkAttemptRepository = homeworkAttemptRepository;
+            _groupRepository = groupRepository;
+            _attachmentRepository = attachmentRepository;
         }
 
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
@@ -36,11 +39,14 @@ namespace EducationSystem.Business
         public HomeworkDto GetHomeworkById(int id)
         {
             var result = _homeworkRepository.GetHomeworkById(id);
+            result.Group = _groupRepository.GetGroupById(result.Group.Id);
+            result.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(id);
             return result;
         }
 
-        public int UpdateHomework(HomeworkDto homeworkDto)
+        public int UpdateHomework(int homeworkId, HomeworkDto homeworkDto)
         {
+            homeworkDto.Id = homeworkId;
             return _homeworkRepository.UpdateHomework(homeworkDto);
         }
 
@@ -53,7 +59,7 @@ namespace EducationSystem.Business
             });
             homeworkDto.Tags.ForEach(tag =>
             {
-                _homeworkRepository.HomeworkTagAdd(new HomeworkTagDto() { HomeworkId = result, TagId = tag.Id });
+                _homeworkRepository.HomeworkTagAdd(result,  tag.Id );
             });
             return result;
         }
@@ -122,13 +128,15 @@ namespace EducationSystem.Business
         }
 
 
-        public int AddHomeworkAttempt(HomeworkAttemptDto homeworkAttempt)
+        public int AddHomeworkAttempt(int homeworkId, HomeworkAttemptDto homeworkAttempt)
         {
+            homeworkAttempt.Homework = new HomeworkDto { Id = homeworkId };
             return _homeworkRepository.AddHomeworkAttempt(homeworkAttempt);
         }
 
-        public int UpdateHomeworkAttempt(HomeworkAttemptDto homeworkAttempt)
+        public int UpdateHomeworkAttempt(int attemptId, HomeworkAttemptDto homeworkAttempt)
         {
+            homeworkAttempt.Id = attemptId;
             return _homeworkRepository.UpdateHomeworkAttempt(homeworkAttempt);
         }
 
@@ -144,13 +152,13 @@ namespace EducationSystem.Business
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
         {
-            var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByUserId(id);
+            var dtos = _homeworkRepository.GetHomeworkAttemptsByUserId(id);
 
             return dtos;
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
         {
-            var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
+            var dtos = _homeworkRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
 
             return dtos;
         }
@@ -160,19 +168,25 @@ namespace EducationSystem.Business
             return _homeworkRepository.GetHomeworkAttemptById(id);
         }
 
-        public int AddComment(CommentDto comment)
+        public int AddComment(int attemptId, CommentDto comment)
         {
+
+            comment.HomeworkAttempt = new HomeworkAttemptDto() { Id = attemptId };
             return _homeworkRepository.AddComment(comment);
         }
 
-        public int UpdateComment(CommentDto comment)
+        public int UpdateComment(int attemptId, int commentId, CommentDto comment)
         {
-            return _homeworkRepository.UpdateComment(comment);
+
+            comment.Id = commentId;
+            comment.HomeworkAttempt = new HomeworkAttemptDto { Id = attemptId };
+            var result = _homeworkRepository.UpdateComment(comment);
+            return result;
         }
 
-        public int AddHomeworkTag(HomeworkTagDto homeworkTagDto)
+        public int AddHomeworkTag(int homeworkId, int tagId)
         {
-            return _homeworkRepository.HomeworkTagAdd(homeworkTagDto);
+            return _homeworkRepository.HomeworkTagAdd(homeworkId, tagId);
         }
         public int DeleteHomeworkTag(int homeworkId, int tagId) { return _homeworkRepository.HomeworkTagDelete(homeworkId, tagId); }
     }

@@ -1,4 +1,11 @@
-﻿ALTER TABLE [dbo].[Attachment]  WITH CHECK ADD  CONSTRAINT [Attachment_fk0] FOREIGN KEY([AttachmentTypeId])
+﻿declare @DbVersion int
+
+select top 1 @DbVersion = version
+from dbo.DbVersion order by id desc
+
+if @DbVersion is not null set noexec on
+
+ALTER TABLE [dbo].[Attachment]  WITH CHECK ADD  CONSTRAINT [Attachment_fk0] FOREIGN KEY([AttachmentTypeId])
 REFERENCES [dbo].[AttachmentType] ([Id])
 ON UPDATE NO ACTION
 GO
@@ -257,3 +264,5 @@ GO
 
 ALTER TABLE [dbo].[User_Role] CHECK CONSTRAINT [User_Role_fk1]
 GO
+
+set noexec off

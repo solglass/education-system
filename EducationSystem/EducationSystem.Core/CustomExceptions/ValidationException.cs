@@ -14,7 +14,11 @@ namespace EducationSystem.Core.CustomExceptions
         public ValidationException(ModelStateDictionary modelState)
         {
             StatusCode = (int)HttpStatusCode.Conflict;
-            ErrorMessage = "тобi жопа"; // get errors from modelState and combine them into ErrorMessage
+            ErrorMessage = ""; // get errors from modelState and combine them into ErrorMessage
+            foreach(var state in modelState)
+            {
+                ErrorMessage += $"Invalid format {state.Key}{System.Environment.NewLine}";
+            }
         }
     }
 }

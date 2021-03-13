@@ -52,22 +52,22 @@ namespace EducationSystem.Data.Tests
             }
         }
 
-        [TestCase(1)]
-        public void Attachment_Update(int dtoMockNumber)
-        {
-            AttachmentDto expected = GetMockAttachment_Add(dtoMockNumber);
-            _attachmentId.Add(aRepo.AddAttachment(expected));
-            if (_attachmentId.Count == 0) { Assert.Fail("Attachment addition failed"); }
+        //[TestCase(1)]
+        //public void Attachment_Update(int dtoMockNumber)
+        //{
+        //    AttachmentDto expected = GetMockAttachment_Add(dtoMockNumber);
+        //    _attachmentId.Add(aRepo.AddAttachment(expected));
+        //    if (_attachmentId.Count == 0) { Assert.Fail("Attachment addition failed"); }
 
-            int newId = _attachmentId[_attachmentId.Count - 1];
-            expected.Path = "B\\TESTCASE2";
-            expected.Id = newId;
-            aRepo.ModifyAttachment(expected);
-            AttachmentDto actual = aRepo.GetAttachmentById(newId);
+        //    int newId = _attachmentId[_attachmentId.Count - 1];
+        //    expected.Path = "B\\TESTCASE2";
+        //    expected.Id = newId;
+        //    aRepo.ModifyAttachment(expected);
+        //    AttachmentDto actual = aRepo.GetAttachmentById(newId);
 
-            Assert.AreEqual(expected, actual);
+        //    Assert.AreEqual(expected, actual);
 
-        }
+        //}
 
 
 
