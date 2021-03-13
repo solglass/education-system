@@ -82,6 +82,28 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [TestCase(1, true)]
+        [TestCase(1, false)]
+        public void ThemeDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
+        {
+
+            //Given
+            var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
+            var addedThemeId = _courseRepo.AddTheme(dto);
+            _themeIdList.Add(addedThemeId);
+            dto.Id = addedThemeId;
+            dto.IsDeleted = isDeleted;
+
+            // When
+            var affectedRowsCount = _courseRepo.DeleteOrRecoverTheme(addedThemeId, isDeleted);
+
+            var actual = _courseRepo.GetThemeById(addedThemeId);
+
+            // Then
+            Assert.AreEqual(1, affectedRowsCount);
+            Assert.AreEqual(dto, actual);
+        }
+
         [OneTimeTearDown]
         public void SampleTestTearDown()
         {
