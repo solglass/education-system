@@ -25,6 +25,13 @@ namespace EducationSystem.Data.Tests.Mocks
                         IsDeleted = false
                     };
                     break;
+                case 3:
+                    return new ThemeDto
+                    {
+                        Name = "Test theme 3",
+                        IsDeleted = false
+                    };
+                    break;
                 default:
                     return null;
             }

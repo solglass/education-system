@@ -61,6 +61,27 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(new int[] { 1,2,3})]
+        public void GetThemesPositiveTest(int[] mockIds)
+        {
+            // Given
+            var expected = _courseRepo.GetThemes();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(dto);
+                _themeIdList.Add(addedThemeId);
+                dto.Id = addedThemeId;
+                expected.Add(dto);
+            }
+
+            // When
+            var actual = _courseRepo.GetThemes();
+
+            // Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
         [OneTimeTearDown]
         public void SampleTestTearDown()
         {
