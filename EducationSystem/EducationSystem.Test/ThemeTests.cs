@@ -23,6 +23,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(1)]
         [TestCase(2)]
+        [TestCase(3)]
         public void ThemeAddPositiveTest(int mockId)
         {
             // Given
@@ -40,7 +41,9 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
-        [TestCase(1,2)]
+        [TestCase(1, 2)]
+        [TestCase(2, 3)]
+        [TestCase(3, 2)]
         public void ThemeUpdatePositiveTest(int mockId, int updateMockId)
         {
             // Given
@@ -61,7 +64,9 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
-        [TestCase(new int[] { 1,2,3})]
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
         public void GetThemesPositiveTest(int[] mockIds)
         {
             // Given
@@ -84,6 +89,8 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(1, true)]
         [TestCase(1, false)]
+        [TestCase(2, true)]
+        [TestCase(3, false)]
         public void ThemeDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
         {
 
