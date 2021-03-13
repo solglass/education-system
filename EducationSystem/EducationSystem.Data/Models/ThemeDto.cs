@@ -18,27 +18,17 @@ namespace EducationSystem.Data.Models
             {
                 Id = Id,
                 Name = Name,
-                Tags = Tags
+                Tags = Tags,
+                IsDeleted = IsDeleted
             };
         }
 
         public override bool Equals(object obj)
         {
             ThemeDto themeObj = (ThemeDto)obj;
-            if (!themeObj.Name.Equals(Name))
+            if (themeObj.Id != Id || themeObj.Name != Name || themeObj.IsDeleted != IsDeleted)
             {
                 return false;
-            }
-            if (themeObj.Tags == null || Tags == null || themeObj.Tags.Count != Tags.Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < Tags.Count; i++)
-            {
-                if (!themeObj.Tags[i].Name.Equals(Tags[i].Name))
-                {
-                    return false;
-                }
             }
             return true;
         }

@@ -1,4 +1,5 @@
 ﻿using EducationSystem.Data.Models;
+using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,66 +7,56 @@ using System.Text;
 
 namespace EducationSystem.Data.Tests
 {
-    public class ThemeTests
+    public class ThemeTests : BaseTest
     {
 
         private ICourseRepository _courseRepo;
         private List<int> _themeIdList;
-        private List<ThemeDto> _themeFromDb;
+
         [OneTimeSetUp]
         public void SetUpTest()
         {
-
-            _themeFromDb = new List<ThemeDto>();
+            _courseRepo = new CourseRepository(_options);
 
             _themeIdList = new List<int>();
         }
 
-        [Test, Order(1)]
-        public void TestAddTheme()
+        [TestCase(1)]
+        public void ThemeAddPositiveTest(int mockId)
         {
-            _themeFromDb = _courseRepo.GetThemes();
-            ThemeDto theme; 
-            for (int i = 2; i < 4; ++i)
-            {
-                theme = GetThemeMock(i);
-                _themeFromDb.Add(theme);
-                _themeIdList.Add(_courseRepo.AddTheme(theme));
-            }
+            // Given
+            var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
+            var addedThemeId = _courseRepo.AddTheme(dto);
+            Assert.Greater(addedThemeId, 0);
 
-            List<ThemeDto> actualThemeRepo = _courseRepo.GetThemes();
-            if(actualThemeRepo.Count != _themeFromDb.Count)
-            {
-                Assert.Fail();
-            }
-            for(int i = _themeIdList[0]; i < actualThemeRepo.Count; ++i)
-            {
-                if (!_themeFromDb[i].Equals(actualThemeRepo[i]))
-                {
-                    Assert.Fail();
-                }
-            }
-            Assert.Pass();
+            _themeIdList.Add(addedThemeId);
+            dto.Id = addedThemeId;
+
+            // When
+            var actual = _courseRepo.GetThemeById(addedThemeId);
+
+            // Then
+            Assert.AreEqual(dto, actual);
 
         }
 
-        [Test, Order(2)]
-        public void TestUpdateTheme()
-        {
-            _themeFromDb = _courseRepo.GetThemes();
-            ThemeDto theme;
-            foreach (int themeId in _themeIdList)
-            {
-                theme = _courseRepo.GetThemeById(themeId);
-                theme.Name = $"New Name {themeId}";
-                _courseRepo.UpdateTheme(theme);
-                if (!theme.Equals(_courseRepo.GetThemeById(themeId)))
-                {
-                    Assert.Fail($"Theme {themeId} was changed incorrectly or not changed");
-                }
-            }
-            Assert.Pass();
-        }
+        //[Test, Order(2)]
+        //public void TestUpdateTheme()
+        //{
+        //    _themeFromDb = _courseRepo.GetThemes();
+        //    ThemeDto theme;
+        //    foreach (int themeId in _themeIdList)
+        //    {
+        //        theme = _courseRepo.GetThemeById(themeId);
+        //        theme.Name = $"New Name {themeId}";
+        //        _courseRepo.UpdateTheme(theme);
+        //        if (!theme.Equals(_courseRepo.GetThemeById(themeId)))
+        //        {
+        //            Assert.Fail($"Theme {themeId} was changed incorrectly or not changed");
+        //        }
+        //    }
+        //    Assert.Pass();
+        //}
         //[Test, Order(3)]
         //public void TestDeleteTheme()
         //{
@@ -94,25 +85,25 @@ namespace EducationSystem.Data.Tests
         //    Assert.Pass();
 
         //}
-        public ThemeDto GetThemeMock(int n)
-        {
-            ThemeDto result = new ThemeDto();
-            switch (n)
-            {
-                case 1:
-                    return result;
-                case 2:
-                    result = (new ThemeDto { Name = "Test theme 1" });
-                    return result;
-                case 3:
-                    result = new ThemeDto { Name = "Test theme 2" };
-                    return result;
-                case 4:
-                    result = new ThemeDto { Name = "Test theme 3" };
-                    return result;
-                default:
-                    return result;
-            }
-        }
+        //public ThemeDto GetThemeMock(int n)
+        //{
+        //    ThemeDto result = new ThemeDto();
+        //    switch (n)
+        //    {
+        //        case 1:
+        //            return result;
+        //        case 2:
+        //            result = (new ThemeDto { Name = "Test theme 1" });
+        //            return result;
+        //        case 3:
+        //            result = new ThemeDto { Name = "Test theme 2" };
+        //            return result;
+        //        case 4:
+        //            result = new ThemeDto { Name = "Test theme 3" };
+        //            return result;
+        //        default:
+        //            return result;
+        //    }
+        //}
     }
 }
