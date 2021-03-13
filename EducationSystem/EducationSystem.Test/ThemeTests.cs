@@ -22,6 +22,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1)]
+        [TestCase(2)]
         public void ThemeAddPositiveTest(int mockId)
         {
             // Given
@@ -37,73 +38,42 @@ namespace EducationSystem.Data.Tests
 
             // Then
             Assert.AreEqual(dto, actual);
-
         }
 
-        //[Test, Order(2)]
-        //public void TestUpdateTheme()
-        //{
-        //    _themeFromDb = _courseRepo.GetThemes();
-        //    ThemeDto theme;
-        //    foreach (int themeId in _themeIdList)
-        //    {
-        //        theme = _courseRepo.GetThemeById(themeId);
-        //        theme.Name = $"New Name {themeId}";
-        //        _courseRepo.UpdateTheme(theme);
-        //        if (!theme.Equals(_courseRepo.GetThemeById(themeId)))
-        //        {
-        //            Assert.Fail($"Theme {themeId} was changed incorrectly or not changed");
-        //        }
-        //    }
-        //    Assert.Pass();
-        //}
-        //[Test, Order(3)]
-        //public void TestDeleteTheme()
-        //{
-        //    _themeFromDb = _courseRepo.GetThemes();
-        //    int deletedId;
-        //    foreach (int themeId in _themeIdList)
-        //    {
-        //        deletedId = _courseRepo.DeleteTheme(themeId);
+        [TestCase(1,2)]
+        public void ThemeUpdatePositiveTest(int mockId, int updateMockId)
+        {
+            // Given
+            var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
+            var addedThemeId = _courseRepo.AddTheme(dto);
+            _themeIdList.Add(addedThemeId);
 
-        //        List<ThemeDto> newThemeFromDb = _courseRepo.GetThemes();
+            dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(updateMockId).Clone();
+            dto.Id = addedThemeId;
+            var affectedRowsCount = _courseRepo.UpdateTheme(dto);
 
-        //        if (_themeFromDb.Count == newThemeFromDb.Count)
-        //        {
 
-        //            Assert.Fail("Nothing was deleted");
-        //        }
-        //        else
-        //        {
-        //            _themeFromDb = newThemeFromDb;
-        //        }
-        //        if (_courseRepo.GetThemeById(themeId) != null)
-        //        {
-        //            Assert.Fail("Something wrong was deleted");
-        //        }
-        //    }
-        //    Assert.Pass();
+            // When
+            var actual = _courseRepo.GetThemeById(addedThemeId);
 
-        //}
-        //public ThemeDto GetThemeMock(int n)
-        //{
-        //    ThemeDto result = new ThemeDto();
-        //    switch (n)
-        //    {
-        //        case 1:
-        //            return result;
-        //        case 2:
-        //            result = (new ThemeDto { Name = "Test theme 1" });
-        //            return result;
-        //        case 3:
-        //            result = new ThemeDto { Name = "Test theme 2" };
-        //            return result;
-        //        case 4:
-        //            result = new ThemeDto { Name = "Test theme 3" };
-        //            return result;
-        //        default:
-        //            return result;
-        //    }
-        //}
+            // Then
+            Assert.AreEqual(1, affectedRowsCount);
+            Assert.AreEqual(dto, actual);
+        }
+
+        [OneTimeTearDown]
+        public void SampleTestTearDown()
+        {
+            DeleteThemes();
+        }
+
+        private void DeleteThemes()
+        {
+            foreach(var themeId in _themeIdList)
+            {
+                _courseRepo.HardDeleteTheme(themeId);
+            }
+        }
+
     }
 }
