@@ -210,7 +210,7 @@ namespace EducationSystem.Data
                 .ToList();
             return groups;
         }
-        public int DeleteTutorGroupsByIds(int userId, int groupId)
+        public int DeleteTutorGroup(int userId, int groupId)
         {
             return _connection.Execute("dbo.Tutor_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);
         }
@@ -234,7 +234,7 @@ namespace EducationSystem.Data
             }
 
         }
-        public int DeleteStudentGroupById(int userId, int groupId)
+        public int DeleteStudentGroup(int userId, int groupId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -248,8 +248,8 @@ namespace EducationSystem.Data
                 return connection.QuerySingleOrDefault<int>("dbo.Student_Group_Add",
                     new
                     {
-                        studentGroup.User,
-                        studentGroup.Group,
+                        UserId = studentGroup.User.Id,
+                        GroupId = studentGroup.Group.Id,
                         contractNumber = studentGroup.ContractNumber
                     },
                     commandType: System.Data.CommandType.StoredProcedure);
