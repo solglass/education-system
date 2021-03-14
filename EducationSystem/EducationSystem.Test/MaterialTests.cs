@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using EducationSystem.Data.Models;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -78,14 +79,16 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
-        [TestCase(5)]
+        [TestCase(100)]
         public void MaterialsGetByTagIdPositiveTest(int caseId)
         {
-            for (int i = 0; i < 4; i++)
+            List<MaterialDto> expected = new List<MaterialDto>();
+            for (int i = 0; i < 8; i+=2)
             {
                 var dto = MaterialMock.GetMaterialMock(i);
                 int addedId = _materialRepository.AddMaterial(dto);
                 dto.Id = addedId;
+                expected.Add(dto);
                 _addedMaterialMockIds.Add(addedId);
             }
 
@@ -96,11 +99,13 @@ namespace EducationSystem.Data.Tests
 
             for (int i = 0; i < 4; i++)
             {
-                var dto = MaterialMock.GetMaterialMock(i);
-                int addedId = _materialRepository.AddMaterial(dto);
-                dto.Id = addedId;
-                _addedMaterialMockIds.Add(addedId);
+                int addedId = _tagRepository.MaterialTagAdd(expected[i].Id, addedTagId);
+                _addedMaterialTagIds.Add(addedId);
             }
+
+            var actual = _materialRepository.GetMaterialsByTagId(addedTagId);
+
+            Assert.AreEqual(expected, actual);
 
         }
 
@@ -115,6 +120,10 @@ namespace EducationSystem.Data.Tests
             _addedMaterialMockIds.ForEach(id =>
             {
                 _materialRepository.HardDeleteMaterial(id);
+            });
+            _addedTagMockIds.ForEach(id =>
+            {
+                _tagRepository.TagDelete(id);
             });
         }
     }
