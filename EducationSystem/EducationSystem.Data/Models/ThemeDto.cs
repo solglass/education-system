@@ -17,30 +17,15 @@ namespace EducationSystem.Data.Models
             return new ThemeDto
             {
                 Id = Id,
-                Name = Name,
-                Tags = Tags
+                Name = Name
             };
         }
 
         public override bool Equals(object obj)
         {
             ThemeDto themeObj = (ThemeDto)obj;
-            if (!themeObj.Name.Equals(Name))
-            {
-                return false;
-            }
-            if (themeObj.Tags == null || Tags == null || themeObj.Tags.Count != Tags.Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < Tags.Count; i++)
-            {
-                if (!themeObj.Tags[i].Name.Equals(Tags[i].Name))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return themeObj.Name.Equals(Name);
+            
         }
     }
 }
