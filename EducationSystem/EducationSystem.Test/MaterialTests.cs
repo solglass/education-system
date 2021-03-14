@@ -1,4 +1,5 @@
 ﻿using EducationSystem.Data.Models;
+using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,26 +11,30 @@ namespace EducationSystem.Data.Tests
     {
         private MaterialRepository _materialRepository;
         private TagRepository _tagRepository;
+        private GroupRepository _groupRepository;
 
         private List<int> _addedMaterialMockIds;
         private List<int> _addedTagMockIds;
         private List<int> _addedMaterialTagIds;
+        private List<int> _addedGroupIds;
 
         [OneTimeSetUp]
         public void MaterialOneTimeSetUp()
         {
             _materialRepository = new MaterialRepository(_options);
             _tagRepository = new TagRepository(_options);
+            _groupRepository = new GroupRepository(_options);
 
             _addedMaterialMockIds = new List<int>();
             _addedTagMockIds = new List<int>();
             _addedMaterialTagIds = new List<int>();
+            _addedGroupIds = new List<int>();
         }
 
-        [TestCase(1)]
         [TestCase(2)]
-        [TestCase(3)]
         [TestCase(4)]
+        [TestCase(6)]
+        [TestCase(8)]
         public void MaterialAddPositiveTest(int caseId)
         {
             var dto = MaterialMock.GetMaterialMock(caseId);
@@ -109,6 +114,38 @@ namespace EducationSystem.Data.Tests
 
         }
 
+        [TestCase(888)]
+        public void MaterialsGetByGroupIdPositiveTest(int groupId)
+        {
+            List<MaterialDto> expected = new List<MaterialDto>();
+            for (int i = 0; i < 8; i += 2)
+            {
+                var dto = MaterialMock.GetMaterialMock(i);
+                int addedId = _materialRepository.AddMaterial(dto);
+                dto.Id = addedId;
+                expected.Add(dto);
+                _addedMaterialMockIds.Add(addedId);
+            }
+
+            var dtoCourse = CourseMockGetter.GetCourseDtoMock(1);
+            var dtoGroup = GroupMockGetter.GetGroupDtoMock(1);
+            dtoGroup.Course = dtoCourse;
+            int addedGroupId = _groupRepository.AddGroup(dtoGroup);
+            dtoGroup.Id = addedGroupId;
+            _addedGroupIds.Add(addedGroupId);
+
+            for (int i = 0; i < 4; i++)
+            {
+                int addedId = _groupRepository.AddGroup_Material(addedGroupId, expected[i].Id);
+                //_addedMaterialTagIds.Add(addedId);
+            }
+
+            var actual = _materialRepository.GetMaterialsByGroupId(addedGroupId);
+
+            Assert.AreEqual(expected, actual);
+
+        }
+
         public void AddMaterials()
         {
 
@@ -124,6 +161,10 @@ namespace EducationSystem.Data.Tests
             _addedTagMockIds.ForEach(id =>
             {
                 _tagRepository.TagDelete(id);
+            });
+            _addedGroupIds.ForEach(id =>
+            {
+                _groupRepository.HardDeleteGroup(id);
             });
         }
     }
