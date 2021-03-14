@@ -15,8 +15,9 @@ namespace EducationSystem.Data.Tests
 
         private List<int> _addedMaterialMockIds;
         private List<int> _addedTagMockIds;
-        private List<int> _addedMaterialTagIds;
         private List<int> _addedGroupIds;
+        private List<(int, int)> _addedMaterialTagIds;
+        private List<(int, int)> _addedMaterialGroupIds;
 
         [OneTimeSetUp]
         public void MaterialOneTimeSetUp()
@@ -27,8 +28,9 @@ namespace EducationSystem.Data.Tests
 
             _addedMaterialMockIds = new List<int>();
             _addedTagMockIds = new List<int>();
-            _addedMaterialTagIds = new List<int>();
             _addedGroupIds = new List<int>();
+            _addedMaterialTagIds = new List<(int, int)>();
+            _addedMaterialGroupIds = new List<(int, int)>();
         }
 
         [TestCase(2)]
@@ -104,8 +106,8 @@ namespace EducationSystem.Data.Tests
 
             for (int i = 0; i < 4; i++)
             {
-                int addedId = _tagRepository.MaterialTagAdd(expected[i].Id, addedTagId);
-                _addedMaterialTagIds.Add(addedId);
+                _tagRepository.MaterialTagAdd(expected[i].Id, addedTagId);
+                _addedMaterialTagIds.Add((expected[i].Id, addedTagId));
             }
 
             var actual = _materialRepository.GetMaterialsByTagId(addedTagId);
@@ -136,8 +138,8 @@ namespace EducationSystem.Data.Tests
 
             for (int i = 0; i < 4; i++)
             {
-                int addedId = _groupRepository.AddGroup_Material(addedGroupId, expected[i].Id);
-                //_addedMaterialTagIds.Add(addedId);
+                _groupRepository.AddGroup_Material(addedGroupId, expected[i].Id);
+                _addedMaterialGroupIds.Add((addedGroupId, expected[i].Id));
             }
 
             var actual = _materialRepository.GetMaterialsByGroupId(addedGroupId);
@@ -165,6 +167,14 @@ namespace EducationSystem.Data.Tests
             _addedGroupIds.ForEach(id =>
             {
                 _groupRepository.HardDeleteGroup(id);
+            });
+            _addedMaterialTagIds.ForEach(id =>
+            {
+                _tagRepository.MaterialTagDelete(id.Item1, id.Item2);
+            });
+            _addedMaterialTagIds.ForEach(id =>
+            {
+                _groupRepository.DeleteGroup_Material(id.Item1, id.Item2);
             });
         }
     }
