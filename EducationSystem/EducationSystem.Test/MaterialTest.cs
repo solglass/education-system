@@ -7,7 +7,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Tests
 {
-    public class MaterialTests : BaseTest
+    public class MaterialTest : BaseTest
     {
         private MaterialRepository _materialRepository;
         private TagRepository _tagRepository;
@@ -144,7 +144,7 @@ namespace EducationSystem.Data.Tests
 
             var actual = _materialRepository.GetMaterialsByGroupId(addedGroupId);
 
-            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected, actual);
 
         }
 
