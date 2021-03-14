@@ -12,9 +12,8 @@ namespace EducationSystem.Data
         int AddTutorToGroup(int userId,int groupId);
         int DeleteGroup(int id);
         int DeleteGroup_Material(int groupId, int materialId);
-        int DeleteStudentGroupById(int userId, int groupId);
+        int DeleteStudentGroup(int userId, int groupId);
         int DeleteTeacherGroup(int userId, int groupId);
-        int DeleteTutorGroupsByIds(int userId, int groupId);
         List<GroupReportDto> GenerateReport();
         GroupDto GetGroupById(int id);
         GroupDto GetGroupProgramsByGroupId(int id);
@@ -25,5 +24,6 @@ namespace EducationSystem.Data
         int HardDeleteGroup(int id);
         int UpdateGroup(GroupDto groupDto);
         List<GroupDto> GetGroupByThemeId(int id);
+        int DeleteTutorGroup(int userId, int groupId);
     }
 }
