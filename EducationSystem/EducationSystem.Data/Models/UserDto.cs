@@ -38,7 +38,7 @@ namespace EducationSystem.Data.Models
         public override bool Equals(object obj)
         {
             var userDto = (UserDto)obj;
-            if ((userDto.Id == Id) &&
+            return (userDto.Id == Id) &&
                 String.Equals(userDto.FirstName, FirstName) &&
                 String.Equals(userDto.LastName, LastName) &&
                 userDto.BirthDate == BirthDate &&
@@ -46,13 +46,8 @@ namespace EducationSystem.Data.Models
                 String.Equals(userDto.Password, Password) &&
                 String.Equals(userDto.Phone, Phone) &&
                 String.Equals(userDto.Email, Email) &&
-                (userDto.IsDeleted == IsDeleted)&&
-                (userDto.Roles == null ? 
-                Enumerable.SequenceEqual(userDto.Roles.OrderBy(role => role),
-                                         Roles.OrderBy(role => role))
-                                       :true))
-                return true;
-            else return false;
+                (userDto.IsDeleted == IsDeleted);
+ 
         }
 
         public override int GetHashCode()

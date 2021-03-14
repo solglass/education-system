@@ -64,28 +64,6 @@ namespace EducationSystem.Data.Tests
         }
 
 
-
-        [TestCase(1)]
-        public void UserHardDeletePositiveTest(int mockId)
-        {
-            //Given
-            var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
-            var addedEntityId = _repository.AddUser(dto);
-            _repository.AddRoleToUser(addedEntityId, 1);
-            dto.Roles = new List<Role> { Role.Admin };
-            Assert.Greater(addedEntityId, 0);
-            _addedUserDtoIds.Add(addedEntityId);
-            dto.Id = addedEntityId;
-
-            //When
-            _repository.HardDeleteUser(addedEntityId);
-
-            // Then
-            var actual = _repository.GetUserById(addedEntityId);
-            Assert.AreEqual(null, actual);
-        }
-
-
         [TestCase(1)]
         public void UserDeleteOrRecoverPositiveTest(int mockId)
         {
@@ -233,7 +211,7 @@ namespace EducationSystem.Data.Tests
 
 
         [TearDown]
-        public void SampleTestTearDown()
+        public void UserTestTearDown()
         {
             _addedUserDtoIds.ForEach(id =>
             {
