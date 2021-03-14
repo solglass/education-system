@@ -13,35 +13,29 @@ namespace EducationSystem.Data.Models
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
 
+        public object Clone()
+        {
+            return new CourseDto
+            {
+                Id = this.Id,
+                Description = this.Description,
+                Duration = this.Duration,
+                Name = this.Name,
+                IsDeleted = this.IsDeleted
+            };
+        }
 
         public override bool Equals(object obj)
         {
             CourseDto courseObj = (CourseDto)obj;
-            if (object.ReferenceEquals(courseObj, null) && object.ReferenceEquals(this, null))
-            {
-                return true;
-            }
-            if (object.ReferenceEquals(courseObj, null))
-            {
-                return false;
-            }
-            if (!courseObj.Description.Equals(Description) || !courseObj.Name.Equals(Name) || courseObj.Duration!=Duration)
-            {
-                return false;
-            }
-            if (courseObj.Themes == null || Themes == null || courseObj.Themes.Count != Themes.Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < Themes.Count; i++)
-            {
-                if (!courseObj.Themes[i].Name.Equals(Themes[i].Name))
-                {
-                    return false;
-                }
-            }
 
-            return true;
+            return (Id == courseObj.Id &&
+                    Name.Equals(courseObj.Name) &&
+                    Description.Equals(courseObj.Description) &&
+                    Duration == courseObj.Duration &&
+                    IsDeleted == courseObj.IsDeleted);
+           
+           
         }
     }
 }
