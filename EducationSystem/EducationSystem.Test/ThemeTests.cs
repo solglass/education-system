@@ -12,6 +12,8 @@ namespace EducationSystem.Data.Tests
 
         private ICourseRepository _courseRepo;
         private List<int> _themeIdList;
+        private List<int> _courseIdList;
+        private List<(int, int)> _courseThemeList;
 
         [OneTimeSetUp]
         public void SetUpTest()
@@ -19,6 +21,8 @@ namespace EducationSystem.Data.Tests
             _courseRepo = new CourseRepository(_options);
 
             _themeIdList = new List<int>();
+            _courseIdList = new List<int>();
+            _courseThemeList = new List<(int, int)>();
         }
 
         [TestCase(1)]
@@ -111,10 +115,58 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
+        public void GetThemesByCourseIdPositiveTest(int[] mockIds)
+        {
+            // Given
+            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1);
+            var addedCourseId = _courseRepo.AddCourse(courseDto);
+            _courseIdList.Add(addedCourseId);
+
+            var expected = new List<ThemeDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(dto);
+                _themeIdList.Add(addedThemeId);
+                dto.Id = addedThemeId;
+                expected.Add(dto);
+
+                _courseRepo.AddCourse_Theme(addedCourseId, addedThemeId);
+                _courseThemeList.Add((addedCourseId, addedThemeId));
+            }
+
+            // When
+            var actual = _courseRepo.GetThemesByCourseId(addedCourseId);
+
+            // Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
         [OneTimeTearDown]
         public void SampleTestTearDown()
         {
+            DeleteCourseThemes();
+            DeleteCourses();
             DeleteThemes();
+        }
+
+        private void DeleteCourseThemes()
+        {
+            foreach (var courseTheme in _courseThemeList)
+            {
+                _courseRepo.DeleteCourse_Theme(courseTheme.Item1, courseTheme.Item2);
+            }
+        }
+
+        private void DeleteCourses()
+        {
+            foreach (var courseId in _courseIdList)
+            {
+                _courseRepo.HardDeleteCourse(courseId);
+            }
         }
 
         private void DeleteThemes()
