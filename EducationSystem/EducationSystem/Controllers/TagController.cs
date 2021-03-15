@@ -76,24 +76,6 @@ namespace EducationSystem.Controllers
             return Ok(tag);
         }
         /// <summary>
-        /// Updates Tag
-        /// </summary>
-        /// /// <param name="id"> is used to find the tag user wants to update</param>
-        /// <param name="tag"> is used to provide new information about selected tag</param>
-        /// <returns>Returns the TagOutputModel which includes Id and Name-property</returns>
-        //https://localhost:50221/api/tag/3
-        [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
-        public ActionResult<TagOutputModel> UpdateTag(int id, [FromBody] TagInputModel tag)
-        {
-            var tagDto = _mapper.Map<TagDto>(tag);
-            tagDto.Id = id;
-            _tagService.UpdateTag(tagDto);
-            var result = _mapper.Map<TagOutputModel>(_tagService.GetTagById(id));
-            return Ok(result);
-        }
-        /// <summary>
         /// Deletes Tag
         /// </summary>
         /// /// <param name="id"> is used to find the tag user wants to delete</param>
