@@ -15,9 +15,9 @@ namespace EducationSystem.Data.Tests.Mocks
                 {
                     Amount = 2222,
                     ContractNumber = 99,
-                    Date = DateTime.Now,
+                    Date = DateTime.Today,
                     IsPaid = true,
-                    Period = "January2020",
+                    Period = "January",
                 },
                 _ => throw new NotImplementedException()
             };
