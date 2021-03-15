@@ -121,24 +121,6 @@ namespace EducationSystem.Data.Tests
         }
 
 
-        [TestCase(1)]
-        public void UserAddRolePositiveTest(int mockId)
-        {
-            //Given
-            var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
-            var addedEntityId = _repository.AddUser(dto);
-            _addedUserDtoIds.Add(addedEntityId);
-            Assert.Greater(addedEntityId, 0);
-
-            //When
-            _repository.AddRoleToUser(addedEntityId, 1);
-
-            // Then
-            dto.Id = addedEntityId;
-            dto.Roles = new List<Role> {Role.Admin };
-            var actual = _repository.GetUserById(addedEntityId);
-            Assert.AreEqual(dto, actual);
-        }
 
         [TestCase(1)]
         public void UserDeleteRolePositiveTest(int mockId)
