@@ -1,9 +1,7 @@
 ﻿using EducationSystem.Data.Models;
 using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Tests
 {
@@ -33,34 +31,26 @@ namespace EducationSystem.Data.Tests
             _addedMaterialGroupIds = new List<(int, int)>();
         }
 
-        [TestCase(2)]
-        [TestCase(4)]
-        [TestCase(6)]
-        [TestCase(8)]
-        public void MaterialAddPositiveTest(int caseId)
+        [TestCase(1)]
+        public void MaterialAddPositiveTest(int mockId)
         {
-            var dto = MaterialMock.GetMaterialMock(caseId);
-            int addedId = _materialRepository.AddMaterial(dto);
-            dto.Id = addedId;
-            _addedMaterialMockIds.Add(addedId);
+            var dto = AddMaterial(mockId);
 
-            var actual = _materialRepository.GetMaterialById(addedId);
+            var actual = _materialRepository.GetMaterialById(dto.Id);
 
             Assert.AreEqual(dto, actual);
         }
 
-        [TestCase(2)]
-        public void MaterialUpdatePositiveTest(int caseId)
+        [TestCase(1)]
+        public void MaterialUpdatePositiveTest(int mockId)
         {
-            var dto = MaterialMock.GetMaterialMock(caseId);
-            int addedId = _materialRepository.AddMaterial(dto);
-            dto.Id = addedId;
-            _addedMaterialMockIds.Add(addedId);
+            var dto = AddMaterial(mockId);
 
-            dto.Description = $"Description { caseId} update";
+            dto.Description = $"Description update";
+            dto.Link = $"Link update";
 
             var affectedRows = _materialRepository.UpdateMaterial(dto);
-            var actual = _materialRepository.GetMaterialById(addedId);
+            var actual = _materialRepository.GetMaterialById(dto.Id);
 
             Assert.AreEqual(1, affectedRows);
             Assert.AreEqual(dto, actual);
@@ -68,111 +58,131 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(1, true)]
         [TestCase(1, false)]
-        [TestCase(2, true)]
-        [TestCase(2, false)]
-        public void MaterialDeleteOrRecoverPositiveTest(int caseId, bool isDeleted)
+        public void MaterialDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
         {
-            var dto = MaterialMock.GetMaterialMock(caseId);
-            int addedId = _materialRepository.AddMaterial(dto);
-            dto.Id = addedId;
-            _addedMaterialMockIds.Add(addedId);
+            var dto = AddMaterial(mockId);
 
             dto.IsDeleted = isDeleted;
 
             var affectedRows = _materialRepository.DeleteOrRecoverMaterial(dto.Id, dto.IsDeleted);
-            var actual = _materialRepository.GetMaterialById(addedId);
+            var actual = _materialRepository.GetMaterialById(dto.Id);
 
             Assert.AreEqual(1, affectedRows);
             Assert.AreEqual(dto, actual);
         }
 
-        [TestCase(100)]
-        public void MaterialsGetByTagIdPositiveTest(int caseId)
+        [TestCase(1, 4)]
+        public void MaterialsGetByTagIdPositiveTest(int mockId, int amountRelations)
         {
+            var dtoTag = AddTag(mockId);
+
             List<MaterialDto> expected = new List<MaterialDto>();
-            for (int i = 0; i < 8; i+=2)
+            for (int i = 0; i < amountRelations; i++)
             {
-                var dto = MaterialMock.GetMaterialMock(i);
-                int addedId = _materialRepository.AddMaterial(dto);
-                dto.Id = addedId;
+                var dto = AddMaterial(mockId);
                 expected.Add(dto);
-                _addedMaterialMockIds.Add(addedId);
+
+                _tagRepository.MaterialTagAdd(expected[i].Id, dtoTag.Id);
+                _addedMaterialTagIds.Add((expected[i].Id, dtoTag.Id));
             }
 
-            var dtoTag = TagMock.GetTagMock(caseId);
-            int addedTagId = _tagRepository.TagAdd(dtoTag);
-            dtoTag.Id = addedTagId;
-            _addedTagMockIds.Add(addedTagId);
-
-            for (int i = 0; i < 4; i++)
-            {
-                _tagRepository.MaterialTagAdd(expected[i].Id, addedTagId);
-                _addedMaterialTagIds.Add((expected[i].Id, addedTagId));
-            }
-
-            var actual = _materialRepository.GetMaterialsByTagId(addedTagId);
+            var actual = _materialRepository.GetMaterialsByTagId(dtoTag.Id);
 
             Assert.AreEqual(expected, actual);
 
         }
 
-        [TestCase(888)]
-        public void MaterialsGetByGroupIdPositiveTest(int groupId)
+        [TestCase(1, 4)]
+        public void MaterialsGetByGroupIdPositiveTest(int mockId, int amountRelations)
         {
+            var dtoGroup = AddGroup(mockId);
+
             List<MaterialDto> expected = new List<MaterialDto>();
-            for (int i = 0; i < 8; i += 2)
+            for (int i = 0; i < amountRelations; i ++)
             {
-                var dto = MaterialMock.GetMaterialMock(i);
-                int addedId = _materialRepository.AddMaterial(dto);
-                dto.Id = addedId;
+                var dto = AddMaterial(mockId);
                 expected.Add(dto);
-                _addedMaterialMockIds.Add(addedId);
+
+                _groupRepository.AddGroup_Material(dtoGroup.Id, expected[i].Id);
+                _addedMaterialGroupIds.Add((dtoGroup.Id, expected[i].Id));
             }
 
-            var dtoCourse = CourseMockGetter.GetCourseDtoMock(1);
-            var dtoGroup = GroupMockGetter.GetGroupDtoMock(1);
-            dtoGroup.Course = dtoCourse;
-            int addedGroupId = _groupRepository.AddGroup(dtoGroup);
-            dtoGroup.Id = addedGroupId;
-            _addedGroupIds.Add(addedGroupId);
-
-            for (int i = 0; i < 4; i++)
-            {
-                _groupRepository.AddGroup_Material(addedGroupId, expected[i].Id);
-                _addedMaterialGroupIds.Add((addedGroupId, expected[i].Id));
-            }
-
-            var actual = _materialRepository.GetMaterialsByGroupId(addedGroupId);
+            var actual = _materialRepository.GetMaterialsByGroupId(dtoGroup.Id);
 
             CollectionAssert.AreEqual(expected, actual);
 
         }
 
-        public void AddMaterials()
+        public MaterialDto AddMaterial(int mockId)
         {
+            var dto = MaterialMock.GetMaterialMock(mockId);
+            int addedId = _materialRepository.AddMaterial(dto);
+            dto.Id = addedId;
+            _addedMaterialMockIds.Add(addedId);
+            return dto;
+        }
 
+        public TagDto AddTag(int mockId)
+        {
+            var dtoTag = TagMock.GetTagMock(mockId);
+            int addedTagId = _tagRepository.TagAdd(dtoTag);
+            dtoTag.Id = addedTagId;
+            _addedTagMockIds.Add(addedTagId);
+            return dtoTag;
+        }
+
+        public GroupDto AddGroup(int mockId)
+        {
+            var dtoCourse = CourseMockGetter.GetCourseDtoMock(mockId);
+            var dtoGroup = GroupMockGetter.GetGroupDtoMock(mockId);
+            dtoGroup.Course = dtoCourse;
+            int addedGroupId = _groupRepository.AddGroup(dtoGroup);
+            dtoGroup.Id = addedGroupId;
+            _addedGroupIds.Add(addedGroupId);
+            return dtoGroup;
         }
 
         [OneTimeTearDown]
         public void MaterialOneTimeTearDown()
         {
+            DeleteMaterials();
+            DeleteTags();
+            DeleteGroups();
+            DeleteMaterialTags();
+            DeleteMaterialGroups();
+        }
+
+        public void DeleteMaterials()
+        {
             _addedMaterialMockIds.ForEach(id =>
             {
                 _materialRepository.HardDeleteMaterial(id);
             });
+        }
+        public void DeleteTags()
+        {
             _addedTagMockIds.ForEach(id =>
             {
                 _tagRepository.TagDelete(id);
             });
+        }
+        public void DeleteGroups()
+        {
             _addedGroupIds.ForEach(id =>
             {
                 _groupRepository.HardDeleteGroup(id);
             });
+        }
+        public void DeleteMaterialTags()
+        {
             _addedMaterialTagIds.ForEach(id =>
             {
-                _tagRepository.MaterialTagDelete(id.Item1, id.Item2);
+                _tagRepository.MaterialTagDelete( id.Item1, id.Item2);
             });
-            _addedMaterialTagIds.ForEach(id =>
+        }
+        public void DeleteMaterialGroups()
+        {
+            _addedMaterialGroupIds.ForEach(id =>
             {
                 _groupRepository.DeleteGroup_Material(id.Item1, id.Item2);
             });
