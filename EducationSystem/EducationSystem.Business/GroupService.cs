@@ -62,5 +62,40 @@ namespace EducationSystem.Business
         {
             return _groupRepository.DeleteGroup_Material(groupId, materialId);
         }
+        public int DeleteTeacherGroup(int groupId, int userId)
+        {
+            return _groupRepository.DeleteTeacherGroup(groupId, userId);
+        }
+        public int AddTeacherGroup(int groupId, int userId)
+        {
+            return _groupRepository.AddTeacherGroup(groupId, userId);
+        }
+        public int DeleteStudentGroup(int userId, int groupId)
+        {
+            return _groupRepository.DeleteStudentGroup(userId, groupId);
+        }
+        public int AddStudentGroup(int groupId, int userId, StudentGroupDto studentGroupDto)
+        {
+            studentGroupDto.Group.Id = groupId;
+            studentGroupDto.User.Id = userId;
+            return _groupRepository.AddStudentGroup(studentGroupDto);
+        }
+        public StudentGroupDto GetStudentGroupById(int userGroupId)
+        {
+            return _groupRepository.GetStudentGroupById(userGroupId);
+        }
+        public int DeleteTutorGroup(int groupId, int userId)
+        {
+            return _groupRepository.DeleteTutorGroup(userId, groupId);
+        }
+        public int AddTutorToGroup(int groupId, int userId)
+        {
+            return _groupRepository.AddTutorToGroup(userId, groupId);
+        }
+
+        public List<GroupReportDto> GenerateReport()
+        {
+            return _groupRepository.GenerateReport();
+        }
     }
 }
