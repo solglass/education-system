@@ -6,21 +6,19 @@ namespace EducationSystem.Data.Tests
     {
         public static MaterialDto GetMaterialMock(int caseId)
         {
-            return new MaterialDto
+            switch (caseId)
             {
-                Description = $"Description {caseId}",
-                Link = $"Link {caseId}",
-                IsDeleted = CheckOddNumber(caseId)
-            };
-        }
-
-        public static bool CheckOddNumber(int caseId)
-        {
-            if (caseId % 2 == 0)
-            {
-                return false;
+                case 1:
+                    return new MaterialDto
+                    {
+                        Description = "Decriprion test",
+                        Link = "Link test",
+                        IsDeleted = false
+                    };
+                    break;
+                default:
+                    return null;
             }
-            return true;
         }
     }
 }
