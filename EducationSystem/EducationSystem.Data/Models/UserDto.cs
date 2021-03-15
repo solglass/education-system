@@ -39,13 +39,13 @@ namespace EducationSystem.Data.Models
         {
             var userDto = (UserDto)obj;
             return (userDto.Id == Id) &&
-                String.Equals(userDto.FirstName, FirstName) &&
-                String.Equals(userDto.LastName, LastName) &&
+                string.Equals(userDto.FirstName, FirstName) &&
+                string.Equals(userDto.LastName, LastName) &&
                 userDto.BirthDate == BirthDate &&
-                String.Equals(userDto.Login, Login) &&
-                String.Equals(userDto.Password, Password) &&
-                String.Equals(userDto.Phone, Phone) &&
-                String.Equals(userDto.Email, Email) &&
+                string.Equals(userDto.Login, Login) &&
+                string.Equals(userDto.Password, Password) &&
+                string.Equals(userDto.Phone, Phone) &&
+                string.Equals(userDto.Email, Email) &&
                 (userDto.IsDeleted == IsDeleted);
  
         }
