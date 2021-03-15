@@ -116,18 +116,18 @@ namespace EducationSystem.Data.Tests
         public MaterialDto AddMaterial(int mockId)
         {
             var dto = MaterialMock.GetMaterialMock(mockId);
-            int addedId = _materialRepository.AddMaterial(dto);
-            dto.Id = addedId;
-            _addedMaterialMockIds.Add(addedId);
+            dto.Id = _materialRepository.AddMaterial(dto);
+            Assert.Greater(dto.Id, 0);
+            _addedMaterialMockIds.Add(dto.Id);
             return dto;
         }
 
         public TagDto AddTag(int mockId)
         {
             var dtoTag = TagMock.GetTagMock(mockId);
-            int addedTagId = _tagRepository.TagAdd(dtoTag);
-            dtoTag.Id = addedTagId;
-            _addedTagMockIds.Add(addedTagId);
+            dtoTag.Id = _tagRepository.TagAdd(dtoTag);
+            Assert.Greater(dtoTag.Id, 0);
+            _addedTagMockIds.Add(dtoTag.Id);
             return dtoTag;
         }
 
@@ -136,9 +136,9 @@ namespace EducationSystem.Data.Tests
             var dtoCourse = CourseMockGetter.GetCourseDtoMock(mockId);
             var dtoGroup = GroupMockGetter.GetGroupDtoMock(mockId);
             dtoGroup.Course = dtoCourse;
-            int addedGroupId = _groupRepository.AddGroup(dtoGroup);
-            dtoGroup.Id = addedGroupId;
-            _addedGroupIds.Add(addedGroupId);
+            dtoGroup.Id = _groupRepository.AddGroup(dtoGroup);
+            Assert.Greater(dtoGroup.Id, 0);
+            _addedGroupIds.Add(dtoGroup.Id);
             return dtoGroup;
         }
 
