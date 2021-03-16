@@ -9,7 +9,6 @@ namespace EducationSystem.Data.Tests
 {
     public class TagsTests:BaseTest
     {
-       
         private TagRepository _tagRepo;
         private List<int> _tagIdList;
 
@@ -19,7 +18,6 @@ namespace EducationSystem.Data.Tests
             _tagRepo = new TagRepository(_options);
             _tagIdList = new List<int>();
         }
-
 
         [TestCase(1)]
         public void TagAddTest(int dtoMockNumber)
@@ -31,12 +29,8 @@ namespace EducationSystem.Data.Tests
             _tagIdList.Add(added);
             expected.Id = added;
 
-            if (_tagIdList.Count == 0) { Assert.Fail("Tag addition failed"); }
-            else
-            {
-                TagDto actual = _tagRepo.GetTagById(added);
-                Assert.AreEqual(expected, actual);
-            }
+            TagDto actual = _tagRepo.GetTagById(added);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestCase(1)]
@@ -44,18 +38,16 @@ namespace EducationSystem.Data.Tests
         {
             TagDto expected = (TagDto)TagMockGetter.GetTagDtoMock(dtoMockNumber);
             _tagIdList.Add(_tagRepo.TagAdd(expected));
-            if (_tagIdList.Count == 0) { Assert.Fail("Tag addition failed"); }
-            else
-            {
+
                 int newId = _tagIdList[_tagIdList.Count - 1];
                 _tagRepo.TagDelete(newId);
+
                 TagDto actual = _tagRepo.GetTagById(newId);
                 if (actual == null) { Assert.Pass(); }
                 else Assert.Fail("Deletion went wrong");
-            }
         }
         [TestCase(new int[] { 1, 2, 3 })]
-        public void EntitySelectAllPositiveTest(int[] mockIds)
+        public void TagSelectAllPositiveTest(int[] mockIds)
         {
             // Given
             var expected = new List<TagDto>();
@@ -74,19 +66,9 @@ namespace EducationSystem.Data.Tests
             for (var i = actual.Count - 1; i > actual.Count - expected.Count; i--)
             {
                 var j = i - actual.Count + expected.Count;
-                Assert.IsTrue(CustomCompare(expected[j], actual[i]));
+                Assert.IsTrue(Equals(expected[j], actual[i]));
             }
         }
-
-        private bool? CustomCompare(TagDto tagDto1, TagDto tagDto2)
-        {
-            if(tagDto1.Name==tagDto2.Name&& tagDto1.Id == tagDto2.Id)
-            {
-                return true;
-            }
-            return false;
-        }
-
         [TearDown]
         public void TagsTestsTearDown()
         {
