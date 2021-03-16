@@ -227,6 +227,50 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void DeleteHomeworkTagPositiveTest(int[] mockIds)
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+            homeworkDto.Id = addedHomeworkId;
+
+            var expected = new List<TagDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
+                var addedTagId = _tagRepo.TagAdd(tagDto);
+                _tagIdList.Add(addedTagId);
+                tagDto.Id = addedTagId;
+                expected.Add(tagDto);
+                var addedThemeHomework = _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
+                _tagHomeworkList.Add((addedHomeworkId, addedTagId));
+            }
+
+            var toDeleteList = new List<(int, int)>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
+                var addedTagId = _tagRepo.TagAdd(tagDto);
+                tagDto.Id = addedTagId;
+                _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
+                toDeleteList.Add((addedHomeworkId, addedTagId));
+            }
+
+            //When
+            toDeleteList.ForEach((homeworkTheme) =>
+            {
+                _homeworkRepo.HomeworkTagDelete(homeworkTheme.Item1, homeworkTheme.Item2);
+            });
+
+            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId).Tags;
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
         [TestCase(new int[] { 1,2,3})]
         public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
         {
