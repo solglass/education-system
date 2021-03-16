@@ -48,11 +48,11 @@ namespace EducationSystem.Data.Tests
         [OneTimeTearDown]
         public void AttendanceOneTimeTearDown()
         {
-            DeleteCourses();
-            DeleteGroups();
-            DeleteLessons();
-            DeleteUsers();
             DeleteAttendances();
+            DeleteUsers();
+            DeleteLessons();
+            DeleteGroups();
+            DeleteCourses();
         }
 
         private AttendanceDto AddAttendance(int mockId)
