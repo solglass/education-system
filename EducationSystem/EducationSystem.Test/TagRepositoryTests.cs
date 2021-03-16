@@ -56,16 +56,16 @@ namespace EducationSystem.Data.Tests
             }
         }
         [TestCase(new int[] { 1, 2, 3 })]
-        public void TagSelectAllPositiveTest(int[] mockIds)
+        public void EntitySelectAllPositiveTest(int[] mockIds)
         {
             // Given
             var expected = new List<TagDto>();
             for (var i = 0; i < mockIds.Length; i++)
             {
-                var dto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
-                var addedTagId = _tagRepo.TagAdd(dto);
-                _tagIdList.Add(addedTagId);
-                dto.Id = addedTagId;
+                var dto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]);
+                var addedEntityId = _tagRepo.TagAdd(dto);
+                _tagIdList.Add(addedEntityId);
+                dto.Id = addedEntityId;
                 expected.Add(dto);
             }
 
@@ -74,13 +74,23 @@ namespace EducationSystem.Data.Tests
 
             // Then
             // in simple case:
-            CollectionAssert.AreEqual(expected, actual);
+            //CollectionAssert.AreEqual(expected, actual);
 
             // in worst case
-            //for (var i = 0; i < actual.Count; i++)
-            //{
-            //    //Assert.IsTrue(CustomCompare(expected[i], actual[i]));
-            //}
+            for (var i = actual.Count - 1; i > actual.Count - expected.Count; i--)
+            {
+                var j = i - actual.Count + expected.Count;
+                Assert.IsTrue(CustomCompare(expected[j], actual[i]));
+            }
+        }
+
+        private bool? CustomCompare(TagDto tagDto1, TagDto tagDto2)
+        {
+            if(tagDto1.Name==tagDto2.Name&& tagDto1.Id == tagDto2.Id)
+            {
+                return true;
+            }
+            return false;
         }
 
         [TearDown]
