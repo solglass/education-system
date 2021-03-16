@@ -53,15 +53,15 @@ namespace EducationSystem.Data
 
         public int AddMaterial(MaterialDto material)
         {
-            int rows = _connection
-                .Execute("dbo.Material_Add",
+            var result = _connection
+                .QuerySingle<int>("dbo.Material_Add",
                 new
                 {
                     material.Link,
                     material.Description
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
-            return rows;
+            return result;
         }
 
         public int UpdateMaterial(MaterialDto material)

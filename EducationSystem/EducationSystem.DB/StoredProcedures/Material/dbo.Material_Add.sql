@@ -4,7 +4,7 @@ create proc [dbo].[Material_Add]
 	@description nvarchar(max)
 ) as
 begin
-	insert into dbo.Material (Link, Description)
-	values (@link, @description)
+	insert into dbo.Material (Link, Description, isDeleted)
+	values (@link, @description, 0)
 	select SCOPE_IDENTITY()
 end

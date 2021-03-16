@@ -4,7 +4,6 @@
 as
 begin
 	insert into [dbo].[HomeworkAttempt_Attachment](HomeworkAttemptId,AttachmentId)
-	values ((select Id from dbo.HomeworkAttempt where Id = @homeworkAttemptId), (select Id from dbo.Attachment where Id = @attachmentId))
-	
+	values (@homeworkAttemptId, @attachmentId)
 	select SCOPE_IDENTITY()
 end

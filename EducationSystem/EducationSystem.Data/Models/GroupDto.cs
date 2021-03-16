@@ -5,38 +5,40 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class GroupDto
+    public class GroupDto : ICloneable
     {
         public int Id { get; set; }     
         public DateTime StartDate { get; set; }
         public CourseDto Course { get; set; }
         public GroupStatus GroupStatus { get; set; }
 
+        public object Clone()
+        {
+            return new GroupDto
+            {
+                Id = Id,
+                StartDate = StartDate,
+                Course = Course,
+                GroupStatus = GroupStatus
+            };
+        }
+
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
+            if (!(obj is GroupDto))
+                return false;
+
             GroupDto groupDto = (GroupDto)obj;
 
-            if(object.ReferenceEquals(groupDto, null) && object.ReferenceEquals(this, null))
+            if (groupDto.Id != Id ||
+                !groupDto.StartDate.Equals(StartDate) ||
+                groupDto.GroupStatus != GroupStatus)
             {
-                return true;
+                return false;
             }
-            if(object.ReferenceEquals(groupDto, null))
-            {
-                return false;   
-            }
-            if (groupDto.StartDate == StartDate)
-            {
-                if (groupDto.Course.Equals(Course))
-                {
-                    if (groupDto.GroupStatus.Equals(GroupStatus))
-                    {
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return true;
         }
 
         public override string ToString()

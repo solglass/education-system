@@ -7,20 +7,16 @@ namespace EducationSystem.Business
     public class HomeworkService : IHomeworkService
     {
         private IHomeworkRepository _homeworkRepository;
-        private IHomeworkAttemptRepository _homeworkAttemptRepository;
         private ITagRepository _tagRepository;
         private IGroupRepository _groupRepository;
         private IAttachmentRepository _attachmentRepository;
-
         public HomeworkService(IHomeworkRepository homeworkRepository,
-            IHomeworkAttemptRepository homeworkAttemptRepository,
             ITagRepository tagRepository,
             IGroupRepository groupRepository,
             IAttachmentRepository attachmentRepository)
         {
             _tagRepository = tagRepository;
             _homeworkRepository = homeworkRepository;
-            _homeworkAttemptRepository = homeworkAttemptRepository;
             _groupRepository = groupRepository;
             _attachmentRepository = attachmentRepository;
         }
@@ -63,7 +59,7 @@ namespace EducationSystem.Business
             });
             homeworkDto.Tags.ForEach(tag =>
             {
-                _homeworkRepository.HomeworkTagAdd(new HomeworkTagDto() { HomeworkId = result, TagId = tag.Id });
+                _homeworkRepository.HomeworkTagAdd(result,  tag.Id );
             });
             return result;
         }
@@ -156,13 +152,13 @@ namespace EducationSystem.Business
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id)
         {
-            var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByUserId(id);
+            var dtos = _homeworkRepository.GetHomeworkAttemptsByUserId(id);
 
             return dtos;
         }
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
         {
-            var dtos = _homeworkAttemptRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
+            var dtos = _homeworkRepository.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
 
             return dtos;
         }
@@ -190,8 +186,7 @@ namespace EducationSystem.Business
 
         public int AddHomeworkTag(int homeworkId, int tagId)
         {
-            var dto = new HomeworkTagDto { HomeworkId = homeworkId, TagId = tagId };
-            return _homeworkRepository.HomeworkTagAdd(dto);
+            return _homeworkRepository.HomeworkTagAdd(homeworkId, tagId);
         }
         public int DeleteHomeworkTag(int homeworkId, int tagId) { return _homeworkRepository.HomeworkTagDelete(homeworkId, tagId); }
     }

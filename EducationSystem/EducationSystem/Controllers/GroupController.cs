@@ -1,10 +1,6 @@
-﻿
-using EducationSystem.API.Models;
-using EducationSystem.API.Mappers;
-using EducationSystem.Data;
+﻿using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Models.InputModels;
@@ -23,17 +19,16 @@ namespace EducationSystem.Controllers
     [Authorize]
     public class GroupController : ControllerBase
     {
-
-        private IGroupRepository _repo;
         private IGroupService _service;
         private ICourseService _courseService;
+        private ILessonService _lessonService;
         private IMapper _mapper;
-        public GroupController(IMapper mapper, IGroupRepository groupRepository, IGroupService groupService, ICourseService courseService)
+        public GroupController(IMapper mapper, IGroupService groupService, 
+            ICourseService courseService, ILessonService lessonService)
         {
-            
-            _repo = groupRepository;
             _service = groupService;
             _courseService = courseService;
+            _lessonService = lessonService;
             _mapper = mapper;
         }
         // https://localhost:44365/api/group/
@@ -100,7 +95,7 @@ namespace EducationSystem.Controllers
             return Ok("Ошибка! Отсутствует группа с введенным id!");
           }
           var groupDto = _mapper.Map<GroupDto>(group);
-          var changedRows = _service.UpdateGroup(groupDto);
+          _service.UpdateGroup(groupDto);
           var result = _mapper.Map<GroupOutputModel>(_service.GetGroupById(id));
           return Ok(result);
         }
@@ -109,7 +104,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult DeleteGroup(int id)
         {
-            var deleteRows = _service.DeleteGroup(id);
+            _service.DeleteGroup(id);
             return NoContent();
         }
 
@@ -136,7 +131,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult DeleteTeacherGroup(int groupId, int userId)
         {
-            var deletedGroup = _repo.DeleteTeacherGroup(userId, groupId);
+            _service.DeleteTeacherGroup(userId, groupId);
             return NoContent();
         }
 
@@ -144,7 +139,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult AddTeacherGroup(int groupId, int userId)
         {
-            var addGroup = _repo.AddTeacherGroup(new TeacherGroupDto { GroupID = groupId, UserID = userId});
+            _service.AddTeacherGroup(groupId, userId);
             return StatusCode(StatusCodes.Status201Created);
         }      
 
@@ -153,35 +148,37 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult DeleteStudentGroup(int groupId, int userId)
         {
-            var deletedGroup = _repo.DeleteStudentGroupById(userId, groupId);
+            _service.DeleteStudentGroup(userId, groupId);
             return NoContent();
         }
 
         [HttpPost("{groupId}/student/{userId}")]
         [Authorize(Roles = "Админ, Менеджер")]
-        public ActionResult AddStudentGroup(int groupId, int userId)
+        public ActionResult AddStudentGroup(int groupId, int userId, StudentGroupOutputModel studentGroupInputModel)
         {
-            var addGroup = _repo.AddStudentGroup(new StudentGroupDto { GroupID = groupId, UserID = userId });
-            return StatusCode(StatusCodes.Status201Created);
+            var studentGroupDto = _mapper.Map<StudentGroupDto>(studentGroupInputModel);
+            var id = _service.AddStudentGroup(groupId, userId, studentGroupDto);
+            var outputModel = _mapper.Map<StudentGroupOutputModel>(_service.GetStudentGroupById(id));
+            return Ok(outputModel);
         }
 
         [HttpDelete("{groupId}/tutor/{userId}")]
         [Authorize(Roles = "Админ, Менеджер")]
 
-        public ActionResult DeleteTutorGroupsByIds(int groupId, int userId)
+        public ActionResult DeleteTutorGroups(int groupId, int userId)
         {
-            var deletedGroup = _repo.DeleteTutorGroupsByIds(userId, groupId);
+            _service.DeleteTutorGroup(userId, groupId);
             return NoContent();
-    }
+        }
 
         [HttpPost("{groupId}/tutor/{userId}")]
         [Authorize(Roles = "Админ, Менеджер")]
 
         public ActionResult AddTutorToGroup(int groupId, int userId)
         {
-            var addGroup = _repo.AddTutorToGroup(new TutorGroupDto { GroupID = groupId, UserID = userId});
+            _service.AddTutorToGroup(userId, groupId);
             return StatusCode(StatusCodes.Status201Created);
-    }
+        }
 
         [HttpGet("report")]
         [Authorize(Roles = "Админ, Менеджер, Преподаватель, Тьютор, Методист")]
@@ -191,7 +188,7 @@ namespace EducationSystem.Controllers
 
             try
             {
-                var reportDto = _repo.GenerateReport();
+                var reportDto = _service.GenerateReport();
                 report = _mapper.Map<List<GroupReportOutputModel>>(reportDto);
       }
             catch (Exception ex)
@@ -206,7 +203,16 @@ namespace EducationSystem.Controllers
         public ActionResult<List<ThemeOutputModel>> GetUncoveredThemesByGroupId(int id)
         {
             var result = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetUncoveredThemesByGroupId(id));
-                 return Ok(result);
+            return Ok(result);
+        }
+
+        // https://localhost:44365/api/group/3/percent-of-skip/0
+        [HttpGet("{groupId}/percent-of-skip/{percent}")]
+        [AllowAnonymous]
+        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
+        public ActionResult GetStudentsByPercentOfSkip(int groupId, int percent)
+        {
+            return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
         }
     }
     

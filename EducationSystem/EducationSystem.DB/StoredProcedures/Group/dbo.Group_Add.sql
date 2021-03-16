@@ -6,4 +6,5 @@ create proc dbo.Group_Add (
 begin
 	insert into dbo.[Group] (CourseID, StatusId, StartDate)
 	values (@courseId, @statusId, @startDate)
+	select SCOPE_IDENTITY()
 end
