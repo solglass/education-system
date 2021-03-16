@@ -43,7 +43,11 @@ namespace EducationSystem.Data.Tests
         [OneTimeTearDown]
         public void AttendanceOneTimeTearDown()
         {
-
+            DeleteCourses();
+            DeleteGroups();
+            DeleteLessons();
+            DeleteUsers();
+            DeleteAttendances();
         }
 
         private AttendanceDto AddAttendance(int mockId)
@@ -95,6 +99,42 @@ namespace EducationSystem.Data.Tests
             Assert.Greater(dtoCourse.Id, 0);
             _addedCourseIds.Add(dtoCourse.Id);
             return dtoCourse;
+        }
+
+        private void DeleteCourses()
+        {
+            _addedCourseIds.ForEach(id =>
+            {
+                _courseRepository.HardDeleteCourse(id);
+            });
+        }
+        private void DeleteGroups()
+        {
+            _addedGroupIds.ForEach(id =>
+            {
+                _groupRepository.HardDeleteGroup(id);
+            });
+        }
+        public void DeleteLessons()
+        {
+            _addedLessonIds.ForEach(id =>
+            {
+                _lessonRepository.HardDeleteLesson(id);
+            });
+        }
+        public void DeleteUsers()
+        {
+            _addedUserIds.ForEach(id =>
+            {
+                _userRepository.HardDeleteUser(id);
+            });
+        }
+        public void DeleteAttendances()
+        {
+            _addedAttendanceIds.ForEach(id =>
+            {
+                _lessonRepository.DeleteAttendance(id);
+            });
         }
     }
 }
