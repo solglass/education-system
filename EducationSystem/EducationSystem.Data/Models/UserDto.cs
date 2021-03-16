@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace EducationSystem.Data.Models
 {
-    public class UserDto: ICloneable
+    public class UserDto : ICloneable
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -37,7 +37,11 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
+            if (obj == null || !(obj is UserDto))
+                return false;
+
             var userDto = (UserDto)obj;
+
             return (userDto.Id == Id) &&
                 string.Equals(userDto.FirstName, FirstName) &&
                 string.Equals(userDto.LastName, LastName) &&
@@ -47,7 +51,7 @@ namespace EducationSystem.Data.Models
                 string.Equals(userDto.Phone, Phone) &&
                 string.Equals(userDto.Email, Email) &&
                 (userDto.IsDeleted == IsDeleted);
- 
+
         }
 
         public override int GetHashCode()
