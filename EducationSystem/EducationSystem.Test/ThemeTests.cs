@@ -178,40 +178,13 @@ namespace EducationSystem.Data.Tests
             var addedLessonId = _lessonRepo.AddLesson(lessonDto);
             _lessonIdList.Add(addedLessonId);
 
-            var expected = new List<ThemeDto>();
-            for (int i = 0; i < mockIds.Length; i++)
-            {
-                var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
-                var addedThemeId = _courseRepo.AddTheme(dto);
-                _themeIdList.Add(addedThemeId);
-                dto.Id = addedThemeId;
-                expected.Add(dto);
-
-                _courseRepo.AddCourse_Theme(addedCourseId, addedThemeId);
-                _courseThemeList.Add((addedCourseId, addedThemeId));
-
-                _lessonRepo.AddLessonTheme(addedLessonId, addedThemeId);
-                _lessonThemeList.Add((addedLessonId, addedThemeId));
-            }
+            var expected = AddThemeMocksToCourseAndLesson(mockIds, addedCourseId, addedLessonId);
 
             lessonDto.Date = DateTime.Now.AddDays(-10);
-            lessonDto.Group = groupDto;
             addedLessonId = _lessonRepo.AddLesson(lessonDto);
             _lessonIdList.Add(addedLessonId);
 
-            for (int i = 0; i < mockIds.Length; i++)
-            {
-                var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
-                var addedThemeId = _courseRepo.AddTheme(dto);
-                _themeIdList.Add(addedThemeId);
-                dto.Id = addedThemeId;
-
-                _courseRepo.AddCourse_Theme(addedCourseId, addedThemeId);
-                _courseThemeList.Add((addedCourseId, addedThemeId));
-
-                _lessonRepo.AddLessonTheme(addedLessonId, addedThemeId);
-                _lessonThemeList.Add((addedLessonId, addedThemeId));
-            }
+            AddThemeMocksToCourseAndLesson(mockIds, addedCourseId, addedLessonId);
 
             // When
             var actual = _courseRepo.GetUncoveredThemesByGroupId(addedGroupId);
@@ -279,5 +252,25 @@ namespace EducationSystem.Data.Tests
             }
         }
 
+        private List<ThemeDto> AddThemeMocksToCourseAndLesson(int[] mockIds, int courseId, int lessonId)
+        {
+
+            var dtos = new List<ThemeDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(dto);
+                _themeIdList.Add(addedThemeId);
+                dto.Id = addedThemeId;
+                dtos.Add(dto);
+
+                _courseRepo.AddCourse_Theme(courseId, addedThemeId);
+                _courseThemeList.Add((courseId, addedThemeId));
+
+                _lessonRepo.AddLessonTheme(lessonId, addedThemeId);
+                _lessonThemeList.Add((lessonId, addedThemeId));
+            }
+            return dtos;
+        }
     }
 }
