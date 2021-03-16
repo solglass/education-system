@@ -125,6 +125,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
         public void AddHomeworkThemePositiveTest(int[] mockIds)
         {
             //Given
@@ -154,6 +155,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
         public void DeleteHomeworkThemePositiveTest(int[] mockIds)
         {
             //Given
@@ -199,6 +201,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
         public void AddHomeworkTagPositiveTest(int[] mockIds)
         {
             //Given
@@ -228,6 +231,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
         public void DeleteHomeworkTagPositiveTest(int[] mockIds)
         {
             //Given
@@ -272,6 +276,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1,2,3})]
+        [TestCase(new int[] { })]
         public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
         {
             //Given
@@ -301,6 +306,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
         public void SearchHomeworksByThemeIdPositiveTest(int[] mockIds)
         {
             //Given
@@ -335,6 +341,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
         public void SearchHomeworksByTagIdPositiveTest(int[] mockIds)
         {
             //Given
