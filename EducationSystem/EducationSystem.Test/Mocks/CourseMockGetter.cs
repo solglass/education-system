@@ -23,5 +23,16 @@ namespace EducationSystem.Data.Tests.Mocks
                     return null;
             }
         }
+
+        public static CourseDto GetCourseDtoWithIdMock(int id)
+        {
+            return new CourseDto
+            {
+                Id = id,
+                Description = $"Course Test {id} mock",
+                Duration = 8,
+                Name = "Test C#"
+            };
+        }
     }
 }

@@ -82,8 +82,8 @@ namespace EducationSystem.Data.Tests
                 var dto = AddMaterial(mockId);
                 expected.Add(dto);
 
-                _tagRepository.MaterialTagAdd(expected[i].Id, dtoTag.Id);
-                _addedMaterialTagIds.Add((expected[i].Id, dtoTag.Id));
+                _tagRepository.MaterialTagAdd(dto.Id, dtoTag.Id);
+                _addedMaterialTagIds.Add((dto.Id, dtoTag.Id));
             }
 
             var actual = _materialRepository.GetMaterialsByTagId(dtoTag.Id);
@@ -103,8 +103,8 @@ namespace EducationSystem.Data.Tests
                 var dto = AddMaterial(mockId);
                 expected.Add(dto);
 
-                _groupRepository.AddGroup_Material(dtoGroup.Id, expected[i].Id);
-                _addedMaterialGroupIds.Add((dtoGroup.Id, expected[i].Id));
+                _groupRepository.AddGroup_Material(dtoGroup.Id, dto.Id);
+                _addedMaterialGroupIds.Add((dtoGroup.Id, dto.Id));
             }
 
             var actual = _materialRepository.GetMaterialsByGroupId(dtoGroup.Id);
@@ -133,7 +133,7 @@ namespace EducationSystem.Data.Tests
 
         public GroupDto AddGroup(int mockId)
         {
-            var dtoCourse = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            var dtoCourse = (CourseDto)CourseMockGetter.GetCourseDtoWithIdMock(mockId).Clone();
             var dtoGroup = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
             dtoGroup.Course = dtoCourse;
             dtoGroup.Id = _groupRepository.AddGroup(dtoGroup);
