@@ -198,6 +198,35 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void AddHomeworkTagPositiveTest(int[] mockIds)
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+            homeworkDto.Id = addedHomeworkId;
+
+            var expected = new List<TagDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
+                var addedTagId = _tagRepo.TagAdd(tagDto);
+                _tagIdList.Add(addedTagId);
+                tagDto.Id = addedTagId;
+                expected.Add(tagDto);
+                var addedThemeHomework = _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
+                _tagHomeworkList.Add((addedHomeworkId, addedTagId));
+            }
+
+            //When
+            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId).Tags;
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
         [TestCase(new int[] { 1,2,3})]
         public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
         {
@@ -304,6 +333,15 @@ namespace EducationSystem.Data.Tests
             DeleteGroups();
             DeleteCourse();
             DeleteThemes();
+            DeleteTags();
+        }
+
+        private void DeleteTags()
+        {
+            foreach (int tagId in _tagIdList)
+            {
+                _tagRepo.TagDelete(tagId);
+            }
         }
 
         private void DeteleTagHomeworks()
