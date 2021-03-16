@@ -158,11 +158,11 @@ namespace EducationSystem.Data.Tests
         [OneTimeTearDown]
         public void MaterialOneTimeTearDown()
         {
+            DeleteMaterialGroups();
+            DeleteMaterialTags();
             DeleteMaterials();
             DeleteTags();
             DeleteGroups();
-            DeleteMaterialTags();
-            DeleteMaterialGroups();
             DeleteCourses();
         }
 
