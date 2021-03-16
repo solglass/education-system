@@ -7,7 +7,7 @@ using EducationSystem.Data.Tests.Mocks;
 
 namespace EducationSystem.Data.Tests
 {
-    public class TagsTests:BaseTest
+    public class TagRepositoryTests:BaseTest
     {
         private TagRepository _tagRepo;
         private List<int> _tagIdList;
