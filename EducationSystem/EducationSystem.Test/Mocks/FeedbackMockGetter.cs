@@ -27,7 +27,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     return new FeedbackDto
                     {
                         Message = "Test 3 mock",
-                        UnderstandingLevel = Core.Enums.UnderstandingLevel.Medium
+                        UnderstandingLevel = Core.Enums.UnderstandingLevel.Good
                     };
                 default:
                     return null;
