@@ -13,12 +13,15 @@ namespace EducationSystem.Data.Tests
         private ICourseRepository _courseRepo;
         private IGroupRepository _groupRepo;
         private ILessonRepository _lessonRepo;
+        private ITagRepository _tagRepo;
         private List<int> _themeIdList;
         private List<int> _courseIdList;
         private List<int> _groupIdList;
         private List<int> _lessonIdList;
+        private List<int> _tagIdList;
         private List<(int, int)> _courseThemeList;
         private List<(int, int)> _lessonThemeList;
+        private List<(int, int)> _tagThemeList;
 
         [OneTimeSetUp]
         public void SetUpTest()
@@ -26,13 +29,16 @@ namespace EducationSystem.Data.Tests
             _courseRepo = new CourseRepository(_options);
             _groupRepo = new GroupRepository(_options);
             _lessonRepo = new LessonRepository(_options);
+            _tagRepo = new TagRepository(_options);
 
             _themeIdList = new List<int>();
             _courseIdList = new List<int>();
             _groupIdList = new List<int>();
             _lessonIdList = new List<int>();
+            _tagIdList = new List<int>();
             _courseThemeList = new List<(int, int)>();
             _lessonThemeList = new List<(int, int)>();
+            _tagThemeList = new List<(int, int)>();
         }
 
         [TestCase(1)]
@@ -193,15 +199,64 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
+        public void AddThemeTagPositiveTest(int[] mockIds)
+        {
+            // Given
+            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+            var addedThemeId = _courseRepo.AddTheme(themeDto);
+            _themeIdList.Add(addedThemeId);
+            themeDto.Id = addedThemeId;
+
+            var expected = new List<TagDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = (TagDto)TagMock.GetTagMock(mockIds[i]).Clone();
+                var addedTagId = _tagRepo.TagAdd(tagDto);
+                _tagIdList.Add(addedTagId);
+                tagDto.Id = addedTagId;
+                expected.Add(tagDto);
+
+                _tagRepo.ThemeTagAdd(addedThemeId, addedTagId);
+                _tagThemeList.Add((addedThemeId, addedTagId));
+            }
+
+            // When
+            var actual = _courseRepo.GetThemeById(addedThemeId).Tags;
+
+            // Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
         [OneTimeTearDown]
         public void SampleTestTearDown()
         {
             DeleteCourseThemes();
             DeleteLessonThemes();
+            DeleteTagThemes();
+            DeleteTags();
             DeleteLessons();
             DeleteGroups();
             DeleteCourses();
             DeleteThemes();
+        }
+
+        private void DeleteTagThemes()
+        {
+            foreach (var tagTheme in _tagThemeList)
+            {
+                _tagRepo.ThemeTagDelete(tagTheme.Item1, tagTheme.Item2);
+            }
+        }
+
+        private void DeleteTags()
+        {
+            foreach (var tagId in _tagIdList)
+            {
+                _tagRepo.TagDelete(tagId);
+            }
         }
 
         private void DeleteLessons()
