@@ -124,6 +124,36 @@ namespace EducationSystem.Data.Tests
 
         }
 
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void AddHomeworkThemePositiveTest(int[] mockIds)
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+            homeworkDto.Id = addedHomeworkId;
+
+            var expected = new List<ThemeDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(themeDto);
+                _themeIdList.Add(addedThemeId);
+                themeDto.Id = addedThemeId;
+                expected.Add(themeDto);
+                var addedThemeHomework = _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
+                _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
+            }
+
+            //When
+            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId).Themes;
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+
+        }
+
         [TestCase(new int[] { 1,2,3})]
         public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
         {
