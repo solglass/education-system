@@ -48,7 +48,13 @@ namespace EducationSystem.Data.Tests
         [TestCase(1)]
         public void DeleteAttendancePositiveTest(int mockId)
         {
-            
+            var dto = AddAttendance(mockId);
+
+            var affectedRows = _lessonRepository.DeleteAttendance(dto.Id);
+            var actual = _lessonRepository.GetAttendanceById(dto.Id);
+
+            Assert.AreEqual(1, affectedRows);
+            Assert.AreEqual(null, actual);
         }
 
         [TestCase(1, false, "Tupaya otmazka")]
