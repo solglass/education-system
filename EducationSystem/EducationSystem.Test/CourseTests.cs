@@ -44,7 +44,7 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(course, actual);
         }
        
-        [TestCase(1)]
+        [TestCase(2)]
         public void CourseUpdatePositiveTest(int mockId)
         {
             //Given
@@ -65,8 +65,8 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(course, actual);
         }
 
-        [TestCase(1, true)]
-        [TestCase(1, false)]
+        [TestCase(3, true)]
+        [TestCase(4, false)]
         public void CourseDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
         {
             //Given
@@ -140,7 +140,6 @@ namespace EducationSystem.Data.Tests
                 Assert.Greater(result, 0);
                 themes.Remove(theme);
             }
-
             //When
             var actual = _courseRepo.GetCourseById(course.Id);
             //Then

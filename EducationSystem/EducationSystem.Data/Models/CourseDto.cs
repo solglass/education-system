@@ -17,11 +17,11 @@ namespace EducationSystem.Data.Models
         {
             return new CourseDto
             {
-                Id = this.Id,
-                Description = this.Description,
-                Duration = this.Duration,
-                Name = this.Name,
-                IsDeleted = this.IsDeleted
+                Id = Id,
+                Description = Description,
+                Duration = Duration,
+                Name = Name,
+                IsDeleted = IsDeleted
             };
         }
 
