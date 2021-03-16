@@ -10,10 +10,12 @@ namespace EducationSystem.Data.Tests
         private IMaterialRepository _materialRepository;
         private ITagRepository _tagRepository;
         private IGroupRepository _groupRepository;
+        private ICourseRepository _courseRepository;
 
         private List<int> _addedMaterialMockIds;
         private List<int> _addedTagMockIds;
         private List<int> _addedGroupIds;
+        private List<int> _addedCourseIds;
         private List<(int, int)> _addedMaterialTagIds;
         private List<(int, int)> _addedMaterialGroupIds;
 
@@ -23,10 +25,12 @@ namespace EducationSystem.Data.Tests
             _materialRepository = new MaterialRepository(_options);
             _tagRepository = new TagRepository(_options);
             _groupRepository = new GroupRepository(_options);
+            _courseRepository = new CourseRepository(_options);
 
             _addedMaterialMockIds = new List<int>();
             _addedTagMockIds = new List<int>();
             _addedGroupIds = new List<int>();
+            _addedCourseIds = new List<int>();
             _addedMaterialTagIds = new List<(int, int)>();
             _addedMaterialGroupIds = new List<(int, int)>();
         }
@@ -133,13 +137,22 @@ namespace EducationSystem.Data.Tests
 
         public GroupDto AddGroup(int mockId)
         {
-            var dtoCourse = (CourseDto)CourseMockGetter.GetCourseDtoWithIdMock(mockId).Clone();
             var dtoGroup = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
+            var dtoCourse = AddCourse(mockId);
             dtoGroup.Course = dtoCourse;
             dtoGroup.Id = _groupRepository.AddGroup(dtoGroup);
             Assert.Greater(dtoGroup.Id, 0);
             _addedGroupIds.Add(dtoGroup.Id);
             return dtoGroup;
+        }
+
+        public CourseDto AddCourse(int mockId)
+        {
+            var dtoCourse = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            dtoCourse.Id = _courseRepository.AddCourse(dtoCourse);
+            Assert.Greater(dtoCourse.Id, 0);
+            _addedCourseIds.Add(dtoCourse.Id);
+            return dtoCourse;
         }
 
         [OneTimeTearDown]
@@ -150,6 +163,7 @@ namespace EducationSystem.Data.Tests
             DeleteGroups();
             DeleteMaterialTags();
             DeleteMaterialGroups();
+            DeleteCourses();
         }
 
         public void DeleteMaterials()
@@ -185,6 +199,13 @@ namespace EducationSystem.Data.Tests
             _addedMaterialGroupIds.ForEach(id =>
             {
                 _groupRepository.DeleteGroup_Material(id.Item1, id.Item2);
+            });
+        }
+        public void DeleteCourses()
+        {
+            _addedCourseIds.ForEach(id =>
+            {
+                _courseRepository.HardDeleteCourse(id);
             });
         }
     }
