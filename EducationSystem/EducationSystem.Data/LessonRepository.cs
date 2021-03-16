@@ -236,11 +236,12 @@ namespace EducationSystem.Data
 
         public AttendanceDto GetAttendanceById(int id)
         {
-            return _connection.Query<AttendanceDto, UserDto, AttendanceDto>(
+            return _connection.Query<AttendanceDto, UserDto, LessonDto, AttendanceDto>(
             "dbo.Attendance_SelectById",
-            (attendance, user) =>
+            (attendance, user, lesson) =>
             {
                 attendance.User = user;
+                attendance.Lesson = lesson;
                 return attendance;
             },
             new { id },
