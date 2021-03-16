@@ -9,11 +9,11 @@ namespace EducationSystem.Data.Tests
 {
     public class HomeworkRepositoryTests : BaseTest
     {
-        private HomeworkRepository _homeworkRepo;
-        private GroupRepository _groupRepo;
-        private CourseRepository _courseRepo;
-        private UserRepository _userRepo;
-        private TagRepository _tagRepo;
+        private IHomeworkRepository _homeworkRepo;
+        private IGroupRepository _groupRepo;
+        private ICourseRepository _courseRepo;
+        private IUserRepository _userRepo;
+        private ITagRepository _tagRepo;
 
         private List<int> _homeworkIdList;
         private List<int> _groupIdList;
@@ -122,6 +122,80 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
 
+        }
+
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void AddHomeworkThemePositiveTest(int[] mockIds)
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+            homeworkDto.Id = addedHomeworkId;
+
+            var expected = new List<ThemeDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(themeDto);
+                _themeIdList.Add(addedThemeId);
+                themeDto.Id = addedThemeId;
+                expected.Add(themeDto);
+                var addedThemeHomework = _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
+                _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
+            }
+
+            //When
+            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId).Themes;
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void DeleteHomeworkThemePositiveTest(int[] mockIds)
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+            homeworkDto.Id = addedHomeworkId;
+
+            var expected = new List<ThemeDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(themeDto);
+                _themeIdList.Add(addedThemeId);
+                themeDto.Id = addedThemeId;
+                expected.Add(themeDto);
+                _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
+                _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
+            }
+
+            var toDeleteList = new List<(int, int)>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(themeDto);
+                _themeIdList.Add(addedThemeId);
+                themeDto.Id = addedThemeId;
+                _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
+                toDeleteList.Add((addedHomeworkId, addedThemeId));
+            }
+
+            //When
+            toDeleteList.ForEach((homeworkTheme) =>
+            {
+                _homeworkRepo.DeleteHomework_Theme(homeworkTheme.Item1, homeworkTheme.Item2);
+            });
+
+            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId).Themes;
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestCase(new int[] { 1,2,3})]
