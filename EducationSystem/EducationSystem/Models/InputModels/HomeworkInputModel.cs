@@ -14,9 +14,11 @@ namespace EducationSystem.API.Models.InputModels
         public string StartDate { get; set; }
         [CustomDateTimeValidation]
         public string DeadlineDate { get; set; }
+        [Required]
         public int GroupId { get; set; }
         public List<int> TagIds { get; set; }
         public List<int> ThemeIds { get; set; }
+        [Required]
         public bool IsOptional { get; set; }
     }
 }

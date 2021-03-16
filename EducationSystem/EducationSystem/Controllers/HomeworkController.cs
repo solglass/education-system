@@ -44,6 +44,10 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]        
         public ActionResult<HomeworkOutputModel> AddHomework([FromBody] HomeworkInputModel homework)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var addedHomeworkId = _homeworkService.AddHomework(_mapper.Map<HomeworkDto>(homework));
             var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(addedHomeworkId));
             return Ok(result);
@@ -174,6 +178,10 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Студент")]
         public ActionResult<HomeworkAttemptOutputModel> CreateAttempt(int homeworkId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var dto = _mapper.Map<HomeworkAttemptDto>(inputModel);
             var addedAttemptId = _homeworkService.AddHomeworkAttempt(homeworkId, dto);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(addedAttemptId));
@@ -210,6 +218,10 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult<HomeworkAttemptOutputModel> UpdateHomeworkAttempt(int homeworkId, int attemptId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var dto = _mapper.Map<HomeworkAttemptDto>(inputModel);
             var changedRows = _homeworkService.UpdateHomeworkAttempt(attemptId, dto);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
@@ -245,6 +257,10 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<CommentOutputModel> AddComment(int homeworkId, int attemptId, [FromBody] CommentInputModel comment)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var dto = _mapper.Map<CommentDto>(comment);
             var addedCommentId = _homeworkService.AddComment(attemptId, dto);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(addedCommentId));
@@ -265,6 +281,10 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
         public ActionResult<CommentOutputModel> UpdateComment(int homeworkId, int attemptId, int commentId, [FromBody] CommentUpdateInputModel comment)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var dto = _mapper.Map<CommentDto>(comment);
             var changedRows = _homeworkService.UpdateComment(attemptId, commentId, dto);
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
