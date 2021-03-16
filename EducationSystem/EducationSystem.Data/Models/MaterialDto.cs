@@ -23,14 +23,13 @@ namespace EducationSystem.Data.Models
         }
 
         public override bool Equals(object obj)
-        {
-            MaterialDto materialDto = (MaterialDto)obj;
+        {   
             if (obj == null)
-            {
                 return false;
-            }
-            if (!(obj is MaterialDto material))
+            if (!(obj is MaterialDto))
                 return false;
+
+            MaterialDto materialDto = (MaterialDto)obj;
             if (Link != materialDto.Link || Description != materialDto.Description || IsDeleted !=materialDto.IsDeleted)
             {
                 return false;
