@@ -7,7 +7,7 @@ using EducationSystem.Data.Tests.Mocks;
 
 namespace EducationSystem.Data.Tests
 {
-    public class TagRepositoryTests:BaseTest
+    public class TagRepositoryTests : BaseTest
     {
         private TagRepository _tagRepo;
         private List<int> _tagIdList;
@@ -36,38 +36,31 @@ namespace EducationSystem.Data.Tests
         [TestCase(1)]
         public void TagDeleteTest(int dtoMockNumber)
         {
-            TagDto expected = (TagDto)TagMockGetter.GetTagDtoMock(dtoMockNumber);
-            _tagIdList.Add(_tagRepo.TagAdd(expected));
+            TagDto expected = (TagDto)TagMockGetter.GetTagDtoMock(dtoMockNumber).Clone();
+            var addedTagId = _tagRepo.TagAdd(expected);
 
-                int newId = _tagIdList[_tagIdList.Count - 1];
-                _tagRepo.TagDelete(newId);
+            _tagRepo.TagDelete(addedTagId);
 
-                TagDto actual = _tagRepo.GetTagById(newId);
-                if (actual == null) { Assert.Pass(); }
-                else Assert.Fail("Deletion went wrong");
+            TagDto actual = _tagRepo.GetTagById(addedTagId);
+            Assert.IsNull(actual);
         }
         [TestCase(new int[] { 1, 2, 3 })]
         public void TagSelectAllPositiveTest(int[] mockIds)
         {
             // Given
-            var expected = new List<TagDto>();
+            var expected = _tagRepo.GetTags();
             for (var i = 0; i < mockIds.Length; i++)
             {
-                var dto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]);
+                var dto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
                 var addedEntityId = _tagRepo.TagAdd(dto);
                 _tagIdList.Add(addedEntityId);
                 dto.Id = addedEntityId;
                 expected.Add(dto);
             }
-
             // When
             var actual = _tagRepo.GetTags();
             //Then
-            for (var i = actual.Count - 1; i > actual.Count - expected.Count; i--)
-            {
-                var j = i - actual.Count + expected.Count;
-                Assert.IsTrue(Equals(expected[j], actual[i]));
-            }
+            CollectionAssert.AreEqual(expected, actual);
         }
         [TearDown]
         public void TagsTestsTearDown()
