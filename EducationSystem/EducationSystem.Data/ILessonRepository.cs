@@ -25,5 +25,6 @@ namespace EducationSystem.Data
         int UpdateFeedback(FeedbackDto feedbackDto);
         int UpdateLesson(LessonDto lessonDto);
         List<AttendanceReportDto> GetStudentByPercentOfSkip(int percent, int groupId);
+        int HardDeleteLesson(int lessonId);
     }
 }
