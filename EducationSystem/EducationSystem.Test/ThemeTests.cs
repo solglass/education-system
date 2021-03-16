@@ -230,6 +230,54 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
+        public void DeleteThemeTagPositiveTest(int[] mockIds)
+        {
+            // Given
+            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+            var addedThemeId = _courseRepo.AddTheme(themeDto);
+            _themeIdList.Add(addedThemeId);
+            themeDto.Id = addedThemeId;
+
+            var expected = new List<TagDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = (TagDto)TagMock.GetTagMock(mockIds[i]).Clone();
+                var addedTagId = _tagRepo.TagAdd(tagDto);
+                _tagIdList.Add(addedTagId);
+                tagDto.Id = addedTagId;
+                expected.Add(tagDto);
+
+                _tagRepo.ThemeTagAdd(addedThemeId, addedTagId);
+                _tagThemeList.Add((addedThemeId, addedTagId));
+            }
+
+            var toDeleteIdList = new List<(int,int)>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = (TagDto)TagMock.GetTagMock(mockIds[i]).Clone();
+                var addedTagId = _tagRepo.TagAdd(tagDto);
+                _tagIdList.Add(addedTagId);
+                tagDto.Id = addedTagId;
+
+                _tagRepo.ThemeTagAdd(addedThemeId, addedTagId);
+                toDeleteIdList.Add((addedThemeId, addedTagId));
+            }
+
+            // When
+            toDeleteIdList.ForEach(themeTag =>
+            {
+                _tagRepo.ThemeTagDelete(themeTag.Item1, themeTag.Item2);
+            });
+
+            var actual = _courseRepo.GetThemeById(addedThemeId).Tags;
+
+            // Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
         [OneTimeTearDown]
         public void SampleTestTearDown()
         {
