@@ -19,6 +19,11 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
+            if (!(obj is ThemeDto))
+                return false;
+
             return obj is TagDto dto &&
                    Id == dto.Id &&
                    Name == dto.Name;
