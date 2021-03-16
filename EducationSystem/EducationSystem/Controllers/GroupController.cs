@@ -36,7 +36,13 @@ namespace EducationSystem.Controllers
             _courseService = courseService;
             _mapper = mapper;
         }
+
+        /// <summary>
+        /// Gets all the groups with their courses and groupStatuses
+        /// </summary>
+        /// <returns>Returns the list of GroupOutputModels</returns>
         // https://localhost:44365/api/group/
+        [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult<List<GroupOutputModel>> GetGroups()
@@ -46,7 +52,13 @@ namespace EducationSystem.Controllers
 
             return Ok(result);
         }
+        /// <summary>
+        /// Gets only one group by its id with its course and groupStatus
+        /// </summary>
+        /// <param name="id"> is used to find necessary group</param>
+        /// <returns>Returns the GroupOutputModel</returns>
         // https://localhost:44365/api/group/3
+        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
         [HttpGet("{id}")]
         public ActionResult<GroupOutputModel> GetGroupById(int id)
         {
@@ -54,15 +66,26 @@ namespace EducationSystem.Controllers
             GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
             return Ok(result);
         }
+        /// <summary>
+        /// Gets all the groups with their courses and groupStatuses
+        /// </summary>
+        /// <param name="themeId"> is used to find necessary groups by theme-id</param>
+        /// <returns>Returns the list of GroupOutputModels</returns>
         // https://localhost:44365/api/group/3
-        [HttpGet("by-theme/{Id}")]
-        public ActionResult<List<GroupOutputModel>> GetGroupByThemeId(int id)
+        [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
+        [HttpGet("by-theme/{themeId}")]
+        public ActionResult<List<GroupOutputModel>> GetGroupByThemeId(int themeId)
         {
-            var group = _service.GetGroupByThemeId(id);
+            var group = _service.GetGroupByThemeId(themeId);
             List<GroupOutputModel> result = _mapper.Map<List<GroupOutputModel>>(group);
             return Ok(result);
         }
+        /// <summary>
+        /// Gets all the groups that do not have a tutor with their courses and groupStatuses
+        /// </summary>
+        /// <returns>Returns the list of GroupOutputModels</returns>
         // https://localhost:44365/api/group/without-tutors
+        [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("without-tutors")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult<List<GroupOutputModel>> GetGroupsWithoutTutors()
@@ -70,15 +93,27 @@ namespace EducationSystem.Controllers
             var result = _mapper.Map<List<GroupOutputModel>>(_service.GetGroupsWithoutTutors());
             return Ok(result);
         }
+        /// <summary>
+        /// Gets all the groups  with their courses, groupStatuses and list their themes
+        /// </summary>
+        /// <param name="id"> is used to find necessary groups by id</param>
+        /// <returns>Returns the list of GroupOutputModels</returns>
         // https://localhost:44365/api/group/2/programs
-        [HttpGet("{Id}/programs")]        
+        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
+        [HttpGet("{id}/programs")]        
         public ActionResult<GroupOutputModel> GetGroupProgramsByGroupId(int id)
         {
             var program = _service.GetGroupProgramsByGroupId(id);
             GroupOutputModel result = _mapper.Map<GroupOutputModel>(program);
             return Ok(result);
         }
+        /// <summary>
+        /// Creates Course
+        /// </summary>
+        /// <param name="group"> is used to get all the information about new group that is necessary to create it</param>
+        /// <returns>Returns the GroupOutputModel</returns>
         // https://localhost:44365/api/group/
+        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
         [HttpPost]
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult<GroupOutputModel> AddNewGroup([FromBody] GroupInputModel group)
