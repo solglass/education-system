@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class HomeworkAttemptDto
+    public class HomeworkAttemptDto : ICloneable
     {
         public int Id { get; set; }
         public string Comment { get; set; }
@@ -16,55 +16,46 @@ namespace EducationSystem.Data.Models
         public List<AttachmentDto> Attachments { get; set; }
         public List<CommentDto> Comments { get; set; }
 
-
+        public object Clone()
+        {
+            return new HomeworkAttemptDto
+            {
+                Id = this.Id,
+                Comment = this.Comment,
+                IsDeleted = this.IsDeleted,
+                Author = this.Author,
+                Homework = this.Homework,
+                HomeworkAttemptStatus = this.HomeworkAttemptStatus,
+                Attachments = this.Attachments,
+                Comments = this.Comments
+            };
+        }
 
         public override bool Equals(object obj)
         {
-            HomeworkAttemptDto attemptObj = (HomeworkAttemptDto)obj;
-            if (!attemptObj.Comment.Equals(Comment) ||  attemptObj.IsDeleted != IsDeleted)
+            HomeworkAttemptDto homeworkAttemptObject = (HomeworkAttemptDto)obj;
+            if (Id != homeworkAttemptObject.Id ||
+                Comment != homeworkAttemptObject.Comment ||
+                HomeworkAttemptStatus != homeworkAttemptObject.HomeworkAttemptStatus ||
+                IsDeleted != homeworkAttemptObject.IsDeleted)
             {
                 return false;
             }
-            if (attemptObj.Author == null || Author == null || !attemptObj.Author.Equals(Author))
-            {
-                return false;
-            }
-            if (attemptObj.Homework == null || Homework == null || !attemptObj.Homework.Equals(Homework))
-            {
-                return false;
-            }
-            if (attemptObj.HomeworkAttemptStatus == 0 || HomeworkAttemptStatus == 0 
-                || !attemptObj.HomeworkAttemptStatus.Equals(HomeworkAttemptStatus))
-            {
-                return false;
-            }
-            if (attemptObj.Attachments.Count != Attachments.Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < Attachments.Count; i++)
-            {
-                if (!attemptObj.Attachments[i].Path.Equals(Attachments[i].Path))
-                {
-                    return false;
-                }
-            }
-            if (attemptObj.Comments.Count != Comments.Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < Comments.Count; i++)
-            {
-                if (!attemptObj.Comments[i].Message.Equals(Comments[i].Message))
-                {
-                    return false;
-                }
-            }
-            return true;
+
+            else return true;
         }
+
         public override int GetHashCode()
         {
-            return Id;
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            string s = "";
+
+            s +=Id + " " + Comment + " " + HomeworkAttemptStatus + " " + IsDeleted + "; ";
+            return s;
         }
     }
 }
