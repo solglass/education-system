@@ -12,7 +12,17 @@ namespace EducationSystem.Data.Tests.Mocks
             switch (caseId)
             {
                 case 1:
-                    return new AttendanceDto { };
+                    return new AttendanceDto 
+                    {
+                        IsAbsent = true
+                    };
+                    break;
+                case 2:
+                    return new AttendanceDto
+                    {
+                        IsAbsent = false,
+                        ReasonOfAbsence = "Important"
+                    };
                     break;
                 default:
                     return null;
