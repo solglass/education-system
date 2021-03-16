@@ -25,6 +25,11 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
+            if (!(obj is ThemeDto))
+                return false;
+
             ThemeDto themeObj = (ThemeDto)obj;
             if (themeObj.Id != Id || themeObj.Name != Name || themeObj.IsDeleted != IsDeleted)
             {

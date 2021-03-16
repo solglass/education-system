@@ -131,7 +131,7 @@ namespace EducationSystem.Data.Tests
         public void GetThemesByCourseIdPositiveTest(int[] mockIds)
         {
             // Given
-            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1);
+            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
             var addedCourseId = _courseRepo.AddCourse(courseDto);
             _courseIdList.Add(addedCourseId);
 
@@ -161,12 +161,12 @@ namespace EducationSystem.Data.Tests
         public void GetUncoveredThemesByGroupIdPositiveTest(int[] mockIds)
         {
             // Given
-            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1);
+            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
             var addedCourseId = _courseRepo.AddCourse(courseDto);
             _courseIdList.Add(addedCourseId);
             courseDto.Id = addedCourseId;
 
-            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1);
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
             groupDto.Course = courseDto;
             var addedGroupId = _groupRepo.AddGroup(groupDto);
             _groupIdList.Add(addedGroupId);
@@ -186,6 +186,25 @@ namespace EducationSystem.Data.Tests
                 _themeIdList.Add(addedThemeId);
                 dto.Id = addedThemeId;
                 expected.Add(dto);
+
+                _courseRepo.AddCourse_Theme(addedCourseId, addedThemeId);
+                _courseThemeList.Add((addedCourseId, addedThemeId));
+
+                _lessonRepo.AddLessonTheme(addedLessonId, addedThemeId);
+                _lessonThemeList.Add((addedLessonId, addedThemeId));
+            }
+
+            lessonDto.Date = DateTime.Now.AddDays(-10);
+            lessonDto.Group = groupDto;
+            addedLessonId = _lessonRepo.AddLesson(lessonDto);
+            _lessonIdList.Add(addedLessonId);
+
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(dto);
+                _themeIdList.Add(addedThemeId);
+                dto.Id = addedThemeId;
 
                 _courseRepo.AddCourse_Theme(addedCourseId, addedThemeId);
                 _courseThemeList.Add((addedCourseId, addedThemeId));
