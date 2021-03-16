@@ -126,20 +126,38 @@ namespace EducationSystem.Data.Tests
             Assert.Greater(course.Id, 0);
             _courseIds.Add(course.Id);
             var themes = new List<ThemeDto>();
+           
             foreach (var themeMockId in themeMockIds)
             {
                 var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
                 theme.Id = _courseRepo.AddTheme(theme);
                 Assert.Greater(theme.Id, 0);
+
                 themes.Add(theme);
                 _themeIds.Add(theme.Id);
                 var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
                 Assert.Greater(result, 0);
+
+                _courseThemes.Add((course.Id, theme.Id));
+              //  themes.Remove(theme);
+            }
+
+            foreach (var themeMockId in themeMockIds)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                Assert.Greater(theme.Id, 0);
+
+                _themeIds.Add(theme.Id);
+                var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
+                Assert.Greater(result, 0);
+
                 _courseThemes.Add((course.Id, theme.Id));
                 result = _courseRepo.DeleteCourse_Theme(course.Id, theme.Id);
                 Assert.Greater(result, 0);
-                themes.Remove(theme);
+                
             }
+
             //When
             var actual = _courseRepo.GetCourseById(course.Id);
             //Then

@@ -25,9 +25,17 @@ namespace EducationSystem.Data.Models
             };
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public override bool Equals(object obj)
         {
-            CourseDto courseObj = (CourseDto)obj;
+            if (obj == null || !(obj is CourseDto))
+                return false;
+
+            var courseObj = (CourseDto)obj;
 
             return (Id == courseObj.Id &&
                     Name.Equals(courseObj.Name) &&
