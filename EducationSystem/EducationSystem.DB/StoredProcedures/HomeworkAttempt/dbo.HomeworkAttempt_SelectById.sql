@@ -8,15 +8,13 @@ begin
 		hma.Comment,
 		hma.HomeworkID,
 		hma.StatusID,
-		hma.IsDeleted,
 		u.Id,
 		u.FirstName,
 		u.LastName,
 		u.UserPic,
+		hm.Id,
 		hm.Description,
-		hmas.Name,
-		a.Path,
-		c.*
+		hmas.Id
 	from dbo.HomeworkAttempt hma 
 		inner join dbo.[User] u on hma.UserID = u.Id
 		inner join dbo.Homework hm  on hma.HomeworkID = hm.Id
