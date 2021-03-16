@@ -115,7 +115,7 @@ namespace EducationSystem.Data.Tests
 
         public MaterialDto AddMaterial(int mockId)
         {
-            var dto = MaterialMock.GetMaterialMock(mockId);
+            var dto = (MaterialDto)MaterialMock.GetMaterialMock(mockId).Clone();
             dto.Id = _materialRepository.AddMaterial(dto);
             Assert.Greater(dto.Id, 0);
             _addedMaterialMockIds.Add(dto.Id);
@@ -124,7 +124,7 @@ namespace EducationSystem.Data.Tests
 
         public TagDto AddTag(int mockId)
         {
-            var dtoTag = TagMock.GetTagMock(mockId);
+            var dtoTag = (TagDto)TagMock.GetTagMock(mockId).Clone();
             dtoTag.Id = _tagRepository.TagAdd(dtoTag);
             Assert.Greater(dtoTag.Id, 0);
             _addedTagMockIds.Add(dtoTag.Id);
@@ -133,8 +133,8 @@ namespace EducationSystem.Data.Tests
 
         public GroupDto AddGroup(int mockId)
         {
-            var dtoCourse = CourseMockGetter.GetCourseDtoMock(mockId);
-            var dtoGroup = GroupMockGetter.GetGroupDtoMock(mockId);
+            var dtoCourse = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            var dtoGroup = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
             dtoGroup.Course = dtoCourse;
             dtoGroup.Id = _groupRepository.AddGroup(dtoGroup);
             Assert.Greater(dtoGroup.Id, 0);

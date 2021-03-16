@@ -4,7 +4,7 @@ using EducationSystem.Data.Models;
 
 namespace EducationSystem.Data.Models
 {
-    public class CourseDto
+    public class CourseDto : ICloneable
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,6 +13,18 @@ namespace EducationSystem.Data.Models
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
 
+        public object Clone()
+        {
+            return new CourseDto 
+            {
+                Id = Id,
+                Name = Name,
+                Description = Description,
+                Duration = Duration,
+                IsDeleted = IsDeleted,
+                Themes = Themes
+            };
+        }
 
         public override bool Equals(object obj)
         {

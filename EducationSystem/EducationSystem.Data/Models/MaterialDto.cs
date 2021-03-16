@@ -4,12 +4,24 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class MaterialDto
+    public class MaterialDto : ICloneable
     {
         public int Id { get; set; }
         public string Link { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
+
+        public object Clone()
+        {
+            return new MaterialDto
+            {
+                Id = Id,
+                Link = Link,
+                Description = Description,
+                IsDeleted = IsDeleted
+            };
+        }
+
         public override bool Equals(object obj)
         {
             MaterialDto materialDto = (MaterialDto)obj;
