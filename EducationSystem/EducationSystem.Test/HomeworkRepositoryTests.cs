@@ -160,6 +160,51 @@ namespace EducationSystem.Data.Tests
 
         }
 
+        [TestCase(4)]
+        public void HomeworkUpdate_Empty_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            dto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
+
+            //When
+            try
+            {
+            _homeworkRepo.UpdateHomework(dto);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void HomeworkUpdate_Null_NegativeTest()
+        {
+            //Given
+            var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            dto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+            _homeworkIdList.Add(addedHomeworkId);
+            //When
+            try
+            {
+                _homeworkRepo.UpdateHomework(null);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(1, true)]
         [TestCase(1, false)]
         public void HomeworkDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
@@ -181,6 +226,17 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
 
+        }
+
+        [Test]
+        public void HomeworkDeleteOrRecover_NotExistHomework_NegativeTest()
+        {
+            //Given
+            //When
+            var deletedRows = _homeworkRepo.DeleteOrRecoverHomework(-1, true);
+
+            //Then
+            Assert.AreEqual(0, deletedRows);
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
@@ -210,6 +266,50 @@ namespace EducationSystem.Data.Tests
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void AddHomeworkTheme_NotExistHomework_NegativeTest()
+        {
+            //Given
+            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+            var addedThemeId = _courseRepo.AddTheme(themeDto);
+            _themeIdList.Add(addedThemeId);
+            themeDto.Id = addedThemeId;
+
+            //When
+            try
+            {
+                _homeworkRepo.AddHomework_Theme(-1, addedThemeId);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void AddHomeworkTheme_NotExistTheme_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            //When
+            try
+            {
+                _homeworkRepo.AddHomework_Theme(addedHomeworkId, -1);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
