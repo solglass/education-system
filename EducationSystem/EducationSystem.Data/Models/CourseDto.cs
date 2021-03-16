@@ -11,19 +11,19 @@ namespace EducationSystem.Data.Models
         public string Description { get; set; }
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
-        public List<ThemeDto> Themes { get; set; }
-
-        public object Clone()
-        {
-            return new CourseDto
-            {
-                Id = Id,
-                Name = Name,
-                Description = Description,
-                Duration = Duration,
-                IsDeleted = IsDeleted,
-                Themes = Themes
-            };
+        public List<ThemeDto> Themes { get; set; }
+
+        public object Clone()
+        {
+            return new CourseDto
+            {
+                Id = Id,
+                Name = Name,
+                Description = Description,
+                Duration = Duration,
+                IsDeleted = IsDeleted,
+                Themes = Themes
+            };
         }
 
         public override bool Equals(object obj)
