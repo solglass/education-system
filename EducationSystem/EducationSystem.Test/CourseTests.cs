@@ -139,7 +139,6 @@ namespace EducationSystem.Data.Tests
                 Assert.Greater(result, 0);
 
                 _courseThemes.Add((course.Id, theme.Id));
-              //  themes.Remove(theme);
             }
 
             foreach (var themeMockId in themeMockIds)
