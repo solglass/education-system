@@ -35,7 +35,13 @@ namespace EducationSystem.Data.Tests
             _addedStudentGroupDtoIds = new List<(int, int)>();
 
         }
+
         [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
         public void AddPaymentPositiveTest(int mockId)
         {
             //Given
@@ -57,6 +63,7 @@ namespace EducationSystem.Data.Tests
             studentGroupDto.User.Id = addedUserId;
             studentGroupDto.Group.Course = courseDto;
             studentGroupDto.Group.Id = addedGroupId;
+            studentGroupDto.ContractNumber = dto.ContractNumber;
             var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
             Assert.Greater(addedUserId, 0);
             Assert.Greater(addedGroupId, 0);
@@ -81,13 +88,66 @@ namespace EducationSystem.Data.Tests
             var actual = _repository.GetPaymentById(addedEntityId);
             Assert.AreEqual(dto, actual);
         }
-        /*
-        [TestCase(1)]
-        public void GetPaymentByContractNumberPositiveTest(int mockId)
+
+        [TestCase(3, 99)]
+        public void GetPaymentByContractNumberPositiveTest(int numberOfPayments, int contractNumber)
         {
-            throw new NotImplementedException();
+
+            //Given
+            var expected = new List<PaymentDto>();
+            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
+            var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
+
+
+            var addedUserId = _userRepository.AddUser(userDto);
+            var addedCourseId = _courseRepository.AddCourse(courseDto);
+            Assert.Greater(addedCourseId, 0);
+
+            courseDto.Id = addedCourseId;
+            groupDto.Course = courseDto;
+
+            var addedGroupId = _groupRepository.AddGroup(groupDto);
+            userDto.Id = addedUserId;
+            studentGroupDto.User.Id = addedUserId;
+            studentGroupDto.Group.Course = courseDto;
+            studentGroupDto.Group.Id = addedGroupId;
+            studentGroupDto.ContractNumber = contractNumber;
+            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
+            Assert.Greater(addedUserId, 0);
+            Assert.Greater(addedGroupId, 0);
+            Assert.Greater(addedStudentGroupId, 0);
+
+
+            _addedUserDtoIds.Add(addedUserId);
+            _addedGroupDtoIds.Add(addedGroupId);
+            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
+            _addedCourseDtoIds.Add(addedCourseId);
+
+            for (int mockId = 1; mockId <= numberOfPayments; mockId++)
+            {
+                var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
+                userDto.Login = null;
+                userDto.Password = null;
+                dto.Student = userDto;
+                var addedEntityId = _repository.AddPayment(dto);
+
+                _addedPaymentDtoIds.Add(addedEntityId);
+                dto.Id = addedEntityId;
+                expected.Add(dto);
+
+            }
+            //When
+
+            var actual = _repository.GetPaymentByContractNumber(contractNumber);
+
+            // Then
+            CollectionAssert.AreEqual(expected, actual);
         }
 
+
+        /*
         [TestCase(1)]
         public void GetPaymentByIdPositiveTest(int mockId)
         {
@@ -113,7 +173,7 @@ namespace EducationSystem.Data.Tests
         }
 
         */
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDowTest()
         {
             _addedUserDtoIds.ForEach(id =>

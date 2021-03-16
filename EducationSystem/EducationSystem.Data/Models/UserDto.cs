@@ -37,7 +37,11 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
+            if (obj == null || !(obj is UserDto))
+                return false;
+
             var userDto = (UserDto)obj;
+            
             return (userDto.Id == Id) &&
                 string.Equals(userDto.FirstName, FirstName) &&
                 string.Equals(userDto.LastName, LastName) &&

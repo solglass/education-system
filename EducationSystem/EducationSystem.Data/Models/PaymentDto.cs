@@ -15,7 +15,7 @@ namespace EducationSystem.Data.Models
         public UserDto Student { get; set; }
 
         public object Clone()
-        {
+        {           
             return new PaymentDto()
             {
                 Amount = Amount,
@@ -30,12 +30,16 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
+            if (obj == null || !(obj is PaymentDto))
+                return false;
+
             var paymentDto = (PaymentDto)obj;
+
             return ((paymentDto.Id == Id) &&
             (paymentDto.ContractNumber == ContractNumber) &&
             (paymentDto.Amount == Amount) &&
             (paymentDto.Date == Date) &&
-            paymentDto.Student.Equals(Student) &&
+            (paymentDto.Student.Id == Student.Id) &&
             (paymentDto.IsPaid == IsPaid) &&
             string.Equals(paymentDto.Period, Period));
         }
