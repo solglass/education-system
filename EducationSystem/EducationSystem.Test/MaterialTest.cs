@@ -7,9 +7,9 @@ namespace EducationSystem.Data.Tests
 {
     public class MaterialTest : BaseTest
     {
-        private MaterialRepository _materialRepository;
-        private TagRepository _tagRepository;
-        private GroupRepository _groupRepository;
+        private IMaterialRepository _materialRepository;
+        private ITagRepository _tagRepository;
+        private IGroupRepository _groupRepository;
 
         private List<int> _addedMaterialMockIds;
         private List<int> _addedTagMockIds;
