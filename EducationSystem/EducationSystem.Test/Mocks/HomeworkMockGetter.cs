@@ -38,6 +38,11 @@ namespace EducationSystem.Data.Tests.Mocks
                         IsOptional = true
                     };
                     break;
+                case 4:
+                    return new HomeworkDto
+                    {
+
+                    };
                 default:
                     return null;
             }

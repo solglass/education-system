@@ -74,6 +74,65 @@ namespace EducationSystem.Data.Tests
 
         }
 
+        [TestCase(4)]
+        public void HomeworkAdd_EmptyHomework_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
+            dto.Group = _groupDtoMock;
+            //When
+            try
+            {
+                var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+                _homeworkIdList.Add(addedHomeworkId);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void HomeworkAdd_WithoutGroup_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
+
+            //When
+            try
+            {
+                var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+                _homeworkIdList.Add(addedHomeworkId);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void HomeworkAdd_Null_NegativeTest()
+        {
+            //Given
+
+            //When
+            try
+            {
+                var addedHomeworkId = _homeworkRepo.AddHomework(null);
+                _homeworkIdList.Add(addedHomeworkId);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(1)]
         public void HomeworkUpdatePositiveTest(int mockId)
         {
