@@ -7,7 +7,7 @@ namespace EducationSystem.Data
 {
     public interface IUserRepository
     {
-        int AddRoleToUser(UserRoleDto userRole);
+        int AddRoleToUser(int userId, int roleId);
         int AddUser(UserDto user);
         int ChangeUserPassword(int id, string oldPassword, string newPassword);
         UserDto CheckUser(string login);
@@ -17,6 +17,7 @@ namespace EducationSystem.Data
         List<UserDto> GetUsers();
         int HardDeleteUser(int id);
         int UpdateUser(UserDto user);
-        int DeleteOrRecoverUser(int id, bool isDeleted);
+        int DeleteOrRecoverUser(int id, bool isDeleted);
+
     }
 }

@@ -167,14 +167,14 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public int AddRoleToUser(UserRoleDto userRole)
+        public int AddRoleToUser(int userId, int roleId)
         {
             return _connection
                .QuerySingle<int>("dbo.User_Role_Add",
                new 
                { 
-                   userRole.UserId,
-                   userRole.RoleId 
+                   userId,
+                   roleId 
                },
                commandType: System.Data.CommandType.StoredProcedure);
         }

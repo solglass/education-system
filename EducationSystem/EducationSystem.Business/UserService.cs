@@ -21,10 +21,6 @@ namespace EducationSystem.Business
         {
             return _userRepository.GetUsers();
         }
-        //public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
-        //{
-        //    return _repo.PassedStudentsAttempt_SelectByGroupId(groupId);
-        //}
         public UserDto GetUserById(int id)
         {
             return _userRepository.GetUserById(id);
@@ -33,8 +29,9 @@ namespace EducationSystem.Business
         {
             return _userRepository.GetPassedStudentsAttempt_SelectByGroupId(groupId);
         }
-        public int UpdateUser(UserDto userDto)
+        public int UpdateUser(int id, UserDto userDto)
         {
+            userDto.Id = id;
             return _userRepository.UpdateUser(userDto);
         }
         public int AddUser(UserDto userDto)
@@ -69,5 +66,28 @@ namespace EducationSystem.Business
         {
             return _paymentRepository.GetPaymentsByUserId(id);
         }
+        public int AddPayment(int id, PaymentDto paymentDto)
+        {
+            paymentDto.Student.Id = id;
+            return _paymentRepository.AddPayment(paymentDto);
+        }
+        public PaymentDto GetPaymentById(int id)
+        {
+            return _paymentRepository.GetPaymentById(id);
+        }
+        public int UpdatePayment(int id, PaymentDto paymentDto)
+        {
+            paymentDto.Id = id;
+            return _paymentRepository.UpdatePayment(paymentDto);
+        }
+        public int DeletePayment(int id)
+        {
+            return _paymentRepository.DeletePayment(id);
+        }
+        public List<UserDto> GetStudentsNotPaidInMonth(string period)
+        {
+            return _paymentRepository.GetStudentsNotPaidInMonth(period);
+        }
     }
+    
 }
