@@ -20,5 +20,6 @@ namespace EducationSystem.Data
         int HardDeleteCourse(int id);
         int UpdateCourse(CourseDto course);
         int UpdateTheme(ThemeDto theme);
+        int HardDeleteTheme(int themeId);
     }
 }

@@ -73,7 +73,9 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
-                new { lessonDto.Group.Id, lessonDto.Comment, lessonDto.Date, lessonDto.Themes },
+                new { GroupId = lessonDto.Group.Id,
+                    Description = lessonDto.Comment,
+                    Date = lessonDto.Date },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -246,7 +248,7 @@ namespace EducationSystem.Data
         {
             return _connection
                  .QuerySingleOrDefault<int>(
-                 "dbo.Lesson_AddTheme",
+                 "dbo.Lesson_Theme_Add",
                  new { lessonId = lessonId, themeId = themeId },
                  commandType: CommandType.StoredProcedure);
         }
