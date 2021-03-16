@@ -1,6 +1,6 @@
 ﻿using EducationSystem.Data.Models;
 
-namespace EducationSystem.Data.Tests
+namespace EducationSystem.Data.Tests.Mocks
 {
     public static class MaterialMock
     {
@@ -22,13 +22,3 @@ namespace EducationSystem.Data.Tests
         }
     }
 }
-
-/* for caseId 1-5
- * Description, Link, IsDeleted
- * Description1, Link1, 1
- * Description2, Link2, 0
- * Description3, Link3, 1
- * Description4, Link4, 0
- * Description5, Link5, 1
- * 
- */

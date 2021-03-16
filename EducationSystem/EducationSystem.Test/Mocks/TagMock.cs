@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EducationSystem.Data.Tests
+namespace EducationSystem.Data.Tests.Mocks
 {
     public static class TagMock
     {
