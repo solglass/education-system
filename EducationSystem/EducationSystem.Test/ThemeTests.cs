@@ -213,7 +213,7 @@ namespace EducationSystem.Data.Tests
             var expected = new List<TagDto>();
             for (int i = 0; i < mockIds.Length; i++)
             {
-                var tagDto = (TagDto)TagMock.GetTagMock(mockIds[i]).Clone();
+                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
                 var addedTagId = _tagRepo.TagAdd(tagDto);
                 _tagIdList.Add(addedTagId);
                 tagDto.Id = addedTagId;
@@ -244,7 +244,7 @@ namespace EducationSystem.Data.Tests
             var expected = new List<TagDto>();
             for (int i = 0; i < mockIds.Length; i++)
             {
-                var tagDto = (TagDto)TagMock.GetTagMock(mockIds[i]).Clone();
+                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
                 var addedTagId = _tagRepo.TagAdd(tagDto);
                 _tagIdList.Add(addedTagId);
                 tagDto.Id = addedTagId;
@@ -257,7 +257,7 @@ namespace EducationSystem.Data.Tests
             var toDeleteIdList = new List<(int,int)>();
             for (int i = 0; i < mockIds.Length; i++)
             {
-                var tagDto = (TagDto)TagMock.GetTagMock(mockIds[i]).Clone();
+                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
                 var addedTagId = _tagRepo.TagAdd(tagDto);
                 _tagIdList.Add(addedTagId);
                 tagDto.Id = addedTagId;
