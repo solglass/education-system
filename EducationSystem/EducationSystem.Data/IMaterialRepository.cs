@@ -12,5 +12,6 @@ namespace EducationSystem.Data
         List<MaterialDto> GetMaterialsByTagId(int id);
         int UpdateMaterial(MaterialDto material);
         int DeleteOrRecoverMaterial(int id, bool isDeleted);
+        int HardDeleteMaterial(int id);
     }
 }
