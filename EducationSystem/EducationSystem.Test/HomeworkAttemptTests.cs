@@ -62,7 +62,7 @@ namespace EducationSystem.Data.Tests
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
-        public void CreateAttemptPositiveTest(int mockId)
+        public void AddHomeworkAttemptPositiveTest(int mockId)
         {
             // Given
             var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockId).Clone();
@@ -82,28 +82,30 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
-        //[TestCase(1, 2)]
-        //[TestCase(2, 3)]
-        //[TestCase(3, 2)]
-        //public void ThemeUpdatePositiveTest(int mockId, int updateMockId)
-        //{
-        //    // Given
-        //    var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
-        //    var addedHomeworkAttemptId = _homeworkRepo.AddTheme(dto);
-        //    _homeworkIdList.Add(addedHomeworkAttemptId);
+        [TestCase(1, 2)]
+        [TestCase(2, 3)]
+        [TestCase(3, 1)]
+        public void UpdateHomeworkAttemptPositiveTest(int mockId, int updateMockId)
+        {
+            // Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockId).Clone();
+            dto.Author = _userDtoMock;
+            dto.Homework = _homeworkDtoMock;
+            var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
+            _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
 
-        //    dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(updateMockId).Clone();
-        //    dto.Id = addedHomeworkAttemptId;
-        //    var affectedRowsCount = _homeworkRepo.UpdateTheme(dto);
+            dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(updateMockId).Clone();
+            dto.Id = addedHomeworkAttemptId;
+            var affectedRowsCount = _homeworkRepo.UpdateHomeworkAttempt(dto);
 
 
-        //    // When
-        //    var actual = _homeworkRepo.GetThemeById(addedHomeworkAttemptId);
+            // When
+            var actual = _homeworkRepo.GetHomeworkAttemptById(addedHomeworkAttemptId);
 
-        //    // Then
-        //    Assert.AreEqual(1, affectedRowsCount);
-        //    Assert.AreEqual(dto, actual);
-        //}
+            // Then
+            Assert.AreEqual(1, affectedRowsCount);
+            Assert.AreEqual(dto, actual);
+        }
 
         //[TestCase(new int[] { 1, 2, 3 })]
         //[TestCase(new int[] { 3, 2, 1 })]
@@ -231,11 +233,11 @@ namespace EducationSystem.Data.Tests
         [OneTimeTearDown]
         public void TestTearDown()
         {
+            DeleteHomeworkAttempt();
             DeleteHomework();
             DeleteGroups();
             DeleteCourse();
             DeleteUser();
-            DeleteHomeworkAttempt();
         }
 
         private void DeleteUser()

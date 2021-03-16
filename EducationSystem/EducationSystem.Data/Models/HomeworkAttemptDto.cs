@@ -33,6 +33,11 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
+            if (!(obj is HomeworkAttemptDto))
+                return false;
+
             HomeworkAttemptDto homeworkAttemptObject = (HomeworkAttemptDto)obj;
             if (Id != homeworkAttemptObject.Id ||
                 Comment != homeworkAttemptObject.Comment ||

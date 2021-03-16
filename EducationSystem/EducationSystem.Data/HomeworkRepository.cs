@@ -228,9 +228,7 @@ namespace EducationSystem.Data
                  {
                      id = homeworkAttempt.Id,
                      comment = homeworkAttempt.Comment,
-                     author = homeworkAttempt.Author.Id,
-                     homework = homeworkAttempt.Homework.Id,
-                     homeworkAttemptStatus = (int)homeworkAttempt.HomeworkAttemptStatus
+                     statusId = (int)homeworkAttempt.HomeworkAttemptStatus
                  },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
