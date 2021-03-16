@@ -4,20 +4,37 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class MaterialDto
+    public class MaterialDto : ICloneable
     {
         public int Id { get; set; }
         public string Link { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
-        public override bool Equals(object obj)
+
+        public object Clone()
         {
-            MaterialDto materialDto = (MaterialDto)obj;
-            if (Link == materialDto.Link && Description == materialDto.Description)
+            return new MaterialDto
             {
-                return true;
+                Id = Id,
+                Link = Link,
+                Description = Description,
+                IsDeleted = IsDeleted
+            };
+        }
+
+        public override bool Equals(object obj)
+        {   
+            if (obj == null)
+                return false;
+            if (!(obj is MaterialDto))
+                return false;
+
+            MaterialDto materialDto = (MaterialDto)obj;
+            if (Link != materialDto.Link || Description != materialDto.Description || IsDeleted !=materialDto.IsDeleted)
+            {
+                return false;
             }
-            return false;
+            return true;
         }
         public override int GetHashCode()
         {

@@ -9,11 +9,11 @@ namespace EducationSystem.Data.Tests
 {
     public class HomeworkRepositoryTests : BaseTest
     {
-        private HomeworkRepository _homeworkRepo;
-        private GroupRepository _groupRepo;
-        private CourseRepository _courseRepo;
-        private UserRepository _userRepo;
-        private TagRepository _tagRepo;
+        private IHomeworkRepository _homeworkRepo;
+        private IGroupRepository _groupRepo;
+        private ICourseRepository _courseRepo;
+        private IUserRepository _userRepo;
+        private ITagRepository _tagRepo;
 
         private List<int> _homeworkIdList;
         private List<int> _groupIdList;
