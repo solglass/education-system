@@ -45,6 +45,27 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(1)]
+        public void DeleteAttendancePositiveTest(int mockId)
+        {
+            
+        }
+
+        [TestCase(1, false, "Tupaya otmazka")]
+        [TestCase(1, true, null)]
+        public void UpdatedAttendancePositiveTest(int mockId, bool isAbsent, string reason)
+        {
+            var dto = AddAttendance(mockId);
+            dto.IsAbsent = isAbsent;
+            dto.ReasonOfAbsence = reason;
+
+            var affectedRows = _lessonRepository.UpdateAttendance(dto);
+            var actual = _lessonRepository.GetAttendanceById(dto.Id);
+
+            Assert.AreEqual(1, affectedRows);
+            Assert.AreEqual(dto, actual);
+        }
+
         [OneTimeTearDown]
         public void AttendanceOneTimeTearDown()
         {
