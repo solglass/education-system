@@ -12,9 +12,8 @@ namespace EducationSystem.Data.Tests
        
         private TagRepository _tagRepo;
         private List<int> _tagIdList;
-        private TagDto _tagDtoMock;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void TagTestsSetup()
         {
             _tagRepo = new TagRepository(_options);
@@ -71,12 +70,7 @@ namespace EducationSystem.Data.Tests
 
             // When
             var actual = _tagRepo.GetTags();
-
-            // Then
-            // in simple case:
-            //CollectionAssert.AreEqual(expected, actual);
-
-            // in worst case
+            //Then
             for (var i = actual.Count - 1; i > actual.Count - expected.Count; i--)
             {
                 var j = i - actual.Count + expected.Count;
