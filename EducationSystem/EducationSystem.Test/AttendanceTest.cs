@@ -26,6 +26,7 @@ namespace EducationSystem.Data.Tests
             _userRepository = new UserRepository(_options);
             _courseRepository = new CourseRepository(_options);
             _groupRepository = new GroupRepository(_options);
+            _lessonRepository = new LessonRepository(_options);
 
             _addedUserIds = new List<int>();
             _addedCourseIds = new List<int>();
@@ -34,10 +35,14 @@ namespace EducationSystem.Data.Tests
             _addedAttendanceIds = new List<int>();
         }
 
-        [TestCase]
-        public void AddAttendancePositiveTest()
+        [TestCase(1)]
+        public void AddAttendancePositiveTest(int mockId)
         {
+            var dto = AddAttendance(mockId);
 
+            var actual = _lessonRepository.GetAttendanceById(dto.Id);
+
+            Assert.AreEqual(dto, actual);
         }
 
         [OneTimeTearDown]
