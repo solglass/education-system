@@ -20,6 +20,10 @@ namespace EducationSystem.Data.Tests
         private List<int> _addedLessonIds;
         private List<int> _addedAttendanceIds;
 
+        private GroupDto _group;
+        private LessonDto[] _lessons;
+        private UserDto[] _students;
+
         [OneTimeSetUp]
         public void AttendanceOneTimeSetUp()
         {
@@ -33,12 +37,24 @@ namespace EducationSystem.Data.Tests
             _addedGroupIds = new List<int>();
             _addedLessonIds = new List<int>();
             _addedAttendanceIds = new List<int>();
+
+            _group = AddGroup(1);
+            _lessons = new LessonDto[2];
+            for (int i = 0; i < 2; i++) //
+            {
+                _lessons[i] = AddLesson(i+1);
+            }
+            _students = new UserDto[5];
+            for (int i = 0; i < 5; i++) //five students
+            {
+                _students[i] = AddUser(i+1);
+            }
         }
 
         [TestCase(1)]
         public void AddAttendancePositiveTest(int mockId)
         {
-            var dto = AddAttendance(mockId);
+            var dto = AddAttendance(mockId, mockId);
 
             var actual = _lessonRepository.GetAttendanceById(dto.Id);
 
@@ -46,9 +62,10 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1)]
-        public void DeleteAttendancePositiveTest(int mockId)
+        public void DeleteAttendancePositiveTest(int mock)
         {
-            var dto = AddAttendance(mockId);
+            var a = new AttendanceMock(mock);
+            var dto = AddAttendance(mock, mock);
 
             var affectedRows = _lessonRepository.DeleteAttendance(dto.Id);
             var actual = _lessonRepository.GetAttendanceById(dto.Id);
@@ -58,10 +75,10 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1, false, "Tupaya otmazka")]
-        [TestCase(1, true, null)]
+        [TestCase(2, true, null)]
         public void UpdatedAttendancePositiveTest(int mockId, bool isAbsent, string reason)
         {
-            var dto = AddAttendance(mockId);
+            var dto = AddAttendance(mockId, mockId);
             dto.IsAbsent = isAbsent;
             dto.ReasonOfAbsence = reason;
 
@@ -70,6 +87,21 @@ namespace EducationSystem.Data.Tests
 
             Assert.AreEqual(1, affectedRows);
             Assert.AreEqual(dto, actual);
+        }
+
+        [TestCase()]
+        public void GetAttendancesByLessonIdPositiveTest()
+        {
+            List<AttendanceDto> attendanceFirstLesson = new List<AttendanceDto>();
+            List<AttendanceDto> attendanceSecondLesson = new List<AttendanceDto>();
+            for (int i =1; i <= 5; i++)
+            {
+                attendanceFirstLesson.Add(AddAttendance(1, i));
+                attendanceSecondLesson.Add(AddAttendance(2, i));
+            }
+            var actual = _lessonRepository.GetAttendancesByLessonId(_lessons[0].Id);
+            CollectionAssert.AreEqual(attendanceFirstLesson, actual);
+
         }
 
         [OneTimeTearDown]
@@ -82,11 +114,11 @@ namespace EducationSystem.Data.Tests
             DeleteCourses();
         }
 
-        private AttendanceDto AddAttendance(int mockId)
+        private AttendanceDto AddAttendance(int lessonId, int studentId)
         {
-            var attendanceDto = (AttendanceDto)AttendanceMockGetter.GetAttendance(mockId).Clone();
-            attendanceDto.Lesson = AddLesson(mockId);
-            attendanceDto.User = AddUser(mockId);
+            var attendanceDto = (AttendanceDto)AttendanceMockGetter.GetAttendance(lessonId).Clone();
+            attendanceDto.Lesson = _lessons[lessonId - 1];
+            attendanceDto.User = _students[studentId - 1];
             attendanceDto.Id = _lessonRepository.AddAttendance(attendanceDto);
             Assert.Greater(attendanceDto.Id, 0);
             _addedAttendanceIds.Add(attendanceDto.Id);
@@ -105,8 +137,7 @@ namespace EducationSystem.Data.Tests
         private LessonDto AddLesson(int mockId)
         {
             var dtoLesson = (LessonDto)LessonMockGetter.GetLessonDtoMock(mockId).Clone();
-            var dtoGroup = AddGroup(mockId);
-            dtoLesson.Group = dtoGroup;
+            dtoLesson.Group = _group;
             dtoLesson.Id = _lessonRepository.AddLesson(dtoLesson);
             Assert.Greater(dtoLesson.Id, 0);
             _addedLessonIds.Add(dtoLesson.Id);

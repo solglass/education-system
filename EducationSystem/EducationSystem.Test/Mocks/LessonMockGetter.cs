@@ -19,6 +19,14 @@ namespace EducationSystem.Data.Tests.Mocks
                         Date = DateTime.Now.AddDays(-1)
                     };
                     break;
+                case 2:
+                    return new LessonDto
+                    {
+                        Comment = "Test Lesson 2",
+                        IsDeleted = false,
+                        Date = DateTime.Now.AddDays(-5)
+                    };
+                    break;
                 default:
                     return null;
             }
