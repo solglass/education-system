@@ -357,6 +357,50 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void DeleteHomeworkTheme_NotExistTheme_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+            var addedThemeId = _courseRepo.AddTheme(themeDto);
+            _themeIdList.Add(addedThemeId);
+
+            _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
+            _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
+            //When
+            var affectedRows = _homeworkRepo.DeleteHomework_Theme(addedHomeworkId, -1);
+
+            //Then
+            Assert.AreEqual(0, affectedRows);
+        }
+
+        [Test]
+        public void DeleteHomeworkTheme_NotExistHomework_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+            var addedThemeId = _courseRepo.AddTheme(themeDto);
+            _themeIdList.Add(addedThemeId);
+
+            _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
+            _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
+            //When
+            var affectedRows = _homeworkRepo.DeleteHomework_Theme(-1, addedThemeId);
+
+            //Then
+            Assert.AreEqual(0, affectedRows);
+        }
+
         [TestCase(new int[] { 1,2,3})]
         public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
         {
