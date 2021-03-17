@@ -44,7 +44,7 @@ namespace EducationSystem.Data.Models
         public override string ToString()
         {
             string s = "";
-            s += Id + " " + Lesson.Id + " " + User.Id + " " + IsAbsent + " " + ReasonOfAbsence + ";";
+            s += Id + " " + IsAbsent + " " + ReasonOfAbsence + ";";
             return s;
         }
     }
