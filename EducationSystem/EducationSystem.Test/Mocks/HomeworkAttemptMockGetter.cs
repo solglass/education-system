@@ -31,7 +31,7 @@ namespace EducationSystem.Data.Tests.Mocks
                 case 3:
                     return new HomeworkAttemptDto()
                     {
-                        Comment = "Test Comment2 (Description) Here",
+                        Comment = "Test Comment3 (Description) Here",
                         HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
                         IsDeleted = false
                     };

@@ -203,10 +203,8 @@ namespace EducationSystem.Data.Tests
                 var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
                 _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
                 dto.Id = addedHomeworkAttemptId;
-                //dto.HomeworkAttemptStatus = (Core.Enums.HomeworkAttemptStatus)statusId;
                 expected.Add(dto);
             }
-            //var statusId = dto.HomeworkAttemptStatus;
 
             // When
             var actual = _homeworkRepo.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);

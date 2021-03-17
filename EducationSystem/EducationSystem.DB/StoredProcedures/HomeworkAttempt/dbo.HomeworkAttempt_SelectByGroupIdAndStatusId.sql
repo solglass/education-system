@@ -1,6 +1,6 @@
 ﻿CREATE proc [dbo].[HomeworkAttempt_SelectByGroupIdAndStatusId]
-(@Statusid int,
-@GroupId int)
+(@statusId int,
+@groupId int)
 as
 begin
 	SELECT
@@ -17,13 +17,12 @@ begin
 		u.Id,
 		u.FirstName,
 		u.LastName,
-		u.UserPic,
-		g.Id
-
+		u.UserPic
+		
     from HomeworkAttempt ha
         join dbo.[User] u on ha.UserId = u.Id
 		join dbo.HomeworkAttemptStatus hwas on ha.StatusId = hwas.Id
 		join dbo.Homework hw on ha.HomeworkId = hw.Id
         join dbo.[Group] g on hw.GroupID = g.Id 
-    where ha.IsDeleted = 0 and g.Id = @GroupId and hwas.Id = @Statusid
+    where ha.IsDeleted = 0 and g.Id = @groupId and hwas.Id = @statusId
 end
