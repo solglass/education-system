@@ -184,7 +184,9 @@ namespace EducationSystem.Data
                  { 
                      LessonId = attendance.Lesson.Id, 
                      UserId = attendance.User.Id, 
-                     attendance.IsAbsent 
+                     isAbsent = attendance.IsAbsent,
+                     reason = attendance.ReasonOfAbsence
+
                  },
                  commandType: CommandType.StoredProcedure);
         }
@@ -220,11 +222,10 @@ namespace EducationSystem.Data
 
         public List<AttendanceDto> GetAttendancesByUserId(int id)
         {
-            var attendance = _connection.Query<AttendanceDto, UserDto, LessonDto, AttendanceDto>(
+            var attendance = _connection.Query<AttendanceDto, LessonDto, AttendanceDto>(
             "dbo.Attendance_SelectByUserId",
-            (attendance, user, lesson) =>
+            (attendance, lesson) =>
             {
-                attendance.User = user;
                 attendance.Lesson = lesson;
                 return attendance;
             },
