@@ -188,8 +188,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2, 3 }, 3)]
-        //[TestCase(new int[] { 3, 2, 1 })]
-        //[TestCase(new int[] { 1, 2, 3, 2, 1, 3 })]
+        [TestCase(new int[] { 3, 2, 1 }, 3)]
         public void GetHomeworkAttemptsByStatusIdAndGroupIdPositiveTest(int[] mockIds, int statusId)
         {
             // Given

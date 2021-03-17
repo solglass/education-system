@@ -621,7 +621,7 @@ namespace EducationSystem.Data
                 return homeworkAttempt;
             },
 
-            new { statusId, groupId }, commandType: System.Data.CommandType.StoredProcedure)
+            new { groupId, statusId },  commandType: System.Data.CommandType.StoredProcedure)
 
                 .ToList();
 
