@@ -24,7 +24,7 @@ namespace EducationSystem.Data.Tests
         private List<int> _groupIdList;
         private List<int> _courseIdList;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUpTest()
         {
             _homeworkRepo = new HomeworkRepository(_options);
@@ -107,130 +107,64 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
-        //[TestCase(new int[] { 1, 2, 3 })]
-        //[TestCase(new int[] { 3, 2, 1 })]
-        //[TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
-        //public void GetThemesPositiveTest(int[] mockIds)
-        //{
-        //    // Given
-        //    var expected = _homeworkRepo.GetThemes();
-        //    for (int i = 0; i < mockIds.Length; i++)
-        //    {
-        //        var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
-        //        var addedHomeworkAttemptId = _homeworkRepo.AddTheme(dto);
-        //        _homeworkIdList.Add(addedHomeworkAttemptId);
-        //        dto.Id = addedHomeworkAttemptId;
-        //        expected.Add(dto);
-        //    }
+        [TestCase(1, true)]
+        [TestCase(1, false)]
+        [TestCase(2, true)]
+        [TestCase(3, false)]
+        [TestCase(3, true)]
+        public void DeleteOrRecoverHomeworkAttemptPositiveTest(int mockId, bool isDeleted)
+        {
 
-        //    // When
-        //    var actual = _homeworkRepo.GetThemes();
+            //Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockId).Clone();
+            dto.Author = _userDtoMock;
+            dto.Homework = _homeworkDtoMock;
+            var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
+            _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+            dto.Id = addedHomeworkAttemptId;
 
-        //    // Then
-        //    CollectionAssert.AreEqual(expected, actual);
-        //}
+            // When
+            var affectedRowsCount = _homeworkRepo.DeleteOrRecoverHomeworkAttempt(addedHomeworkAttemptId, isDeleted);
 
-        //[TestCase(1, true)]
-        //[TestCase(1, false)]
-        //[TestCase(2, true)]
-        //[TestCase(3, false)]
-        //public void ThemeDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
-        //{
+            var actual = _homeworkRepo.GetHomeworkAttemptById(addedHomeworkAttemptId);
 
-        //    //Given
-        //    var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
-        //    var addedHomeworkAttemptId = _homeworkRepo.AddTheme(dto);
-        //    _homeworkIdList.Add(addedHomeworkAttemptId);
-        //    dto.Id = addedHomeworkAttemptId;
-        //    dto.IsDeleted = isDeleted;
+            // Then
+            Assert.AreEqual(1, affectedRowsCount);
+            Assert.AreEqual(dto, actual);
+        }
 
-        //    // When
-        //    var affectedRowsCount = _homeworkRepo.DeleteOrRecoverTheme(addedHomeworkAttemptId, isDeleted);
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { 1, 2, 3, 2, 1, 3 })]
+        public void GetHomeworkAttemptsByUserIdPositiveTest(int[] mockIds)
+        {
+            // Given
+            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(2).Clone();
+            var addedUserId = _userRepo.AddUser(userDto);
+            userDto.Id = addedUserId;
+            _userIdList.Add(addedUserId);
 
-        //    var actual = _homeworkRepo.GetThemeById(addedHomeworkAttemptId);
+            var expected = new List<HomeworkAttemptDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[i]).Clone();
+                dto.Author = userDto;
+                dto.Homework = _homeworkDtoMock;
+                var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
+                _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+                dto.Id = addedHomeworkAttemptId;
+                expected.Add(dto);
+            }
 
-        //    // Then
-        //    Assert.AreEqual(1, affectedRowsCount);
-        //    Assert.AreEqual(dto, actual);
-        //}
+            // When
+            var actual = _homeworkRepo.GetHomeworkAttemptsByUserId(addedUserId);
 
-        //[TestCase(new int[] { 1, 2, 3 })]
-        //[TestCase(new int[] { 3, 2, 1 })]
-        //[TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
-        //public void GetThemesByCourseIdPositiveTest(int[] mockIds)
-        //{
-        //    // Given
-        //    var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1);
-        //    var addedCourseId = _homeworkRepo.AddCourse(courseDto);
-        //    _courseIdList.Add(addedCourseId);
+            // Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
 
-        //    var expected = new List<ThemeDto>();
-        //    for (int i = 0; i < mockIds.Length; i++)
-        //    {
-        //        var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
-        //        var addedHomeworkAttemptId = _homeworkRepo.AddTheme(dto);
-        //        _homeworkIdList.Add(addedHomeworkAttemptId);
-        //        dto.Id = addedHomeworkAttemptId;
-        //        expected.Add(dto);
-
-        //        _homeworkRepo.AddCourse_Theme(addedCourseId, addedHomeworkAttemptId);
-        //        _courseThemeList.Add((addedCourseId, addedHomeworkAttemptId));
-        //    }
-
-        //    // When
-        //    var actual = _homeworkRepo.GetThemesByCourseId(addedCourseId);
-
-        //    // Then
-        //    CollectionAssert.AreEqual(expected, actual);
-        //}
-
-        //[TestCase(new int[] { 1, 2, 3 })]
-        //[TestCase(new int[] { 3, 2, 1 })]
-        //[TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
-        //public void GetUncoveredThemesByGroupIdPositiveTest(int[] mockIds)
-        //{
-        //    // Given
-        //    var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1);
-        //    var addedCourseId = _homeworkRepo.AddCourse(courseDto);
-        //    _courseIdList.Add(addedCourseId);
-        //    courseDto.Id = addedCourseId;
-
-        //    var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1);
-        //    groupDto.Course = courseDto;
-        //    var addedGroupId = _groupRepo.AddGroup(groupDto);
-        //    _groupIdList.Add(addedGroupId);
-        //    groupDto.Id = addedGroupId;
-
-        //    var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
-        //    lessonDto.Date = DateTime.Now.AddDays(10);
-        //    lessonDto.Group = groupDto;
-        //    var addedLessonId = _lessonRepo.AddLesson(lessonDto);
-        //    _lessonIdList.Add(addedLessonId);
-
-        //    var expected = new List<ThemeDto>();
-        //    for (int i = 0; i < mockIds.Length; i++)
-        //    {
-        //        var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
-        //        var addedHomeworkAttemptId = _homeworkRepo.AddTheme(dto);
-        //        _homeworkIdList.Add(addedHomeworkAttemptId);
-        //        dto.Id = addedHomeworkAttemptId;
-        //        expected.Add(dto);
-
-        //        _homeworkRepo.AddCourse_Theme(addedCourseId, addedHomeworkAttemptId);
-        //        _courseThemeList.Add((addedCourseId, addedHomeworkAttemptId));
-
-        //        _lessonRepo.AddLessonTheme(addedLessonId, addedHomeworkAttemptId);
-        //        _lessonThemeList.Add((addedLessonId, addedHomeworkAttemptId));
-        //    }
-
-        //    // When
-        //    var actual = _homeworkRepo.GetUncoveredThemesByGroupId(addedGroupId);
-
-        //    // Then
-        //    CollectionAssert.AreEqual(expected, actual);
-        //}
-
-        [OneTimeTearDown]
+       
+        [TearDown]
         public void TestTearDown()
         {
             DeleteHomeworkAttempt();
