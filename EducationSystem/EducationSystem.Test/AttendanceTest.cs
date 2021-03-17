@@ -84,7 +84,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(1, 1, false, "Tupaya otmazka")]
         [TestCase(2, 1, true, null)]
-        public void UpdatedAttendancePositiveTest(int mockLessonId, int mockUserId, bool isAbsent, string reason)
+        public void UpdateAttendancePositiveTest(int mockLessonId, int mockUserId, bool isAbsent, string reason)
         {
             var dto = AddAttendance(mockLessonId, mockUserId);
             dto.IsAbsent = isAbsent;
@@ -145,9 +145,9 @@ namespace EducationSystem.Data.Tests
             DeleteCourses();
         }
 
-        private AttendanceDto AddAttendance(int mockLessonId, int mockStudentId)
+        private AttendanceDto AddAttendance(int mockLessonId, int mockStudentId, int mockAttendanceId=1)
         {
-            var attendanceDto = (AttendanceDto)AttendanceMockGetter.GetAttendance(mockLessonId).Clone();
+            var attendanceDto = (AttendanceDto)AttendanceMockGetter.GetAttendance(mockAttendanceId).Clone();
             attendanceDto.Lesson = _lessons[mockLessonId - 1];
             attendanceDto.User = _students[mockStudentId - 1];
             attendanceDto.Id = _lessonRepository.AddAttendance(attendanceDto);
