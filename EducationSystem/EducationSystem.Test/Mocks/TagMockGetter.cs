@@ -13,8 +13,18 @@ namespace EducationSystem.Data.Tests.Mocks
             {
                 case 1:
                     return new TagDto
-                    {                        
+                    {
                         Name = "Test Tag"
+                    }; break;
+                case 2:
+                    return new TagDto
+                    {
+                        Name = "Test Tag2"
+                    }; break;
+                case 3:
+                    return new TagDto
+                    {
+                        Name = "Test Tag3"
                     };
                     break;
                 default:
