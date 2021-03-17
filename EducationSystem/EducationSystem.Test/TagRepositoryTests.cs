@@ -19,19 +19,6 @@ namespace EducationSystem.Data.Tests
             _tagIdList = new List<int>();
         }
 
-        [TestCase(1)]
-        public void TagAddTest(int dtoMockNumber)
-        {
-            TagDto expected = (TagDto)TagMockGetter.GetTagDtoMock(dtoMockNumber).Clone();
-            var added = _tagRepo.TagAdd(expected);
-            Assert.Greater(added, 0);
-
-            _tagIdList.Add(added);
-            expected.Id = added;
-
-            TagDto actual = _tagRepo.GetTagById(added);
-            Assert.AreEqual(expected, actual);
-        }
 
         [TestCase(1)]
         public void TagDeleteTest(int dtoMockNumber)
@@ -61,6 +48,37 @@ namespace EducationSystem.Data.Tests
             var actual = _tagRepo.GetTags();
             //Then
             CollectionAssert.AreEqual(expected, actual);
+        }
+        [TestCase(1)]
+        public void TagAddTest(int dtoMockNumber)
+        {
+            TagDto expected = (TagDto)TagMockGetter.GetTagDtoMock(dtoMockNumber).Clone();
+            var added = _tagRepo.TagAdd(expected);
+            Assert.Greater(added, 0);
+
+            _tagIdList.Add(added);
+            expected.Id = added;
+
+            TagDto actual = _tagRepo.GetTagById(added);
+            Assert.AreEqual(expected, actual);
+        }
+        [TestCase(1)]
+        public void TagAddNegativeTest(int mockId)
+        {
+            //Given
+            var dto = (TagDto)TagMockGetter.GetTagDtoMock(mockId).Clone();
+           //When
+            try
+            {
+                var added = _tagRepo.TagAdd(dto);
+                _tagIdList.Add(added);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
         [TearDown]
         public void TagsTestsTearDown()
