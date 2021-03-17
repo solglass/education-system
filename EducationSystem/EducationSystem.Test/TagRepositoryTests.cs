@@ -62,7 +62,7 @@ namespace EducationSystem.Data.Tests
             TagDto actual = _tagRepo.GetTagById(added);
             Assert.AreEqual(expected, actual);
         }
-        [TestCase(1)]
+        [TestCase(4)]
         public void TagAddNegativeTest(int mockId)
         {
             //Given
@@ -71,6 +71,23 @@ namespace EducationSystem.Data.Tests
             try
             {
                 var added = _tagRepo.TagAdd(dto);
+                _tagIdList.Add(added);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void TagAddNullNegativeTest()
+        {
+            //Given
+            //When
+            try
+            {
+                var added = _tagRepo.TagAdd(null);
                 _tagIdList.Add(added);
             }
             //Then

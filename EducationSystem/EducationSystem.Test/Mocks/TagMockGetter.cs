@@ -28,6 +28,9 @@ namespace EducationSystem.Data.Tests.Mocks
                         Name = "Test Tag3"
                     };
                     break;
+                case 4:
+                    return new TagDto();
+                    break;
                 default:
                     return null;
             }
