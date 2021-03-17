@@ -39,10 +39,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     };
                     break;
                 case 4:
-                    return new HomeworkDto
-                    {
-
-                    };
+                    return new HomeworkDto();
                 default:
                     return null;
             }
