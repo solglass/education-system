@@ -97,6 +97,17 @@ namespace EducationSystem.Data.Tests
             }
             Assert.Fail();
         }
+        [Test]
+        public void TagDeleteNegativeTest()
+        {
+            //Given
+            //When
+            var deletedRows = _tagRepo.TagDelete(-1);
+
+            //Then
+            Assert.AreEqual(0, deletedRows);
+        }
+
         [TearDown]
         public void TagsTestsTearDown()
         {
