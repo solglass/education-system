@@ -498,6 +498,51 @@ namespace EducationSystem.Data.Tests
 
         }
 
+        [Test]
+        public void SearchHomeworks_NotExistHomework_NegativeTest()
+        {
+            //Given
+            for (int i = 0; i < 2; i++)
+            {
+
+                var groupDto = (GroupDto)_groupDtoMock.Clone();
+                var addedGroupId = _groupRepo.AddGroup(groupDto);
+                _groupIdList.Add(addedGroupId);
+                groupDto.Id = addedGroupId;
+
+                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+                var addedThemeId = _courseRepo.AddTheme(themeDto);
+                _themeIdList.Add(addedThemeId);
+
+                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(1).Clone();
+                var addedTagId = _tagRepo.TagAdd(tagDto);
+                _tagIdList.Add(addedTagId);
+
+                var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+                dto.Group = groupDto;
+                var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+                _homeworkIdList.Add(addedHomeworkId);
+                dto.Id = addedHomeworkId;
+
+                var addedThemeHomework = _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
+                _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
+
+                var addedTagHomework = _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
+                _tagHomeworkList.Add((addedHomeworkId, addedTagId));
+            }
+            //When
+            try
+            {
+                _homeworkRepo.SearchHomeworks(null, null, null);
+            }
+            //Then
+            catch (ArgumentNullException ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [OneTimeTearDown]
         public void TearDowTest()
         {
