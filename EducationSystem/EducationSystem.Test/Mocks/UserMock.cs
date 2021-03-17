@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
-    public static class UserMockGetter
+    public static class UserMock
     {
         public static UserDto GetUserDtoMock(int mockId)
         {

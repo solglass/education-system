@@ -14,7 +14,7 @@ namespace EducationSystem.Data.Tests.Mocks
                 case 1:
                     return new LessonDto
                     {
-                        Comment = "Test LEsson 1",
+                        Comment = "Test Lesson 1",
                         IsDeleted = false,
                         Date = DateTime.Now.AddDays(-1)
                     };
@@ -25,6 +25,14 @@ namespace EducationSystem.Data.Tests.Mocks
                         Comment = "Test Lesson 2",
                         IsDeleted = false,
                         Date = DateTime.Now.AddDays(-5)
+                    };
+                    break;
+                case 3:
+                    return new LessonDto
+                    {
+                        Comment = "Test Lesson 3",
+                        IsDeleted = false,
+                        Date = DateTime.Now.AddDays(+15)
                     };
                     break;
                 default:

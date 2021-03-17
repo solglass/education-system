@@ -12,9 +12,10 @@ namespace EducationSystem.Data.Tests.Mocks
             switch (caseId)
             {
                 case 1:
-                    return new AttendanceDto 
+                    return new AttendanceDto
                     {
-                        IsAbsent = true
+                        IsAbsent = true,
+                        ReasonOfAbsence = null
                     };
                     break;
                 case 2:
