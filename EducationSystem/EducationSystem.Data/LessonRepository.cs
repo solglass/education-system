@@ -180,7 +180,14 @@ namespace EducationSystem.Data
             return _connection
                  .QuerySingleOrDefault<int>(
                  "dbo.Attendance_Add",
-                 new { LessonId = attendance.Lesson.Id, UserId = attendance.User.Id, attendance.IsAbsent },
+                 new 
+                 { 
+                     lessonId = attendance.Lesson.Id, 
+                     userId = attendance.User.Id, 
+                     isAbsent = attendance.IsAbsent,
+                     reason = attendance.ReasonOfAbsence
+
+                 },
                  commandType: CommandType.StoredProcedure);
         }
         public int DeleteAttendance(int id)
@@ -215,11 +222,10 @@ namespace EducationSystem.Data
 
         public List<AttendanceDto> GetAttendancesByUserId(int id)
         {
-            var attendance = _connection.Query<AttendanceDto, UserDto, LessonDto, AttendanceDto>(
+            var attendance = _connection.Query<AttendanceDto, LessonDto, AttendanceDto>(
             "dbo.Attendance_SelectByUserId",
-            (attendance, user, lesson) =>
+            (attendance, lesson) =>
             {
-                attendance.User = user;
                 attendance.Lesson = lesson;
                 return attendance;
             },
@@ -231,11 +237,12 @@ namespace EducationSystem.Data
 
         public AttendanceDto GetAttendanceById(int id)
         {
-            return _connection.Query<AttendanceDto, UserDto, AttendanceDto>(
+            return _connection.Query<AttendanceDto, UserDto, LessonDto, AttendanceDto>(
             "dbo.Attendance_SelectById",
-            (attendance, user) =>
+            (attendance, user, lesson) =>
             {
                 attendance.User = user;
+                attendance.Lesson = lesson;
                 return attendance;
             },
             new { id },
