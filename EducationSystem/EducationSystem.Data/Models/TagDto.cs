@@ -21,7 +21,7 @@ namespace EducationSystem.Data.Models
         {
             if (obj == null)
                 return false;
-            if (!(obj is ThemeDto))
+            if (!(obj is TagDto))
                 return false;
 
             return obj is TagDto dto &&
