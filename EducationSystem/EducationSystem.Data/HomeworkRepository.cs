@@ -445,12 +445,6 @@ namespace EducationSystem.Data
             return result;
         }
 
-
-
-        // todo: dapper logic
-
-        // method doesn't work =(
-
         public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
         {
             var hwAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
@@ -609,7 +603,6 @@ namespace EducationSystem.Data
         public List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId)
 
         {
-
             var homeworkAttempt = _connection
 
             .Query<HomeworkAttemptWithCountDto, int, HomeworkDto, UserDto, HomeworkAttemptWithCountDto>("dbo.HomeworkAttempt_SelectByGroupIdAndStatusId",
@@ -617,7 +610,6 @@ namespace EducationSystem.Data
             (homeworkAttempt, homeworkAttemptStatus, homework, author) =>
 
             {
-
                 homeworkAttempt.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
 
                 homeworkAttempt.Homework = homework;
@@ -627,7 +619,6 @@ namespace EducationSystem.Data
                 homework.Group = new GroupDto();
 
                 return homeworkAttempt;
-
             },
 
             new { statusId, groupId }, commandType: System.Data.CommandType.StoredProcedure)

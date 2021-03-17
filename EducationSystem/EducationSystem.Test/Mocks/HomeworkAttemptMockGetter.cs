@@ -24,7 +24,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     return new HomeworkAttemptDto()
                     {
                         Comment = "Test Comment2 (Description) Here",
-                        HomeworkAttemptStatus = (HomeworkAttemptStatus)1,
+                        HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
                         IsDeleted = false
                     };
                     break;
@@ -32,7 +32,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     return new HomeworkAttemptDto()
                     {
                         Comment = "Test Comment2 (Description) Here",
-                        HomeworkAttemptStatus = (HomeworkAttemptStatus)2,
+                        HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
                         IsDeleted = false
                     };
                     break;
