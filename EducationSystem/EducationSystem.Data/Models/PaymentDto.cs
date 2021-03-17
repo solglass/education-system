@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,7 +23,6 @@ namespace EducationSystem.Data.Models
                 ContractNumber = ContractNumber,
                 Student = Student,
                 Date = Date,
-                Id = Id,
                 IsPaid = IsPaid,
                 Period = Period
             };
@@ -58,4 +58,5 @@ namespace EducationSystem.Data.Models
         }
 
     }
+
 }
