@@ -1,11 +1,12 @@
 ﻿create proc [dbo].[Attendance_Add](
   @LessonId int, 
   @UserId int,
-  @IsAbsent bit
+  @IsAbsent bit,
+  @reason nvarchar(Max)
  )
 as
 begin
-	Insert Into dbo.Attendance(LessonId,UserId,IsAbsent)
-	Values(@LessonId,@UserId,@IsAbsent)
+	Insert Into dbo.Attendance(LessonId,UserId,IsAbsent, ReasonOfAbsence)
+	Values(@LessonId,@UserId,@IsAbsent, @reason)
 	select SCOPE_IDENTITY()
 end
