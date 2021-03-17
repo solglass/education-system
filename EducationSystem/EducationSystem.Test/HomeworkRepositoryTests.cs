@@ -505,6 +505,7 @@ namespace EducationSystem.Data.Tests
             {
                 var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
                 var addedTagId = _tagRepo.TagAdd(tagDto);
+                _tagIdList.Add(addedTagId);
                 tagDto.Id = addedTagId;
                 _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
                 toDeleteList.Add((addedHomeworkId, addedTagId));
