@@ -36,7 +36,12 @@ namespace EducationSystem.Data.Tests.Mocks
                     };
                     break;
                 default:
-                    return null;
+                    return new LessonDto 
+                    {
+                        Comment = $"Test Lesson {id}",
+                        IsDeleted = false,
+                        Date = DateTime.Now.AddDays(+id)
+                    };
             }
         }
     }

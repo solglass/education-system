@@ -182,8 +182,8 @@ namespace EducationSystem.Data
                  "dbo.Attendance_Add",
                  new 
                  { 
-                     LessonId = attendance.Lesson.Id, 
-                     UserId = attendance.User.Id, 
+                     lessonId = attendance.Lesson.Id, 
+                     userId = attendance.User.Id, 
                      isAbsent = attendance.IsAbsent,
                      reason = attendance.ReasonOfAbsence
 

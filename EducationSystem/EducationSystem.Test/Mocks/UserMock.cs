@@ -16,15 +16,15 @@ namespace EducationSystem.Data.Tests.Mocks
                 case 1:
                     return new UserDto
                     {
-                        Email = "Use1r14@mail.ru",
+                        Email = "Use1111111111@mail.ru",
                         FirstName = "Anton",
                         BirthDate = DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
                         IsDeleted = false,
                         LastName = "Negodyaj",
                         Password = "1234567",
-                        Phone = "9999999997",
+                        Phone = "119119991197",
                         UserPic = " 22",
-                        Login = "AN712"
+                        Login = "AN11111111"
                     };
                 case 2:
                     return new UserDto
