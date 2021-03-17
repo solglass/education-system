@@ -433,6 +433,50 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void AddHomeworkTag_NotExistHomework_NegativeTest()
+        {
+            //Given
+            var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(1).Clone();
+            var addedTagId = _tagRepo.TagAdd(tagDto);
+            _tagIdList.Add(addedTagId);
+            tagDto.Id = addedTagId;
+
+            //When
+            try
+            {
+                _homeworkRepo.HomeworkTagAdd(-1, addedTagId);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void AddHomeworkTag_NotExistTag_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            //When
+            try
+            {
+                _homeworkRepo.HomeworkTagAdd(addedHomeworkId, -1);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { })]
         public void DeleteHomeworkTagPositiveTest(int[] mockIds)
@@ -476,6 +520,50 @@ namespace EducationSystem.Data.Tests
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DeleteHomeworkTag_NotExistTag_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(1).Clone();
+            var addedTagId = _tagRepo.TagAdd(tagDto);
+            _tagIdList.Add(addedTagId);
+
+            _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
+            _tagHomeworkList.Add((addedHomeworkId, addedTagId));
+            //When
+            var affectedRows = _homeworkRepo.HomeworkTagDelete(addedHomeworkId, -1);
+
+            //Then
+            Assert.AreEqual(0, affectedRows);
+        }
+
+        [Test]
+        public void DeleteHomeworkTag_NotExistHomework_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Group = _groupDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(1).Clone();
+            var addedTagId = _tagRepo.TagAdd(tagDto);
+            _tagIdList.Add(addedTagId);
+
+            _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
+            _tagHomeworkList.Add((addedHomeworkId, addedTagId));
+            //When
+            var affectedRows = _homeworkRepo.HomeworkTagDelete(-1, addedTagId);
+
+            //Then
+            Assert.AreEqual(0, affectedRows);
         }
 
         [TestCase(new int[] { 1,2,3})]
