@@ -43,15 +43,15 @@ namespace EducationSystem.Controllers
         /// <summary>
         /// Gets all lessons of the Group
         /// </summary>
-        /// <param name="GroupId">Group id </param>
+        /// <param name="groupId">Group id </param>
         /// <returns>List of Output models of the found Lessons </returns>
         [ProducesResponseType(typeof(List<LessonOutputModel>), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/45
-        [HttpGet("{GroupId}")]
+        [HttpGet("{groupId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
-        public ActionResult<List<LessonOutputModel>> GetLessons(int GroupId)
+        public ActionResult<List<LessonOutputModel>> GetLessons(int groupId)
         {
-            var lessonDtos = _lessonService.GetLessonsByGroupId(GroupId);
+            var lessonDtos = _lessonService.GetLessonsByGroupId(groupId);
             var lessonsList = _mapper.Map<List<LessonOutputModel>>(lessonDtos);
             return Ok(lessonsList);
         }
@@ -59,47 +59,47 @@ namespace EducationSystem.Controllers
         /// <summary>
         /// Gets lesson by id 
         /// </summary>
-        /// <param name="lesonId"> Id of the lesson</param>
+        /// <param name="lessonId"> Id of the lesson</param>
         /// <returns>Output model of the found Lesson </returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/3
-        [HttpGet("{lesonId}")]
+        [HttpGet("{lessonId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
-        public ActionResult<LessonOutputModel> GetLessonById(int lesonId)
+        public ActionResult<LessonOutputModel> GetLessonById(int lessonId)
         {
-            var lessonDto = _lessonService.GetLessonById(lesonId);
+            var lessonDto = _lessonService.GetLessonById(lessonId);
             var lessonModel = _mapper.Map<LessonOutputModel>(lessonDto);
             return Ok(lessonModel);
         }
         /// <summary>
         /// Deletes lesson (soft-delete)
         /// </summary>
-        /// <param name="lesonId"> Id of the lesson</param>
+        /// <param name="lessonId"> Id of the lesson</param>
         /// <returns>Output model of the soft-deleted Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/34
-        [HttpDelete("{id}")]
+        [HttpDelete("{lessonId")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult<LessonOutputModel> DeleteLesson(int lesonId)
+        public ActionResult<LessonOutputModel> DeleteLesson(int lessonId)
         {
-           _lessonService.DeleteLesson(lesonId);
-            var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lesonId));
+           _lessonService.DeleteLesson(lessonId);
+            var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
         }
 
         /// <summary>
         /// Recovers deleted lesson
         /// </summary>
-        /// <param name="lesonId"> Id of the lesson</param>
+        /// <param name="lessonId"> Id of the lesson</param>
         /// <returns>Output model of the recovered Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/44/recovery
-        [HttpPut("{lesonId}/recovery")]
+        [HttpPut("{lessonId}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult<LessonOutputModel> RecoverLesson(int lesonId)
+        public ActionResult<LessonOutputModel> RecoverLesson(int lessonId)
         {
-             _lessonService.RecoverLesson(lesonId);
-            var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lesonId));
+             _lessonService.RecoverLesson(lessonId);
+            var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
         }
 
@@ -165,7 +165,7 @@ namespace EducationSystem.Controllers
         /// <returns>Output model of the created feedback</returns>
         [ProducesResponseType(typeof(FeedbackOutputModel), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/id/feedback/
-        [HttpPost("{id}")]
+        [HttpPost("{lessonId}")]
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult<FeedbackOutputModel> AddNewFeedback(int lessonId, FeedbackInputModel inputModel)
         {
@@ -217,7 +217,7 @@ namespace EducationSystem.Controllers
         /// <returns>List of attendences output models for the lesson</returns>
         [ProducesResponseType(typeof(List<AttendanceOutputModel>), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/5/attendance/
-        [HttpGet("{id}/attendance")]
+        [HttpGet("{lessonId}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult<List<AttendanceOutputModel>> GetAttendancesByLessonId(int lessonId)
         {
@@ -234,7 +234,7 @@ namespace EducationSystem.Controllers
         /// <returns>Attendence output model for the lesson</returns>
         [ProducesResponseType(typeof(AttendanceOutputModel), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/5/attendance/3
-        [HttpGet("{id}/attendance/{attendanceId}")]
+        [HttpGet("{lessonId}/attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult<AttendanceOutputModel> GetAttendanceById(int lessonId, int attendanceId)
         {
@@ -251,7 +251,7 @@ namespace EducationSystem.Controllers
         /// <returns>Added attendence output model </returns>
         [ProducesResponseType(typeof(AttendanceOutputModel), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/5/attendance
-        [HttpPost("{id}/attendance")]
+        [HttpPost("{lessonId}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult <AttendanceOutputModel> AddNewAttendance(int lessonId, [FromBody] AttendanceInputModel inputModel)
         {
