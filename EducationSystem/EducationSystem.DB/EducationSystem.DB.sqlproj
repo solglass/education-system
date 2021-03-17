@@ -261,6 +261,7 @@
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_DeleteTheme.sql" />
     <Build Include="Tables\DbVersion.sql" />
     <Build Include="StoredProcedures\User\dbo.PassedStudentsAttempt_SelectByGroupId.sql" />
+    <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Add.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
