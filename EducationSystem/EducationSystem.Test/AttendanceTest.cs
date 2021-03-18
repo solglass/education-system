@@ -129,6 +129,40 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(attendanceFindUser, actual);
         }
 
+        [TestCase(1, 1, 0)] // незаполненные данные о посещении
+        [TestCase(0, 1, 1)] // пустой урок
+        [TestCase(1, _amountStudents+5, 1)] //несуществующий юзер
+        public void AddAttendanceNegativeTest(int mockLessonId, int mockUserId, int mockAttendanceId)
+        {
+            try
+            {
+                var dto = AddAttendance(mockLessonId, mockUserId, mockAttendanceId);
+            }
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1, 1, 1)]
+        [TestCase(1, 1, 2)]
+        public void AddAttendanceDoubleNegativeTest(int mockLessonId, int mockUserId, int mockAttendanceId)
+        {
+            try
+            {
+                var dto = AddAttendance(mockLessonId, mockUserId);
+                var dtoCopy = AddAttendance(mockLessonId, mockUserId, mockAttendanceId);
+            }
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+
+
         [TearDown]
         public void AttendanceTearDown()
         {

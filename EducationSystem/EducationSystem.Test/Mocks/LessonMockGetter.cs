@@ -11,6 +11,12 @@ namespace EducationSystem.Data.Tests.Mocks
         {
             switch (id)
             {
+                case 0:
+                    return new LessonDto
+                    {
+                       
+                    };
+                    break;
                 case 1:
                     return new LessonDto
                     {
