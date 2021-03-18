@@ -11,7 +11,7 @@ namespace EducationSystem.Data.Tests
 {
     public class CourseTests:BaseTest
     {
-        private CourseRepository _courseRepo;
+        private ICourseRepository _courseRepo;
 
         private List<int> _courseIds;
         private List<int> _themeIds;

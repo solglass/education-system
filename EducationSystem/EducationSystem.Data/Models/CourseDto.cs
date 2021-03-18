@@ -22,9 +22,6 @@ namespace EducationSystem.Data.Models
             return new CourseDto
 
             {
-
-                Id = Id,
-
                 Name = Name,
 
                 Description = Description,
