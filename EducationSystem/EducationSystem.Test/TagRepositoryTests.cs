@@ -9,7 +9,7 @@ namespace EducationSystem.Data.Tests
 {
     public class TagRepositoryTests : BaseTest
     {
-        private TagRepository _tagRepo;
+        private ITagRepository _tagRepo;
         private List<int> _tagIdList;
 
         [OneTimeSetUp]
@@ -63,7 +63,7 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(expected, actual);
         }
         [TestCase(4)]
-        public void TagAddNegativeTest(int mockId)
+        public void TagAdd_EmptyTag_NegativeTest(int mockId)
         {
             //Given
             var dto = (TagDto)TagMockGetter.GetTagDtoMock(mockId).Clone();
@@ -81,7 +81,7 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
         [Test]
-        public void TagAddNullNegativeTest()
+        public void TagAdd_Null_NegativeTest()
         {
             //Given
             //When
