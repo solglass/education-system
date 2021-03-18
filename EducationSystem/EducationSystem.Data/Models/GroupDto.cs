@@ -15,8 +15,7 @@ namespace EducationSystem.Data.Models
         public object Clone()
         {
             return new GroupDto
-            {
-                Id = Id,
+            {             
                 StartDate = StartDate,
                 Course = Course,
                 GroupStatus = GroupStatus

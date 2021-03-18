@@ -15,8 +15,7 @@ namespace EducationSystem.Data.Models
         public object Clone()
         {
             return new ThemeDto
-            {
-                Id = Id,
+            {           
                 Name = Name,
                 Tags = Tags
             };

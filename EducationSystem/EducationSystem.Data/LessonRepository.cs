@@ -36,8 +36,8 @@ namespace EducationSystem.Data
                    lessonEntry.Themes.Add(theme);
                    return lessonEntry;
                },
-               new { id },
-                splitOn: "ID",
+               new { idGroup = id },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
@@ -73,7 +73,7 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
-                new { lessonDto.Group.Id, lessonDto.Comment, lessonDto.Date, lessonDto.Themes },
+                new { GroupID = lessonDto.Group.Id, Description = lessonDto.Description, Date = lessonDto.Date },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -97,7 +97,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new { lessonDto.Id, lessonDto.Comment, lessonDto.Date, lessonDto.Themes },
+                new {id = lessonDto.Id, Description =  lessonDto.Description, Date = lessonDto.Date },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -246,7 +246,7 @@ namespace EducationSystem.Data
         {
             return _connection
                  .QuerySingleOrDefault<int>(
-                 "dbo.Lesson_AddTheme",
+                 "dbo.Lesson_Theme_Add",
                  new { lessonId = lessonId, themeId = themeId },
                  commandType: CommandType.StoredProcedure);
         }
