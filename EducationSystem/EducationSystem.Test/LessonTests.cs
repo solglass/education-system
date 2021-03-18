@@ -42,7 +42,7 @@ namespace EducationSystem.Data.Tests
             var groupDto = (GroupDto)_groupDtoMock.Clone();
             groupDto.Id = _groupRepository.AddGroup(groupDto);
             _addedGroupsId.Add(groupDto.Id);
-            var expected = (LessonDto)LessonMockGetter.GetlessonDtoMock(mockId).Clone();
+            var expected = (LessonDto)LessonMockGetter.GetLessonDtoMock(mockId).Clone();
             expected.Group = groupDto;
             expected.Id = _lessonRepository.AddLesson(expected);
             _addedLessonId.Add(expected.Id);
@@ -57,7 +57,7 @@ namespace EducationSystem.Data.Tests
             var groupDto = (GroupDto)_groupDtoMock.Clone();
             groupDto.Id = _groupRepository.AddGroup(groupDto);
             _addedGroupsId.Add(groupDto.Id);
-            var lessonDto = LessonMockGetter.GetlessonDtoMock(mockId);
+            var lessonDto = LessonMockGetter.GetLessonDtoMock(mockId);
             lessonDto.Group = groupDto;
             lessonDto.Id = _lessonRepository.AddLesson(lessonDto);
             _addedLessonId.Add(lessonDto.Id);
@@ -65,7 +65,7 @@ namespace EducationSystem.Data.Tests
             {
                 Id = lessonDto.Id,
                 Description = "Update description",
-                Date = new DateTime(2021, 09, 11)
+                Date = DateTime.Now.AddDays(-20)
             };
             _lessonRepository.UpdateLesson(expected);
             var actual = _lessonRepository.GetLessonById(lessonDto.Id);
@@ -81,7 +81,7 @@ namespace EducationSystem.Data.Tests
             var expected = new List<LessonDto>();
             for (int id = 0; id < lessonIdMock.Length; id++)
             {
-                var lessonMock = (LessonDto)LessonMockGetter.GetlessonDtoMock(lessonIdMock[id]).Clone();
+                var lessonMock = (LessonDto)LessonMockGetter.GetLessonDtoMock(lessonIdMock[id]).Clone();
                 lessonMock.Group = groupDto;
                 var lessonId = _lessonRepository.AddLesson(lessonMock);
                 lessonMock.Id = lessonId;
@@ -98,7 +98,7 @@ namespace EducationSystem.Data.Tests
             var groupDto = (GroupDto)_groupDtoMock.Clone();
             groupDto.Id = _groupRepository.AddGroup(groupDto);
             _addedGroupsId.Add(groupDto.Id);
-            var expected = (LessonDto)LessonMockGetter.GetlessonDtoMock(lessonMockId).Clone();
+            var expected = (LessonDto)LessonMockGetter.GetLessonDtoMock(lessonMockId).Clone();
             expected.Group = groupDto;
             var addedLessonId = _lessonRepository.AddLesson(expected);
             expected.Id = addedLessonId;
@@ -113,7 +113,7 @@ namespace EducationSystem.Data.Tests
             var groupDto = (GroupDto)_groupDtoMock.Clone();
             groupDto.Id = _groupRepository.AddGroup(groupDto);
             _addedGroupsId.Add(groupDto.Id);
-            var expected = (LessonDto)LessonMockGetter.GetlessonDtoMock(lessonMockId).Clone();
+            var expected = (LessonDto)LessonMockGetter.GetLessonDtoMock(lessonMockId).Clone();
             expected.Group = groupDto;
             expected.Id = _lessonRepository.AddLesson(expected);
             _addedLessonId.Add(expected.Id);
@@ -135,7 +135,7 @@ namespace EducationSystem.Data.Tests
             var expected = new List<LessonDto>();
             foreach(int id in lessonMockcId)
             {
-                var lessonDto = (LessonDto)LessonMockGetter.GetlessonDtoMock(id).Clone();
+                var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(id).Clone();
                 lessonDto.Group = groupDto;
                 lessonDto.Id = _lessonRepository.AddLesson(lessonDto);
                 _addedLessonId.Add(lessonDto.Id);

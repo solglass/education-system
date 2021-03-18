@@ -28,7 +28,7 @@ namespace EducationSystem.Data.Models
         public override bool Equals(object obj)
         {
             LessonDto lesson = (LessonDto)obj;
-            if(!Id.Equals(lesson.Id) || !Description.Equals(lesson.Description) || Date != lesson.Date || IsDeleted != lesson.IsDeleted)
+            if(!Id.Equals(lesson.Id) || !Description.Equals(lesson.Description) || Date == lesson.Date || IsDeleted != lesson.IsDeleted)
             { 
                 return false;
             }
