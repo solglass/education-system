@@ -81,6 +81,45 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [Test]
+        public void AddHomeworkAttemptNullEntityNegativeTest()
+        {
+            //Given
+
+            //When
+            try
+            {
+                _homeworkRepo.AddHomeworkAttempt(null);
+            }
+
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void AddHomeworkAttemptEmptyPropertyNegativeTest()
+        {
+            //Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(4).Clone();
+
+            //When
+            try
+            {
+                _homeworkRepo.AddHomeworkAttempt(dto);
+            }
+
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(1, 2)]
         [TestCase(2, 3)]
         [TestCase(3, 1)]
@@ -103,6 +142,49 @@ namespace EducationSystem.Data.Tests
             // Then
             Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
+        }
+
+        [Test]
+        public void UpdateHomeworkAttemptNullEntityNegativeTest()
+        {
+            //Given
+            
+            //When
+            try
+            {
+                _homeworkRepo.UpdateHomeworkAttempt(null);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateHomeworkAttemptEmptyPropertyNegativeTest()
+        {
+            //Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
+            dto.Author = _userDtoMock;
+            dto.Homework = _homeworkDtoMock;
+            var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
+            _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+
+            var updto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(4).Clone();
+            updto.Id = addedHomeworkAttemptId;
+            //When
+            try
+            {
+                _homeworkRepo.UpdateHomeworkAttempt(updto);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
         [TestCase(1, true)]
@@ -129,6 +211,17 @@ namespace EducationSystem.Data.Tests
             // Then
             Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
+        }
+
+        [Test]
+        public void DeleteOrRecoverHomeworkAttemptNotExistEntityNegativeTest()
+        {
+            //Given
+            //When
+            var deletedRows = _homeworkRepo.DeleteOrRecoverHomeworkAttempt(-1, true);
+
+            //Then
+            Assert.AreEqual(0, deletedRows);
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
