@@ -11,38 +11,51 @@ namespace EducationSystem.Data.Models
         public string Description { get; set; }
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
-        public List<ThemeDto> Themes { get; set; }
-
-        public object Clone()
-        {
-            return new CourseDto
-            {
-                Id = Id,
-                Name = Name,
-                Description = Description,
-                Duration = Duration,
-                IsDeleted = IsDeleted,
-                Themes = Themes
-            };
+        public List<ThemeDto> Themes { get; set; }
+
+
+
+        public object Clone()
+
+        {
+
+            return new CourseDto
+
+            {
+                Name = Name,
+
+                Description = Description,
+
+                Duration = Duration,
+
+                IsDeleted = IsDeleted,
+
+                Themes = Themes
+
+            };
+
+        }
+
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
-            CourseDto courseObj = (CourseDto)obj;
-            if (object.ReferenceEquals(courseObj, null) && object.ReferenceEquals(this, null))
-            {
-                return true;
-            }
-            if (object.ReferenceEquals(courseObj, null))
-            {
+            if (obj == null || !(obj is CourseDto))
                 return false;
-            }
-            if (!courseObj.Description.Equals(Description) || !courseObj.Name.Equals(Name) || courseObj.Duration!=Duration)
-            {
-                return false;
-            }
 
-            return true;
+            var courseObj = (CourseDto)obj;
+
+            return (Id == courseObj.Id &&
+                    Name.Equals(courseObj.Name) &&
+                    Description.Equals(courseObj.Description) &&
+                    Duration == courseObj.Duration &&
+                    IsDeleted == courseObj.IsDeleted);
+           
+           
         }
     }
 }
