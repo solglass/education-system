@@ -161,22 +161,20 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
 
-        [TestCase(1, 1)]
-        public void DeleteAttendanceNegativeTest(int mockLessonId, int mockUserId)
-        {
-            var dto = AddAttendance(mockLessonId, mockUserId);
-            int i = 1;
-            while (_lessonRepository.GetAttendanceById(dto.Id+i) != null)
+        [Test]
+        public void UpdateAttendanceNegativeTest() 
+        { 
+            try
             {
-                i++;
+                _lessonRepository.UpdateAttendance(null);
             }
-                var rowsAffected = _lessonRepository.DeleteAttendance(dto.Id + i);
-            if (rowsAffected != 0)
+            catch
             {
-                Assert.Fail();
+                Assert.Pass();
             }
-            Assert.Pass();
+            Assert.Fail();
         }
+
 
         [TearDown]
         public void AttendanceTearDown()

@@ -40,12 +40,5 @@ namespace EducationSystem.Data.Models
             }
             return true;
         }
-
-        public override string ToString()
-        {
-            string s = "";
-            s += Id + " " + IsAbsent + " " + ReasonOfAbsence + ";";
-            return s;
-        }
     }
 }

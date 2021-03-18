@@ -202,7 +202,9 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Attendance_Update",
-                new { attendance.Id, attendance.IsAbsent, attendance.ReasonOfAbsence },
+                new { attendance.Id, 
+                    attendance.IsAbsent, 
+                    attendance.ReasonOfAbsence },
                 commandType: CommandType.StoredProcedure);
         }
         public List<AttendanceDto> GetAttendancesByLessonId(int id)

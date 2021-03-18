@@ -11,6 +11,9 @@ namespace EducationSystem.Data.Tests.Mocks
         {
             switch (caseId)
             {
+                case 0:
+                    return new AttendanceDto();
+                    break;
                 case 1:
                     return new AttendanceDto
                     {
