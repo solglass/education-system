@@ -46,6 +46,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     Name = "Test 5 C#",
                     Themes = new List<ThemeDto>()
                 },
+                6=> new CourseDto(),
                 _ => null,
             };
         }

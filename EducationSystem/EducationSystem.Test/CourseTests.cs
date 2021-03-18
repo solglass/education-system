@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using EducationSystem.Data.Tests.Mocks;
 using System.Data.SqlClient;
 using System.Linq;
+using System;
 
 namespace EducationSystem.Data.Tests
 {
@@ -71,7 +72,7 @@ namespace EducationSystem.Data.Tests
 
 
         [TestCase(1, new int[] { 1,2})]
-        public void GetCourseByIdPositiveTest(int mockId, int[] themeIds)
+        public void GetCourseByIdTest(int mockId, int[] themeIds)
         {
             //Given
             var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
@@ -116,6 +117,45 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(course, actual);
         }
        
+        [TestCase(6)]
+        public void CourseAddNegativeTestEmptyProprties(int mockId)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+
+            //When
+            try
+            {
+                course.Id = _courseRepo.AddCourse(course);
+                _courseIds.Add(course.Id);
+            }
+            //Then
+            catch(Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void CourseAddNegativeTestNullEntity()
+        {
+            //Given
+           
+            //When
+            try
+            {
+              var  courseId = _courseRepo.AddCourse(null);
+                _courseIds.Add(courseId);
+            }
+            //Then
+            catch (Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(2)]
         public void CourseUpdatePositiveTest(int mockId)
         {
