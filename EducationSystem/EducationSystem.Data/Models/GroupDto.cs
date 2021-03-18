@@ -24,29 +24,20 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
+            if (!(obj is GroupDto))
+                return false;
+
             GroupDto groupDto = (GroupDto)obj;
 
-            if(object.ReferenceEquals(groupDto, null) && object.ReferenceEquals(this, null))
+            if (groupDto.Id != Id ||
+                !groupDto.StartDate.Equals(StartDate) ||
+                groupDto.GroupStatus != GroupStatus)
             {
-                return true;
+                return false;
             }
-            if(object.ReferenceEquals(groupDto, null))
-            {
-                return false;   
-            }
-            if (groupDto.StartDate == StartDate)
-            {
-                if (groupDto.Course.Equals(Course))
-                {
-                    if (groupDto.GroupStatus.Equals(GroupStatus))
-                    {
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return true;
         }
 
         public override string ToString()

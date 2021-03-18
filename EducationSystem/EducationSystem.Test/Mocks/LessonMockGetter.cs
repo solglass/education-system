@@ -7,13 +7,42 @@ namespace EducationSystem.Data.Tests.Mocks
 {
     public static class LessonMockGetter
     {
-        public static LessonDto GetlessonDtoMock(int id)
+        public static LessonDto GetLessonDtoMock(int id)
         {
-            return id switch
+            switch (id)
             {
-                1 => new LessonDto { Description = "first test comment", Date = new DateTime(2021, 4, 15)},
-                2 => new LessonDto { Description = "second test comment", Date = new DateTime(2021, 8, 17) }
-            };
+                case 1:
+                    return new LessonDto
+                    {
+                        Comment = "Test Lesson 1",
+                        IsDeleted = false,
+                        Date = DateTime.Now.AddDays(-1)
+                    };
+                    break;
+                case 2:
+                    return new LessonDto
+                    {
+                        Comment = "Test Lesson 2",
+                        IsDeleted = false,
+                        Date = DateTime.Now.AddDays(-5)
+                    };
+                    break;
+                case 3:
+                    return new LessonDto
+                    {
+                        Comment = "Test Lesson 3",
+                        IsDeleted = false,
+                        Date = DateTime.Now.AddDays(+15)
+                    };
+                    break;
+                default:
+                    return new LessonDto 
+                    {
+                        Comment = $"Test Lesson {id}",
+                        IsDeleted = false,
+                        Date = DateTime.Now.AddDays(+id)
+                    };
+            }
         }
     }
 }
