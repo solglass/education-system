@@ -50,6 +50,7 @@ namespace EducationSystem.Data.Models
                 string.Equals(userDto.Password, Password) &&
                 string.Equals(userDto.Phone, Phone) &&
                 string.Equals(userDto.Email, Email) &&
+                string.Equals(userDto.UserPic, UserPic) &&
                 (userDto.IsDeleted == IsDeleted);
 
         }

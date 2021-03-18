@@ -38,13 +38,13 @@ namespace EducationSystem.Data.Tests
             _groupIdList = new List<int>();
             _courseIdList = new List<int>();
 
-            _userDtoMock = UserMockGetter.GetUserDtoMock(1);
+            _userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
             var addedUserId = _userRepo.AddUser(_userDtoMock);
             _userIdList.Add(addedUserId);
             _userDtoMock.Id = addedUserId;
 
-            _groupDtoMock = GroupMockGetter.GetGroupDtoMock(1);
-            _groupDtoMock.Course = CourseMockGetter.GetCourseDtoMock(1);
+            _groupDtoMock = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            _groupDtoMock.Course = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
             var addedCourseId = _courseRepo.AddCourse(_groupDtoMock.Course);
             _courseIdList.Add(addedCourseId);
             _groupDtoMock.Course.Id = addedCourseId;
@@ -52,7 +52,7 @@ namespace EducationSystem.Data.Tests
             _groupIdList.Add(addedGroupId);
             _groupDtoMock.Id = addedGroupId;
 
-            _homeworkDtoMock = HomeworkMockGetter.GetHomeworkDtoMock(1);
+            _homeworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
             _homeworkDtoMock.Group = _groupDtoMock;
             var addedhomeworkId = _homeworkRepo.AddHomework(_homeworkDtoMock);
             _homeworkIdList.Add(addedhomeworkId);
@@ -73,7 +73,6 @@ namespace EducationSystem.Data.Tests
 
             _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
             dto.Id = addedHomeworkAttemptId;
-            
 
             // When
             var actual = _homeworkRepo.GetHomeworkAttemptById(addedHomeworkAttemptId);
@@ -98,7 +97,6 @@ namespace EducationSystem.Data.Tests
             dto.Id = addedHomeworkAttemptId;
             var affectedRowsCount = _homeworkRepo.UpdateHomeworkAttempt(dto);
 
-
             // When
             var actual = _homeworkRepo.GetHomeworkAttemptById(addedHomeworkAttemptId);
 
@@ -114,7 +112,6 @@ namespace EducationSystem.Data.Tests
         [TestCase(3, true)]
         public void DeleteOrRecoverHomeworkAttemptPositiveTest(int mockId, bool isDeleted)
         {
-
             //Given
             var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockId).Clone();
             dto.Author = _userDtoMock;
@@ -122,6 +119,7 @@ namespace EducationSystem.Data.Tests
             var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
             _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
             dto.Id = addedHomeworkAttemptId;
+            dto.IsDeleted = isDeleted;
 
             // When
             var affectedRowsCount = _homeworkRepo.DeleteOrRecoverHomeworkAttempt(addedHomeworkAttemptId, isDeleted);
@@ -135,7 +133,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3 })]
+        [TestCase(new int[] { })]
         public void GetHomeworkAttemptsByUserIdPositiveTest(int[] mockIds)
         {
             // Given
@@ -162,7 +160,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3 })]
+        [TestCase(new int[] { })]
         public void GetHomeworkAttemptsByHomeworkIdPositiveTest(int[] mockIds)
         {
             // Given
@@ -188,7 +186,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2, 3 }, 3)]
-        [TestCase(new int[] { 3, 2, 1 }, 3)]
+        [TestCase(new int[] {  }, 3)]
         public void GetHomeworkAttemptsByStatusIdAndGroupIdPositiveTest(int[] mockIds, int statusId)
         {
             // Given
@@ -203,6 +201,7 @@ namespace EducationSystem.Data.Tests
                 var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
                 _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
                 dto.Id = addedHomeworkAttemptId;
+                dto.HomeworkAttemptStatus = (Core.Enums.HomeworkAttemptStatus)statusId;
                 expected.Add(dto);
             }
 

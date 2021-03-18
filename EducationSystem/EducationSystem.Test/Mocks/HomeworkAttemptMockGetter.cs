@@ -17,7 +17,6 @@ namespace EducationSystem.Data.Tests.Mocks
                     {
                         Comment = "Test Comment1 (Description) Here",
                         HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
-                        IsDeleted = false 
                     };
                     break;
                 case 2:
@@ -25,7 +24,6 @@ namespace EducationSystem.Data.Tests.Mocks
                     {
                         Comment = "Test Comment2 (Description) Here",
                         HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
-                        IsDeleted = false
                     };
                     break;
                 case 3:
@@ -33,7 +31,6 @@ namespace EducationSystem.Data.Tests.Mocks
                     {
                         Comment = "Test Comment3 (Description) Here",
                         HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
-                        IsDeleted = false
                     };
                     break;
                 default:

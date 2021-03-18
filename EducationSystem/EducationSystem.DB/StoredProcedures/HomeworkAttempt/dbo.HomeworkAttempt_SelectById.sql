@@ -5,6 +5,7 @@ as
 begin
 	select
 		hma.Id,
+		hma.IsDeleted,
 		hma.Comment,
 		hma.HomeworkID,
 		hma.StatusID,
