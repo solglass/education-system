@@ -28,6 +28,39 @@ namespace EducationSystem.Data.Tests
             _courseIds = new List<int>();
         }
         
+        [TestCase(new int[] { 1,2,3})]
+        public void GetAllCoursesTest(int[] mockIds)
+        {
+            //Given
+            var expected = _courseRepo.GetCourses();
+            foreach(var item in mockIds)
+            {
+                var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(item).Clone();
+                course.Id = _courseRepo.AddCourse(course);
+                Assert.Greater(course.Id, 0);
+                _courseIds.Add(course.Id);
+                expected.Add(course);
+            }
+
+            //When
+            var actual = _courseRepo.GetCourses();
+
+            //Them
+            CollectionAssert.AreEqual(expected, actual);
+
+            for (int i = 0; i < expected.Count; i++)
+            {
+                CollectionAssert.AreEqual(expected[i].Themes, actual[i].Themes);
+            }
+        }
+
+
+        [TestCase(1)]
+        public void GetCourseByIdPositiveTest(int mickId)
+        {
+
+        }
+
         [TestCase(1)]
         public void CourseAddPositiveTest(int mockId)
         {
