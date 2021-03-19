@@ -12,20 +12,28 @@ namespace EducationSystem.Data.Models
         {
             return new TagDto
             {
-                Id = Id,
                 Name = Name
             };
         }
 
         public override bool Equals(object obj)
         {
-            return obj is TagDto dto &&
-                   Id == dto.Id &&
+            if (obj == null)
+                return false;
+            if (!(obj is TagDto))
+                return false;
+            var dto = (TagDto)obj;
+            return Id == dto.Id &&
                    Name == dto.Name;
         }
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return $"{Id} {Name}";
         }
     }
 }

@@ -9,17 +9,34 @@ namespace EducationSystem.Data.Tests.Mocks
     {
         public static ThemeDto GetThemeDtoMock(int id)
         {
-            switch (id)
+            return id switch
             {
-                case 1:
-                    return new ThemeDto
-                    {
-                        Name = "Test theme 1" 
-                    };
-                    break;                
-                default:
-                    return null;
-            }
+                1 => new ThemeDto
+                {
+                    Name = "Test theme 1"
+                },
+                2 => new ThemeDto
+                {
+                    Name = "Test theme 2"
+                },
+                3 => new ThemeDto
+                {
+                    Name = "Test theme 3"
+                },
+                4 => new ThemeDto
+                {
+                    Name = "Test theme 4"
+                },
+                6 => new ThemeDto
+                {
+                    Name = "Test theme 6"
+                },
+                7 => new ThemeDto
+                {
+                    Name = "Test theme 7"
+                },
+                _ => null,
+            };
         }
     }
 }
