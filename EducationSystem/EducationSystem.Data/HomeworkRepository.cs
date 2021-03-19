@@ -68,12 +68,8 @@ namespace EducationSystem.Data
 
         public List<HomeworkDto> SearchHomeworks(int? groupId, int? themeId, int? tagId)
         {
-            if(groupId == null &&
-               themeId == null &&
-               tagId   == null)
-            {
+            if(groupId == null && themeId == null && tagId == null)
                 throw new ArgumentNullException();
-            }
 
             var homeworkDictionary = new Dictionary<int, HomeworkDto>();
             var tagDictionary = new Dictionary<int, TagDto>();
