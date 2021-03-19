@@ -16,26 +16,25 @@ namespace EducationSystem.Data.Models
         {
             return new ThemeDto
             {
-                Id = Id,
-                Name = Name,
-                Tags = Tags,
-                IsDeleted = IsDeleted
+                Name = Name
             };
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (!(obj is ThemeDto))
+            if (obj == null || !(obj is ThemeDto))
                 return false;
 
-            ThemeDto themeObj = (ThemeDto)obj;
-            if (themeObj.Id != Id || themeObj.Name != Name || themeObj.IsDeleted != IsDeleted)
-            {
-                return false;
-            }
-            return true;
+            var themeObj = (ThemeDto)obj;
+            return  (themeObj.Name.Equals(Name) && 
+                    themeObj.Id==Id && 
+                    themeObj.IsDeleted==IsDeleted);
+            
         }
     }
 }

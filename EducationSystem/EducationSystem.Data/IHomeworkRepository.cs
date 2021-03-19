@@ -31,7 +31,6 @@ namespace EducationSystem.Data
         int HomeworkTagAdd(int homeworkId, int tagId);
         int HomeworkTagDelete(int homeworkId, int tagId);
 
-        List<HomeworkAttemptDto> GetHomeworkAttempts();
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id);
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId);
     }

@@ -32,9 +32,9 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (!(obj is HomeworkDto))
+            if (obj == null)
+                return false;
+            if (!(obj is HomeworkDto))
                 return false;
 
             HomeworkDto homeworkObj = (HomeworkDto)obj;
