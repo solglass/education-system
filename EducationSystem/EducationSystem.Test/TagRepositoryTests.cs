@@ -9,7 +9,7 @@ namespace EducationSystem.Data.Tests
 {
     public class TagRepositoryTests : BaseTest
     {
-        private TagRepository _tagRepo;
+        private ITagRepository _tagRepo;
         private List<int> _tagIdList;
 
         [OneTimeSetUp]
@@ -19,19 +19,6 @@ namespace EducationSystem.Data.Tests
             _tagIdList = new List<int>();
         }
 
-        [TestCase(1)]
-        public void TagAddTest(int dtoMockNumber)
-        {
-            TagDto expected = (TagDto)TagMockGetter.GetTagDtoMock(dtoMockNumber).Clone();
-            var added = _tagRepo.TagAdd(expected);
-            Assert.Greater(added, 0);
-
-            _tagIdList.Add(added);
-            expected.Id = added;
-
-            TagDto actual = _tagRepo.GetTagById(added);
-            Assert.AreEqual(expected, actual);
-        }
 
         [TestCase(1)]
         public void TagDeleteTest(int dtoMockNumber)
@@ -62,6 +49,65 @@ namespace EducationSystem.Data.Tests
             //Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [TestCase(1)]
+        public void TagAddTest(int dtoMockNumber)
+        {
+            TagDto expected = (TagDto)TagMockGetter.GetTagDtoMock(dtoMockNumber).Clone();
+            var added = _tagRepo.TagAdd(expected);
+            Assert.Greater(added, 0);
+
+            _tagIdList.Add(added);
+            expected.Id = added;
+
+            TagDto actual = _tagRepo.GetTagById(added);
+            Assert.AreEqual(expected, actual);
+        }
+        [TestCase(4)]
+        public void TagAdd_EmptyTag_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (TagDto)TagMockGetter.GetTagDtoMock(mockId).Clone();
+           //When
+            try
+            {
+                var added = _tagRepo.TagAdd(dto);
+                _tagIdList.Add(added);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void TagAdd_Null_NegativeTest()
+        {
+            //Given
+            //When
+            try
+            {
+                var added = _tagRepo.TagAdd(null);
+                _tagIdList.Add(added);
+            }
+            //Then
+            catch (Exception ex)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void TagDeleteNegativeTest()
+        {
+            //Given
+            //When
+            var deletedRows = _tagRepo.TagDelete(-1);
+
+            //Then
+            Assert.AreEqual(0, deletedRows);
+        }
+
         [TearDown]
         public void TagsTestsTearDown()
         {
