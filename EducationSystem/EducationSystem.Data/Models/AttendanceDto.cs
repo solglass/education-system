@@ -16,7 +16,6 @@ namespace EducationSystem.Data.Models
         {
             return new AttendanceDto
             {
-                Id = Id,
                 Lesson = Lesson,
                 User = User,
                 IsAbsent = IsAbsent,

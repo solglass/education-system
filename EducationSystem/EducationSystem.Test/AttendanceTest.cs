@@ -24,7 +24,7 @@ namespace EducationSystem.Data.Tests
         private List<LessonDto> _lessons;
         private List<UserDto> _students;
 
-        private const int _amountLessons = 40;
+        private const int _amountLessons = 4;
         private const int _amountStudents = 5;
 
         [OneTimeSetUp]
@@ -138,7 +138,7 @@ namespace EducationSystem.Data.Tests
             {
                 var dto = AddAttendance(mockLessonId, mockUserId, mockAttendanceId);
             }
-            catch (Exception ex)
+            catch 
             {
                 Assert.Pass();
             }
@@ -154,7 +154,7 @@ namespace EducationSystem.Data.Tests
                 var dto = AddAttendance(mockLessonId, mockUserId);
                 var dtoCopy = AddAttendance(mockLessonId, mockUserId, mockAttendanceId);
             }
-            catch (Exception ex)
+            catch 
             {
                 Assert.Pass();
             }
@@ -163,7 +163,8 @@ namespace EducationSystem.Data.Tests
 
         [Test]
         public void UpdateAttendanceNegativeTest() 
-        { 
+        {
+            var dto = AddAttendance(1, 1);
             try
             {
                 _lessonRepository.UpdateAttendance(null);
@@ -174,6 +175,7 @@ namespace EducationSystem.Data.Tests
             }
             Assert.Fail();
         }
+
 
 
         [TearDown]
