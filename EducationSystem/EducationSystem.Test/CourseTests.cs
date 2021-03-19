@@ -72,7 +72,7 @@ namespace EducationSystem.Data.Tests
 
 
         [TestCase(1, new int[] { 1,2})]
-        public void GetCourseByIdTest(int mockId, int[] themeIds)
+        public void GetCourseByIdPositiveTest(int mockId, int[] themeIds)
         {
             //Given
             var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
@@ -99,6 +99,16 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(course, actual);
             CollectionAssert.AreEqual(course.Themes, actual.Themes);
+        }
+        [Test]
+        public void GetCourseByIdNegativeTestCourseNotExist()
+        {
+            //Given
+
+            //When
+            var course = _courseRepo.GetCourseById(-1);
+            //Then
+            Assert.IsNull(course);
         }
 
         [TestCase(1)]
@@ -177,6 +187,61 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(course, actual);
         }
 
+        [TestCase(1)]
+        public void CourseUpdateNegativeTestEntityNotExist(int mockId)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+
+            //When
+            var result = _courseRepo.UpdateCourse(course);
+
+            //Then
+            Assert.AreEqual(0, result);
+
+        }
+
+        [TestCase(1,6)]
+        public void CourseUpdateNegativeTestEmptyProperties(int mockToAddId, int mockToUpdate)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockToAddId).Clone();
+            var courseId = _courseRepo.AddCourse(course);
+            _courseIds.Add(courseId);
+            //When
+            try
+            {
+                course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockToUpdate).Clone();
+                course.Id = courseId;
+                _courseRepo.UpdateCourse(course);
+                
+            }
+            //Then
+            catch (Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void CourseUpdateNegativeTestNullEntity()
+        {
+            //Given
+            
+            //When
+            try
+            {
+                _courseRepo.UpdateCourse(null);
+            }
+            //Then
+            catch (Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+
         [TestCase(3, true)]
         [TestCase(4, false)]
         public void CourseDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
@@ -197,6 +262,17 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(course, actual);
         }
 
+        [TestCase(-1, true)]
+        [TestCase(-1, false)]
+        public void CourseDeleteOrRecoverNegativeTestEntityNotExist(int id, bool isDeleted)
+        {
+            //Given
+
+            //When
+            var result = _courseRepo.DeleteOrRecoverCourse(id, isDeleted);
+            //Then
+            Assert.AreEqual(0, result);
+        }
 
         [TestCase(1, new int[] { 1, 2, 3 })]
         [TestCase(1, new int[] { 2 })]
@@ -225,6 +301,50 @@ namespace EducationSystem.Data.Tests
             var actual = _courseRepo.GetCourseById(course.Id);
             //Then
             CollectionAssert.AreEqual(themes, actual.Themes);
+        }
+
+        [TestCase(1)]
+        public void AddCourseThemeNegativeTestNotExistCourse(int themeMockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+            theme.Id = _courseRepo.AddTheme(theme);
+            Assert.Greater(theme.Id, 0);
+            _themeIds.Add(theme.Id);
+
+            //When
+            try
+            {
+                var result = _courseRepo.AddCourse_Theme(-1, theme.Id);
+            }
+            //Then
+            catch(Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void AddCourseThemeNegativeTestNotExistTheme(int courseMockId)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseMockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            Assert.Greater(course.Id, 0);
+            _courseIds.Add(course.Id);
+
+            //When
+            try
+            {
+                var result = _courseRepo.AddCourse_Theme(course.Id ,- 1 );
+            }
+            //Then
+            catch (Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
         [TestCase(1, new int[] { 1, 2, 3 })]
@@ -274,6 +394,17 @@ namespace EducationSystem.Data.Tests
             //Then
             CollectionAssert.AreEqual(themes, actual.Themes);
         }
+        [Test]
+        public void DeleteCourseThemeNegativeTestConnectionNotExist()
+        {
+            //Given
+
+            //When
+            var result = _courseRepo.DeleteCourse_Theme(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
         [OneTimeTearDown]
         public void TearDown()
         {
