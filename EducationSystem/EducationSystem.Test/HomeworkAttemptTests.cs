@@ -120,6 +120,17 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
 
+        [Test]
+        public void GetHomeworkAttemptByIdEntityNotExistNegativeTest()
+        {
+            //Given
+
+            //When
+            var hwattempt = _homeworkRepo.GetHomeworkAttemptById(-1);
+            //Then
+            Assert.IsNull(hwattempt);
+        }
+
         [TestCase(1, 2)]
         [TestCase(2, 3)]
         [TestCase(3, 1)]
@@ -160,6 +171,21 @@ namespace EducationSystem.Data.Tests
                 Assert.Pass();
             }
             Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateHomeworkAttemptEntityNotExistNegativeTest()
+        {
+            //Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
+            dto.Id = -1;
+
+            //When
+            var result = _homeworkRepo.UpdateHomeworkAttempt(dto);
+
+            //Then
+            Assert.AreEqual(0, result);
+
         }
 
         [Test]
