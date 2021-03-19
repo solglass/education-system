@@ -16,7 +16,8 @@ namespace EducationSystem.Data.Models
         {
             return new ThemeDto
             {
-                Name = Name
+                Name = Name,
+                Tags = Tags
             };
         }
 
