@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[Feedback](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[UserID] [int] NOT NULL,
-	[Message] [nvarchar](max) NOT NULL,
-	[LessonID] [int] NULL,
+	[Message] [nvarchar](max) NULL,
+	[LessonID] [int] NOT NULL,
 	[UnderstandingLevelId] [int] NOT NULL,
  CONSTRAINT [PK_FEEDBACK] PRIMARY KEY CLUSTERED 
 (

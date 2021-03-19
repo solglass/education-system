@@ -46,12 +46,14 @@ namespace EducationSystem.Business
         {
             var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login, 
+///ADDITION
+                user.Id.ToString())
                 };
             foreach(Role role in user.Roles)
             {
                 claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, FriendlyNames.GetFriendlyRoleName(role)));
-            }
+            }     
             ClaimsIdentity claimsIdentity =
             new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType);

@@ -3,6 +3,7 @@ using AutoMapper;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
+using EducationSystem.Core.CustomExceptions;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,11 +18,13 @@ namespace EducationSystem.Controllers
     public class LessonController : ControllerBase
     {
         private ILessonService _lessonService;
+        private IGroupService _groupService;
         private IMapper _mapper;
 
-        public LessonController(IMapper mapper, ILessonService lessonService)
+        public LessonController(IMapper mapper, ILessonService lessonService, IGroupService groupService)
         {
             _lessonService = lessonService;
+            _groupService = groupService;
             _mapper = mapper;
         }
         /// <summary>
@@ -30,13 +33,19 @@ namespace EducationSystem.Controllers
         /// <param name="inputModel">Input model with all the properties for the new lesson</param>
         /// <returns>Output model of the added lesson</returns>
        [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+       [ProducesResponseType (StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
         public ActionResult<LessonOutputModel> AddNewLesson([FromBody] LessonInputModel inputModel)
         {
+            if (!ModelState.IsValid) 
+                throw new ValidationException(ModelState);
+
             var lessonDto = _mapper.Map<LessonDto>(inputModel);
             var result = _mapper.Map < LessonOutputModel >(_lessonService.GetLessonById(_lessonService.AddLesson(lessonDto)));
+
+
 
             return Ok(result);
         }
@@ -46,11 +55,15 @@ namespace EducationSystem.Controllers
         /// <param name="groupId">Group id </param>
         /// <returns>List of Output models of the found Lessons </returns>
         [ProducesResponseType(typeof(List<LessonOutputModel>), StatusCodes.Status200OK)]
-        // https://localhost:50221/api/lesson/45
-        [HttpGet("{groupId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        // https://localhost:50221/api/lesson/by-group/45
+        [HttpGet("by-group/{groupId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
-        public ActionResult<List<LessonOutputModel>> GetLessons(int groupId)
+        public ActionResult<List<LessonOutputModel>> GetLessonsByGroupId(int groupId)
         {
+            var group = _groupService.GetGroupById(groupId);
+            if (group == null)
+                return NotFound($"Group {groupId} was not found");
             var lessonDtos = _lessonService.GetLessonsByGroupId(groupId);
             var lessonsList = _mapper.Map<List<LessonOutputModel>>(lessonDtos);
             return Ok(lessonsList);
@@ -62,13 +75,17 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId"> Id of the lesson</param>
         /// <returns>Output model of the found Lesson </returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/3
         [HttpGet("{lessonId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
         public ActionResult<LessonOutputModel> GetLessonById(int lessonId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
             var lessonModel = _mapper.Map<LessonOutputModel>(lessonDto);
+
             return Ok(lessonModel);
         }
         /// <summary>
@@ -77,12 +94,16 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId"> Id of the lesson</param>
         /// <returns>Output model of the soft-deleted Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/34
         [HttpDelete("{lessonId")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult<LessonOutputModel> DeleteLesson(int lessonId)
         {
-           _lessonService.DeleteLesson(lessonId);
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            _lessonService.DeleteLesson(lessonId);
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
         }
@@ -93,12 +114,16 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId"> Id of the lesson</param>
         /// <returns>Output model of the recovered Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/44/recovery
         [HttpPut("{lessonId}/recovery")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult<LessonOutputModel> RecoverLesson(int lessonId)
         {
-             _lessonService.RecoverLesson(lessonId);
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            _lessonService.RecoverLesson(lessonId);
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
         }
@@ -115,6 +140,9 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult<LessonOutputModel> UpdateLesson(int lessonId, [FromBody] LessonInputModel inputModel)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
             var lessonDto = _mapper.Map<LessonDto>(inputModel);
             lessonDto.Id = lessonId;
            _lessonService.UpdateLesson(lessonDto);
@@ -134,6 +162,9 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult<List<FeedbackOutputModel>> GetFeedbacks(int lessonId, [FromBody] FeedbackSearchInputModel inputModel)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
             var feedbackDtos = _lessonService.GetFeedbacks(inputModel.LessonId, inputModel.GroupId, inputModel.CourseId);
             var feedbackList = _mapper.Map<List<FeedbackOutputModel>>(feedbackDtos);
             return Ok(feedbackList);
@@ -151,6 +182,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер, Методист, Преподаватель")]
         public ActionResult<FeedbackOutputModel> GetFeedbackById(int lessonId, int feedbackId)
         {
+            
             var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
             var result = _mapper.Map<FeedbackOutputModel>(feedbackDto);
             return Ok(result);
@@ -165,10 +197,13 @@ namespace EducationSystem.Controllers
         /// <returns>Output model of the created feedback</returns>
         [ProducesResponseType(typeof(FeedbackOutputModel), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/id/feedback/
-        [HttpPost("{lessonId}")]
+        [HttpPost("{lessonId}/feedback")]
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult<FeedbackOutputModel> AddNewFeedback(int lessonId, FeedbackInputModel inputModel)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
             var feedbackDto = _mapper.Map<FeedbackDto>(inputModel);
             var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(_lessonService.AddFeedback(lessonId, feedbackDto)));
             return Ok(result);
@@ -182,12 +217,25 @@ namespace EducationSystem.Controllers
         /// <param name="feedbackInputModel">Input model with all the properties for the feedback to update</param>
         /// <returns>Output model of the updated feedback</returns>
         [ProducesResponseType(typeof(FeedbackOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/5/feedback/5
         [HttpPut("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult<FeedbackOutputModel> UpdateFeedback(int lessonId, int feedbackId, [FromBody] FeedbackInputModel feedbackInputModel)
         {
-            var feedbackDto = _mapper.Map<FeedbackDto>(feedbackInputModel);
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
+            if (feedbackDto == null)
+                return NotFound($"Feedback {feedbackId} was not found");
+            if (feedbackDto.Lesson.Id != lessonId)
+                return BadRequest($"Feedback with id {feedbackId} does not belong to the lesson with id {lessonId}");
+
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
+            feedbackDto = _mapper.Map<FeedbackDto>(feedbackInputModel);
             feedbackDto.Id = feedbackId;
             _lessonService.UpdateFeedback(lessonId, feedbackId, feedbackDto);
             var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(feedbackId));
@@ -255,6 +303,9 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult <AttendanceOutputModel> AddNewAttendance(int lessonId, [FromBody] AttendanceInputModel inputModel)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
             var attendanceDto = _mapper.Map<AttendanceDto>(inputModel);
             var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(_lessonService.AddAttendance(lessonId, attendanceDto)));
             return Ok(result);
@@ -274,6 +325,9 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult<AttendanceOutputModel> UpdateAttendance(int lessonId, int attendanceId, [FromBody] AttendanceInputModel attendanceInputModel)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
             var attendanceDto = _mapper.Map<AttendanceDto>(attendanceInputModel);
             _lessonService.UpdateAttendance(lessonId, attendanceId, attendanceDto);
             var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(attendanceId));

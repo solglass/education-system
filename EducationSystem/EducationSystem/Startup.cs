@@ -56,8 +56,8 @@ namespace EducationSystem
                 c.SwaggerEndpoint("v1/swagger.json", "EducationSystem");
             });
             app.UseHttpsRedirection();
-            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
             app.UseMiddleware<ExceptionMiddleware>();
