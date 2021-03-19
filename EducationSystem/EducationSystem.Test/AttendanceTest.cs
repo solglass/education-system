@@ -207,7 +207,7 @@ namespace EducationSystem.Data.Tests
 
         private UserDto AddUser(int mockId)
         {
-            var userDto = UserMock.GetUserDtoMock(mockId);
+            var userDto = UserMockGetter.GetUserDtoMock(mockId);
             userDto.Id = _userRepository.AddUser(userDto);
             Assert.Greater(userDto.Id, 0);
             _addedUserIds.Add(userDto.Id);

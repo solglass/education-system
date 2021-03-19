@@ -51,6 +51,30 @@ namespace EducationSystem.Data.Tests.Mocks
                     UserPic = " 23",
                     Login = "vasya",
                 },
+                4 => new UserDto
+                {
+                    Email = "Case4444@mail.ru",
+                    FirstName = "Anton",
+                    BirthDate = DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    IsDeleted = false,
+                    LastName = "Negodyaj",
+                    Password = "1234567",
+                    Phone = "4448444444",
+                    UserPic = "00",
+                    Login = "Case4444Login"
+                },
+                5 => new UserDto
+                {
+                    Email = "Case55555@mail.ru",
+                    FirstName = "Anton",
+                    BirthDate = DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    IsDeleted = false,
+                    LastName = "Negodyaj",
+                    Password = "1234567",
+                    Phone = "5555595555",
+                    UserPic = "00",
+                    Login = "Case55555Login"
+                },
                 _ => throw new NotImplementedException()
             };
 

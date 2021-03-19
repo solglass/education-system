@@ -12,7 +12,6 @@ namespace EducationSystem.Data.Models
         {
             return new TagDto
             {
-                Id = Id,
                 Name = Name
             };
         }
@@ -23,14 +22,18 @@ namespace EducationSystem.Data.Models
                 return false;
             if (!(obj is TagDto))
                 return false;
-
-            return obj is TagDto dto &&
-                   Id == dto.Id &&
+            var dto = (TagDto)obj;
+            return Id == dto.Id &&
                    Name == dto.Name;
         }
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return $"{Id} {Name}";
         }
     }
 }
