@@ -12,7 +12,6 @@ namespace EducationSystem.Data.Models
         {
             return new TagDto
             {
-                Id = Id,
                 Name = Name
             };
         }
