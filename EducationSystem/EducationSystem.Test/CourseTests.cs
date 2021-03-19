@@ -1,11 +1,7 @@
-using Dapper;
-using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
 using EducationSystem.Data.Tests.Mocks;
-using System.Data.SqlClient;
-using System.Linq;
 using System;
 
 namespace EducationSystem.Data.Tests
@@ -18,12 +14,10 @@ namespace EducationSystem.Data.Tests
         private List<int> _themeIds;
         private List<(int, int)> _courseThemes;
 
-
         [OneTimeSetUp]
         public void SetUpTest()
         {
             _courseRepo = new CourseRepository(_options);
-
             _themeIds = new List<int>();
             _courseThemes = new List<(int, int)>();
             _courseIds = new List<int>();
@@ -140,7 +134,7 @@ namespace EducationSystem.Data.Tests
                 _courseIds.Add(course.Id);
             }
             //Then
-            catch(Exception)
+            catch
             {
                 Assert.Pass();
             }
@@ -159,7 +153,7 @@ namespace EducationSystem.Data.Tests
                 _courseIds.Add(courseId);
             }
             //Then
-            catch (Exception)
+            catch
             {
                 Assert.Pass();
             }
@@ -177,18 +171,20 @@ namespace EducationSystem.Data.Tests
             expected.Description = "Updated course description";
             expected.Name = "Updated course name";
             expected.Duration = 4;
-            var result = _courseRepo.UpdateCourse(expected);
+            var courseToUpdate = (CourseDto)expected.Clone();
+            courseToUpdate.Id = expected.Id;
+            courseToUpdate.IsDeleted = !expected.IsDeleted;
+
+            //When, Then
+            var result = _courseRepo.UpdateCourse(courseToUpdate);
             Assert.AreEqual(1,result);
 
-            //When
             var actual = _courseRepo.GetCourseById(expected.Id);
-
-            //Then
             Assert.AreEqual(expected, actual);
         }
 
         [TestCase(1)]
-        public void CourseUpdateNegativeTestEntityNotExist(int mockId)
+        public void CourseUpdateNegativeTestEntityNotExists(int mockId)
         {
             //Given
             var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
@@ -198,7 +194,6 @@ namespace EducationSystem.Data.Tests
 
             //Then
             Assert.AreEqual(0, result);
-
         }
 
         [TestCase(1,6)]
@@ -426,7 +421,7 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual.Themes);
         }
         [Test]
-        public void DeleteCourseThemeNegativeTestConnectionNotExist()
+        public void DeleteCourseThemeNegativeTestRelationNotExists()
         {
             //Given
 
@@ -436,8 +431,7 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(0, result);
         }
 
-
-
+        // possible kosyak
         [OneTimeTearDown]
         public void TearDown()
         {
