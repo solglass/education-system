@@ -13,6 +13,7 @@ namespace EducationSystem.Data.Tests
         private IUserRepository _userRepo;
         private IGroupRepository _groupRepo;
         private ICourseRepository _courseRepo;
+        private IAttachmentRepository _attachmentRepository;
 
         private UserDto _userDtoMock;
         private GroupDto _groupDtoMock;
@@ -23,6 +24,8 @@ namespace EducationSystem.Data.Tests
         private List<int> _userIdList;
         private List<int> _groupIdList;
         private List<int> _courseIdList;
+        private List<int> _attachmentIds;
+        private List<(int, int)> _attemptAttachmentIds;
 
         [SetUp]
         public void SetUpTest()
@@ -31,12 +34,15 @@ namespace EducationSystem.Data.Tests
             _userRepo = new UserRepository(_options);
             _groupRepo = new GroupRepository(_options);
             _courseRepo = new CourseRepository(_options);
+            _attachmentRepository = new AttachmentRepository(_options);
 
             _homeworkAttemptIdList = new List<int>();
             _homeworkIdList = new List<int>();
             _userIdList = new List<int>();
             _groupIdList = new List<int>();
             _courseIdList = new List<int>();
+            _attachmentIds = new List<int>();
+            _attemptAttachmentIds = new List<(int, int)>();
 
             _userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
             var addedUserId = _userRepo.AddUser(_userDtoMock);
@@ -212,14 +218,43 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+
+        [TestCase()]
+        public void AddHomeworkAttemptAttachmentPositiveTest()
+        {
+
+        }
+
+        [TestCase()]
+        public void DeleteHomeworkAttemptAttachmentPositiveTest()
+        {
+
+        }
+
         [TearDown]
         public void TestTearDown()
         {
+            DeleteHomworkAttemptAttachments();
+            DeleteAttachments();
             DeleteHomeworkAttempt();
             DeleteHomework();
             DeleteGroups();
             DeleteCourse();
             DeleteUser();
+        }
+        private void DeleteHomworkAttemptAttachments()
+        {
+            foreach (var item in _attemptAttachmentIds)
+            {
+                _attachmentRepository.DeleteAttachmentFromHomeworkAttempt(item.Item1, item.Item2);
+            }
+        }
+        private void DeleteAttachments()
+        {
+            foreach(var item in _attachmentIds)
+            {
+                _attachmentRepository.DeleteAttachmentById(item);
+            }
         }
 
         private void DeleteUser()
