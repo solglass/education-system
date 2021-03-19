@@ -3,139 +3,267 @@ using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
+using EducationSystem.Data.Tests.Mocks;
 using System.Data.SqlClient;
 using System.Linq;
 
 namespace EducationSystem.Data.Tests
 {
-    [TestFixture]
-    public class CourseTests
+    public class CourseTests:BaseTest
     {
         private ICourseRepository _courseRepo;
-        private int _courseId;
-        private List<int> _themeIdList;
-        private CourseDto _expectedCourse;
-        private List<CourseDto> _coursesFromDb;
+
+        private List<int> _courseIds;
+        private List<int> _themeIds;
+        private List<(int, int)> _courseThemes;
+
 
         [OneTimeSetUp]
         public void SetUpTest()
         {
-            _coursesFromDb = new List<CourseDto>();
-            _themeIdList = new List<int>();
-            _expectedCourse = GetCourseMock(1);
-            _expectedCourse.Themes = GetThemeMock(3);
-            foreach (var theme in _expectedCourse.Themes)
-            {
-                _themeIdList.Add(_courseRepo.AddTheme(theme));
-            }
-            _coursesFromDb.AddRange(_courseRepo.GetCourses());
+            _courseRepo = new CourseRepository(_options);
+
+            _themeIds = new List<int>();
+            _courseThemes = new List<(int, int)>();
+            _courseIds = new List<int>();
         }
-
-
-        [TestCase(1), Order(1)]
-        public void TestAddCourse(int courseMock )
+        
+        [TestCase(new int[] { 1,2,3}, new int[] { })]
+        [TestCase(new int[] { 1, 2 }, new int[] { 1,2})]
+        [TestCase(new int[] { 1}, new int[] { 1})]
+        [TestCase(new int[] { 1 }, new int[] { 1,2 })]
+        public void GetAllCoursesTest(int[] courseMockIds, int[] themeMockIds)
         {
-            CourseDto course = GetCourseMock(courseMock);
-            _courseId = _courseRepo.AddCourse(_expectedCourse);
-            foreach (var id in _themeIdList)
+            //Given
+            var expected = _courseRepo.GetCourses();
+            foreach(var courseId in courseMockIds)
             {
-               _courseRepo.AddCourse_Theme(_courseId, id);
+                var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseId).Clone();
+                course.Id = _courseRepo.AddCourse(course);
+                Assert.Greater(course.Id, 0);
+                _courseIds.Add(course.Id);
+                foreach (var themeId in themeMockIds)
+                {
+                    var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeId).Clone();
+                    theme.Id = _courseRepo.AddTheme(theme);
+                    Assert.Greater(course.Id, 0);
+                    _themeIds.Add(theme.Id);
+
+                    var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
+                    Assert.Greater(result, 0);
+                    _courseThemes.Add((course.Id, theme.Id));
+                    course.Themes.Add(theme);
+                }
+                expected.Add(course);
             }
-            CourseDto actualCourse = _courseRepo.GetCourseById(_courseId);
-            Assert.AreEqual(_expectedCourse, actualCourse);
+
+            //When
+            var actual = _courseRepo.GetCourses();
+
+            //Them
+            CollectionAssert.AreEqual(expected, actual);
+
+            for (int i = 0; i < expected.Count; i++)
+            {
+                CollectionAssert.AreEqual(expected[i].Themes, actual[i].Themes);
+            }
         }
 
-        [TestCase(2), Order(2)]
-        public void TestUpdateCourse(int courseMock)
+
+        [TestCase(1, new int[] { 1,2})]
+        public void GetCourseByIdPositiveTest(int mockId, int[] themeIds)
         {
-            CourseDto tempCourse = GetCourseMock(courseMock);
-            _expectedCourse.Id = _courseId;
-            _expectedCourse.Name = tempCourse.Name;
-            _expectedCourse.Duration = tempCourse.Duration;
-            if (_courseRepo.UpdateCourse(_expectedCourse) == 1)
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            Assert.Greater(course.Id, 0);
+            _courseIds.Add(course.Id);
+
+            foreach(var item in themeIds)
             {
-                CourseDto actualCourse = _courseRepo.GetCourseById(_courseId);
-                Assert.AreEqual(_expectedCourse, actualCourse);
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(item).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                Assert.Greater(course.Id, 0);
+                _themeIds.Add(theme.Id);
+
+                var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
+                Assert.Greater(result, 0);
+                _courseThemes.Add((course.Id, theme.Id));
+                course.Themes.Add(theme);
             }
-            else Assert.Fail("Course update went wrong, the amount of affected rows is not 1");
+
+            //When
+            var actual = _courseRepo.GetCourseById(course.Id);
+
+            //Then
+            Assert.AreEqual(course, actual);
+            CollectionAssert.AreEqual(course.Themes, actual.Themes);
         }
 
-        //[Test, Order(3)]
-        //public void TestDeleteCourse()
-        //{
-        //    foreach (var themeId in _themeIdList)
-        //    {
-        //        if (_courseRepo.DeleteCourse_Theme(_courseId, themeId) != 1)
-        //            throw new System.Exception("Course_theme delete went wrong, the amount of affected rows is not 1");
-        //        if (_courseRepo.DeleteTheme(themeId) != 1)
-        //            throw new System.Exception("Theme delete went wrong, the amount of affected rows is not 1");
-        //    }
-        //    if (_courseRepo.DeleteCourse(_courseId) != 1)
-        //    {
-        //        Assert.Fail("Course delete went wrong, the amount of affected rows is not 1");
-        //    }
-        //    else
-        //    {
-        //        List<CourseDto> actualCourses = _courseRepo.GetCourses();
-        //        if (actualCourses.Count == _coursesFromDb.Count)
-        //        {
-        //            for (int i = 0; i < actualCourses.Count; i++)
-        //            {
-        //                if (actualCourses[i].Id != _coursesFromDb[i].Id) 
-        //                    Assert.Fail("Something wrong was deleted");
-        //            }
-        //            Assert.Pass();
-        //        }
-        //        else Assert.Fail("The amount of courses before and after don't match");
-        //    }
-        //}
+        [TestCase(1)]
+        public void CourseAddPositiveTest(int mockId)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            Assert.Greater(course.Id, 0);
+            _courseIds.Add(course.Id);
+
+            //When
+            var actual = _courseRepo.GetCourseById(course.Id);
+
+            //Then
+            Assert.AreEqual(course, actual);
+        }
        
+        [TestCase(2)]
+        public void CourseUpdatePositiveTest(int mockId)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            Assert.Greater(course.Id, 0);
+            _courseIds.Add(course.Id);
+            course.Description = "Updated course description";
+            course.Name = "Updated course name";
+            course.Duration = 4;
+            var result = _courseRepo.UpdateCourse(course);
+            Assert.AreEqual(1,result);
+
+            //When
+            var actual = _courseRepo.GetCourseById(course.Id);
+
+            //Then
+            Assert.AreEqual(course, actual);
+        }
+
+        [TestCase(3, true)]
+        [TestCase(4, false)]
+        public void CourseDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            Assert.Greater(course.Id, 0);
+            _courseIds.Add(course.Id);
+            course.IsDeleted = isDeleted;
+            var result = _courseRepo.DeleteOrRecoverCourse(course.Id, isDeleted);
+            Assert.AreEqual(1, result);
+
+            //When
+            var actual = _courseRepo.GetCourseById(course.Id);
+
+            //Then
+            Assert.AreEqual(course, actual);
+        }
+
+
+        [TestCase(1, new int[] { 1, 2, 3 })]
+        [TestCase(1, new int[] { 2 })]
+        [TestCase(1, new int[] { })]
+        public void AddCourseThemePositiveTest(int mockId, int[] themeMockIds)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            Assert.Greater(course.Id, 0);
+            _courseIds.Add(course.Id);
+            var themes = new List<ThemeDto>();
+            foreach (var themeMockId in themeMockIds)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                Assert.Greater(theme.Id, 0);
+                themes.Add(theme);
+                _themeIds.Add(theme.Id);
+                var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
+                Assert.Greater(result, 0);
+                _courseThemes.Add((course.Id, theme.Id));
+            }
+
+            //When
+            var actual = _courseRepo.GetCourseById(course.Id);
+            //Then
+            CollectionAssert.AreEqual(themes, actual.Themes);
+        }
+
+        [TestCase(1, new int[] { 1, 2, 3 })]
+        [TestCase(1, new int[] { 2 })]
+        [TestCase(1, new int[] { })]
+        public void DeleteCourseThemePositiveTest(int mockId, int[] themeMockIds)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            Assert.Greater(course.Id, 0);
+            _courseIds.Add(course.Id);
+            var themes = new List<ThemeDto>();
+           
+            foreach (var themeMockId in themeMockIds)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                Assert.Greater(theme.Id, 0);
+
+                themes.Add(theme);
+                _themeIds.Add(theme.Id);
+                var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
+                Assert.Greater(result, 0);
+
+                _courseThemes.Add((course.Id, theme.Id));
+            }
+
+            foreach (var themeMockId in themeMockIds)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                Assert.Greater(theme.Id, 0);
+
+                _themeIds.Add(theme.Id);
+                var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
+                Assert.Greater(result, 0);
+
+                _courseThemes.Add((course.Id, theme.Id));
+                result = _courseRepo.DeleteCourse_Theme(course.Id, theme.Id);
+                Assert.Greater(result, 0);
+                
+            }
+
+            //When
+            var actual = _courseRepo.GetCourseById(course.Id);
+            //Then
+            CollectionAssert.AreEqual(themes, actual.Themes);
+        }
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            DeleteCourseThemes();
+            DeleteThemes();
+            DeleteCourses();
+        }
+        private void DeleteCourseThemes()
+        {
+            foreach (var ids in _courseThemes)
+            {
+                _courseRepo.DeleteCourse_Theme(ids.Item1, ids.Item2);
+            }
+        }
+        private void DeleteThemes()
+        {
+            foreach (var id in _themeIds)
+            {
+                _courseRepo.HardDeleteTheme(id);
+            }
+        }
        
-
-        //[OneTimeTearDown]
-        //public void TearDowTest()
-        //{
-        //    foreach (int themeId in _themeIdList)
-        //    {
-        //        _courseRepo.DeleteCourse_Theme(_courseId, themeId);
-        //        _courseRepo.DeleteTheme(themeId);
-        //    }
-        //    _courseRepo.HardDeleteCourse(_courseId);
-        //}
-
-        public List<ThemeDto> GetThemeMock(int n)
+        private void DeleteCourses()
         {
-            List<ThemeDto> themes = new List<ThemeDto>();
-            switch (n)
+            foreach(var id in _courseIds)
             {
-                case 1:
-                    return themes;
-                case 2:
-                    themes.Add(new ThemeDto { Name="Test theme 1"});
-                    return themes;
-                case 3:
-                    themes.Add(new ThemeDto { Name = "Test theme 2" });
-                    themes.Add(new ThemeDto { Name = "Test theme 3" });
-                    return themes;
-                default:
-                    return themes;
+                _courseRepo.HardDeleteCourse(id);
             }
         }
 
-        public CourseDto GetCourseMock(int n)
-        {
-            CourseDto course = new CourseDto();
-            switch (n)
-            {
-                case 1:
-                    course = new CourseDto() { Name = "TestCourseCase 1", Description = "Test case 1", Duration = 1 };
-                    return course;
-                case 2:
-                    course = new CourseDto() { Name = "TestCourseCase 2", Description = "Test case 2", Duration = 2 };
-                    return course;
-                default:
-                    return course;
-            }
-        }
+
     }
 }
