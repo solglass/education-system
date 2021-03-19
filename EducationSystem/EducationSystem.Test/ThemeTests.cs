@@ -210,6 +210,7 @@ namespace EducationSystem.Data.Tests
             _themeIdList.Add(addedThemeId);
             themeDto.Id = addedThemeId;
 
+            // When
             var expected = new List<TagDto>();
             for (int i = 0; i < mockIds.Length; i++)
             {
@@ -223,7 +224,6 @@ namespace EducationSystem.Data.Tests
                 _tagThemeList.Add((addedThemeId, addedTagId));
             }
 
-            // When
             var actual = _courseRepo.GetThemeById(addedThemeId).Tags;
 
             // Then
