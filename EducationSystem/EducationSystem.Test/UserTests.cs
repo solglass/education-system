@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using EducationSystem.Data.Tests.Mocks;
 using EducationSystem.Core.Enums;
+using System.Linq;
 
 namespace EducationSystem.Data.Tests
 {
@@ -30,26 +31,25 @@ namespace EducationSystem.Data.Tests
         public void UserGetUserByIdPositiveTest(int mockId)
         {
             //Given
-            var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
-            var addedEntityId = _repository.AddUser(dto);
+            var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            var addedEntityId = _repository.AddUser(expected);
             _repository.AddRoleToUser(addedEntityId, 1);
-            dto.Roles = new List<Role> { Role.Admin };
+            expected.Roles = new List<Role> { Role.Admin };
             _addedUserDtoIds.Add(addedEntityId);
             _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
-            dto.Id = addedEntityId;
+            expected.Id = addedEntityId;
 
-            //When
+            //When, Then
             var actual = _repository.GetUserById(addedEntityId);
-
-            // Then
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
         public void UserGetUsersPositiveTest(int[] mockIds)
         {
             //Given
-            var dtoList = new List<UserDto>();
+            var expected = new List<UserDto>();
             foreach (int mockId in mockIds)
             {
                 var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
@@ -59,14 +59,20 @@ namespace EducationSystem.Data.Tests
                 _addedUserDtoIds.Add(addedEntityId);
                 _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
                 dto.Id = addedEntityId;
-                dtoList.Add(dto);
+                expected.Add(dto);
             }
 
-            //When
+            //When, Then
             var actual = _repository.GetUsers();
+            CollectionAssert.AreEqual(expected, actual);
 
-            // Then
-            Assert.AreEqual(dtoList, actual);
+            _addedUserDtoIds.ForEach(id =>
+            {
+                CollectionAssert.AreEqual(expected.First(item => item.Id == id).Roles, actual.First(item => item.Id == id).Roles);
+            });
+
+
+
         }
 
 
@@ -74,20 +80,19 @@ namespace EducationSystem.Data.Tests
         public void UserAddPositiveTest(int mockId)
         {
              //Given
-            var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
-            var addedEntityId = _repository.AddUser(dto);
+            var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            var addedEntityId = _repository.AddUser(expected);
             _repository.AddRoleToUser(addedEntityId, 1);
             Assert.Greater(addedEntityId, 0);
-            dto.Roles = new List<Role> { Role.Admin };
+            expected.Roles = new List<Role> { Role.Admin };
             _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
 
-            //When
+            //When, Then
             _addedUserDtoIds.Add(addedEntityId);
-
-            // Then
-            dto.Id = addedEntityId;
+            expected.Id = addedEntityId;
             var actual = _repository.GetUserById(addedEntityId);
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
 
@@ -95,36 +100,35 @@ namespace EducationSystem.Data.Tests
         public void UserDeleteOrRecoverPositiveTest(int mockId)
         {
             //Given
-            var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
-            var addedEntityId = _repository.AddUser(dto);
+            var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            var addedEntityId = _repository.AddUser(expected);
             _repository.AddRoleToUser(addedEntityId, 1);
-            dto.Roles = new List<Role> { Role.Admin };
+            expected.Roles = new List<Role> { Role.Admin };
             _addedUserDtoIds.Add(addedEntityId);
-            dto.Id = addedEntityId;
+            expected.Id = addedEntityId;
             _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
 
-            //When
+            //When, Then
             _repository.DeleteOrRecoverUser(addedEntityId, true);
-
-            // Then
-            dto.IsDeleted = true;
+            expected.IsDeleted = true;
             var actual = _repository.GetUserById(addedEntityId);
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
         [TestCase(1)]
        public void UserUpdatePositiveTest(int mockId)
        {
             //Given
-            var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
-            var addedEntityId = _repository.AddUser(dto);
+            var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            var addedEntityId = _repository.AddUser(expected);
             _repository.AddRoleToUser(addedEntityId, 1);
-            dto.Roles = new List<Role> { Role.Admin };
+            expected.Roles = new List<Role> { Role.Admin };
 
             _addedUserDtoIds.Add(addedEntityId);
             _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
 
-            dto = new UserDto
+            expected = new UserDto
             {
                 Id = addedEntityId,
                 Email = "qwer4@mail.ru",
@@ -134,18 +138,18 @@ namespace EducationSystem.Data.Tests
                 Phone = "7111111111",
                 UserPic = " 33",
                 //not changed here
-                Login = dto.Login,
-                Password = dto.Password,
-                IsDeleted = dto.IsDeleted,
-                Roles = dto.Roles
-        }; 
+                Login = expected.Login,
+                Password = expected.Password,
+                IsDeleted = expected.IsDeleted,
+                Roles = expected.Roles
+        };
 
-            //When
-            _repository.UpdateUser(dto);
+            //When, Then
+            _repository.UpdateUser(expected);
 
-            // Then
             var actual = _repository.GetUserById(addedEntityId);
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
 
@@ -154,8 +158,8 @@ namespace EducationSystem.Data.Tests
         public void UserDeleteRolePositiveTest(int mockId)
         {
             //Given
-            var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
-            var addedEntityId = _repository.AddUser(dto);
+            var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            var addedEntityId = _repository.AddUser(expected);
 
             _addedUserDtoIds.Add(addedEntityId);
 
@@ -167,14 +171,14 @@ namespace EducationSystem.Data.Tests
             _addedUserRoleIds.Add((addedEntityId, 2));
             _addedUserRoleIds.Add((addedEntityId, 3));
 
-            //When
+            //When, Then
             _repository.DeleteRoleToUser(addedEntityId, 2);
 
-            // Then
-            dto.Id = addedEntityId;
-            dto.Roles = new List<Role> { Role.Admin,Role.Teacher };
+            expected.Id = addedEntityId;
+            expected.Roles = new List<Role> { Role.Admin,Role.Teacher };
             var actual = _repository.GetUserById(addedEntityId);
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
         [TestCase(1)]
@@ -205,24 +209,24 @@ namespace EducationSystem.Data.Tests
         public void UserChangePasswordPositiveTest(int mockId)
         {
             //Given
-            var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
-            var addedEntityId = _repository.AddUser(dto);
+            var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            var addedEntityId = _repository.AddUser(expected);
             _repository.AddRoleToUser(addedEntityId, 1);
-            dto.Roles = new List<Role> { Role.Admin };
+            expected.Roles = new List<Role> { Role.Admin };
             Assert.Greater(addedEntityId, 0);
-            dto.Id = addedEntityId;
+            expected.Id = addedEntityId;
 
             _addedUserDtoIds.Add(addedEntityId);
             _addedUserRoleIds.Add((addedEntityId, 1));
             string newPassword = "fskljjsdljf";
 
-            //When
-            _repository.ChangeUserPassword(addedEntityId, dto.Password, newPassword);
+            //When, Then
+            _repository.ChangeUserPassword(addedEntityId, expected.Password, newPassword);
 
-            // Then
-            dto.Password = newPassword;
+            expected.Password = newPassword;
             var actual = _repository.GetUserById(addedEntityId);
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
 
