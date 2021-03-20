@@ -80,7 +80,7 @@ namespace EducationSystem.Data
             return payments;
         }
 
-        public List<UserDto> GetStudentsNotPaidInMonth(string month)
+        public List<UserDto> GetListOfStudentsByPeriodWhoHaveNotPaid(string month)
         {
             var result = _connection
                .Query<UserDto>("dbo.Student_SelectByPeriodAndIsNotPaid", new { period = month },

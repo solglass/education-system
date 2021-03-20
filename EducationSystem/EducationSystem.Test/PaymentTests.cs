@@ -185,8 +185,6 @@ namespace EducationSystem.Data.Tests
             for (int mockId = 1; mockId <= numberOfPayments; mockId++)
             {
                 var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
-                userDto.Login = null;
-                userDto.Password = null;
                 dto.Student = userDto;
                 dto.ContractNumber = contractNumber;
                 var addedEntityId = _repository.AddPayment(dto);
@@ -207,8 +205,8 @@ namespace EducationSystem.Data.Tests
 
 
 
-        [TestCase(3, "2021.01", "2021.02")]
-        public void GetPaymentsByPeriodPositiveTest(int numberOfPayments, string periodFrom, string periodTo)
+        [TestCase(new int[] { 1, 2, 3}, "2021.01", "2021.02")]
+        public void GetPaymentsByPeriodPositiveTest(int[] mockIds, string periodFrom, string periodTo)
         {
             //Given
             var expected = new List<PaymentDto>();
@@ -241,11 +239,9 @@ namespace EducationSystem.Data.Tests
             _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
             _addedCourseDtoIds.Add(addedCourseId);
 
-            for (int mockId = 1; mockId <= numberOfPayments; mockId++)
+            foreach (var mockId in mockIds)
             {
                 var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
-                userDto.Login = null;
-                userDto.Password = null;
                 dto.Student = userDto;
                 var addedEntityId = _repository.AddPayment(dto);
 
@@ -262,8 +258,8 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual, new PaymentComparer());
         }
 
-        [TestCase(6)]
-        public void GetPaymentsByUserIdPositiveTest(int numberOfPayments)
+        [TestCase(new int[] { 1, 2, 3, 4, 5, 6 })]
+        public void GetPaymentsByUserIdPositiveTest(int[] mockIds)
         {
             //Given
             var expected = new List<PaymentDto>();
@@ -305,11 +301,9 @@ namespace EducationSystem.Data.Tests
             _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
             _addedCourseDtoIds.Add(addedCourseId);
 
-            for (int mockId = 1; mockId <= numberOfPayments; mockId++)
+            foreach (var mockId in mockIds)
             {
                 var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
-                userDto.Login = null;
-                userDto.Password = null;
                 dto.Student = userDto;
                 var addedEntityId = _repository.AddPayment(dto);
 
@@ -377,9 +371,60 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
-        [TestCase(1)]
-        public void GetStudentsNotPaidInMonthPositiveTest (int mockId)
-        { Assert.Fail(); }
+        [TestCase(new int[] { 4, 5, 6, 7 }, "2021.05")]
+        [TestCase(new int[] { 4, 5, 6, 7 }, "2021.06")]
+        public void GetListOfStudentsByPeriodWhoHaveNotPaid (int[] mockIds, string month)
+        {
+            var expected = new List<UserDto>();
+            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
+            var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(2).Clone();
+
+
+            var addedUserId = _userRepository.AddUser(userDto);
+            var addedCourseId = _courseRepository.AddCourse(courseDto);
+            Assert.Greater(addedCourseId, 0);
+
+            courseDto.Id = addedCourseId;
+            groupDto.Course = courseDto;
+
+            var addedGroupId = _groupRepository.AddGroup(groupDto);
+            userDto.Id = addedUserId;
+            studentGroupDto.User.Id = addedUserId;
+            studentGroupDto.Group.Course = courseDto;
+            studentGroupDto.Group.Id = addedGroupId;
+            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
+            Assert.Greater(addedUserId, 0);
+            Assert.Greater(addedGroupId, 0);
+            Assert.Greater(addedStudentGroupId, 0);
+
+
+            _addedUserDtoIds.Add(addedUserId);
+            _addedGroupDtoIds.Add(addedGroupId);
+            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
+            _addedCourseDtoIds.Add(addedCourseId);
+
+            foreach (var mockId in mockIds)
+            {
+                var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
+                dto.Student = userDto;
+                var addedEntityId = _repository.AddPayment(dto);
+
+                _addedPaymentDtoIds.Add(addedEntityId);
+                dto.Id = addedEntityId;
+
+            }
+
+            expected.Add(userDto);
+
+            //When
+
+            var actual = _repository.GetListOfStudentsByPeriodWhoHaveNotPaid(month);
+
+            // Then
+            CollectionAssert.AreEqual(expected, actual, new UserComparer());
+        }
 
         [TearDown]
         public void TearDowTest()
@@ -410,9 +455,9 @@ namespace EducationSystem.Data.Tests
         }
     }
 
-    public class PaymentComparer : System.Collections.IComparer
+    internal class PaymentComparer : System.Collections.IComparer
     {
-        public PaymentComparer()
+        internal PaymentComparer()
         {
 
         }
@@ -428,6 +473,8 @@ namespace EducationSystem.Data.Tests
                 var userDtoExpected = (UserDto)paymentDtoExpected.Student;
                 var userDtoActual = (UserDto)paymentDtoActual.Student;
 
+                var UserComparer = new UserComparer();
+
                 if (
                     ((paymentDtoExpected.Id == paymentDtoActual.Id) &&
                 (paymentDtoExpected.ContractNumber == paymentDtoActual.ContractNumber) &&
@@ -435,6 +482,35 @@ namespace EducationSystem.Data.Tests
                 (paymentDtoExpected.Date == paymentDtoActual.Date) &&
                 (paymentDtoExpected.IsPaid == paymentDtoActual.IsPaid) &&
                 string.Equals(paymentDtoExpected.Period, paymentDtoActual.Period)) &&
+                (UserComparer.Compare(userDtoExpected, userDtoActual) == 0)
+                    )
+
+                    return 0;
+                else return 1;
+            }
+            else if (expected.Equals(actual)) return 0;
+            return 1;
+        }
+
+    }
+
+
+    internal class UserComparer : System.Collections.IComparer
+    {
+        internal UserComparer()
+        {
+
+        }
+
+        public int Compare(object expected, object actual)
+        {
+            if (expected is UserDto && actual is UserDto)
+            {
+
+                var userDtoExpected = (UserDto)expected;
+                var userDtoActual = (UserDto)actual;
+
+                if (
 
                 ((userDtoExpected.Id == userDtoActual.Id) &&
                 string.Equals(userDtoExpected.FirstName, userDtoActual.FirstName) &&

@@ -59,6 +59,15 @@ namespace EducationSystem.Data.Tests.Mocks
                     IsPaid = true,
                     Period = "2021.04",
                 },
+                7 => new PaymentDto()
+                {
+                    Amount = 1111,
+                    ContractNumber = 11,
+                    Date = DateTime.Today,
+                    IsPaid = false,
+                    Period = "2021.05",
+                },
+
                 _ => throw new NotImplementedException()
             };
 
