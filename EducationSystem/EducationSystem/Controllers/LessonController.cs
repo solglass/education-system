@@ -78,7 +78,7 @@ namespace EducationSystem.Controllers
         /// <returns>Output model of the soft-deleted Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
         // https://localhost:50221/api/lesson/34
-        [HttpDelete("{lessonId")]
+        [HttpDelete("{lessonId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult<LessonOutputModel> DeleteLesson(int lessonId)
         {
