@@ -17,25 +17,31 @@ namespace EducationSystem.Data.Models
         {
             return new CourseDto
             {
-                Id = this.Id,
-                Description = this.Description,
-                Duration = this.Duration,
-                Name = this.Name,
-                IsDeleted = this.IsDeleted
+                Name = Name,
+                Description = Description,
+                Duration = Duration,
+                IsDeleted = IsDeleted,
+                Themes = Themes
             };
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
-            CourseDto courseObj = (CourseDto)obj;
+            if (obj == null || !(obj is CourseDto))
+                return false;
+
+            var courseObj = (CourseDto)obj;
 
             return (Id == courseObj.Id &&
                     Name.Equals(courseObj.Name) &&
                     Description.Equals(courseObj.Description) &&
                     Duration == courseObj.Duration &&
                     IsDeleted == courseObj.IsDeleted);
-
-
         }
     }
 }

@@ -41,7 +41,7 @@ namespace EducationSystem.Data.Models
                 return false;
 
             var userDto = (UserDto)obj;
-            
+
             return (userDto.Id == Id) &&
                 string.Equals(userDto.FirstName, FirstName) &&
                 string.Equals(userDto.LastName, LastName) &&

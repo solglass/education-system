@@ -15,15 +15,65 @@ namespace EducationSystem.Data.Tests.Mocks
             {
                 1 => new UserDto()
                 {
-                    Email = "Use1r14@mail.ru",
+                    Email = "ololosh@mail.ru",
+                    FirstName = "Ololosh",
+                    BirthDate = DateTime.ParseExact("06.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    IsDeleted = false,
+                    LastName = "Horoshiy",
+                    Password = "1234567",
+                    Phone = "123123123",
+                    UserPic = " 21",
+                    Login = "ololosha",
+                },
+
+                2 => new UserDto()
+                {
+                    Email = "Use1r15@mail.ru",
+                    FirstName = "Antonio",
+                    BirthDate = DateTime.ParseExact("06.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    IsDeleted = false,
+                    LastName = "Negodny",
+                    Password = "1234567",
+                    Phone = "9999999999",
+                    UserPic = " 22",
+                    Login = "AN7123",
+                },
+
+                3 => new UserDto()
+                {
+                    Email = "vasyarulit@mail.ru",
+                    FirstName = "Vasek",
+                    BirthDate = DateTime.ParseExact("07.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    IsDeleted = false,
+                    LastName = "Pupkin",
+                    Password = "1234567",
+                    Phone = "999977777",
+                    UserPic = " 23",
+                    Login = "vasya",
+                },
+                4 => new UserDto
+                {
+                    Email = "Case4444@mail.ru",
                     FirstName = "Anton",
                     BirthDate = DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
                     IsDeleted = false,
                     LastName = "Negodyaj",
                     Password = "1234567",
-                    Phone = "9999999997",
-                    UserPic = " 22",
-                    Login = "AN712",
+                    Phone = "4448444444",
+                    UserPic = "00",
+                    Login = "Case4444Login"
+                },
+                5 => new UserDto
+                {
+                    Email = "Case55555@mail.ru",
+                    FirstName = "Anton",
+                    BirthDate = DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    IsDeleted = false,
+                    LastName = "Negodyaj",
+                    Password = "1234567",
+                    Phone = "5555595555",
+                    UserPic = "00",
+                    Login = "Case55555Login"
                 },
                 _ => throw new NotImplementedException()
             };
