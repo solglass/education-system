@@ -116,7 +116,29 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
 
         }
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
+        public void AddMaterialTagPositiveTest(int[] mockIds)
+        {
+            //Given
+            var materialDto = AddMaterial(1);
 
+            var expected = new List<TagDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = AddTag(mockIds[i]);
+                expected.Add(tagDto);
+
+                _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+            }
+
+            //When
+            var actual = _materialRepository.GetMaterialById(materialDto.Id).Tags;
+
+            ////Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
         public MaterialDto AddMaterial(int mockId)
         {
             var dto = (MaterialDto)MaterialMock.GetMaterialMock(mockId).Clone();
