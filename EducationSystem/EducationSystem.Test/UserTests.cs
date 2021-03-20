@@ -50,6 +50,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var expected = new List<UserDto>();
+            var _addedUserDtoIdsLocal = new List<int>();
             foreach (int mockId in mockIds)
             {
                 var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
@@ -57,7 +58,9 @@ namespace EducationSystem.Data.Tests
                 _repository.AddRoleToUser(addedEntityId, 1);
                 dto.Roles = new List<Role> { Role.Admin };
                 _addedUserDtoIds.Add(addedEntityId);
+                _addedUserDtoIdsLocal.Add(addedEntityId);
                 _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
+                
                 dto.Id = addedEntityId;
                 expected.Add(dto);
             }
@@ -66,11 +69,11 @@ namespace EducationSystem.Data.Tests
             var actual = _repository.GetUsers();
             CollectionAssert.AreEqual(expected, actual);
 
-            _addedUserDtoIds.ForEach(id =>
+            _addedUserDtoIdsLocal.ForEach(id =>
             {
                 CollectionAssert.AreEqual(expected.First(item => item.Id == id).Roles, actual.First(item => item.Id == id).Roles);
             });
-
+        
 
 
         }
@@ -97,6 +100,7 @@ namespace EducationSystem.Data.Tests
 
 
         [TestCase(1)]
+        [TestCase(6)]
         public void UserDeleteOrRecoverPositiveTest(int mockId)
         {
             //Given
@@ -172,7 +176,7 @@ namespace EducationSystem.Data.Tests
             _addedUserRoleIds.Add((addedEntityId, 3));
 
             //When, Then
-            _repository.DeleteRoleToUser(addedEntityId, 2);
+            _repository.DeleteRoleFromUser(addedEntityId, 2);
 
             expected.Id = addedEntityId;
             expected.Roles = new List<Role> { Role.Admin,Role.Teacher };
@@ -236,7 +240,7 @@ namespace EducationSystem.Data.Tests
 
             _addedUserRoleIds.ForEach(record =>
             {
-                _repository.DeleteRoleToUser(record.Item1, record.Item2);
+                _repository.DeleteRoleFromUser(record.Item1, record.Item2);
             });
 
             _addedUserDtoIds.ForEach(id =>
