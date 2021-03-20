@@ -138,7 +138,7 @@ namespace EducationSystem.Data.Tests
                 Password = dto.Password,
                 IsDeleted = dto.IsDeleted,
                 Roles = dto.Roles
-        };
+        }; 
 
             //When
             _repository.UpdateUser(dto);
