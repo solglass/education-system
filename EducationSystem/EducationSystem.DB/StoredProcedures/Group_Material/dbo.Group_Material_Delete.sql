@@ -1,7 +1,8 @@
-create proc dbo.Group_Material_Delete (
-	@id int
+create proc [dbo].[Group_Material_Delete] (
+	@groupId int,
+	@materialId int
 ) as
 begin
 	delete from dbo.Group_Material
-	where Id = @id
+	where GroupID = @groupId and MaterialID = @materialId
 end

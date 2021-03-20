@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-   public  class LessonDto
+   public  class LessonDto : ICloneable
     {
         public int Id { get; set; }
         public GroupDto Group { get; set; }
@@ -12,5 +12,18 @@ namespace EducationSystem.Data.Models
         public DateTime Date { get; set; }
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
+
+        public object Clone()
+        {
+            return new LessonDto
+            {
+                Id = Id,
+                Group = Group,
+                Comment = Comment,
+                Date = Date,
+                IsDeleted = IsDeleted,
+                Themes = Themes
+            };
+        }
     }
 }
