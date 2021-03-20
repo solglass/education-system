@@ -14,25 +14,25 @@ namespace EducationSystem.Data.Tests.Mocks
                 0 => new LessonDto(),
                 1 => new LessonDto
                 {
-                    Comment = "Test Lesson 1",
+                    Description = "Test Lesson 1",
                     IsDeleted = false,
                     Date = DateTime.Now.AddDays(-1)
                 },
                 2 => new LessonDto
                 {
-                    Comment = "Test Lesson 2",
+                    Description = "Test Lesson 2",
                     IsDeleted = false,
                     Date = DateTime.Now.AddDays(-5)
                 },
                 3 => new LessonDto
                 {
-                    Comment = "Test Lesson 3",
+                    Description = "Test Lesson 3",
                     IsDeleted = false,
                     Date = DateTime.Now.AddDays(+15)
                 },
                 _ => new LessonDto
                 {
-                    Comment = $"Test Lesson {id}",
+                    Description = $"Test Lesson {id}",
                     IsDeleted = false,
                     Date = DateTime.Now.AddDays(+id)
                 },

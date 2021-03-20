@@ -163,7 +163,7 @@ namespace EducationSystem.Data.Tests
         [Test]
         public void UpdateAttendanceNegativeTest() 
         {
-            var dto = AddAttendance(1, 1);
+            AddAttendance(1, 1);
             try
             {
                 _lessonRepository.UpdateAttendance(null);
@@ -173,6 +173,20 @@ namespace EducationSystem.Data.Tests
                 Assert.Pass();
             }
             Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateAttendanceIncorrectChangesNegativeTest()
+        {
+            var dto = AddAttendance(1, 1);
+            dto.Lesson = _lessons[2];
+            dto.User = _students[2];
+           
+            _lessonRepository.UpdateAttendance(dto);
+            var actual = _lessonRepository.GetAttendanceById(dto.Id);
+            
+            Assert.AreNotEqual(dto.Lesson, actual.Lesson);
+            Assert.AreNotEqual(dto.User, actual.User);
         }
 
 
