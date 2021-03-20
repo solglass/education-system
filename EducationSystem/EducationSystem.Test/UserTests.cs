@@ -12,6 +12,7 @@ namespace EducationSystem.Data.Tests
     public class UserTests : BaseTest
     {
         private List<int> _addedUserDtoIds;
+        private List<(int, int)> _addedUserRoleIds;
         private UserRepository _repository;
 
         [OneTimeSetUp]
@@ -19,21 +20,22 @@ namespace EducationSystem.Data.Tests
         {
             _addedUserDtoIds = new List<int>();
             _repository = new UserRepository(_options);
+            _addedUserRoleIds = new List<(int, int)>();
 
         }
 
         //  entity tests are below:
 
         [TestCase(1)]
-        public void UserGetUserById(int mockId)
+        public void UserGetUserByIdPositiveTest(int mockId)
         {
             //Given
             var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
             var addedEntityId = _repository.AddUser(dto);
             _repository.AddRoleToUser(addedEntityId, 1);
-            Assert.Greater(addedEntityId, 0);
             dto.Roles = new List<Role> { Role.Admin };
             _addedUserDtoIds.Add(addedEntityId);
+            _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
             dto.Id = addedEntityId;
 
             //When
@@ -41,6 +43,30 @@ namespace EducationSystem.Data.Tests
 
             // Then
             Assert.AreEqual(dto, actual);
+        }
+
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void UserGetUsersPositiveTest(int[] mockIds)
+        {
+            //Given
+            var dtoList = new List<UserDto>();
+            foreach (int mockId in mockIds)
+            {
+                var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+                var addedEntityId = _repository.AddUser(dto);
+                _repository.AddRoleToUser(addedEntityId, 1);
+                dto.Roles = new List<Role> { Role.Admin };
+                _addedUserDtoIds.Add(addedEntityId);
+                _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
+                dto.Id = addedEntityId;
+                dtoList.Add(dto);
+            }
+
+            //When
+            var actual = _repository.GetUsers();
+
+            // Then
+            Assert.AreEqual(dtoList, actual);
         }
 
 
@@ -53,6 +79,7 @@ namespace EducationSystem.Data.Tests
             _repository.AddRoleToUser(addedEntityId, 1);
             Assert.Greater(addedEntityId, 0);
             dto.Roles = new List<Role> { Role.Admin };
+            _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
 
             //When
             _addedUserDtoIds.Add(addedEntityId);
@@ -72,10 +99,10 @@ namespace EducationSystem.Data.Tests
             var addedEntityId = _repository.AddUser(dto);
             _repository.AddRoleToUser(addedEntityId, 1);
             dto.Roles = new List<Role> { Role.Admin };
-            Assert.Greater(addedEntityId, 0);
             _addedUserDtoIds.Add(addedEntityId);
-            dto.Id = addedEntityId;           
-            
+            dto.Id = addedEntityId;
+            _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
+
             //When
             _repository.DeleteOrRecoverUser(addedEntityId, true);
 
@@ -93,9 +120,10 @@ namespace EducationSystem.Data.Tests
             var addedEntityId = _repository.AddUser(dto);
             _repository.AddRoleToUser(addedEntityId, 1);
             dto.Roles = new List<Role> { Role.Admin };
-            Assert.Greater(addedEntityId, 0);
 
             _addedUserDtoIds.Add(addedEntityId);
+            _addedUserRoleIds.Add((addedEntityId, (int)Role.Admin));
+
             dto = new UserDto
             {
                 Id = addedEntityId,
@@ -106,10 +134,10 @@ namespace EducationSystem.Data.Tests
                 Phone = "7111111111",
                 UserPic = " 33",
                 //not changed here
-                Login = "AN712",
-                Password = "1234567",
-                IsDeleted = false,
-                Roles = new List<Role> { Role.Admin }
+                Login = dto.Login,
+                Password = dto.Password,
+                IsDeleted = dto.IsDeleted,
+                Roles = dto.Roles
         };
 
             //When
@@ -128,11 +156,16 @@ namespace EducationSystem.Data.Tests
             //Given
             var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
             var addedEntityId = _repository.AddUser(dto);
+
             _addedUserDtoIds.Add(addedEntityId);
-            Assert.Greater(addedEntityId, 0);
+
             _repository.AddRoleToUser(addedEntityId, 1);
             _repository.AddRoleToUser(addedEntityId, 2);
             _repository.AddRoleToUser(addedEntityId, 3);
+
+            _addedUserRoleIds.Add((addedEntityId, 1));
+            _addedUserRoleIds.Add((addedEntityId, 2));
+            _addedUserRoleIds.Add((addedEntityId, 3));
 
             //When
             _repository.DeleteRoleToUser(addedEntityId, 2);
@@ -151,8 +184,8 @@ namespace EducationSystem.Data.Tests
             var dto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
             var addedEntityId = _repository.AddUser(dto);
             _addedUserDtoIds.Add(addedEntityId);
-            Assert.Greater(addedEntityId, 0);
             _repository.AddRoleToUser(addedEntityId, 1);
+            _addedUserRoleIds.Add((addedEntityId, 1));
             var expected = new UserDto()
             {
                 Id = addedEntityId,
@@ -180,6 +213,7 @@ namespace EducationSystem.Data.Tests
             dto.Id = addedEntityId;
 
             _addedUserDtoIds.Add(addedEntityId);
+            _addedUserRoleIds.Add((addedEntityId, 1));
             string newPassword = "fskljjsdljf";
 
             //When
@@ -195,10 +229,17 @@ namespace EducationSystem.Data.Tests
         [TearDown]
         public void UserTestTearDown()
         {
+
+            _addedUserRoleIds.ForEach(record =>
+            {
+                _repository.DeleteRoleToUser(record.Item1, record.Item2);
+            });
+
             _addedUserDtoIds.ForEach(id =>
             {
                 _repository.HardDeleteUser(id); 
             });
+
         }
 
     }
