@@ -129,9 +129,9 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(attendanceFindUser, actual);
         }
 
-        [TestCase(0, 1, 1)] // пустой урок
-        [TestCase(1, _amountStudents+5, 1)] //несуществующий юзер
-        public void AddAttendanceNegativeTest(int mockLessonId, int mockUserId, int mockAttendanceId)
+        [TestCase(0, 1, 1)] 
+        [TestCase(1, -1, 1)] 
+        public void AddAttendanceEmptyDataNegativeTest(int mockLessonId, int mockUserId, int mockAttendanceId)
         {
             try
             {
