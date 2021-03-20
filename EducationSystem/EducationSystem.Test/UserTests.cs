@@ -22,6 +22,18 @@ namespace EducationSystem.Data.Tests
             _addedUserDtoIds = new List<int>();
             _repository = new UserRepository(_options);
             _addedUserRoleIds = new List<(int, int)>();
+            var junk = _repository.GetUsers();
+            if (junk.Count > 0)
+            {
+                junk.ForEach(user =>
+                {
+                    user.Roles.ForEach(role =>
+                    {
+                        _repository.DeleteRoleFromUser(user.Id, (int)role);
+                    });
+                    _repository.HardDeleteUser(user.Id);
+                });
+            };
 
         }
 
@@ -48,6 +60,7 @@ namespace EducationSystem.Data.Tests
         [TestCase(new int[] { 1, 2, 3 })]
         public void UserGetUsersPositiveTest(int[] mockIds)
         {
+
             //Given
             var expected = new List<UserDto>();
             var _addedUserDtoIdsLocal = new List<int>();
