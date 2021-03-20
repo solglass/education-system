@@ -205,12 +205,12 @@ namespace EducationSystem.Data.Tests
         }
 
 
-        
+
 
         [TestCase(3, "2021.01", "2021.02")]
         public void GetPaymentsByPeriodPositiveTest(int numberOfPayments, string periodFrom, string periodTo)
         {
-             //Given
+            //Given
             var expected = new List<PaymentDto>();
             var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
             var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
@@ -261,7 +261,7 @@ namespace EducationSystem.Data.Tests
             // Then
             CollectionAssert.AreEqual(expected, actual, new PaymentComparer());
         }
-        
+
         [TestCase(6)]
         public void GetPaymentsByUserIdPositiveTest(int numberOfPayments)
         {
@@ -371,16 +371,32 @@ namespace EducationSystem.Data.Tests
 
             //When
             _repository.UpdatePayment(dto);
-          
+
             // Then
             var actual = _repository.GetPaymentById(addedEntityId);
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(1)]
+        public void GetStudentsNotPaidInMonthPositiveTest (int mockId)
+        { Assert.Fail(); }
 
         [TearDown]
         public void TearDowTest()
         {
+            _addedStudentGroupDtoIds.ForEach(record =>
+            _groupRepository.DeleteStudentGroup(record.Item1, record.Item2));
+
+
+            _addedGroupDtoIds.ForEach(id =>
+            {
+                _groupRepository.DeleteGroup(id);
+            });
+
+
+            _addedCourseDtoIds.ForEach(id =>
+           _courseRepository.HardDeleteCourse(id));
+
             _addedUserDtoIds.ForEach(id =>
             {
                 _userRepository.HardDeleteUser(id);
@@ -391,18 +407,6 @@ namespace EducationSystem.Data.Tests
                 _repository.DeletePayment(id);
             });
 
-
-            _addedGroupDtoIds.ForEach(id =>
-            {
-                _groupRepository.DeleteGroup(id);
-            });
-
-
-            _addedStudentGroupDtoIds.ForEach(record =>
-            _groupRepository.DeleteStudentGroup(record.Item1, record.Item2));
-
-            _addedCourseDtoIds.ForEach(id =>
-           _courseRepository.HardDeleteCourse(id));
         }
     }
 
@@ -424,7 +428,7 @@ namespace EducationSystem.Data.Tests
                 var userDtoExpected = (UserDto)paymentDtoExpected.Student;
                 var userDtoActual = (UserDto)paymentDtoActual.Student;
 
-                if(
+                if (
                     ((paymentDtoExpected.Id == paymentDtoActual.Id) &&
                 (paymentDtoExpected.ContractNumber == paymentDtoActual.ContractNumber) &&
                 (paymentDtoExpected.Amount == paymentDtoActual.Amount) &&
@@ -434,7 +438,7 @@ namespace EducationSystem.Data.Tests
 
                 ((userDtoExpected.Id == userDtoActual.Id) &&
                 string.Equals(userDtoExpected.FirstName, userDtoActual.FirstName) &&
-                string.Equals(userDtoExpected.LastName, userDtoActual.LastName)&& 
+                string.Equals(userDtoExpected.LastName, userDtoActual.LastName) &&
                 string.Equals(userDtoExpected.Phone, userDtoActual.Phone) &&
                 string.Equals(userDtoExpected.Email, userDtoActual.Email) &&
                 (userDtoExpected.IsDeleted == userDtoActual.IsDeleted))

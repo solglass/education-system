@@ -17,7 +17,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     ContractNumber = 99,
                     Date = DateTime.Today,
                     IsPaid = false,
-                    Period = "2021.01",
+                    Period = "2021.01"
                 },
                 2 => new PaymentDto()
                 {
