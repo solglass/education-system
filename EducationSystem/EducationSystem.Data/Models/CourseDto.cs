@@ -4,7 +4,7 @@ using EducationSystem.Data.Models;
 
 namespace EducationSystem.Data.Models
 {
-    public class CourseDto
+    public class CourseDto : ICloneable
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,35 +13,35 @@ namespace EducationSystem.Data.Models
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
 
+        public object Clone()
+        {
+            return new CourseDto
+            {
+                Name = Name,
+                Description = Description,
+                Duration = Duration,
+                IsDeleted = IsDeleted,
+                Themes = Themes
+            };
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         public override bool Equals(object obj)
         {
-            CourseDto courseObj = (CourseDto)obj;
-            if (object.ReferenceEquals(courseObj, null) && object.ReferenceEquals(this, null))
-            {
-                return true;
-            }
-            if (object.ReferenceEquals(courseObj, null))
-            {
+            if (obj == null || !(obj is CourseDto))
                 return false;
-            }
-            if (!courseObj.Description.Equals(Description) || !courseObj.Name.Equals(Name) || courseObj.Duration!=Duration)
-            {
-                return false;
-            }
-            if (courseObj.Themes == null || Themes == null || courseObj.Themes.Count != Themes.Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < Themes.Count; i++)
-            {
-                if (!courseObj.Themes[i].Name.Equals(Themes[i].Name))
-                {
-                    return false;
-                }
-            }
 
-            return true;
+            var courseObj = (CourseDto)obj;
+
+            return (Id == courseObj.Id &&
+                    Name.Equals(courseObj.Name) &&
+                    Description.Equals(courseObj.Description) &&
+                    Duration == courseObj.Duration &&
+                    IsDeleted == courseObj.IsDeleted);
         }
     }
 }
