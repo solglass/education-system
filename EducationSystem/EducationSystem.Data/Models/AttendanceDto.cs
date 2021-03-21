@@ -16,7 +16,6 @@ namespace EducationSystem.Data.Models
         {
             return new AttendanceDto
             {
-                Id = Id,
                 Lesson = Lesson,
                 User = User,
                 IsAbsent = IsAbsent,
@@ -39,13 +38,6 @@ namespace EducationSystem.Data.Models
                 return false;
             }
             return true;
-        }
-
-        public override string ToString()
-        {
-            string s = "";
-            s += Id + " " + IsAbsent + " " + ReasonOfAbsence + ";";
-            return s;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace EducationSystem.Data.Tests
         private List<LessonDto> _lessons;
         private List<UserDto> _students;
 
-        private const int _amountLessons = 40;
+        private const int _amountLessons = 4;
         private const int _amountStudents = 5;
 
         [OneTimeSetUp]
@@ -129,6 +129,68 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(attendanceFindUser, actual);
         }
 
+        [TestCase(0, 1, 1)] 
+        [TestCase(1, -1, 1)] 
+        public void AddAttendanceEmptyDataNegativeTest(int mockLessonId, int mockUserId, int mockAttendanceId)
+        {
+            try
+            {
+                var dto = AddAttendance(mockLessonId, mockUserId, mockAttendanceId);
+            }
+            catch 
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1, 1, 1)]
+        [TestCase(1, 1, 2)]
+        public void AddAttendanceDoubleNegativeTest(int mockLessonId, int mockUserId, int mockAttendanceId)
+        {
+            try
+            {
+                var dto = AddAttendance(mockLessonId, mockUserId);
+                var dtoCopy = AddAttendance(mockLessonId, mockUserId, mockAttendanceId);
+            }
+            catch 
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateAttendanceNegativeTest() 
+        {
+            AddAttendance(1, 1);
+            try
+            {
+                _lessonRepository.UpdateAttendance(null);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateAttendanceIncorrectChangesNegativeTest()
+        {
+            var dto = AddAttendance(1, 1);
+            dto.Lesson = _lessons[2];
+            dto.User = _students[2];
+           
+            _lessonRepository.UpdateAttendance(dto);
+            var actual = _lessonRepository.GetAttendanceById(dto.Id);
+            
+            Assert.AreNotEqual(dto.Lesson, actual.Lesson);
+            Assert.AreNotEqual(dto.User, actual.User);
+        }
+
+
+
         [TearDown]
         public void AttendanceTearDown()
         {
@@ -158,7 +220,7 @@ namespace EducationSystem.Data.Tests
 
         private UserDto AddUser(int mockId)
         {
-            var userDto = UserMock.GetUserDtoMock(mockId);
+            var userDto = UserMockGetter.GetUserDtoMock(mockId);
             userDto.Id = _userRepository.AddUser(userDto);
             Assert.Greater(userDto.Id, 0);
             _addedUserIds.Add(userDto.Id);

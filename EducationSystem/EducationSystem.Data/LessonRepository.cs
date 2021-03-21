@@ -73,7 +73,9 @@ namespace EducationSystem.Data
             return _connection
                 .QuerySingleOrDefault<int>(
                 "dbo.Lesson_Add",
-                new { GroupID = lessonDto.Group.Id, Description = lessonDto.Description, Date = lessonDto.Date },
+                new { GroupId = lessonDto.Group.Id,
+                    Description = lessonDto.Description,
+                    Date = lessonDto.Date },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -97,7 +99,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new {id = lessonDto.Id, Description =  lessonDto.Description, Date = lessonDto.Date },
+                new { lessonDto.Id, lessonDto.Description, lessonDto.Date, lessonDto.Themes },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -200,7 +202,9 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Attendance_Update",
-                new { attendance.Id, attendance.IsAbsent, attendance.ReasonOfAbsence },
+                new { attendance.Id, 
+                    attendance.IsAbsent, 
+                    attendance.ReasonOfAbsence },
                 commandType: CommandType.StoredProcedure);
         }
         public List<AttendanceDto> GetAttendancesByLessonId(int id)

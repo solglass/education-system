@@ -13,29 +13,17 @@ namespace EducationSystem.Data.Models
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
 
-
-
         public object Clone()
-
         {
-
             return new CourseDto
-
             {
                 Name = Name,
-
                 Description = Description,
-
                 Duration = Duration,
-
                 IsDeleted = IsDeleted,
-
                 Themes = Themes
-
             };
-
         }
-
 
         public override int GetHashCode()
         {
@@ -54,8 +42,6 @@ namespace EducationSystem.Data.Models
                     Description.Equals(courseObj.Description) &&
                     Duration == courseObj.Duration &&
                     IsDeleted == courseObj.IsDeleted);
-           
-           
         }
     }
 }
