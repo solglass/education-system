@@ -19,7 +19,6 @@ namespace EducationSystem.Data.Tests.Mocks
                         DeadlineDate = DateTime.Now,
                         IsOptional = true
                     };
-                    break;
                 case 2:
                     return new HomeworkDto
                     {
@@ -28,7 +27,6 @@ namespace EducationSystem.Data.Tests.Mocks
                         DeadlineDate = DateTime.Now,
                         IsOptional = false
                     };
-                    break;
                 case 3:
                     return new HomeworkDto
                     {
@@ -37,7 +35,6 @@ namespace EducationSystem.Data.Tests.Mocks
                         DeadlineDate = DateTime.Now.AddDays(2),
                         IsOptional = true
                     };
-                    break;
                 default:
                     return null;
             }
