@@ -13,7 +13,7 @@ namespace EducationSystem.Data.Tests
         private IUserRepository _userRepo;
         private IGroupRepository _groupRepo;
         private ICourseRepository _courseRepo;
-        private IAttachmentRepository _attachmentRepository;
+        private IAttachmentRepository _attachmentRepo;
 
         private UserDto _userDtoMock;
         private GroupDto _groupDtoMock;
@@ -24,8 +24,8 @@ namespace EducationSystem.Data.Tests
         private List<int> _userIdList;
         private List<int> _groupIdList;
         private List<int> _courseIdList;
-        private List<int> _attachmentIds;
-        private List<(int, int)> _attemptAttachmentIds;
+        private List<int> _attachmentIdList;
+        private List<(int, int)> _attemptAttachmentIdList;
 
         [SetUp]
         public void SetUpTest()
@@ -34,15 +34,15 @@ namespace EducationSystem.Data.Tests
             _userRepo = new UserRepository(_options);
             _groupRepo = new GroupRepository(_options);
             _courseRepo = new CourseRepository(_options);
-            _attachmentRepository = new AttachmentRepository(_options);
+            _attachmentRepo = new AttachmentRepository(_options);
 
             _homeworkAttemptIdList = new List<int>();
             _homeworkIdList = new List<int>();
             _userIdList = new List<int>();
             _groupIdList = new List<int>();
             _courseIdList = new List<int>();
-            _attachmentIds = new List<int>();
-            _attemptAttachmentIds = new List<(int, int)>();
+            _attachmentIdList = new List<int>();
+            _attemptAttachmentIdList = new List<(int, int)>();
 
             _userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
             var addedUserId = _userRepo.AddUser(_userDtoMock);
@@ -235,12 +235,12 @@ namespace EducationSystem.Data.Tests
             foreach(var attachmentMockId in attachmentMockIds)
             {
                 var attachment = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(attachmentMockId).Clone();
-                attachment.Id = _attachmentRepository.AddAttachment(attachment);
+                attachment.Id = _attachmentRepo.AddAttachment(attachment);
                 Assert.Greater(attachment.Id, 0);
-                _attachmentIds.Add(attachment.Id);
-                var result = _attachmentRepository.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
+                _attachmentIdList.Add(attachment.Id);
+                var result = _attachmentRepo.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
                 Assert.Greater(result, 0);
-                _attemptAttachmentIds.Add((addedHomeworkAttemptId, attachment.Id));
+                _attemptAttachmentIdList.Add((addedHomeworkAttemptId, attachment.Id));
                 expected.Attachments.Add(attachment);
             }
 
@@ -256,13 +256,13 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var attachment = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(attachmentMockId).Clone();
-            attachment.Id = _attachmentRepository.AddAttachment(attachment);
+            attachment.Id = _attachmentRepo.AddAttachment(attachment);
             Assert.Greater(attachment.Id, 0);
-            _attachmentIds.Add(attachment.Id);
+            _attachmentIdList.Add(attachment.Id);
             //When
             try
             {
-                var result = _attachmentRepository.AddAttachmentToHomeworkAttempt(-1, attachment.Id);
+                var result = _attachmentRepo.AddAttachmentToHomeworkAttempt(-1, attachment.Id);
             }
             //Then
             catch
@@ -286,7 +286,7 @@ namespace EducationSystem.Data.Tests
             //When
             try
             {
-                var result = _attachmentRepository.AddAttachmentToHomeworkAttempt(attempt.Id, -1);
+                var result = _attachmentRepo.AddAttachmentToHomeworkAttempt(attempt.Id, -1);
             }
             //Then
             catch
@@ -309,18 +309,18 @@ namespace EducationSystem.Data.Tests
             attempt.Id = addedHomeworkAttemptId;
 
             var attachment = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(attachmentMockId).Clone();
-            attachment.Id = _attachmentRepository.AddAttachment(attachment);
+            attachment.Id = _attachmentRepo.AddAttachment(attachment);
             Assert.Greater(attachment.Id, 0);
-            _attachmentIds.Add(attachment.Id);
+            _attachmentIdList.Add(attachment.Id);
 
-            var result = _attachmentRepository.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
+            var result = _attachmentRepo.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
             Assert.Greater(result, 0);
-            _attemptAttachmentIds.Add((addedHomeworkAttemptId, attachment.Id));
+            _attemptAttachmentIdList.Add((addedHomeworkAttemptId, attachment.Id));
 
             //When
             try
             {
-                result = _attachmentRepository.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
+                result = _attachmentRepo.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
             }
             //Then
             catch
@@ -347,29 +347,29 @@ namespace EducationSystem.Data.Tests
             foreach (var attachmentMockId in attachmentMockIds)
             {
                 var attachment = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(attachmentMockId).Clone();
-                attachment.Id = _attachmentRepository.AddAttachment(attachment);
+                attachment.Id = _attachmentRepo.AddAttachment(attachment);
                 Assert.Greater(attachment.Id, 0);
 
-                _attachmentIds.Add(attachment.Id);
-                var result = _attachmentRepository.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
+                _attachmentIdList.Add(attachment.Id);
+                var result = _attachmentRepo.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
                 Assert.Greater(result, 0);
 
-                _attemptAttachmentIds.Add((addedHomeworkAttemptId, attachment.Id));
+                _attemptAttachmentIdList.Add((addedHomeworkAttemptId, attachment.Id));
                 expected.Attachments.Add(attachment);
             }
 
             foreach (var attachmentMockId in attachmentMockIds)
             {
                 var attachment = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(attachmentMockId).Clone();
-                attachment.Id = _attachmentRepository.AddAttachment(attachment);
+                attachment.Id = _attachmentRepo.AddAttachment(attachment);
                 Assert.Greater(attachment.Id, 0);
 
-                _attachmentIds.Add(attachment.Id);
-                var result = _attachmentRepository.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
+                _attachmentIdList.Add(attachment.Id);
+                var result = _attachmentRepo.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
                 Assert.Greater(result, 0);
 
-                _attemptAttachmentIds.Add((addedHomeworkAttemptId, attachment.Id));
-                result = _attachmentRepository.DeleteAttachmentFromHomeworkAttempt(attachment.Id, addedHomeworkAttemptId);
+                _attemptAttachmentIdList.Add((addedHomeworkAttemptId, attachment.Id));
+                result = _attachmentRepo.DeleteAttachmentFromHomeworkAttempt(attachment.Id, addedHomeworkAttemptId);
                 Assert.AreEqual(1, result);
             }
             //When
@@ -386,7 +386,7 @@ namespace EducationSystem.Data.Tests
             //Given
 
             //When
-            var result = _attachmentRepository.DeleteAttachmentFromHomeworkAttempt(-1, -1);
+            var result = _attachmentRepo.DeleteAttachmentFromHomeworkAttempt(-1, -1);
             //Then
             Assert.AreEqual(0, result);
         }
@@ -404,16 +404,16 @@ namespace EducationSystem.Data.Tests
         }
         private void DeleteHomworkAttemptAttachments()
         {
-            foreach (var item in _attemptAttachmentIds)
+            foreach (var item in _attemptAttachmentIdList)
             {
-                _attachmentRepository.DeleteAttachmentFromHomeworkAttempt(item.Item2, item.Item1);
+                _attachmentRepo.DeleteAttachmentFromHomeworkAttempt(item.Item2, item.Item1);
             }
         }
         private void DeleteAttachments()
         {
-            foreach(var item in _attachmentIds)
+            foreach(var item in _attachmentIdList)
             {
-                _attachmentRepository.DeleteAttachmentById(item);
+                _attachmentRepo.DeleteAttachmentById(item);
             }
         }
 
