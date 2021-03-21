@@ -108,7 +108,6 @@ namespace EducationSystem.Data.Tests
             expected.Id = addedEntityId;
             var actual = _repository.GetUserById(addedEntityId);
             Assert.AreEqual(expected, actual);
-            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
 
@@ -130,7 +129,6 @@ namespace EducationSystem.Data.Tests
             expected.IsDeleted = true;
             var actual = _repository.GetUserById(addedEntityId);
             Assert.AreEqual(expected, actual);
-            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
         [TestCase(1)]
@@ -166,7 +164,6 @@ namespace EducationSystem.Data.Tests
 
             var actual = _repository.GetUserById(addedEntityId);
             Assert.AreEqual(expected, actual);
-            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
 
@@ -243,7 +240,6 @@ namespace EducationSystem.Data.Tests
             expected.Password = newPassword;
             var actual = _repository.GetUserById(addedEntityId);
             Assert.AreEqual(expected, actual);
-            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
 
