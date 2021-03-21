@@ -27,7 +27,7 @@ namespace EducationSystem.Data.Tests
         private List<int> _attachmentIds;
         private List<(int, int)> _attemptAttachmentIds;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUpTest()
         {
             _homeworkRepo = new HomeworkRepository(_options);
@@ -251,6 +251,86 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected.Attachments, actual);
         }
 
+        [TestCase(1)]
+        public void AddHomeworkAttemptAttachmentNegativeTestHomeworkAttemptNotExists(int attachmentMockId)
+        {
+            //Given
+            var attachment = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(attachmentMockId).Clone();
+            attachment.Id = _attachmentRepository.AddAttachment(attachment);
+            Assert.Greater(attachment.Id, 0);
+            _attachmentIds.Add(attachment.Id);
+            //When
+            try
+            {
+                var result = _attachmentRepository.AddAttachmentToHomeworkAttempt(-1, attachment.Id);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void AddHomeworkAttemptAttachmentNegativeTestAttachmentNotExists(int attemptMockId)
+        {
+            //Given
+            var attempt = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(attemptMockId).Clone();
+            attempt.Author = _userDtoMock;
+            attempt.Homework = _homeworkDtoMock;
+            var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(attempt);
+            Assert.Greater(addedHomeworkAttemptId, 0);
+            _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+            attempt.Id = addedHomeworkAttemptId;
+            //When
+            try
+            {
+                var result = _attachmentRepository.AddAttachmentToHomeworkAttempt(attempt.Id, -1);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1,1)]
+        public void AddHomeworkAttemptAttachmentNegativeTestNotUniqueEntity(int attemptMockId, int attachmentMockId)
+        {
+            //Given
+            var attempt = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(attemptMockId).Clone();
+            attempt.Author = _userDtoMock;
+            attempt.Homework = _homeworkDtoMock;
+            var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(attempt);
+            Assert.Greater(addedHomeworkAttemptId, 0);
+            _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+            attempt.Id = addedHomeworkAttemptId;
+
+            var attachment = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(attachmentMockId).Clone();
+            attachment.Id = _attachmentRepository.AddAttachment(attachment);
+            Assert.Greater(attachment.Id, 0);
+            _attachmentIds.Add(attachment.Id);
+
+            var result = _attachmentRepository.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
+            Assert.Greater(result, 0);
+            _attemptAttachmentIds.Add((addedHomeworkAttemptId, attachment.Id));
+
+            //When
+            try
+            {
+                result = _attachmentRepository.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+
         [TestCase(1, new int[] { 1, 2 })]
         [TestCase(1, new int[] { 1 })]
         public void DeleteHomeworkAttemptAttachmentPositiveTest(int attemptMockId, int[] attachmentMockIds)
@@ -300,7 +380,18 @@ namespace EducationSystem.Data.Tests
 
         }
 
-        [OneTimeTearDown]
+        [Test]
+        public void DeleteHomeworkAttemptAttachmentNegativeTestRelationNotExists()
+        {
+            //Given
+
+            //When
+            var result = _attachmentRepository.DeleteAttachmentFromHomeworkAttempt(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
+        [TearDown]
         public void TestTearDown()
         {
             DeleteHomworkAttemptAttachments();
