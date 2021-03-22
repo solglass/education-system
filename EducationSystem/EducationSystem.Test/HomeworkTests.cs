@@ -322,6 +322,7 @@ namespace EducationSystem.Data.Tests
             try
             {
                 _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
+                _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
             }            
             catch
             {
@@ -511,6 +512,7 @@ namespace EducationSystem.Data.Tests
             try
             {
                 _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
+                _tagHomeworkList.Add((addedHomeworkId, addedTagId));
             }
             catch
             {
