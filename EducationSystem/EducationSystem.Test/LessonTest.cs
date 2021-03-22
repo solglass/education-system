@@ -74,8 +74,51 @@ namespace EducationSystem.Data.Tests
             // Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void DeleteLessonThemePositiveTest(int[] mockIds)
+        {
+            // Given
+            var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
+            lessonDto.Group = _groupDtoMock;
+            var addedLessonId = _lessonRepo.AddLesson(lessonDto);
+            _lessonIdList.Add(addedLessonId);
+            lessonDto.Id = addedLessonId;
+            // When
+            var expected = new List<ThemeDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(themeDto);
+                _themeIdList.Add(addedThemeId);
+                themeDto.Id = addedThemeId;
+                expected.Add(themeDto);
 
-        // possible kosyak
+                _lessonRepo.AddLessonTheme(addedLessonId, addedThemeId);
+                _lessonThemeList.Add((addedLessonId, addedThemeId));
+            }
+
+            var toDeleteIdList = new List<(int, int)>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(themeDto);
+                _themeIdList.Add(addedThemeId);
+                themeDto.Id = addedThemeId;
+
+                _lessonRepo.AddLessonTheme(addedLessonId, addedThemeId);
+                toDeleteIdList.Add((addedLessonId, addedThemeId));
+            }
+            var actual1 = _lessonRepo.GetLessonById(addedLessonId).Themes;
+            // When
+            toDeleteIdList.ForEach(themeTag =>
+            {
+                _lessonRepo.DeleteLessonTheme(themeTag.Item1, themeTag.Item2);
+            });
+            var actual = _lessonRepo.GetLessonById(addedLessonId).Themes;
+
+            // Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
         [OneTimeTearDown]
         public void TearDowTest()
         {
@@ -122,28 +165,5 @@ namespace EducationSystem.Data.Tests
                 _lessonRepo.DeleteLessonTheme(lessonId, themeId);
             }
         }
-        //[TestCase(new int[] { 1, 2, 3 })]
-        //[TestCase(new int[] { })]
-        //public void AddMaterialTagPositiveTest(int[] mockIds)
-        //{
-        //    //Given
-        //    var materialDto = AddMaterial(1);
-
-        //    var expected = new List<TagDto>();
-        //    for (int i = 0; i < mockIds.Length; i++)
-        //    {
-        //        var tagDto = AddTag(mockIds[i]);
-        //        expected.Add(tagDto);
-
-        //        _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
-        //        _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
-        //    }
-
-        //    //When
-        //    var actual = _materialRepository.GetMaterialById(materialDto.Id).Tags;
-
-        //    ////Then
-        //    CollectionAssert.AreEqual(expected, actual);
-        //}
     }
 }
