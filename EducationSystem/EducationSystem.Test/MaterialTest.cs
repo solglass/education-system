@@ -125,24 +125,11 @@ namespace EducationSystem.Data.Tests
 
         }
 
-        [Test]
-        public void MaterialAddNullNegativeTest()
-        {
-            try
-            {
-                AddMaterial(-1);
-            }
-            catch
-            {
-                Assert.Pass();
-            }
-            Assert.Fail();
-        }
-
+        [TestCase(-1)]
         [TestCase(0)]
         [TestCase(2)]
         [TestCase(3)]
-        public void MaterialAddEmptyDataNegativeTest(int mockId)
+        public void MaterialAddNullOrEmptyDataNegativeTest(int mockId)
         {
             try
             {
