@@ -1,9 +1,7 @@
 ﻿using EducationSystem.Data.Models;
 using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Tests
 {
@@ -89,11 +87,12 @@ namespace EducationSystem.Data.Tests
             //When
             try
             {
-                _homeworkRepo.AddHomeworkAttempt(null);
+                var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(null);
+                _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
             }
 
             //Then
-            catch (Exception ex)
+            catch
             {
                 Assert.Pass();
             }
@@ -109,11 +108,12 @@ namespace EducationSystem.Data.Tests
             //When
             try
             {
-                _homeworkRepo.AddHomeworkAttempt(dto);
+                var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
+                _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
             }
 
             //Then
-            catch (Exception ex)
+            catch
             {
                 Assert.Pass();
             }
@@ -163,10 +163,11 @@ namespace EducationSystem.Data.Tests
             //When
             try
             {
-                _homeworkRepo.UpdateHomeworkAttempt(null);
+                var homeworkAttemptId = _homeworkRepo.UpdateHomeworkAttempt(null);
+                _homeworkAttemptIdList.Add(homeworkAttemptId);
             }
             //Then
-            catch (Exception ex)
+            catch
             {
                 Assert.Pass();
             }
@@ -203,10 +204,12 @@ namespace EducationSystem.Data.Tests
             //When
             try
             {
-                _homeworkRepo.UpdateHomeworkAttempt(updto);
+
+                var homeworkAttemptId = _homeworkRepo.UpdateHomeworkAttempt(updto);
+                _homeworkAttemptIdList.Add(homeworkAttemptId);
             }
             //Then
-            catch (Exception ex)
+            catch
             {
                 Assert.Pass();
             }
@@ -349,7 +352,7 @@ namespace EducationSystem.Data.Tests
             }
         }
 
-        public void DeleteCourse()
+        private void DeleteCourse()
         {
             foreach (int courseId in _courseIdList)
             {
@@ -357,7 +360,7 @@ namespace EducationSystem.Data.Tests
             }
         }
 
-        public void DeleteGroups()
+        private void DeleteGroups()
         {
             foreach (int groupId in _groupIdList)
             {

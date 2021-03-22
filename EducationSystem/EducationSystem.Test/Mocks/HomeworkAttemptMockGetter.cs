@@ -1,8 +1,5 @@
 ﻿using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
