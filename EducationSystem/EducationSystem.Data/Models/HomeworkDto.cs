@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Models
 {
@@ -21,19 +20,18 @@ namespace EducationSystem.Data.Models
         {
             return new HomeworkDto
             {
-                Id = this.Id,
-                Description = this.Description,
-                StartDate = this.StartDate,
-                DeadlineDate = this.DeadlineDate,
-                IsOptional = this.IsOptional,
-                IsDeleted = this.IsDeleted
+                Description = Description,
+                StartDate = StartDate,
+                DeadlineDate = DeadlineDate,
+                IsOptional = IsOptional,
+                IsDeleted = IsDeleted
             };
         }
 
         public override bool Equals(object obj)
         {
             if (obj == null)
-                return false;
+                return false;
             if (!(obj is HomeworkDto))
                 return false;
 

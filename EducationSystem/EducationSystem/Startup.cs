@@ -57,9 +57,8 @@ namespace EducationSystem
             });
             app.UseHttpsRedirection();
             app.UseAuthentication();
-            app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseRouting();           
+            app.UseAuthorization();     
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseEndpoints(endpoints =>
             {
