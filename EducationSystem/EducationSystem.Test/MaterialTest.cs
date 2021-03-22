@@ -117,6 +117,36 @@ namespace EducationSystem.Data.Tests
 
         }
 
+        [Test]
+        public void MaterialAddNullNegativeTest()
+        {
+            try
+            {
+                AddMaterial(-1);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(0)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public void MaterialAddEmptyDataNegativeTest(int mockId)
+        {
+            try
+            {
+                AddMaterial(mockId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         public MaterialDto AddMaterial(int mockId)
         {
             var dto = (MaterialDto)MaterialMock.GetMaterialMock(mockId).Clone();
