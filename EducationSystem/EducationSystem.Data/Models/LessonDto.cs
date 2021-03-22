@@ -17,7 +17,6 @@ namespace EducationSystem.Data.Models
         {
             return new LessonDto
             {
-                Id = Id,
                 Group = Group,
                 Description = Description,
                 Date = Date,

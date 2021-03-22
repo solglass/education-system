@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Models
 {
@@ -16,8 +14,8 @@ namespace EducationSystem.Data.Models
         {
             return new AttendanceDto
             {
-                Lesson = Lesson,
-                User = User,
+                Lesson = (LessonDto)Lesson.Clone(),
+                User = (UserDto)User.Clone(),
                 IsAbsent = IsAbsent,
                 ReasonOfAbsence = ReasonOfAbsence
             };

@@ -98,10 +98,6 @@ namespace EducationSystem.Data
             .FirstOrDefault();
             return users;
         }
-        //public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
-        //{
-        //    var UserDictionary = new Dictionary<int, UserDto>();
-        //}
 
         public int ChangeUserPassword(int id, string oldPassword, string newPassword)
         {
@@ -179,7 +175,7 @@ namespace EducationSystem.Data
                commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public int DeleteRoleToUser(int userId, int roleId)
+        public int DeleteRoleFromUser(int userId, int roleId)
         {
             return _connection
                 .Execute("dbo.User_Role_Delete", 
