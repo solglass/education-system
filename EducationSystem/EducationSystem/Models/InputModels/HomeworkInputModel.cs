@@ -1,18 +1,18 @@
 ﻿using EducationSystem.API.Attributes;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EducationSystem.API.Models.InputModels
 {
     public class HomeworkInputModel
     {
+        [Required]
         public string Description { get; set; }
         [CustomDateTimeValidation]
+        [Required]
         public string StartDate { get; set; }
         [CustomDateTimeValidation]
+        [Required]
         public string DeadlineDate { get; set; }
         [Required]
         public int GroupId { get; set; }

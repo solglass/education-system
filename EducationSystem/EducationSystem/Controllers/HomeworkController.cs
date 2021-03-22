@@ -1,20 +1,14 @@
 ﻿using AutoMapper;
-using EducationSystem.API.Mappers;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.Business;
-using EducationSystem.Controllers;
 using EducationSystem.Core.CustomExceptions;
-using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EducationSystem.API.Controllers
 {
@@ -25,11 +19,15 @@ namespace EducationSystem.API.Controllers
     public class HomeworkController : ControllerBase
     {
         private IHomeworkService _homeworkService;
+        private IUserService _userService;
         private IMapper _mapper;
 
-        public HomeworkController(IMapper mapper, IHomeworkService homeworkService)
+        public HomeworkController(IMapper mapper,
+            IHomeworkService homeworkService,
+            IUserService userService)
         {
             _homeworkService = homeworkService;
+            _userService = userService
             _mapper = mapper;
         }
 
@@ -40,6 +38,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns HomeworkOutPutModel</returns>
         // https://localhost:44365/api/homework
         [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Тьютор")]        
         public ActionResult<HomeworkOutputModel> AddHomework([FromBody] HomeworkInputModel homework)
@@ -48,6 +47,7 @@ namespace EducationSystem.API.Controllers
             {
                 throw new ValidationException(ModelState);
             }
+            var userDto = _userService.GetUserById(Convert.ToInt32(User.FindFirst("id").Value));
             var addedHomeworkId = _homeworkService.AddHomework(_mapper.Map<HomeworkDto>(homework));
             var result = _mapper.Map<HomeworkOutputModel>(_homeworkService.GetHomeworkById(addedHomeworkId));
             return Ok(result);
