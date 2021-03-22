@@ -212,25 +212,18 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
 
-       
-        [TestCase(new int[] { 1, 2, 3 })]
-        public void AddMaterialTagDoubleNegativeTest(int[] mockIds)
+        [Test]
+        public void AddMaterialTagDoubleNegativeTest()
         {
             try
             {
-                var materialDto = AddMaterial(1);
-
-                var expected = new List<TagDto>();
-                for (int i = 0; i < mockIds.Length; i++)
-                {
-                    var tagDto = AddTag(mockIds[i]);
-                    expected.Add(tagDto);
+                    var materialDto = AddMaterial(1);
+                    var tagDto = AddTag(1);
 
                     _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
                     _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
                     _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
                     _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
-                }
             }
             catch
             {
