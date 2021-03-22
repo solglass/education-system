@@ -165,8 +165,6 @@ namespace EducationSystem.Data.Tests
         [Test]
         public void AddLessonThemeDoubleNegativeTest()
         {
-            try
-            {
                 var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
                 lessonDto.Group = _groupDtoMock;
                 var addedLessonId = _lessonRepo.AddLesson(lessonDto);
@@ -177,6 +175,8 @@ namespace EducationSystem.Data.Tests
                 var addedThemeId = _courseRepo.AddTheme(themeDto);
                 _themeIdList.Add(addedThemeId);
                 themeDto.Id = addedThemeId;
+            try
+            {
 
                 _lessonRepo.AddLessonTheme(addedLessonId, addedThemeId);
                 _lessonThemeList.Add((addedLessonId,addedThemeId));
