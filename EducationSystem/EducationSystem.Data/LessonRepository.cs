@@ -99,7 +99,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new { lessonDto.Id, lessonDto.Description, lessonDto.Date, lessonDto.Themes },
+                new { lessonDto.Id, lessonDto.Description, lessonDto.Date },
                 commandType: CommandType.StoredProcedure);
         }
 

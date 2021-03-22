@@ -66,6 +66,7 @@ namespace EducationSystem.Data.Tests
                 Id = lessonDto.Id,
                 Description = "Update description",
                 Date = DateTime.Now.AddDays(-20)
+               
             };
             _lessonRepository.UpdateLesson(expected);
             var actual = _lessonRepository.GetLessonById(lessonDto.Id);
