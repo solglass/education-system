@@ -89,6 +89,46 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+
+        [Test]
+        public void AddPaymentNegativeTestNullEntity()
+        {
+            //Given
+
+            //When
+            try
+            {
+                var paymentId = _repository.AddPayment(null);
+                _addedPaymentDtoIds.Add(paymentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(99)]
+        public void PaymentAddNegativeTestEmptyProprties(int mockId)
+        {
+            //Given
+            var payment = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
+
+            //When
+            try
+            {
+                payment.Id = _repository.AddPayment(payment);
+                _addedPaymentDtoIds.Add(payment.Id);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
@@ -140,6 +180,18 @@ namespace EducationSystem.Data.Tests
 
             // Then
             Assert.AreEqual(dto, actual);
+        }
+
+
+        [Test]
+        public void GetPaymentByIdNegativeTestNotExist()
+        {      
+            //Given
+
+            //When
+            var course = _repository.GetPaymentById(-1);
+            //Then
+            Assert.IsNull(course);
         }
 
 
@@ -371,6 +423,59 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(1)]
+        public void UpdatePaymentNegativeTestEntityNotExists(int mockId)
+        {
+            //Given
+            var payment = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
+
+            //When
+            var result = _repository.UpdatePayment(payment);
+
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
+        [TestCase(1, 99)]
+        public void PaymentUpdateNegativeTestEmptyProperties(int mockToAddId, int mockToUpdate)
+        {
+            //Given
+            var payment = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockToAddId).Clone();
+            var paymentId = _repository.AddPayment(payment);
+            _addedPaymentDtoIds.Add(paymentId);
+            //When
+            try
+            {
+                 payment = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockToUpdate).Clone();
+                payment.Id = paymentId;
+                _repository.UpdatePayment(payment);
+
+            }
+            //Then
+            catch (Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void PaymentUpdateNegativeTestNullEntity()
+        {
+            //Given
+
+            //When
+            try
+            {
+                _repository.UpdatePayment(null);
+            }
+            //Then
+            catch (Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(new int[] { 4, 5, 6, 7 }, "2021.05")]
         [TestCase(new int[] { 4, 5, 6, 7 }, "2021.06")]
         public void GetListOfStudentsByPeriodWhoHaveNotPaid (int[] mockIds, string month)
@@ -427,7 +532,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TearDown]
-        public void TearDowTest()
+        public void TearDownTest()
         {
             _addedStudentGroupDtoIds.ForEach(record =>
             _groupRepository.DeleteStudentGroup(record.Item1, record.Item2));

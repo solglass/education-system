@@ -67,6 +67,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     IsPaid = false,
                     Period = "2021.05",
                 },
+                99 => new PaymentDto(),
 
                 _ => throw new NotImplementedException()
             };
