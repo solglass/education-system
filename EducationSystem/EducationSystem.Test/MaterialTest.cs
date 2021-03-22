@@ -79,6 +79,7 @@ namespace EducationSystem.Data.Tests
         public void MaterialsGetByTagIdPositiveTest(int mockId, int amountRelations)
         {
             var dtoTag = AddTag(mockId);
+            var dtoOtherTag = AddTag(mockId);
 
             List<MaterialDto> expected = new List<MaterialDto>();
             for (int i = 0; i < amountRelations; i++)
@@ -87,7 +88,10 @@ namespace EducationSystem.Data.Tests
                 expected.Add(dto);
 
                 _tagRepository.MaterialTagAdd(dto.Id, dtoTag.Id);
+                _tagRepository.MaterialTagAdd(dto.Id, dtoOtherTag.Id);
+
                 _addedMaterialTagIds.Add((dto.Id, dtoTag.Id));
+                _addedMaterialTagIds.Add((dto.Id, dtoOtherTag.Id));
             }
 
             var actual = _materialRepository.GetMaterialsByTagId(dtoTag.Id);
@@ -100,6 +104,7 @@ namespace EducationSystem.Data.Tests
         public void MaterialsGetByGroupIdPositiveTest(int mockId, int amountRelations)
         {
             var dtoGroup = AddGroup(mockId);
+            var dtoOtherGroup = AddGroup(mockId);
 
             List<MaterialDto> expected = new List<MaterialDto>();
             for (int i = 0; i < amountRelations; i ++)
@@ -108,7 +113,10 @@ namespace EducationSystem.Data.Tests
                 expected.Add(dto);
 
                 _groupRepository.AddGroup_Material(dtoGroup.Id, dto.Id);
+                _groupRepository.AddGroup_Material(dtoOtherGroup.Id, dto.Id);
+
                 _addedMaterialGroupIds.Add((dtoGroup.Id, dto.Id));
+                _addedMaterialGroupIds.Add((dtoOtherGroup.Id, dto.Id));
             }
 
             var actual = _materialRepository.GetMaterialsByGroupId(dtoGroup.Id);
