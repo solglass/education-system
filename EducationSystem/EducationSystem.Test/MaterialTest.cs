@@ -147,6 +147,16 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
 
+        [TestCase(1, true)]
+        [TestCase(1, false)]
+        public void MaterialDeleteTotalNegativeTest(int mockId, bool isDeleted)
+        {
+            var dto = AddMaterial(mockId);
+            _materialRepository.DeleteOrRecoverMaterial(dto.Id, isDeleted);
+            var deletedDto = _materialRepository.GetMaterialById(dto.Id);
+            Assert.IsNotNull(deletedDto);
+        }
+
         public MaterialDto AddMaterial(int mockId)
         {
             var dto = (MaterialDto)MaterialMock.GetMaterialMock(mockId).Clone();
