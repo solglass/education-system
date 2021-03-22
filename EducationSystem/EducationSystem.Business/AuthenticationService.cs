@@ -38,7 +38,8 @@ namespace EducationSystem.Business
             var response = new
             {
                 access_token = encodedJwt,
-                username = identity.Name
+                username = identity.Name,
+                user.Id
             };
             return response.ToString();
         }

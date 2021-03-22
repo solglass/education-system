@@ -9,40 +9,34 @@ namespace EducationSystem.Data.Tests.Mocks
     {
         public static LessonDto GetLessonDtoMock(int id)
         {
-            switch (id)
+            return id switch
             {
-                case 1:
-                    return new LessonDto
-                    {
-                        Comment = "Test Lesson 1",
-                        IsDeleted = false,
-                        Date = DateTime.Now.AddDays(-1)
-                    };
-                    break;
-                case 2:
-                    return new LessonDto
-                    {
-                        Comment = "Test Lesson 2",
-                        IsDeleted = false,
-                        Date = DateTime.Now.AddDays(-5)
-                    };
-                    break;
-                case 3:
-                    return new LessonDto
-                    {
-                        Comment = "Test Lesson 3",
-                        IsDeleted = false,
-                        Date = DateTime.Now.AddDays(+15)
-                    };
-                    break;
-                default:
-                    return new LessonDto 
-                    {
-                        Comment = $"Test Lesson {id}",
-                        IsDeleted = false,
-                        Date = DateTime.Now.AddDays(+id)
-                    };
-            }
+                0 => new LessonDto(),
+                1 => new LessonDto
+                {
+                    Description = "Test Lesson 1",
+                    IsDeleted = false,
+                    Date = DateTime.Now.AddDays(-1)
+                },
+                2 => new LessonDto
+                {
+                    Description = "Test Lesson 2",
+                    IsDeleted = false,
+                    Date = DateTime.Now.AddDays(-5)
+                },
+                3 => new LessonDto
+                {
+                    Description = "Test Lesson 3",
+                    IsDeleted = false,
+                    Date = DateTime.Now.AddDays(+15)
+                },
+                _ => new LessonDto
+                {
+                    Description = $"Test Lesson {id}",
+                    IsDeleted = false,
+                    Date = DateTime.Now.AddDays(+id)
+                },
+            };
         }
     }
 }
