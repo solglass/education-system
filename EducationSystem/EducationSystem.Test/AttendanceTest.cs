@@ -1,9 +1,7 @@
 ﻿using EducationSystem.Data.Models;
 using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Tests
 {
@@ -24,7 +22,7 @@ namespace EducationSystem.Data.Tests
         private List<LessonDto> _lessons;
         private List<UserDto> _students;
 
-        private const int _amountLessons = 40;
+        private const int _amountLessons = 4;
         private const int _amountStudents = 5;
 
         [OneTimeSetUp]
@@ -128,6 +126,68 @@ namespace EducationSystem.Data.Tests
 
             CollectionAssert.AreEqual(attendanceFindUser, actual);
         }
+
+        [TestCase(0, 1, 1)] 
+        [TestCase(1, -1, 1)] 
+        public void AddAttendanceEmptyDataNegativeTest(int mockLessonId, int mockUserId, int mockAttendanceId)
+        {
+            try
+            {
+                var dto = AddAttendance(mockLessonId, mockUserId, mockAttendanceId);
+            }
+            catch 
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1, 1, 1)]
+        [TestCase(1, 1, 2)]
+        public void AddAttendanceDoubleNegativeTest(int mockLessonId, int mockUserId, int mockAttendanceId)
+        {
+            try
+            {
+                var dto = AddAttendance(mockLessonId, mockUserId);
+                var dtoCopy = AddAttendance(mockLessonId, mockUserId, mockAttendanceId);
+            }
+            catch 
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateAttendanceNegativeTest() 
+        {
+            AddAttendance(1, 1);
+            try
+            {
+                _lessonRepository.UpdateAttendance(null);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateAttendanceIncorrectChangesNegativeTest()
+        {
+            var dto = AddAttendance(1, 1);
+            dto.Lesson = _lessons[2];
+            dto.User = _students[2];
+           
+            _lessonRepository.UpdateAttendance(dto);
+            var actual = _lessonRepository.GetAttendanceById(dto.Id);
+            
+            Assert.AreNotEqual(dto.Lesson, actual.Lesson);
+            Assert.AreNotEqual(dto.User, actual.User);
+        }
+
+
 
         [TearDown]
         public void AttendanceTearDown()
