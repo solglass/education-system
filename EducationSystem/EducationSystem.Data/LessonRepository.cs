@@ -36,8 +36,8 @@ namespace EducationSystem.Data
                    lessonEntry.Themes.Add(theme);
                    return lessonEntry;
                },
-               new { id },
-                splitOn: "ID",
+               new { idGroup = id },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
@@ -99,7 +99,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new { lessonDto.Id, lessonDto.Description, lessonDto.Date, lessonDto.Themes },
+                new { lessonDto.Id, lessonDto.Description, lessonDto.Date },
                 commandType: CommandType.StoredProcedure);
         }
 
