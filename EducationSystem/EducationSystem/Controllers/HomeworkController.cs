@@ -50,7 +50,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult<HomeworkOutputModel> AddHomework([FromBody] HomeworkInputModel homework)
         {
             if (!ModelState.IsValid)
@@ -75,7 +75,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{homeworkId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<HomeworkOutputModel> GetHomeworkById(int homeworkId)
         {
             var dto = _homeworkService.GetHomeworkById(homeworkId);
@@ -95,7 +95,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkAttemptOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{homeworkId}/attempts")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkAttemptOutputModel>> GetHomeworkAttemptsByHomeworkId(int homeworkId)
         {
             var dto = _homeworkService.GetHomeworkById(homeworkId);
@@ -114,7 +114,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkSearchOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-group/{groupId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByGroupId(int groupId)
         {
             var groupDto = _groupService.GetGroupById(groupId);
@@ -134,7 +134,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkSearchOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-tag/{tagId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByTagId(int tagId)
         {
             var tagDto = _tagService.GetTagById(tagId);
@@ -154,7 +154,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(List<HomeworkSearchOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-theme/{themeId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByThemeId(int themeId)
         {
             var themeDto = _courseService.GetThemeById(themeId);
@@ -176,7 +176,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPut("{homeworkId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult<HomeworkOutputModel> UpdateHomework(int homeworkId, [FromBody] HomeworkUpdateInputModel homework)
         {
             if (!ModelState.IsValid)
@@ -203,7 +203,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{homeworkId}")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<HomeworkOutputModel> DeleteHomework(int homeworkId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -226,7 +226,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("{homeworkId}/attempt")]
-        [Authorize(Roles = "Студент")]
+        [Authorize(Roles = "Администратор, Студент")]
         public ActionResult<HomeworkAttemptOutputModel> CreateAttempt(int homeworkId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -254,7 +254,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(HomeworkAttemptOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{homeworkId}/attempt/{attemptId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<HomeworkAttemptOutputModel> GetHomeworkAttemptById(int homeworkId, int attemptId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -281,7 +281,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPut("{homeworkId}/attempt/{attemptId}")]
-        [Authorize(Roles = "Админ, Студент")]
+        [Authorize(Roles = "Администратор, Студент")]
         public ActionResult<HomeworkAttemptOutputModel> UpdateHomeworkAttempt(int homeworkId, int attemptId, [FromBody] HomeworkAttemptInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -311,7 +311,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(HomeworkAttemptOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{homeworkId}/attempt/{attemptId}")]
-        [Authorize(Roles = "Админ")]
+        [Authorize(Roles = "Администратор")]
         public ActionResult<HomeworkAttemptOutputModel> DeleteHomeworkAttempt(int homeworkId, int attemptId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -339,7 +339,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("{homeworkId}/attempt/{attemptId}/comment")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<CommentOutputModel> AddComment(int homeworkId, int attemptId, [FromBody] CommentInputModel comment)
         {
             if (!ModelState.IsValid)
@@ -373,7 +373,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPut("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<CommentOutputModel> UpdateComment(int homeworkId, int attemptId, int commentId, [FromBody] CommentUpdateInputModel comment)
         {
             if (!ModelState.IsValid)
@@ -409,7 +409,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<CommentOutputModel> GetCommentById(int homeworkId, int attemptId, int commentId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -438,7 +438,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{homeworkId}/theme/{themeId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult DeleteHomeworkTheme(int homeworkId, int themeId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -462,7 +462,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{homeworkId}/recovery")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult<HomeworkOutputModel> RecoverHomework(int homeworkId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -484,7 +484,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(HomeworkAttemptOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{homeworkId}/attempt/{attemptId}/recovery")]
-        [Authorize(Roles = "Админ, Студент")]
+        [Authorize(Roles = "Администратор, Студент")]
         public ActionResult<HomeworkAttemptOutputModel> RecoverHomeworkAttempt(int homeworkId, int attemptId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -511,7 +511,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult<CommentOutputModel> DeleteComment(int homeworkId, int attemptId, int commentId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -541,7 +541,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{homeworkId}/attempt/{attemptId}/comment/{commentId}/recovery")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult<CommentOutputModel> RecoverComment(int homeworkId, int attemptId, int commentId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -570,7 +570,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("{homeworkId}/theme/{themeId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTheme(int homeworkId, int themeId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -595,7 +595,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("{homeworkId}/tag/{tagId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult AddHomeworkTag(int homeworkId, int tagId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -620,7 +620,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{homeworkId}/tag/{tagId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult DeleteHomeworkTag(int homeworkId, int tagId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -644,7 +644,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/homework/attempt/by-user/2
         [ProducesResponseType(typeof(List<HomeworkAttemptWithCountOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("attempt/by-user/{userId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkAttemptWithCountOutputModel>> GetHomeworkAttemptsByUserId(int userId)
         {
             var userDto = _userService.GetUserById(userId);
@@ -665,7 +665,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:44365/api/homework/attempt/by-group/2/by-status/1
         [ProducesResponseType(typeof(List<HomeworkAttemptWithCountOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("attempt/by-group/{groupId}/by-status/{statusId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<HomeworkAttemptWithCountOutputModel>> GetHomeworkAttemptByStatusIdAndGroupId(int statusId, int groupId)
         {
             var groupDto = _groupService.GetGroupById(groupId);
