@@ -12,7 +12,7 @@ namespace EducationSystem.Data
         int DeleteAttachmentFromHomeworkAttempt(int attachmentId, int homeworkAttemptId);
         int DeleteAttachmentFromComment(int attachmentId, int commentId);
         AttachmentDto GetAttachmentById(int id);
-        int UpdateAttachment(AttachmentDto attachmentDto, int id);
+        int UpdateAttachment(AttachmentDto attachmentDto);
 
 
     }

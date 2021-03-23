@@ -20,9 +20,9 @@ namespace EducationSystem.Business
         {
             return _attachmentRepository.GetAttachmentById(id);
         }
-        public int UpdateAttachment(AttachmentDto attachmentDto, int id)
+        public int UpdateAttachment(AttachmentDto attachmentDto)
         {
-            return _attachmentRepository.UpdateAttachment(attachmentDto, id);
+            return _attachmentRepository.UpdateAttachment(attachmentDto);
         }
 
         public int AddAttachment(AttachmentDto attachmentDto)

@@ -37,23 +37,19 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return data;
         }
-
-        public int UpdateAttachment(AttachmentDto attachmentDto, int id)
-        {          
-            string path = attachmentDto.Path;
-            int attachmentTypeID = (int)attachmentDto.AttachmentType;
-            var data = _connection
+        public int UpdateAttachment(AttachmentDto attachmentDto)
+        {
+            var result = _connection
                 .Execute("dbo.Attachment_Update",
-                new 
-                { 
-                    id,
-                    path,
-                    attachmentTypeID 
-                },
+                 new
+                 {
+                     id = attachmentDto.Id,
+                     Path = attachmentDto.Path,
+                     attachmentTypeId = (int)attachmentDto.AttachmentType
+                 },
                 commandType: System.Data.CommandType.StoredProcedure);
-            return data;
+            return result;
         }
-
 
         public int DeleteAttachmentById(int id)
         {

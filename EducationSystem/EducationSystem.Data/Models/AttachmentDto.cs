@@ -6,17 +6,26 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class AttachmentDto
+    public class AttachmentDto: ICloneable
     {
         public int Id { get; set; }
         public string Path { get; set; }
         public AttachmentType AttachmentType { get; set; }
 
+        public object Clone()
+        {
+            return new AttachmentDto
+            {
+                Path = Path,
+                AttachmentType = AttachmentType
+            };
+        }
+
         public override bool Equals(object obj)
         {
             AttachmentDto attDto = (AttachmentDto)obj;
             
-            if (attDto.Path == Path&& attDto.AttachmentType.Equals(AttachmentType))
+            if (attDto.Path == Path && attDto.AttachmentType.Equals(AttachmentType))
             {
                 return true;
             }
