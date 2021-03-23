@@ -23,8 +23,8 @@ namespace EducationSystem.Business
         int UpdateGroup(GroupDto groupDto);
         List<GroupDto> GetGroupByThemeId(int id);
         List<GroupReportDto> GenerateReport();
-        public List<int> GetGroupsByStudentId(int id);
-        public List<int> GetGroupsByTeacherId(int id);
-        public List<int> GetGroupsByTutorId(int id);
+        List<int> GetGroupsByStudentId(int id);
+        List<int> GetGroupsByTeacherId(int id);
+        List<int> GetGroupsByTutorId(int id);
     }
 }
