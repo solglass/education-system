@@ -15,7 +15,6 @@ namespace EducationSystem.Data.Tests.Mocks
                         Link = "Link test",
                         IsDeleted = false
                     };
-                    break;
                 default:
                     return null;
             }

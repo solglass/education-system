@@ -9,7 +9,6 @@ namespace EducationSystem.Data
         int AddHomework(HomeworkDto homework);
         int AddHomeworkAttempt(HomeworkAttemptDto homeworkAttempt);
         int AddHomework_Theme(int homeworkId, int themeId);
-        List<CommentDto> Comment_SelectByHomeworkId(int id);
         int DeleteHomework_Theme(int homeworkId, int themeId);
         int DeleteOrRecoverComment(int id, bool isDeleted);
         int DeleteOrRecoverHomework(int id, bool isDeleted);

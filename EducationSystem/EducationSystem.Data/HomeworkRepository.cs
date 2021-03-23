@@ -339,74 +339,29 @@ namespace EducationSystem.Data
                 .ToList();
             return comments;
         }
-
         public CommentDto GetCommentById(int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
-            var userDictionary = new Dictionary<int, UserDto>();
-            var homeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
-
             var comment = _connection
-                .Query<CommentDto, UserDto, HomeworkAttemptDto, int?, CommentDto>(
-                    "dbo.Homework_SelectById",
-                    (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
+                .Query<CommentDto, UserDto, CommentDto>(
+                    "dbo.Comment_SelectById",
+                    (comment, user) =>
                     {
                         if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
                         {
                             commentEntry = comment;
-                            commentEntry.Author = new UserDto();
-                            commentEntry.HomeworkAttempt = new HomeworkAttemptDto();
-                            commentDictionary.Add(commentEntry.Id, commentEntry);
-                        }
-
-                        if (homeworkAttempt != null 
-                        && homeworkAttemptStatus != 0 
-                        && user != null 
-                        && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
-                        {
-                            homeworkAttemptEntry = homeworkAttempt;
-                            homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
-                            commentEntry.HomeworkAttempt = homeworkAttemptEntry;
-                            homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
-                        }
-                        if (user != null && !userDictionary.TryGetValue(user.Id, out UserDto userEntry))
-                        {
-                            userEntry = user;
                             commentEntry.Author = user;
-                            userDictionary.Add(userEntry.Id, userEntry);
+                            commentDictionary.Add(commentEntry.Id, commentEntry);
                         }
                         return commentEntry;
                     },
+                    new
+                    { id },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return comment;
         }
-
-        public List<CommentDto> Comment_SelectByHomeworkId(int id)
-        {
-            var commentDictionary = new Dictionary<int, CommentDto>();
-            var result = _connection.Query<CommentDto, UserDto, HomeworkAttemptDto, CommentDto>(
-                "dbo.Comment_SelectByHomeworkId",
-                (comment, user, attempt) =>
-                {
-                    if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
-                    {
-                        commentEntry = comment;
-                        commentEntry.Author = user;
-                        comment.HomeworkAttempt = attempt;
-                        commentDictionary.Add(commentEntry.Id, commentEntry);
-                    }
-                    return commentEntry;
-                },
-                new { id },
-                splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return result;
-        }
-
         public int UpdateComment(CommentDto commentDto)
         {
             return _connection.Execute(
