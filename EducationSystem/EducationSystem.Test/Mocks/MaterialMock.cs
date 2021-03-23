@@ -11,7 +11,7 @@ namespace EducationSystem.Data.Tests.Mocks
             {
                 1 => new MaterialDto
                 {
-                    Description = "Decriprion test",
+                    Description = "Description test",
                     Link = "Link test",
                     IsDeleted = false,
                     Tags=new List<TagDto>()
