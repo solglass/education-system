@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
@@ -19,12 +20,14 @@ namespace EducationSystem.Controllers
     {
         private ILessonService _lessonService;
         private IGroupService _groupService;
+        private ICourseService _courseService;
         private IMapper _mapper;
 
-        public LessonController(IMapper mapper, ILessonService lessonService, IGroupService groupService)
+        public LessonController(IMapper mapper, ILessonService lessonService, IGroupService groupService, ICourseService courseService)
         {
             _lessonService = lessonService;
             _groupService = groupService;
+            _courseService = courseService;
             _mapper = mapper;
         }
         /// <summary>
@@ -32,18 +35,18 @@ namespace EducationSystem.Controllers
         /// </summary>
         /// <param name="inputModel">Input model with all the properties for the new lesson</param>
         /// <returns>Output model of the added lesson</returns>
-       [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
-       [ProducesResponseType (StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/
         [HttpPost]
         [Authorize(Roles = "Админ, Преподаватель, Студент")]
         public ActionResult<LessonOutputModel> AddNewLesson([FromBody] LessonInputModel inputModel)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
 
             var lessonDto = _mapper.Map<LessonDto>(inputModel);
-            var result = _mapper.Map < LessonOutputModel >(_lessonService.GetLessonById(_lessonService.AddLesson(lessonDto)));
+            var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(_lessonService.AddLesson(lessonDto)));
 
 
 
@@ -132,9 +135,10 @@ namespace EducationSystem.Controllers
         /// Updates lesson's properties
         /// </summary>
         /// <param name="lessonId">Id of the lesson</param>
-         /// <param name="inputModel">Input model with all the properties for the new lesson</param>
+        /// <param name="inputModel">Input model with all the properties for the new lesson</param>
         /// <returns>Output model of the updated Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5
         [HttpPut("{lessonId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
@@ -142,10 +146,12 @@ namespace EducationSystem.Controllers
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
-
-            var lessonDto = _mapper.Map<LessonDto>(inputModel);
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            lessonDto = _mapper.Map<LessonDto>(inputModel);
             lessonDto.Id = lessonId;
-           _lessonService.UpdateLesson(lessonDto);
+            _lessonService.UpdateLesson(lessonDto);
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
         }
@@ -157,6 +163,9 @@ namespace EducationSystem.Controllers
         /// <param name="inputModel">Input model with all the properties of the feedback search input model</param>
         /// <returns>List of feedback output models for the lesson</returns>
         [ProducesResponseType(typeof(List<FeedbackOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5/feedback
         [HttpGet("{lessonId}/feedback")]
         [Authorize(Roles = "Админ, Менеджер, Методист")]
@@ -164,7 +173,14 @@ namespace EducationSystem.Controllers
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
-
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            var groupDto = _groupService.GetGroupById((int)inputModel.GroupId);
+            if (groupDto == null)
+                return NotFound($"Group {groupDto} was not found");
+            if (lessonDto.Group.Id != (int)inputModel.GroupId)
+                return BadRequest($"Group with id {(int)inputModel.GroupId} does not belong to the lesson with id {lessonId}"); ;
             var feedbackDtos = _lessonService.GetFeedbacks(inputModel.LessonId, inputModel.GroupId, inputModel.CourseId);
             var feedbackList = _mapper.Map<List<FeedbackOutputModel>>(feedbackDtos);
             return Ok(feedbackList);
@@ -177,13 +193,22 @@ namespace EducationSystem.Controllers
         /// <param name="feedbackId">Id of the feedback</param>
         /// <returns>Output model of the found feedback</returns>
         [ProducesResponseType(typeof(FeedbackOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/5/feedback/3
         [HttpGet("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Менеджер, Методист, Преподаватель")]
         public ActionResult<FeedbackOutputModel> GetFeedbackById(int lessonId, int feedbackId)
         {
-            
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
             var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
+            if (feedbackDto == null)
+                return NotFound($"Feedback {feedbackId} was not found");
+            if (feedbackDto.Lesson.Id != lessonId)
+                return BadRequest($"Feedback with id {feedbackId} does not belong to the lesson with id {lessonId}");
+
             var result = _mapper.Map<FeedbackOutputModel>(feedbackDto);
             return Ok(result);
         }
@@ -196,6 +221,8 @@ namespace EducationSystem.Controllers
         /// <param name="inputModel">>Input model with all the properties for the new feedback</param>
         /// <returns>Output model of the created feedback</returns>
         [ProducesResponseType(typeof(FeedbackOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/id/feedback/
         [HttpPost("{lessonId}/feedback")]
         [Authorize(Roles = "Админ, Студент")]
@@ -203,6 +230,10 @@ namespace EducationSystem.Controllers
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
+
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
 
             var feedbackDto = _mapper.Map<FeedbackDto>(inputModel);
             var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(_lessonService.AddFeedback(lessonId, feedbackDto)));
@@ -218,11 +249,16 @@ namespace EducationSystem.Controllers
         /// <returns>Output model of the updated feedback</returns>
         [ProducesResponseType(typeof(FeedbackOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5/feedback/5
         [HttpPut("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult<FeedbackOutputModel> UpdateFeedback(int lessonId, int feedbackId, [FromBody] FeedbackInputModel feedbackInputModel)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
@@ -248,12 +284,24 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId">Id of the lesson</param>
         /// <param name="feedbackId">Id of the feedback</param>
         /// <returns>Status code 204 (no content) </returns>
-        [ProducesResponseType( StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:44365/api/lesson/3/feedback/3
         [HttpDelete("{lessonId}/feedback/{feedbackId}")]
         [Authorize(Roles = "Админ, Студент")]
         public ActionResult DeleteFeedback(int lessonId, int feedbackId)
         {
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
+            if (feedbackDto == null)
+                return NotFound($"Feedback {feedbackId} was not found");
+            if (feedbackDto.Lesson.Id != lessonId)
+                return BadRequest($"Feedback with id {feedbackId} does not belong to the lesson with id {lessonId}");
+
+
             _lessonService.DeleteFeedback(feedbackId);
             return StatusCode(StatusCodes.Status204NoContent);
         }
@@ -264,11 +312,16 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId">Id of the lesson</param>
         /// <returns>List of attendences output models for the lesson</returns>
         [ProducesResponseType(typeof(List<AttendanceOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/5/attendance/
         [HttpGet("{lessonId}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult<List<AttendanceOutputModel>> GetAttendancesByLessonId(int lessonId)
         {
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+
             var attendanceDtos = _lessonService.GetAttendancesByLessonId(lessonId);
             var listAttendances = _mapper.Map<List<AttendanceOutputModel>>(attendanceDtos);
             return Ok(listAttendances);
@@ -281,12 +334,21 @@ namespace EducationSystem.Controllers
         /// <param name="attendanceId">Id of attendance</param>
         /// <returns>Attendence output model for the lesson</returns>
         [ProducesResponseType(typeof(AttendanceOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/5/attendance/3
         [HttpGet("{lessonId}/attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
         public ActionResult<AttendanceOutputModel> GetAttendanceById(int lessonId, int attendanceId)
         {
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
             var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
+            if (attendanceDto == null)
+                return NotFound($"Attendence {attendanceId} was not found");
+            if (attendanceDto.Lesson.Id != lessonId)
+                return BadRequest($"Attendence with id {attendanceId} does not belong to the lesson with id {lessonId}");
             var result = _mapper.Map<AttendanceOutputModel>(attendanceDto);
             return Ok(result);
         }
@@ -298,13 +360,19 @@ namespace EducationSystem.Controllers
         /// <param name="inputModel">Input model with all the properties for the attendence</param>
         /// <returns>Added attendence output model </returns>
         [ProducesResponseType(typeof(AttendanceOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5/attendance
         [HttpPost("{lessonId}/attendance")]
         [Authorize(Roles = "Админ, Преподаватель")]
-        public ActionResult <AttendanceOutputModel> AddNewAttendance(int lessonId, [FromBody] AttendanceInputModel inputModel)
+        public ActionResult<AttendanceOutputModel> AddNewAttendance(int lessonId, [FromBody] AttendanceInputModel inputModel)
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
+
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
 
             var attendanceDto = _mapper.Map<AttendanceDto>(inputModel);
             var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(_lessonService.AddAttendance(lessonId, attendanceDto)));
@@ -321,14 +389,27 @@ namespace EducationSystem.Controllers
         /// <returns>Updated attendence output model</returns>
         // https://localhost:50221/api/lesson/2/attendance/2
         [ProducesResponseType(typeof(AttendanceOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPut("{lessonId}/Attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
+
         public ActionResult<AttendanceOutputModel> UpdateAttendance(int lessonId, int attendanceId, [FromBody] AttendanceInputModel attendanceInputModel)
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
 
-            var attendanceDto = _mapper.Map<AttendanceDto>(attendanceInputModel);
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
+            if (attendanceDto == null)
+                return NotFound($"Attendence {attendanceId} was not found");
+            if (attendanceDto.Lesson.Id != lessonId)
+                return BadRequest($"Attendence with id {attendanceId} does not belong to the lesson with id {lessonId}");
+
+            attendanceDto = _mapper.Map<AttendanceDto>(attendanceInputModel);
             _lessonService.UpdateAttendance(lessonId, attendanceId, attendanceDto);
             var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(attendanceId));
             return Ok(result);
@@ -340,12 +421,23 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId">Id of the lesson</param>
         /// <param name="attendanceId">Id of Attendance </param>
         /// <returns>Status code 204 (no content)</returns>
-        [ProducesResponseType (StatusCodes.Status204NoContent)]
-        // https://localhost:50221/api/lesson/iD/
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        // https://localhost:50221/api/lesson/Id/
         [HttpDelete("{lessonId}/attendance/{attendanceId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteAttendance(int lessonId, int attendanceId)
         {
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
+            if (attendanceDto == null)
+                return NotFound($"Attendence {attendanceId} was not found");
+            if (attendanceDto.Lesson.Id != lessonId)
+                return BadRequest($"Attendence with id {attendanceId} does not belong to the lesson with id {lessonId}");
+
             _lessonService.DeleteAttendance(attendanceId);
             return StatusCode(StatusCodes.Status204NoContent);
         }
@@ -358,10 +450,15 @@ namespace EducationSystem.Controllers
         /// <returns>The list of Lesson output models</returns>
         // https://localhost:50221/api/lesson/by-theme/14
         [ProducesResponseType(typeof(List<LessonOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int themeId)
         {
+            var themeDto = _courseService.GetThemeById(themeId);
+            if (themeDto == null)
+                return NotFound($"Theme {themeId} was not found");
+
             var lessons = _mapper.Map<List<LessonOutputModel>>(_lessonService.GetLessonsByThemeId(themeId));
             return Ok(lessons);
         }
@@ -372,12 +469,21 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId">Id of the lesson</param>
         /// <param name="themeId">Id of the theme</param>
         /// <returns>Status code 201 (created)</returns>
-        [ProducesResponseType( StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
         // https://localhost:50221/api/lesson/45/theme/54
         [HttpPost("{lessonId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult AddNewLessonTheme(int lessonId, int themeId)
         {
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            var themeDto = _courseService.GetThemeById(themeId);
+            if (themeDto == null)
+                return NotFound($"Theme {themeId} was not found");
+
             var result = _lessonService.AddLessonTheme(lessonId, themeId);
             return StatusCode(StatusCodes.Status201Created);
         }
@@ -388,13 +494,25 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId">Id of the lesson</param>
         /// <param name="themeId">Id of the theme</param>
         /// <returns>Status code 204 (no content)</returns>
-        [ProducesResponseType( StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/45/theme/54
         [HttpDelete("{lessonId}/theme/{themeId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult DeleteLessonTheme(int lessonId, int themeId)
         {
-             _lessonService.DeleteLessonTheme(lessonId, themeId);
+            var lessonDto = _lessonService.GetLessonById(lessonId);
+            if (lessonDto == null)
+                return NotFound($"Lesson {lessonId} was not found");
+            var themeDto = _courseService.GetThemeById(themeId);
+            if (themeDto == null)
+                return NotFound($"Theme {themeId} was not found");
+            var themeFound = lessonDto.Themes.First(theme => theme.Id == themeDto.Id);
+            if (themeFound == null)
+                return BadRequest($"Theme {themeId} with id {themeId} does not belong to the lesson with id {lessonId}");
+
+            _lessonService.DeleteLessonTheme(lessonId, themeId);
             return StatusCode(StatusCodes.Status204NoContent);
         }
     }
