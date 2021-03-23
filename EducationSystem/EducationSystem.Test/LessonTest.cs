@@ -161,7 +161,15 @@ namespace EducationSystem.Data.Tests
             }
             Assert.Fail();
         }
-
+        [Test]
+        public void DeleteLessonTheme_NotExistLessonTheme_NegativeTest()
+        {
+            //Given
+            //When
+            var result=_lessonRepo.DeleteLessonTheme(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
         [Test]
         public void AddLessonThemeDoubleNegativeTest()
         {
