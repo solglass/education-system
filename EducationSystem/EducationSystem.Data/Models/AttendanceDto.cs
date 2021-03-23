@@ -14,8 +14,8 @@ namespace EducationSystem.Data.Models
         {
             return new AttendanceDto
             {
-                Lesson = (LessonDto)Lesson.Clone(),
-                User = (UserDto)User.Clone(),
+                Lesson = Lesson != null ? (LessonDto)Lesson.Clone() : null,
+                User = User != null ? (UserDto)User.Clone() : null,
                 IsAbsent = IsAbsent,
                 ReasonOfAbsence = ReasonOfAbsence
             };
