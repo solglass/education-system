@@ -9,29 +9,25 @@ namespace EducationSystem.Data.Tests.Mocks
     {
         public static FeedbackDto GetFeedbackDtoMock(int id)
         {
-            switch (id)
+            return id switch
             {
-                case 1:
-                    return new FeedbackDto
-                    {
-                        Message = "Test 1 mock",
-                        UnderstandingLevel = Core.Enums.UnderstandingLevel.Bad
-                    };
-                case 2:
-                    return new FeedbackDto
-                    {
-                        Message = "Test 2 mock",
-                        UnderstandingLevel = Core.Enums.UnderstandingLevel.Good
-                    };
-                case 3:
-                    return new FeedbackDto
-                    {
-                        Message = "Test 3 mock",
-                        UnderstandingLevel = Core.Enums.UnderstandingLevel.Good
-                    };
-                default:
-                    return null;
-            }
+                1 => new FeedbackDto
+                {
+                    Message = "Test 1 mock",
+                    UnderstandingLevel = Core.Enums.UnderstandingLevel.Bad
+                },
+                2 => new FeedbackDto
+                {
+                    Message = "Test 2 mock",
+                    UnderstandingLevel = Core.Enums.UnderstandingLevel.Good
+                },
+                3 => new FeedbackDto
+                {
+                    Message = "Test 3 mock",
+                    UnderstandingLevel = Core.Enums.UnderstandingLevel.Good
+                },
+                _ => null,
+            };
         }
     }
 }
