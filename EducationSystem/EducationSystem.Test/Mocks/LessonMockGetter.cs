@@ -30,6 +30,12 @@ namespace EducationSystem.Data.Tests.Mocks
                     IsDeleted = false,
                     Date = DateTime.Now.AddDays(+15)
                 },
+                4 => new LessonDto
+                {
+                    Description = "Test Lesson 4",
+                    IsDeleted = false,
+                    Date = DateTime.Now.AddDays(+20)
+                },
                 _ => new LessonDto
                 {
                     Description = $"Test Lesson {id}",

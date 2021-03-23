@@ -14,6 +14,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     Description = "Course Test 1 mock",
                     Duration = 8,
                     Name = "Test 1 C#",
+                    IsDeleted = false,
                     Themes=new List<ThemeDto>()
                 },
                 2 => new CourseDto

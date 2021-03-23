@@ -11,13 +11,12 @@ namespace EducationSystem.Data.Models
         public string Description { get; set; }
         public DateTime Date { get; set; }
         public bool IsDeleted { get; set; }
-        public List<ThemeDto> Themes { get; set; }
-
+        public List<ThemeDto> Themes { get; set; }
         public object Clone()
         {
-            return new LessonDto
+            return new LessonDto
             {          
-                Group = Group,
+                Group = (GroupDto)Group,
                 Description = Description,
                 Date = Date,
                 IsDeleted = IsDeleted,
@@ -31,11 +30,18 @@ namespace EducationSystem.Data.Models
             if (!(obj is LessonDto))
                 return false;
             LessonDto lessonDto = (LessonDto)obj;
-            if (Id != lessonDto.Id || Description != lessonDto.Description || IsDeleted != lessonDto.IsDeleted || Date == lessonDto.Date)
-            {
-                return false;
-            }
-            return true;
-        }
+            if (Id != lessonDto.Id || Description != lessonDto.Description || IsDeleted != lessonDto.IsDeleted || Date == lessonDto.Date)
+            {
+                return false;
+            }
+            return true;
+        }        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }
