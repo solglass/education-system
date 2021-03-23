@@ -263,6 +263,8 @@
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByUserId.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByGroupIdAndStatusId.sql" />
     <Build Include="StoredProcedures\User\dbo.Check_User_Authentification.sql" />
+    <Build Include="StoredProcedures\dbo.FillEnumTables.sql" />
+    <Build Include="StoredProcedures\dbo.CleanDatabase.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
