@@ -17,6 +17,7 @@ namespace EducationSystem.Data
             _connection = new SqlConnection(_connectionString);
         }
 
+        // ToDo: протянуть в сервис и в контроллер
         public List<MaterialDto> GetMaterials()
         {
             var materials = _connection
@@ -45,8 +46,30 @@ namespace EducationSystem.Data
 
         public MaterialDto GetMaterialById(int id)
         {
+            var tagDictionary = new Dictionary<int, TagDto>();
+            var materialEntry = new MaterialDto();
+
             var material = _connection
-                .Query<MaterialDto>("dbo.Material_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure)
+                .Query<MaterialDto, TagDto, MaterialDto>(
+                "dbo.Material_SelectById",
+                (material, tag) =>
+                {
+                    if (materialEntry.Id == 0)
+                    {
+                        materialEntry = material;
+                        materialEntry.Tags = new List<TagDto>();
+                    }
+                    if (tag != null && !tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
+                    {
+                        tagEntry = tag;
+                        materialEntry.Tags.Add(tag);
+                        tagDictionary.Add(tagEntry.Id, tagEntry);
+                    }
+                    return materialEntry;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
             return material;
         }

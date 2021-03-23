@@ -96,7 +96,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/34
-        [HttpDelete("{lessonId")]
+        [HttpDelete("{lessonId}")]
         [Authorize(Roles = "Админ, Преподаватель")]
         public ActionResult<LessonOutputModel> DeleteLesson(int lessonId)
         {

@@ -15,6 +15,11 @@ namespace EducationSystem.Data.Tests.Mocks
                     GroupStatus = GroupStatus.InProgress,
                     StartDate = DateTime.Now
                 },
+                2 => new GroupDto
+                {
+                    GroupStatus = GroupStatus.InProgress,
+                    StartDate = DateTime.Now.AddDays(+6)
+                },
                 _ => null,
             };
         }
