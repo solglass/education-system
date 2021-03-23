@@ -281,16 +281,17 @@ namespace EducationSystem.Data
             return result;
         }
 
+        // ToDo: покрыть тестом
         public List<AttendanceReportDto> GetStudentByPercentOfSkip(int percent, int groupId)
         {
             var result = _connection
                 .Query<AttendanceReportDto>("dbo.Student_SelectByPercentOfSkip",
                 new
                 {
-                    percent = percent,
-                    groupId = groupId
+                    percent,
+                    groupId
                 },
-                commandType: System.Data.CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure)
                 .Distinct().ToList();
             return result;
         }
