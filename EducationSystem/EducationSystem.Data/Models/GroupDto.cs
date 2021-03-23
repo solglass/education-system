@@ -17,7 +17,7 @@ namespace EducationSystem.Data.Models
             return new GroupDto
             {             
                 StartDate = StartDate,
-                Course = (CourseDto)Course.Clone(),
+                Course = Course != null ? (CourseDto)Course.Clone(): null,
                 GroupStatus = GroupStatus
             };
         }
