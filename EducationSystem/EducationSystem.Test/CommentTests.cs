@@ -59,7 +59,7 @@ namespace EducationSystem.Data.Tests
             _userDtoMock.Id = addedUserId;
 
             _homeworkDtoMock = HomeworkMockGetter.GetHomeworkDtoMock(1);
-            _homeworkDtoMock.Group = _groupDtoMock;
+            _homeworkDtoMock.Group = _groupDtoMock; 
             var addedhomeworkId = _homeworkRepo.AddHomework(_homeworkDtoMock);
             _homeworkIdList.Add(addedhomeworkId);
             _homeworkDtoMock.Id = addedhomeworkId;
@@ -72,194 +72,211 @@ namespace EducationSystem.Data.Tests
             _homeworkAttemptDtoMock.Id = addedhomeworkAttemptId;
         }
 
-        [TestCase(1)]
-        public void CommentAddPositiveTest(int mockId)
-        {
-            //Given
-            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
-            dto.Author = _userDtoMock;
-            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
-
-            var addedCommentId = _homeworkRepo.AddComment(dto);
-            Assert.Greater(addedCommentId, 0);
-
-            _commentIdList.Add(addedCommentId);
-            dto.Id = addedCommentId;
-
-            //When
-            var actual = _homeworkRepo.GetCommentById(addedCommentId);
-
-            //Then
-            Assert.AreEqual(dto, actual);
-        }
-
-        //[TestCase(4)]
-        //public void CommentAdd_EmptyComment_NegativeTest(int mockId)
-        //{
-        //    //Given
-        //    var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
-        //    dto.Group = _groupDtoMock;
-        //    //When
-        //    try
-        //    {
-        //        var addedHomeworkId = _homeworkRepo.AddHomework(dto);
-        //        _homeworkIdList.Add(addedHomeworkId);
-        //    }
-        //    //Then
-        //    catch
-        //    {
-        //        Assert.Pass();
-        //    }
-        //    Assert.Fail();
-        //}
-
         //[TestCase(1)]
-        //public void CommentAdd_WithoutGroup_NegativeTest(int mockId)
+        //public void CommentAddPositiveTest(int mockId)
         //{
         //    //Given
-        //    var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
+        //    var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+        //    dto.Author = _userDtoMock;
+        //    dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+
+        //    var addedCommentId = _homeworkRepo.AddComment(dto);
+        //    Assert.Greater(addedCommentId, 0);
+
+        //    _commentIdList.Add(addedCommentId);
+        //    dto.Id = addedCommentId;
 
         //    //When
-        //    try
-        //    {
-        //        var addedHomeworkId = _homeworkRepo.AddHomework(dto);
-        //        _homeworkIdList.Add(addedHomeworkId);
-        //    }
+        //    var actual = _homeworkRepo.GetCommentById(addedCommentId);
+
         //    //Then
-        //    catch
-        //    {
-        //        Assert.Pass();
-        //    }
-        //    Assert.Fail();
+        //    Assert.AreEqual(dto, actual);
         //}
 
-        //[Test]
-        //public void CommentAdd_Null_NegativeTest()
-        //{
-        //    //Given
-
-        //    //When
-        //    try
-        //    {
-        //        var addedHomeworkId = _homeworkRepo.AddHomework(null);
-        //        _homeworkIdList.Add(addedHomeworkId);
-        //    }
-        //    //Then
-        //    catch
-        //    {
-        //        Assert.Pass();
-        //    }
-        //    Assert.Fail();
-        //}
+        [TestCase(3)]
+        public void CommentAdd_EmptyComment_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            dto.Author = _userDtoMock;
+            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+            //When
+            try
+            {
+                var addedCommentId = _homeworkRepo.AddComment(dto);
+                _commentIdList.Add(addedCommentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
 
         [TestCase(1)]
-        public void CommentUpdatePositiveTest(int mockId)
+        public void CommentAdd_WithoutUser_NegativeTest(int mockId)
         {
             //Given
             var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
-            dto.Author = _userDtoMock;
             dto.HomeworkAttempt = _homeworkAttemptDtoMock;
 
-            var addedCommentId = _homeworkRepo.AddComment(dto);
-            _commentIdList.Add(addedCommentId);
-
-            dto = new CommentDto
+            //When
+            try
             {
-                Id = addedCommentId,
-                Message = "Test 2 mock",
-                IsDeleted = false
-            };
-            _homeworkRepo.UpdateComment(dto);
-
-            //When
-            var actual = _homeworkRepo.GetCommentById(addedCommentId);
-
+                var addedCommentId = _homeworkRepo.AddComment(dto);
+                _commentIdList.Add(addedCommentId);
+            }
             //Then
-            Assert.AreEqual(dto, actual);
-
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
-
-        //[TestCase(4)]
-        //public void CommentUpdate_Empty_NegativeTest(int mockId)
-        //{
-        //    //Given
-        //    var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-        //    dto.Group = _groupDtoMock;
-        //    var addedHomeworkId = _homeworkRepo.AddHomework(dto);
-        //    _homeworkIdList.Add(addedHomeworkId);
-
-        //    dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
-
-        //    //When
-        //    try
-        //    {
-        //        _homeworkRepo.UpdateHomework(dto);
-        //    }
-        //    //Then
-        //    catch
-        //    {
-        //        Assert.Pass();
-        //    }
-        //    Assert.Fail();
-        //}
-
-        //[Test]
-        //public void CommentUpdate_Null_NegativeTest()
-        //{
-        //    //Given
-        //    var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-        //    dto.Group = _groupDtoMock;
-        //    var addedHomeworkId = _homeworkRepo.AddHomework(dto);
-        //    _homeworkIdList.Add(addedHomeworkId);
-        //    //When
-        //    try
-        //    {
-        //        _homeworkRepo.UpdateHomework(null);
-        //    }
-        //    //Then
-        //    catch
-        //    {
-        //        Assert.Pass();
-        //    }
-        //    Assert.Fail();
-        //}
-
-        [TestCase(1, true)]
-        [TestCase(1, false)]
-        public void CommentDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
+        [TestCase(1)]
+        public void CommentAdd_WithoutHomeworkAttempt_NegativeTest(int mockId)
         {
             //Given
             var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            dto.Author = _userDtoMock;
+
+            //When
+            try
+            {
+                var addedCommentId = _homeworkRepo.AddComment(dto);
+                _commentIdList.Add(addedCommentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1)]
+        public void CommentAdd_WithoutUserAndHomeworkAttempt_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+
+            //When
+            try
+            {
+                var addedCommentId = _homeworkRepo.AddComment(dto);
+                _commentIdList.Add(addedCommentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void CommentAdd_Null_NegativeTest()
+        {
+            //Given
+
+            //When
+            try
+            {
+                var addedCommentId = _homeworkRepo.AddComment(null);
+                _commentIdList.Add(addedCommentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(3)]
+        public void CommentUpdate_Empty_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(1).Clone();
             dto.Author = _userDtoMock;
             dto.HomeworkAttempt = _homeworkAttemptDtoMock;
 
             var addedCommentId = _homeworkRepo.AddComment(dto);
             _commentIdList.Add(addedCommentId);
 
-            dto.Id = addedCommentId;
-            dto.IsDeleted = isDeleted;
+            dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
 
             //When
-            var affectedRowsCount = _homeworkRepo.DeleteOrRecoverComment(addedCommentId, isDeleted);
-
-            var actual = _homeworkRepo.GetCommentById(addedCommentId);
-
+            try
+            {
+                _homeworkRepo.UpdateComment(dto);
+            }
             //Then
-            Assert.AreEqual(1, affectedRowsCount);
-            Assert.AreEqual(dto, actual);
-
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
-        //[Test]
-        //public void CommentDeleteOrRecover_NotExistComment_NegativeTest()
+        [Test]
+        public void CommentUpdate_Null_NegativeTest()
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(1).Clone();
+            dto.Author = _userDtoMock;
+            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+
+            var addedCommentId = _homeworkRepo.AddComment(dto);
+            _commentIdList.Add(addedCommentId);
+            //When
+            try
+            {
+                _homeworkRepo.UpdateComment(null);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        //[TestCase(1, true)]
+        //[TestCase(1, false)]
+        //public void CommentDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
         //{
         //    //Given
+        //    var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+        //    dto.Author = _userDtoMock;
+        //    dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+
+        //    var addedCommentId = _homeworkRepo.AddComment(dto);
+        //    _commentIdList.Add(addedCommentId);
+
+        //    dto.Id = addedCommentId;
+        //    dto.IsDeleted = isDeleted;
+
         //    //When
-        //    var deletedRows = _homeworkRepo.DeleteOrRecoverHomework(-1, true);
+        //    var affectedRowsCount = _homeworkRepo.DeleteOrRecoverComment(addedCommentId, isDeleted);
+
+        //    var actual = _homeworkRepo.GetCommentById(addedCommentId);
 
         //    //Then
-        //    Assert.AreEqual(0, deletedRows);
+        //    Assert.AreEqual(1, affectedRowsCount);
+        //    Assert.AreEqual(dto, actual);
+
         //}
+
+        [Test]
+        public void CommentDeleteOrRecover_NotExistComment_NegativeTest()
+        {
+            //Given
+            //When
+            var deletedRows = _homeworkRepo.DeleteOrRecoverComment(-1, true);
+
+            //Then
+            Assert.AreEqual(0, deletedRows);
+        }
 
         [TearDown]
         public void TearDowTest()
@@ -270,7 +287,7 @@ namespace EducationSystem.Data.Tests
             DeleteUser();
             DeleteGroup();
             DeleteCourse();
-
+            
         }
 
         private void DeleteComment()
