@@ -9,27 +9,14 @@ namespace EducationSystem.Data.Tests.Mocks
     {
         public static TagDto GetTagDtoMock(int id)
         {
-            switch (id)
+            return id switch
             {
-                case 1:
-                    return new TagDto
-                    {
-                        Name = "Test Tag"
-                    }; break;
-                case 2:
-                    return new TagDto
-                    {
-                        Name = "Test Tag2"
-                    }; break;
-                case 3:
-                    return new TagDto
-                    {
-                        Name = "Test Tag3"
-                    };
-                    break;
-                default:
-                    return null;
-            }
+                1 => new TagDto { Name = "Test Tag" },
+                2 => new TagDto { Name = "Test Tag2" },
+                3 => new TagDto { Name = "Test Tag3" },
+                4 => new TagDto(),
+                _ => null,
+            };
         }
     }
 }

@@ -50,6 +50,9 @@ GO
 ALTER TABLE [dbo].[HomeworkAttempt_Attachment]
 ADD CONSTRAINT UC_HomeworkAttemptId_AttachmentId UNIQUE(HomeworkAttemptId, AttachmentId)
 GO
+ALTER TABLE [dbo].[Lesson_Theme]
+ADD CONSTRAINT UC_LessonTheme_LessonId_ThemeId UNIQUE(LessonId, ThemeId)
+GO
 
 
 set noexec off
