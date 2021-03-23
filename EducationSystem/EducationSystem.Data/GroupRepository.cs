@@ -35,7 +35,7 @@ namespace EducationSystem.Data
             return result;
         }
        
-        public List<GroupDto> GetGroupByThemeId(int id)
+        public List<GroupDto> GetGroupByThemeId(int themeid)
         {
             List<ThemeDto> Themes = new List<ThemeDto>();
             ThemeDto themeEntry = new ThemeDto();
@@ -55,7 +55,7 @@ namespace EducationSystem.Data
                        }
                        group.GroupStatus = (GroupStatus)groupStatus;
                        return group;
-                   },new { id },
+                   }, new { themeid },
                    splitOn: "Id",
                    commandType: System.Data.CommandType.StoredProcedure)
                .Distinct()

@@ -10,12 +10,27 @@ namespace EducationSystem.Data.Tests.Mocks
         {
             return id switch
             {
-                1 => new GroupDto
-                {
-                    GroupStatus = GroupStatus.InProgress,
-                    StartDate = DateTime.Now
-                },
-                _ => null,
+              1 => new GroupDto
+              {
+                GroupStatus = GroupStatus.InProgress,
+                StartDate = DateTime.Today
+              },
+              2 => new GroupDto
+              {
+                GroupStatus = GroupStatus.Finished,
+                StartDate = DateTime.Today
+              },
+              3 => new GroupDto
+              {
+                GroupStatus = GroupStatus.ReadyToStart,
+                StartDate = DateTime.Today
+              },
+              4 => new GroupDto
+              {
+                GroupStatus = GroupStatus.InProgress,
+                StartDate = DateTime.Today
+              },
+              _ => null,
             };
         }
     }
