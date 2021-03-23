@@ -30,3 +30,7 @@ GO
 
 ALTER TABLE [dbo].[Course_Theme] CHECK CONSTRAINT [Course_Theme_fk1]
 GO
+
+ALTER TABLE [dbo].[Course_Theme]
+ADD CONSTRAINT UC_CourseTheme_CourseId_ThemeId UNIQUE(CourseId, ThemeId)
+GO

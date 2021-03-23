@@ -1,19 +1,12 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EducationSystem.API.Models;
-using EducationSystem.API.Mappers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using EducationSystem.Business;
 using AutoMapper;
 using EducationSystem.API.Models.OutputModels;
-using System.Net;
 using Microsoft.AspNetCore.Http;
 using EducationSystem.Core.CustomExceptions;
 
