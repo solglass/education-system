@@ -12,6 +12,7 @@ namespace EducationSystem.API.Models.InputModels
         [Required]
         public string Comment { get; set; }
         [Required]
+        [Range(1, int.MaxValue)]
         public int AuthorId { get; set; }
         [Required]
         [Range((int)HomeworkAttemptStatus.ToDo,(int)HomeworkAttemptStatus.PassedLate)]

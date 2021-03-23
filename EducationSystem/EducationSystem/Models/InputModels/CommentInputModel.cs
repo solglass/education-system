@@ -9,6 +9,7 @@ namespace EducationSystem.API.Models.InputModels
     public class CommentInputModel
     {
         [Required]
+        [Range(1, int.MaxValue)]
         public int AuthorId { get; set; }
         [Required]
         public string Message { get; set; }
