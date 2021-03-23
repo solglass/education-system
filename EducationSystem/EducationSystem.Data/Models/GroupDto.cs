@@ -15,10 +15,9 @@ namespace EducationSystem.Data.Models
         public object Clone()
         {
             return new GroupDto
-            {
-                Id = Id,
+            {             
                 StartDate = StartDate,
-                Course = Course,
+                Course = (CourseDto)Course.Clone(),
                 GroupStatus = GroupStatus
             };
         }
@@ -41,6 +40,10 @@ namespace EducationSystem.Data.Models
             return true;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
         public override string ToString()
         {
             string s = "";
