@@ -33,12 +33,12 @@ namespace EducationSystem.Controllers
             _service = materialService;
         }
 
-        // https://localhost:44365/api/material/by-group/340
+        // https://localhost:44365/api/material/
         /// <summary>Get all materials </summary>
         /// <returns>List of all materials</returns>
         [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
+        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
         public ActionResult<List<MaterialOutputModel>> GetMaterials()
         {
             return Ok(_mapper.Map<List<MaterialOutputModel>>(_service.GetMaterials()));
@@ -51,7 +51,7 @@ namespace EducationSystem.Controllers
         /// <returns>List of attached materials to group</returns>
         [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("by-group/{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
+        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByGroupId(int id)
         {
             return Ok(_mapper.Map<List<MaterialOutputModel>>(_service.GetMaterialsByGroupId(id)));
@@ -64,7 +64,7 @@ namespace EducationSystem.Controllers
         /// <returns>List of attached materials to tag</returns>
         [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("by-tag/{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
+        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByTagId(int id)
         {
             return Ok(_mapper.Map<List<MaterialOutputModel>>(_service.GetMaterialsByTagId(id)));
@@ -76,7 +76,7 @@ namespace EducationSystem.Controllers
         /// <returns>Material</returns>
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [HttpGet("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
+        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
         public ActionResult<MaterialOutputModel> GetMaterialById(int id)
         {
             return Ok(_mapper.Map<MaterialOutputModel>(_service.GetMaterialById(id)));
@@ -88,7 +88,7 @@ namespace EducationSystem.Controllers
         /// <returns>Added material</returns>
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [HttpPost]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist")]
         public ActionResult<MaterialOutputModel> AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
             var id = _service.AddMaterial(_mapper.Map<MaterialDto>(materialInputModel));
@@ -102,7 +102,7 @@ namespace EducationSystem.Controllers
         /// <returns>Update material</returns>
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [HttpPut("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist")]
         public ActionResult<MaterialOutputModel> UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
             var dto = _mapper.Map<MaterialDto>(material);
@@ -118,7 +118,7 @@ namespace EducationSystem.Controllers
         /// <returns>Update material, which is deleted</returns>
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Admin, Teacher, Tutor")]
         public ActionResult<MaterialOutputModel> DeleteMaterial(int id)
         {
              _service.DeleteMaterial(id);
@@ -132,7 +132,7 @@ namespace EducationSystem.Controllers
         /// <returns>Update material, which is recovered</returns>
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [HttpPut("{id}/recovery")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Admin, Teacher, Tutor")]
         public ActionResult<MaterialOutputModel> RecoverMaterial(int id)
         {
             _service.RecoverMaterial(id);
