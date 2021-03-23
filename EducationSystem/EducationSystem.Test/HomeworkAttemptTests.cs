@@ -321,6 +321,7 @@ namespace EducationSystem.Data.Tests
             try
             {
                 result = _attachmentRepo.AddAttachmentToHomeworkAttempt(addedHomeworkAttemptId, attachment.Id);
+                _attemptAttachmentIdList.Add((addedHomeworkAttemptId, attachment.Id));
             }
             //Then
             catch
