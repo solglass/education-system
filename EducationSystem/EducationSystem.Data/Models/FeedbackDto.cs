@@ -34,8 +34,8 @@ namespace EducationSystem.Data.Models
             FeedbackDto feedbackObj = (FeedbackDto)obj;
             if (Id != feedbackObj.Id ||
                 Message != feedbackObj.Message ||
-                Lesson.Equals(feedbackObj.Lesson) ||
-                User.Equals(feedbackObj.User) ||
+                !Lesson.Equals(feedbackObj.Lesson) ||
+                !User.Equals(feedbackObj.User) ||
                 UnderstandingLevel != feedbackObj.UnderstandingLevel)
             {
                 return false;
