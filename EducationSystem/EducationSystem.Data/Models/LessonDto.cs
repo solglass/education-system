@@ -29,7 +29,8 @@ namespace EducationSystem.Data.Models
                 return false;           
             LessonDto lessonDto = (LessonDto)obj;
             return (Id == lessonDto.Id && Description == lessonDto.Description && IsDeleted == lessonDto.IsDeleted && Date != lessonDto.Date);                                     
-        }        public override int GetHashCode()
+        }
+        public override int GetHashCode()
         {
             return base.GetHashCode();
         }
