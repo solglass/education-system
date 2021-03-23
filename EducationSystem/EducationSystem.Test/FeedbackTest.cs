@@ -81,7 +81,8 @@ namespace EducationSystem.Data.Tests
             var actual = _lessonRepo.GetFeedbackById(addedFeedbackId);
 
             //Then
-            Assert.AreEqual(dto, actual);
+            Assert.IsTrue(CustomFeedbackEquels(dto, actual));
+
 
         }
 
@@ -114,6 +115,28 @@ namespace EducationSystem.Data.Tests
 
         }
 
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void FeedbackByLessonIdSelectAllPositiveTest(int[] mockIds)
+        {
+            // Given
+            var expected = _lessonRepo.GetFeedbacks(_lessonDtoMock.Id, null, null);
+            for (var i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockIds[i]).Clone();
+                dto.User = _userDtoMock;
+                dto.Lesson = _lessonDtoMock;
+                var addedEntityId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedEntityId);
+                dto.Id = addedEntityId;
+                expected.Add(dto);
+            }
+            // When
+            var actual = _lessonRepo.GetFeedbacks(_lessonDtoMock.Id, null, null);
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+     
         [TestCase(1)]
         public void DeleteFeedbackPositiveTest(int mockId)
         {
@@ -186,6 +209,56 @@ namespace EducationSystem.Data.Tests
             foreach (int feedBackId in _feedbackIdList)
             {
                 _lessonRepo.DeleteFeedback(feedBackId);
+            }
+        }
+
+        public bool CustomFeedbackEquels(FeedbackDto firstDto, FeedbackDto secondDto)
+        {
+            if
+               (
+                   firstDto.Id != secondDto.Id ||
+                   firstDto.Message != secondDto.Message ||
+                   firstDto.UnderstandingLevel != firstDto.UnderstandingLevel ||
+                   !CustomLessonEquels(firstDto.Lesson, secondDto.Lesson) ||
+                   !CustomUserEquels(firstDto.User, secondDto.User)
+               )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public bool CustomLessonEquels(LessonDto firstDto, LessonDto secondDto)
+        {
+            if (firstDto.Id != secondDto.Id || !firstDto.Date.Equals(secondDto.Date))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+        public bool CustomUserEquels(UserDto firstDto, UserDto secondDto)
+        {
+            if
+                (
+                    firstDto.Id != secondDto.Id ||
+                    firstDto.FirstName != secondDto.FirstName ||
+                    firstDto.LastName != secondDto.LastName ||
+                    firstDto.Phone != secondDto.Phone ||
+                    firstDto.Email != secondDto.Email ||
+                    firstDto.UserPic != secondDto.UserPic
+                )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }
