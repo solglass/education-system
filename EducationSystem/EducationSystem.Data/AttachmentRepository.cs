@@ -38,7 +38,7 @@ namespace EducationSystem.Data
             return data;
         }
 
-        public int ModifyAttachment(AttachmentDto attachmentDto, int id)
+        public int UpdateAttachment(AttachmentDto attachmentDto, int id)
         {          
             string path = attachmentDto.Path;
             int attachmentTypeID = (int)attachmentDto.AttachmentType;
