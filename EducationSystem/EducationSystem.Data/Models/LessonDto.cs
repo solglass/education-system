@@ -16,25 +16,19 @@ namespace EducationSystem.Data.Models
         {
             return new LessonDto
             {          
-                Group = (GroupDto)Group,
+                Group = Group,
                 Description = Description,
                 Date = Date,
                 IsDeleted = IsDeleted,
                 Themes = Themes
             };
-        }
+        }
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (!(obj is LessonDto))
-                return false;
-            LessonDto lessonDto = (LessonDto)obj;
-            if (Id != lessonDto.Id || Description != lessonDto.Description || IsDeleted != lessonDto.IsDeleted || Date == lessonDto.Date)
-            {
-                return false;
-            }
-            return true;
+            if (obj == null || !(obj is LessonDto))
+                return false;           
+            LessonDto lessonDto = (LessonDto)obj;
+            return (Id == lessonDto.Id && Description == lessonDto.Description && IsDeleted == lessonDto.IsDeleted && Date != lessonDto.Date);                                     
         }        public override int GetHashCode()
         {
             return base.GetHashCode();
