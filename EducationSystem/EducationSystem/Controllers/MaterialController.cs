@@ -32,7 +32,7 @@ namespace EducationSystem.Controllers
         /// <returns>List of all materials</returns>
         [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterials()
         {
             return Ok(_mapper.Map<List<MaterialOutputModel>>(_service.GetMaterials()));
@@ -45,7 +45,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-group/{id}")]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByGroupId(int id)
         {
             var dtos = _service.GetMaterialsByGroupId(id);
@@ -62,7 +62,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-tag/{id}")]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByTagId(int id)
         {
             var dtos = _service.GetMaterialsByTagId(id);
@@ -78,7 +78,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<MaterialOutputModel> GetMaterialById(int id)
         {
             var dtos = _service.GetMaterialById(id);
@@ -94,7 +94,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист")]
         public ActionResult<MaterialOutputModel> AddNewMaterial([FromBody] MaterialInputModel materialInputModel)
         {
             if (!ModelState.IsValid)
@@ -112,7 +112,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист")]
         public ActionResult<MaterialOutputModel> UpdateMaterial(int id, [FromBody] MaterialInputModel material)
         {
             if (_service.GetMaterialById(id) is null)
@@ -133,7 +133,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin, Teacher, Tutor")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult<MaterialOutputModel> DeleteMaterial(int id)
         {
             if (_service.GetMaterialById(id) is null)
@@ -150,7 +150,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(MaterialOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}/recovery")]
-        [Authorize(Roles = "Admin, Teacher, Tutor")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult<MaterialOutputModel> RecoverMaterial(int id)
         {
             if (_service.GetMaterialById(id) is null)
