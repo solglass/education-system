@@ -2,7 +2,6 @@
 using EducationSystem.Data.Models;
 using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace EducationSystem.Data.Tests
@@ -13,7 +12,7 @@ namespace EducationSystem.Data.Tests
         private List<int> _attachmentIdList;
 
         [SetUp]
-        public void OneTimeSetUpTest()
+        public void SetUpTest()
         {
             _attachmentRepo = new AttachmentRepository(_options);
             _attachmentIdList = new List<int>();
@@ -155,7 +154,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TearDown]
-        public void TearDowTest()
+        public void TearDownTest()
         {
             DeleteAttachment();
         }
