@@ -106,19 +106,37 @@ namespace EducationSystem.Data.Tests
                 AttachmentType = AttachmentType.Link
             };
 
-            _attachmentRepo.UpdateAttachment(dto);
+            var affectedRowsCount = _attachmentRepo.UpdateAttachment(dto);
             _attachmentIdList.Add(addedAttachmentId);
 
             //When
             var actual = _attachmentRepo.GetAttachmentById(addedAttachmentId);
 
             //Then
+            Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
 
         }
+        [TestCase(1)]
+        public void AttachmentDeletePositiveTest(int mockId)
+        {
+            // Given
+            var dto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
+            var addedAttachmentId = _attachmentRepo.AddAttachment(dto);
+            _attachmentIdList.Add(addedAttachmentId);
+
+            // When
+            var affectedRowsCount = _attachmentRepo.DeleteAttachmentById(addedAttachmentId);
+
+            var actual = _attachmentRepo.GetAttachmentById(addedAttachmentId);
+
+            // Then
+            Assert.AreEqual(1, affectedRowsCount);
+            Assert.IsNull(actual);
+        }
 
         [Test]
-        public void HomeworkUpdate_Null_NegativeTest()
+        public void AttachmentUpdate_Null_NegativeTest()
         {
             //Given
             var dto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(1).Clone();
