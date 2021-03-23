@@ -34,6 +34,18 @@ namespace EducationSystem.Controllers
         }
 
         // https://localhost:44365/api/material/by-group/340
+        /// <summary>Get all materials </summary>
+        /// <returns>List of all materials</returns>
+        [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
+        [HttpGet]
+        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
+        public ActionResult<List<MaterialOutputModel>> GetMaterials()
+        {
+            return Ok(_mapper.Map<List<MaterialOutputModel>>(_service.GetMaterials()));
+
+        }
+
+        // https://localhost:44365/api/material/by-group/340
         /// <summary>Get all materials related to group</summary>
         /// <param name="id">Id of group, which materials is needed</param>
         /// <returns>List of attached materials to group</returns>
