@@ -39,7 +39,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/
         [HttpPost]
-        [Authorize(Roles = "Админ, Преподаватель, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Студент")]
         public ActionResult<LessonOutputModel> AddNewLesson([FromBody] LessonInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -61,7 +61,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/by-group/45
         [HttpGet("by-group/{groupId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByGroupId(int groupId)
         {
             var group = _groupService.GetGroupById(groupId);
@@ -81,7 +81,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/3
         [HttpGet("{lessonId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Студент")]
         public ActionResult<LessonOutputModel> GetLessonById(int lessonId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
@@ -100,7 +100,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/34
         [HttpDelete("{lessonId}")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<LessonOutputModel> DeleteLesson(int lessonId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
@@ -120,7 +120,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/44/recovery
         [HttpPut("{lessonId}/recovery")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<LessonOutputModel> RecoverLesson(int lessonId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
@@ -141,7 +141,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5
         [HttpPut("{lessonId}")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<LessonOutputModel> UpdateLesson(int lessonId, [FromBody] LessonInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -168,7 +168,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5/feedback
         [HttpGet("{lessonId}/feedback")]
-        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<List<FeedbackOutputModel>> GetFeedbacks(int lessonId, [FromBody] FeedbackSearchInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -197,7 +197,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/5/feedback/3
         [HttpGet("{lessonId}/feedback/{feedbackId}")]
-        [Authorize(Roles = "Админ, Менеджер, Методист, Преподаватель")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист, Преподаватель")]
         public ActionResult<FeedbackOutputModel> GetFeedbackById(int lessonId, int feedbackId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
@@ -225,7 +225,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/id/feedback/
         [HttpPost("{lessonId}/feedback")]
-        [Authorize(Roles = "Админ, Студент")]
+        [Authorize(Roles = "Администратор, Студент")]
         public ActionResult<FeedbackOutputModel> AddNewFeedback(int lessonId, FeedbackInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -253,7 +253,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5/feedback/5
         [HttpPut("{lessonId}/feedback/{feedbackId}")]
-        [Authorize(Roles = "Админ, Студент")]
+        [Authorize(Roles = "Администратор, Студент")]
         public ActionResult<FeedbackOutputModel> UpdateFeedback(int lessonId, int feedbackId, [FromBody] FeedbackInputModel feedbackInputModel)
         {
             if (!ModelState.IsValid)
@@ -289,7 +289,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:44365/api/lesson/3/feedback/3
         [HttpDelete("{lessonId}/feedback/{feedbackId}")]
-        [Authorize(Roles = "Админ, Студент")]
+        [Authorize(Roles = "Администратор, Студент")]
         public ActionResult DeleteFeedback(int lessonId, int feedbackId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
@@ -315,7 +315,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/5/attendance/
         [HttpGet("{lessonId}/attendance")]
-        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
+        [Authorize(Roles = "Администратор, Преподаватель, Менеджер")]
         public ActionResult<List<AttendanceOutputModel>> GetAttendancesByLessonId(int lessonId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
@@ -338,7 +338,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/5/attendance/3
         [HttpGet("{lessonId}/attendance/{attendanceId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
+        [Authorize(Roles = "Администратор, Преподаватель, Менеджер")]
         public ActionResult<AttendanceOutputModel> GetAttendanceById(int lessonId, int attendanceId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
@@ -364,7 +364,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5/attendance
         [HttpPost("{lessonId}/attendance")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<AttendanceOutputModel> AddNewAttendance(int lessonId, [FromBody] AttendanceInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -393,7 +393,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPut("{lessonId}/Attendance/{attendanceId}")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
 
         public ActionResult<AttendanceOutputModel> UpdateAttendance(int lessonId, int attendanceId, [FromBody] AttendanceInputModel attendanceInputModel)
         {
@@ -426,7 +426,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/Id/
         [HttpDelete("{lessonId}/attendance/{attendanceId}")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult DeleteAttendance(int lessonId, int attendanceId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
@@ -452,7 +452,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<LessonOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-theme/{themeId}")]
-        [Authorize(Roles = "Админ, Преподаватель, Студент, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Студент, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int themeId)
         {
             var themeDto = _courseService.GetThemeById(themeId);
@@ -474,7 +474,7 @@ namespace EducationSystem.Controllers
 
         // https://localhost:50221/api/lesson/45/theme/54
         [HttpPost("{lessonId}/theme/{themeId}")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult AddNewLessonTheme(int lessonId, int themeId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
@@ -499,7 +499,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/45/theme/54
         [HttpDelete("{lessonId}/theme/{themeId}")]
-        [Authorize(Roles = "Админ, Преподаватель")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult DeleteLessonTheme(int lessonId, int themeId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
