@@ -9,3 +9,18 @@
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[Tutor_Group]  WITH CHECK ADD  CONSTRAINT [Tutor_Group_fk0] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Tutor_Group] CHECK CONSTRAINT [Tutor_Group_fk0]
+GO
+
+ALTER TABLE [dbo].[Tutor_Group]  WITH CHECK ADD  CONSTRAINT [Tutor_Group_fk1] FOREIGN KEY([GroupID])
+REFERENCES [dbo].[Group] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Tutor_Group] CHECK CONSTRAINT [Tutor_Group_fk1]
+GO
