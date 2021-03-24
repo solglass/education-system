@@ -7,6 +7,7 @@ using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace EducationSystem.Controllers
@@ -20,11 +21,13 @@ namespace EducationSystem.Controllers
 
         private IMapper _mapper;
         private IMaterialService _service;
+        private IGroupService _serviceGroup;
 
-        public MaterialController(IMapper mapper, IMaterialService materialService)
+        public MaterialController(IMapper mapper, IMaterialService materialService, IGroupService groupService)
         {
             _mapper = mapper;
             _service = materialService;
+            _serviceGroup = groupService;
         }
 
         // https://localhost:44365/api/material/
@@ -44,10 +47,17 @@ namespace EducationSystem.Controllers
         /// <returns>List of attached materials to group</returns>
         [ProducesResponseType(typeof(List<MaterialOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("by-group/{id}")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByGroupId(int id)
         {
+            if (User.IsInRole("Студент"))
+            {
+                var groups = _serviceGroup.GetGroupsByStudentId(Convert.ToInt32(User.FindFirst("id").Value));
+                if (!groups.Contains(id))
+                    return Forbid($"User cannot view materials of group {id}");
+            }
             var dtos = _service.GetMaterialsByGroupId(id);
             if (dtos is null)
                 return NotFound($"Group {id} not found");
