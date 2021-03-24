@@ -12,14 +12,18 @@ namespace EducationSystem.Data.Tests
 
         private List<int> _courseIds;
         private List<int> _themeIds;
+        private List<int> _materialIds;
         private List<(int, int)> _courseThemes;
+        private List<(int, int)> _materialThemes;
 
         [OneTimeSetUp]
         public void SetUpTest()
         {
             _courseRepo = new CourseRepository(_options);
             _themeIds = new List<int>();
+            _materialIds = new List<int>();
             _courseThemes = new List<(int, int)>();
+            _materialThemes = new List<(int, int)>();
             _courseIds = new List<int>();
         }
         
@@ -273,6 +277,35 @@ namespace EducationSystem.Data.Tests
         [TestCase(1, new int[] { 2 })]
         [TestCase(1, new int[] { })]
         public void AddCourseThemePositiveTest(int mockId, int[] themeMockIds)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            Assert.Greater(course.Id, 0);
+            _courseIds.Add(course.Id);
+            var expected = new List<ThemeDto>();
+            foreach (var themeMockId in themeMockIds)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                Assert.Greater(theme.Id, 0);
+                expected.Add(theme);
+                _themeIds.Add(theme.Id);
+                var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
+                Assert.Greater(result, 0);
+                _courseThemes.Add((course.Id, theme.Id));
+            }
+
+            //When
+            var actual = _courseRepo.GetCourseById(course.Id);
+            //Then
+            CollectionAssert.AreEqual(expected, actual.Themes);
+        }
+
+        [TestCase(1, new int[] { 1, 2, 3 })]
+        [TestCase(1, new int[] { 2 })]
+        [TestCase(1, new int[] { })]
+        public void AddCourseMaterialPositiveTest(int mockId, int[] themeMockIds)
         {
             //Given
             var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
