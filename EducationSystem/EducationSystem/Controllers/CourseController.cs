@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using EducationSystem.Core.CustomExceptions;
 
 namespace EducationSystem.API.Controllers
 {
@@ -52,6 +53,10 @@ namespace EducationSystem.API.Controllers
        public ActionResult<CourseExtendedOutputModel> GetCourse(int id)       
         {
             var  course = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
+            if(course == null)
+            {
+                return NotFound($"Course with id: {id} not found");
+            }
             return Ok(course);
         }
 
@@ -67,6 +72,8 @@ namespace EducationSystem.API.Controllers
        [Authorize(Roles ="Админ, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> CreateCourse([FromBody] CourseInputModel course)    
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
             var id = _courseService.AddCourse(_mapper.Map<CourseDto>(course));
             var result = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
             return Ok(result);                        
@@ -104,7 +111,9 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> DeleteCourse(int id)
         {
-            var result = _courseService.DeleteCourse(id);
+            if (_courseService.GetCourseById(id) == null)
+                return NotFound($"Course with id: {id} not found");
+            var result = _courseService.DeleteCourse(id);          
             var deleteResult = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
             return Ok(deleteResult);
         }
@@ -120,6 +129,8 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> RecoverCourse(int id)
         {
+            if (_courseService.GetCourseById(id) == null)
+                return NotFound($"Course with id: {id} not found");
             var result = _courseService.RecoverCourse(id);
             var recoverResult = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
             return Ok(recoverResult);
@@ -137,7 +148,11 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult AddThemeToCourse(int courseId, int themeId)
         {
-            int result = _courseService.AddThemeToCourse(courseId, themeId);
+            if (_courseService.GetThemeById(themeId) == null)
+                return NotFound($"Theme with id:{themeId} not found");
+            if (_courseService.GetCourseById(courseId) == null)
+                return NotFound($"Course with id:{courseId} not found");
+            _courseService.AddThemeToCourse(courseId, themeId);
             return StatusCode(StatusCodes.Status201Created);
         }
 
@@ -153,7 +168,11 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Менеджер, Методист")]
         public ActionResult RemoveThemeFromCourse(int courseId, int themeId)
         {
-            var result = _courseService.RemoveThemeFromCourse(courseId, themeId);
+            if (_courseService.GetThemeById(themeId) == null)
+                return NotFound($"Theme with id:{themeId} not found");
+            if (_courseService.GetCourseById(courseId) == null)
+                return NotFound($"Course with id:{courseId} not found");
+             _courseService.RemoveThemeFromCourse(courseId, themeId);
             return NoContent();
         }
 
@@ -182,6 +201,8 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<ThemeExtendedOutputModel> GetThemeById(int id)
         {
+            if (_courseService.GetThemeById(id) == null)
+                return NotFound($"Theme with id:{id} not found");
             var theme = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
             return Ok(theme);
 
