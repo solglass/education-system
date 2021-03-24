@@ -124,6 +124,121 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
 
         }
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
+        public void AddMaterialTagPositiveTest(int[] mockIds)
+        {
+            //Given
+            var materialDto = AddMaterial(1);
+
+            var expected = new List<TagDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = AddTag(mockIds[i]);
+                expected.Add(tagDto);
+
+                _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+            }
+
+            //When
+            var actual = _materialRepository.GetMaterialById(materialDto.Id).Tags;
+
+            ////Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { 3, 2, 1 })]
+        public void DeleteMaterialTagPositiveTest(int[] mockIds)
+        {
+            // Given
+            var materialDto = AddMaterial(1);
+
+            var expected = new List<TagDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = AddTag(mockIds[i]);
+                expected.Add(tagDto);
+
+                _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+            }
+
+            var toDeleteIdList = new List<(int, int)>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var tagDto = AddTag(mockIds[i]);
+
+                _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                toDeleteIdList.Add((materialDto.Id, tagDto.Id));
+            }
+
+            // When
+            toDeleteIdList.ForEach(themeTag =>
+            {
+                _tagRepository.MaterialTagDelete(themeTag.Item1, themeTag.Item2);
+            });
+
+            var actual = _materialRepository.GetMaterialById(materialDto.Id).Tags;
+
+            // Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+        [Test]
+        public void AddMaterialTag_NotExistMaterial_NegativeTest()
+        {
+            //Given
+            var tagDto = AddTag(1);
+            //When
+            try
+            {
+                _tagRepository.MaterialTagAdd(-1, tagDto.Id);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void AddMaterialTag_NotExistTag_NegativeTest()
+        {
+            //Given
+            var materialDto = AddMaterial(1);
+            //When
+            try
+            {
+                _tagRepository.MaterialTagAdd(materialDto.Id, -1);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void AddMaterialTagDoubleNegativeTest()
+        {
+            try
+            {
+                    var materialDto = AddMaterial(1);
+                    var tagDto = AddTag(1);
+
+                    _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                    _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+                    _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                    _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
 
         [TestCase(-1)]
         [TestCase(0)]

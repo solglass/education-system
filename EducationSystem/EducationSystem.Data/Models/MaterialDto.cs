@@ -10,6 +10,7 @@ namespace EducationSystem.Data.Models
         public string Link { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
+        public List<TagDto> Tags { get; set; }
 
         public object Clone()
         {
@@ -18,7 +19,8 @@ namespace EducationSystem.Data.Models
                 Id = Id,
                 Link = Link,
                 Description = Description,
-                IsDeleted = IsDeleted
+                IsDeleted = IsDeleted,
+                Tags=Tags
             };
         }
 

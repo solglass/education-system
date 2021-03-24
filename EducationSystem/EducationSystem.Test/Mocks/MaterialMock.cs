@@ -1,4 +1,5 @@
 ﻿using EducationSystem.Data.Models;
+using System.Collections.Generic;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
@@ -8,13 +9,16 @@ namespace EducationSystem.Data.Tests.Mocks
         {
             return caseId switch
             {
-                0 => new MaterialDto(),
                 1 => new MaterialDto
                 {
                     Description = "Decriprion test",
                     Link = "Link test",
-                    IsDeleted = false
+                    IsDeleted = false,
+                    Tags=new List<TagDto>()
                 },
+                _ => null,
+            };
+                0 => new MaterialDto(),
                 2 => new MaterialDto
                 {
                     Link = "Link test",
