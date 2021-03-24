@@ -16,4 +16,22 @@
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[Attendance]  WITH CHECK ADD  CONSTRAINT [Attendance_fk0] FOREIGN KEY([LessonId])
+REFERENCES [dbo].[Lesson] ([Id])
+ON UPDATE NO ACTION
+GO
 
+ALTER TABLE [dbo].[Attendance] CHECK CONSTRAINT [Attendance_fk0]
+GO
+
+ALTER TABLE [dbo].[Attendance]  WITH CHECK ADD  CONSTRAINT [Attendance_fk1] FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Attendance] CHECK CONSTRAINT [Attendance_fk1]
+GO
+
+ALTER TABLE [dbo].[Attendance]
+ADD CONSTRAINT UC_Attendance_LessonId_UserId UNIQUE(LessonId, UserId)
+GO
