@@ -9,21 +9,23 @@ namespace EducationSystem.Data.Tests
     public class CourseTests:BaseTest
     {
         private ICourseRepository _courseRepo;
+        private IMaterialRepository _materialRepo;
 
         private List<int> _courseIds;
         private List<int> _themeIds;
         private List<int> _materialIds;
         private List<(int, int)> _courseThemes;
-        private List<(int, int)> _materialThemes;
+        private List<(int, int)> _courseMaterials;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUpTest()
         {
             _courseRepo = new CourseRepository(_options);
+            _materialRepo = new MaterialRepository(_options);
             _themeIds = new List<int>();
             _materialIds = new List<int>();
             _courseThemes = new List<(int, int)>();
-            _materialThemes = new List<(int, int)>();
+            _courseMaterials = new List<(int, int)>();
             _courseIds = new List<int>();
         }
         
@@ -303,32 +305,31 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1, new int[] { 1, 2, 3 })]
-        [TestCase(1, new int[] { 2 })]
         [TestCase(1, new int[] { })]
-        public void AddCourseMaterialPositiveTest(int mockId, int[] themeMockIds)
+        public void AddCourseMaterialPositiveTest(int mockId, int[] materialMockIds)
         {
             //Given
             var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
             course.Id = _courseRepo.AddCourse(course);
             Assert.Greater(course.Id, 0);
             _courseIds.Add(course.Id);
-            var expected = new List<ThemeDto>();
-            foreach (var themeMockId in themeMockIds)
+            var expected = new List<MaterialDto>();
+            foreach (var materialMockId in materialMockIds)
             {
-                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
-                theme.Id = _courseRepo.AddTheme(theme);
-                Assert.Greater(theme.Id, 0);
-                expected.Add(theme);
-                _themeIds.Add(theme.Id);
-                var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
+                var material = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(materialMockId).Clone();
+                material.Id = _materialRepo.AddMaterial(material);
+                Assert.Greater(material.Id, 0);
+                expected.Add(material);
+                _materialIds.Add(material.Id);
+                var result = _courseRepo.AddCourse_Material(course.Id, material.Id);
                 Assert.Greater(result, 0);
-                _courseThemes.Add((course.Id, theme.Id));
+                _courseMaterials.Add((course.Id, material.Id));
             }
 
             //When
             var actual = _courseRepo.GetCourseById(course.Id);
             //Then
-            CollectionAssert.AreEqual(expected, actual.Themes);
+            CollectionAssert.AreEqual(expected, actual.Materials);
         }
 
         [TestCase(1)]
@@ -465,18 +466,34 @@ namespace EducationSystem.Data.Tests
         }
 
         // possible kosyak
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
+            DeleteCourseMaterials();
+            DeleteMaterials();
             DeleteCourseThemes();
             DeleteThemes();
             DeleteCourses();
+        }
+        private void DeleteCourseMaterials()
+        {
+            foreach (var ids in _courseMaterials)
+            {
+                _courseRepo.DeleteCourse_Material(ids.Item1, ids.Item2);
+            }
         }
         private void DeleteCourseThemes()
         {
             foreach (var ids in _courseThemes)
             {
                 _courseRepo.DeleteCourse_Theme(ids.Item1, ids.Item2);
+            }
+        }
+        private void DeleteMaterials()
+        {
+            foreach (var id in _materialIds)
+            {
+                _materialRepo.HardDeleteMaterial(id);
             }
         }
         private void DeleteThemes()
@@ -486,7 +503,6 @@ namespace EducationSystem.Data.Tests
                 _courseRepo.HardDeleteTheme(id);
             }
         }
-       
         private void DeleteCourses()
         {
             foreach(var id in _courseIds)
@@ -494,7 +510,5 @@ namespace EducationSystem.Data.Tests
                 _courseRepo.HardDeleteCourse(id);
             }
         }
-
-
     }
 }
