@@ -9,4 +9,22 @@
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[Theme_Tag]  WITH CHECK ADD  CONSTRAINT [Theme_Tag_fk0] FOREIGN KEY([TagId])
+REFERENCES [dbo].[Tag] ([Id])
+ON UPDATE NO ACTION
+GO
 
+ALTER TABLE [dbo].[Theme_Tag] CHECK CONSTRAINT [Theme_Tag_fk0]
+GO
+
+ALTER TABLE [dbo].[Theme_Tag]  WITH CHECK ADD  CONSTRAINT [Theme_Tag_fk1] FOREIGN KEY([ThemeId])
+REFERENCES [dbo].[Theme] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Theme_Tag] CHECK CONSTRAINT [Theme_Tag_fk1]
+GO
+
+ALTER TABLE [dbo].[Theme_Tag] 
+ADD CONSTRAINT UC_TagId_ThemeId UNIQUE(TagId, ThemeId)
+GO
