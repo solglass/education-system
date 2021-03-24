@@ -31,3 +31,7 @@ GO
 
 ALTER TABLE [dbo].[Course_Material] CHECK CONSTRAINT [Course_Material_fk1]
 GO
+
+ALTER TABLE [dbo].[Course_Material]
+ADD CONSTRAINT UC_CourseMaterial_CourseId_MaterialId UNIQUE(CourseId, MaterialId)
+GO
