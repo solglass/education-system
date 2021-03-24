@@ -14,7 +14,7 @@ namespace EducationSystem.Data.Tests
         private List<int> _themeIds;
         private List<(int, int)> _courseThemes;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUpTest()
         {
             _courseRepo = new CourseRepository(_options);
@@ -37,21 +37,24 @@ namespace EducationSystem.Data.Tests
                 course.Id = _courseRepo.AddCourse(course);
                 Assert.Greater(course.Id, 0);
                 _courseIds.Add(course.Id);
-                foreach (var themeId in themeMockIds)
-                {
-                    var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeId).Clone();
-                    theme.Id = _courseRepo.AddTheme(theme);
-                    Assert.Greater(course.Id, 0);
-                    _themeIds.Add(theme.Id);
-
-                    var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
-                    Assert.Greater(result, 0);
-                    _courseThemes.Add((course.Id, theme.Id));
-                    course.Themes.Add(theme);
-                }
                 expected.Add(course);
             }
 
+            foreach (var themeId in themeMockIds)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeId).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                Assert.Greater(theme.Id, 0);
+                _themeIds.Add(theme.Id);
+                foreach(var courseId in _courseIds)
+                {
+                    var result = _courseRepo.AddCourse_Theme(courseId, theme.Id);
+                    Assert.Greater(result, 0);
+                    _courseThemes.Add((courseId, theme.Id));
+                    expected.Find(course=>course.Id==courseId).Themes.Add(theme);
+                }
+            }
+            //
             //When
             var actual = _courseRepo.GetCourses();
 
@@ -385,36 +388,28 @@ namespace EducationSystem.Data.Tests
             _courseIds.Add(course.Id);
             var expected = new List<ThemeDto>();
            
-            foreach (var themeMockId in themeMockIds)
+            for (int i=0;i<themeMockIds.Length; i++)
             {
-                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
                 theme.Id = _courseRepo.AddTheme(theme);
                 Assert.Greater(theme.Id, 0);
-
-                expected.Add(theme);
                 _themeIds.Add(theme.Id);
                 var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
                 Assert.Greater(result, 0);
 
                 _courseThemes.Add((course.Id, theme.Id));
+
+
+                if(i<themeMockIds.Length/2)
+                {
+                    expected.Add(theme);
+                }
+                else
+                {
+                    result = _courseRepo.DeleteCourse_Theme(course.Id, theme.Id);
+                    Assert.AreEqual(1, result);
+                }
             }
-
-            foreach (var themeMockId in themeMockIds)
-            {
-                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
-                theme.Id = _courseRepo.AddTheme(theme);
-                Assert.Greater(theme.Id, 0);
-
-                _themeIds.Add(theme.Id);
-                var result = _courseRepo.AddCourse_Theme(course.Id, theme.Id);
-                Assert.Greater(result, 0);
-
-                _courseThemes.Add((course.Id, theme.Id));
-                result = _courseRepo.DeleteCourse_Theme(course.Id, theme.Id);
-                Assert.AreEqual(1,result);
-                
-            }
-
             //When
             var actual = _courseRepo.GetCourseById(course.Id);
             //Then
@@ -432,7 +427,7 @@ namespace EducationSystem.Data.Tests
         }
 
         // possible kosyak
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
             DeleteCourseThemes();
