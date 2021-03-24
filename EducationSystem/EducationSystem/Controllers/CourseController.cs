@@ -21,10 +21,12 @@ namespace EducationSystem.API.Controllers
     public class CourseController : ControllerBase
     {
         private ICourseService _courseService;
+        ITagService _tagService;
         private IMapper _mapper;
-        public CourseController(ICourseService courseService, IMapper mapper)
+        public CourseController(ICourseService courseService, ITagService tagService , IMapper mapper)
         {
             _courseService = courseService;
+            _tagService = tagService;
             _mapper = mapper;
         }
 
@@ -219,6 +221,8 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Методист, Преподаватель")]
         public ActionResult<ThemeExtendedOutputModel> CreateTheme([FromBody] ThemeInputModel theme)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
             var  id = _courseService.AddTheme(_mapper.Map<ThemeDto>(theme));
             var result = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
             return Ok(result);                        
@@ -237,7 +241,11 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
         {
-            var result = _courseService.AddTagToTheme(themeId, tagId);
+            if (_courseService.GetThemeById(themeId) == null)
+                return NotFound($"Theme with id:{themeId} not found");
+            if (_tagService.GetTagById(tagId) == null)
+                return NotFound($"Tag with id:{tagId} not found");
+            _courseService.AddTagToTheme(themeId, tagId);
             return StatusCode(StatusCodes.Status201Created);                                                      
         }
 
@@ -253,7 +261,11 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
         public ActionResult RemoveTagFromTheme(int themeId, int tagId)
         {
-            var result = _courseService.RemoveTagFromTheme(themeId, tagId);
+            if (_courseService.GetThemeById(themeId) == null)
+                return NotFound($"Theme with id:{themeId} not found");
+            if (_tagService.GetTagById(tagId) == null)
+                return NotFound($"Tag with id:{tagId} not found");
+            _courseService.RemoveTagFromTheme(themeId, tagId);
             return NoContent();
         }
 
@@ -268,9 +280,10 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Методист, Преподаватель")]
         public ActionResult<ThemeExtendedOutputModel> DeleteTheme(int id)
         {
-            var result = _courseService.DeleteTheme(id);
-            var deleteResult = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
-            return Ok(deleteResult);
+            if (_courseService.GetThemeById(id) == null)
+                return NotFound($"Theme with id:{id} not found");
+            _courseService.DeleteTheme(id);           
+            return Ok(_mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id)));
         }
 
         /// <summary>
@@ -284,9 +297,10 @@ namespace EducationSystem.API.Controllers
         [Authorize(Roles = "Админ, Методист, Преподаватель")]
         public ActionResult<ThemeExtendedOutputModel> RecoverTheme(int id)
         {
-            var result = _courseService.RecoverTheme(id);
-            var recoverResult = _mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id));
-            return Ok(recoverResult);
+            if (_courseService.GetThemeById(id) == null)
+                return NotFound($"Theme with id:{id} not found");
+            _courseService.RecoverTheme(id);           
+            return Ok(_mapper.Map<ThemeExtendedOutputModel>(_courseService.GetThemeById(id)));
         }
     }
 }
