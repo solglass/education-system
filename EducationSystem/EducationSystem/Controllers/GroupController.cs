@@ -41,12 +41,13 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/group/
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<List<GroupOutputModel>> GetGroups()
         {
             var groups = _service.GetGroups();
-            if (groups is null)
+            if (groups.Count==0)
                 return StatusCode(StatusCodes.Status404NotFound, "Группы еще не созданы");
             var result = _mapper.Map<List<GroupOutputModel>>(groups);
 
@@ -61,13 +62,25 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/group/3
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("{id}")]
-        [Authorize(Roles = "Администратор, Менеджер, Методист, Преподаватель, Тьютор, Студент")]
+        [Authorize]
         public ActionResult<GroupOutputModel> GetGroupById(int id)
         {
             var group = _service.GetGroupById(id);
             if (group == null)
                 return StatusCode(StatusCodes.Status404NotFound, $"группа c id {id} не найдена");
+
+            if (!User.IsInRole("Администратор") || !User.IsInRole("Менеджер") || !User.IsInRole("Методист"))
+            {
+                var userId = Convert.ToInt32(User.FindFirst("id").Value);
+                var teacherGroups = _service.GetGroupsByTeacherId(userId);
+                var tutorGroups = _service.GetGroupsByTutorId(userId);
+                var studentGroups = _service.GetGroupsByStudentId(userId);
+                if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id) || studentGroups.Contains(group.Id)))
+                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+            }
             GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
             return Ok(result);
         }
@@ -80,13 +93,15 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/group/3
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("by-theme/{themeId}")]
         [Authorize(Roles = "Администратор, Менеджер, Методист, Преподаватель, Тьютор, Студент")]
         public ActionResult<List<GroupOutputModel>> GetGroupByThemeId(int themeId)
         {
             var group = _service.GetGroupByThemeId(themeId);
-            if (group is null)
+            if (group.Count == 0)
                 return StatusCode(StatusCodes.Status404NotFound, $"Группы с id {themeId} темы не существует");
+         
             List<GroupOutputModel> result = _mapper.Map<List<GroupOutputModel>>(group);
             return Ok(result);
         }
@@ -98,6 +113,7 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/group/without-tutors
         [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("without-tutors")]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<List<GroupOutputModel>> GetGroupsWithoutTutors()
@@ -114,15 +130,24 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/group/2/programs
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("{id}/programs")]
         [Authorize(Roles = "Администратор, Менеджер, Методист, Преподаватель")]
         public ActionResult<GroupOutputModel> GetGroupProgramsByGroupId(int id)
         {
-            var program = _service.GetGroupProgramsByGroupId(id);
-            if (program is null)
+            var group = _service.GetGroupProgramsByGroupId(id);
+            if (group is null)
                 return StatusCode(StatusCodes.Status404NotFound, $"Программы с id {id} не существует");
 
-            GroupOutputModel result = _mapper.Map<GroupOutputModel>(program);
+            if (!User.IsInRole("Администратор") || !User.IsInRole("Менеджер") || !User.IsInRole("Методист"))
+            {
+                var userId = Convert.ToInt32(User.FindFirst("id").Value);
+                var teacherGroups = _service.GetGroupsByTeacherId(userId);
+                if (!(teacherGroups.Contains(group.Id)))
+                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+            }
+
+            GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
             return Ok(result);
         }
 
@@ -134,6 +159,7 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/group/
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPost]
         [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<GroupOutputModel> AddNewGroup([FromBody] GroupInputModel group)
@@ -156,8 +182,9 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPut("{id}")]
-        [Authorize(Roles = "Администратор Менеджер")]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<GroupOutputModel> UpdateGroupInfo(int id, [FromBody] GroupInputModel group)
         {
             if (!ModelState.IsValid)
@@ -168,10 +195,10 @@ namespace EducationSystem.Controllers
                 return StatusCode(StatusCodes.Status404NotFound, $"Ошибка! Отсутствует группа с введенным id {id}!");
             }
 
-          var groupDto = _mapper.Map<GroupDto>(group);
-          _service.UpdateGroup(groupDto);
-          var result = _mapper.Map<GroupOutputModel>(_service.GetGroupById(id));
-          return Ok(result);
+            var groupDto = _mapper.Map<GroupDto>(group);
+            _service.UpdateGroup(groupDto);
+            var result = _mapper.Map<GroupOutputModel>(_service.GetGroupById(id));
+            return Ok(result);
         }
 
         /// <summary>
@@ -182,6 +209,7 @@ namespace EducationSystem.Controllers
         // https://localhost:44365/api/group/2
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<GroupOutputModel> DeleteGroup(int id)
@@ -203,6 +231,7 @@ namespace EducationSystem.Controllers
         /// <returns>Returns Created result</returns>
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:XXXXX/api/group/id/material/id
         [HttpPost("{groupId}/material/{materialId}")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
@@ -216,6 +245,16 @@ namespace EducationSystem.Controllers
             if (material == null)
                 return NotFound($"Материалы c id {materialId} не найдены");
 
+            if (!User.IsInRole("Администратор"))
+            {
+                var userId = Convert.ToInt32(User.FindFirst("id").Value);
+                var teacherGroups = _service.GetGroupsByTeacherId(userId);
+                var tutorGroups = _service.GetGroupsByTutorId(userId);
+        
+                if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id)))
+                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+            }
+
             _service.AddGroup_Material(groupId, materialId);
             return StatusCode(StatusCodes.Status201Created);
         }
@@ -227,6 +266,7 @@ namespace EducationSystem.Controllers
         /// <returns>Returns NoContent result</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:XXXXX/api/group/id/material/id
         [HttpDelete("{groupId}/material/{materialId}")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
@@ -239,6 +279,16 @@ namespace EducationSystem.Controllers
             var material = _userService.GetUserById(materialId);
             if (material is null)
                 return StatusCode(StatusCodes.Status404NotFound, $"Материалы c id {materialId} не найдены");
+
+            if (!User.IsInRole("Администратор"))
+            {
+                var userId = Convert.ToInt32(User.FindFirst("id").Value);
+                var teacherGroups = _service.GetGroupsByTeacherId(userId);
+                var tutorGroups = _service.GetGroupsByTutorId(userId);
+
+                if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id)))
+                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+            }
 
             _service.DeleteGroup_Material(groupId, materialId);
   
@@ -253,6 +303,7 @@ namespace EducationSystem.Controllers
         /// <returns>Returns NoContent result</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:XXXXX/api/group/id/teacher/id
         [HttpDelete("{groupId}/teacher/{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
@@ -278,6 +329,7 @@ namespace EducationSystem.Controllers
         /// <returns>Returns Created result</returns>
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:XXXXX/api/group/id/teacher/id
         [HttpPost("{groupId}/teacher/{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
@@ -304,6 +356,7 @@ namespace EducationSystem.Controllers
         /// <returns>Returns NoContent result</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:XXXXX/api/group/id/student/id
         [HttpDelete("{groupId}/student/{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
@@ -330,6 +383,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:XXXXX/api/group/id/student/id
         [HttpPost("{groupId}/student/{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
@@ -360,6 +414,7 @@ namespace EducationSystem.Controllers
         /// <returns>Returns NoContent result</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:XXXXX/api/group/id/tutor/id
         [HttpDelete("{groupId}/tutor/{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
@@ -386,6 +441,7 @@ namespace EducationSystem.Controllers
         /// <returns>Returns Created result</returns>
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:XXXXX/api/group/id/tutor/id
         [HttpPost("{groupId}/tutor/{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
@@ -408,6 +464,7 @@ namespace EducationSystem.Controllers
         /// </summary>
         /// <returns>Returns the list of GroupReportOutputModel</returns>
         [ProducesResponseType(typeof(List<GroupReportOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:XXXXX/api/group/report
         [HttpGet("report")]
         [Authorize(Roles = "Администратор, Менеджер, Преподаватель, Тьютор, Методист")]
@@ -434,6 +491,7 @@ namespace EducationSystem.Controllers
         /// <returns>Returns the list of ThemeOutputModel</returns>
         [ProducesResponseType(typeof(List<ThemeOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:50221/api/group/2/uncovered-themes
         [HttpGet("{id}/uncovered-themes")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
@@ -442,6 +500,16 @@ namespace EducationSystem.Controllers
             var group = _service.GetGroupById(id);
             if (group is null)
                 return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {id} не найдена");
+
+            if (!User.IsInRole("Администратор"))
+            {
+                var userId = Convert.ToInt32(User.FindFirst("id").Value);
+                var teacherGroups = _service.GetGroupsByTeacherId(userId);
+                var tutorGroups = _service.GetGroupsByTutorId(userId);
+
+                if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id)))
+                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+            }
 
             var result = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetUncoveredThemesByGroupId(id));
             return Ok(result);
@@ -456,6 +524,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<AttendanceReportOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status418ImATeapot)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:44365/api/group/3/percent-of-skip/0
         [HttpGet("{groupId}/percent-of-skip/{percent}")]
         [Authorize(Roles = "Администратор, Преподаватель, Менеджер")]
@@ -468,6 +537,15 @@ namespace EducationSystem.Controllers
             if (percent < 0 || percent > 100)
                 //return StatusCode(StatusCodes.Status418ImATeapot, "Вы вышли за допустимые рамки числа процентов");
                 return BadRequest(ModelState);
+
+            if (!User.IsInRole("Администратор") || !User.IsInRole("Менеджер"))
+            {
+                var userId = Convert.ToInt32(User.FindFirst("id").Value);
+                var teacherGroups = _service.GetGroupsByTeacherId(userId);
+
+                if (!(teacherGroups.Contains(group.Id)))
+                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+            }
 
             return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
         }
