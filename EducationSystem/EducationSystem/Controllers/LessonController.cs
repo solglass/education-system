@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EducationSystem.API.Models.InputModels;
@@ -22,6 +23,8 @@ namespace EducationSystem.Controllers
         private IGroupService _groupService;
         private ICourseService _courseService;
         private IMapper _mapper;
+        private int _userId;
+        private List<int> _userGroups;
 
         public LessonController(IMapper mapper, ILessonService lessonService, IGroupService groupService, ICourseService courseService)
         {
@@ -29,6 +32,17 @@ namespace EducationSystem.Controllers
             _groupService = groupService;
             _courseService = courseService;
             _mapper = mapper;
+            _userId = Convert.ToInt32(User.FindFirst("id").Value);
+            if (!User.IsInRole("Администратор"))
+            {
+                if (User.IsInRole("Преподаватель"))
+                    _userGroups.AddRange(_groupService.GetGroupsByTeacherId(_userId));
+                if (User.IsInRole("Тьютор"))
+                    _userGroups.AddRange(_groupService.GetGroupsByTutorId(_userId));
+                if (User.IsInRole("Студент"))
+                    _userGroups.AddRange(_groupService.GetGroupsByStudentId(_userId));
+
+            }
         }
         /// <summary>
         /// Adds new lesson
@@ -49,7 +63,6 @@ namespace EducationSystem.Controllers
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(_lessonService.AddLesson(lessonDto)));
 
 
-
             return Ok(result);
         }
         /// <summary>
@@ -58,17 +71,24 @@ namespace EducationSystem.Controllers
         /// <param name="groupId">Group id </param>
         /// <returns>List of Output models of the found Lessons </returns>
         [ProducesResponseType(typeof(List<LessonOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/by-group/45
         [HttpGet("by-group/{groupId}")]
         [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByGroupId(int groupId)
         {
+            
             var group = _groupService.GetGroupById(groupId);
             if (group == null)
                 return NotFound($"Group {groupId} was not found");
+
+            if (!(_userGroups.Contains(groupId)))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {groupId}");
+
             var lessonDtos = _lessonService.GetLessonsByGroupId(groupId);
             var lessonsList = _mapper.Map<List<LessonOutputModel>>(lessonDtos);
+
             return Ok(lessonsList);
         }
 
@@ -78,16 +98,22 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId"> Id of the lesson</param>
         /// <returns>Output model of the found Lesson </returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/3
         [HttpGet("{lessonId}")]
         [Authorize(Roles = "Администратор, Преподаватель, Студент")]
         public ActionResult<LessonOutputModel> GetLessonById(int lessonId)
         {
+
+
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             var lessonModel = _mapper.Map<LessonOutputModel>(lessonDto);
+
 
             return Ok(lessonModel);
         }
@@ -97,6 +123,7 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId"> Id of the lesson</param>
         /// <returns>Output model of the soft-deleted Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/34
         [HttpDelete("{lessonId}")]
@@ -106,6 +133,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             _lessonService.DeleteLesson(lessonId);
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
@@ -117,6 +146,7 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId"> Id of the lesson</param>
         /// <returns>Output model of the recovered Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/44/recovery
         [HttpPut("{lessonId}/recovery")]
@@ -126,6 +156,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             _lessonService.RecoverLesson(lessonId);
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
@@ -138,6 +170,7 @@ namespace EducationSystem.Controllers
         /// <param name="inputModel">Input model with all the properties for the new lesson</param>
         /// <returns>Output model of the updated Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5
         [HttpPut("{lessonId}")]
@@ -149,6 +182,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             lessonDto = _mapper.Map<LessonDto>(inputModel);
             lessonDto.Id = lessonId;
             _lessonService.UpdateLesson(lessonDto);
@@ -163,6 +198,7 @@ namespace EducationSystem.Controllers
         /// <param name="inputModel">Input model with all the properties of the feedback search input model</param>
         /// <returns>List of feedback output models for the lesson</returns>
         [ProducesResponseType(typeof(List<FeedbackOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -179,8 +215,10 @@ namespace EducationSystem.Controllers
             var groupDto = _groupService.GetGroupById((int)inputModel.GroupId);
             if (groupDto == null)
                 return NotFound($"Group {groupDto} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             if (lessonDto.Group.Id != (int)inputModel.GroupId)
-                return BadRequest($"Group with id {(int)inputModel.GroupId} does not belong to the lesson with id {lessonId}"); ;
+                return BadRequest($"Group with id {(int)inputModel.GroupId} does not belong to the lesson with id {lessonId}"); 
             var feedbackDtos = _lessonService.GetFeedbacks(inputModel.LessonId, inputModel.GroupId, inputModel.CourseId);
             var feedbackList = _mapper.Map<List<FeedbackOutputModel>>(feedbackDtos);
             return Ok(feedbackList);
@@ -193,6 +231,7 @@ namespace EducationSystem.Controllers
         /// <param name="feedbackId">Id of the feedback</param>
         /// <returns>Output model of the found feedback</returns>
         [ProducesResponseType(typeof(FeedbackOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/5/feedback/3
@@ -203,6 +242,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
             if (feedbackDto == null)
                 return NotFound($"Feedback {feedbackId} was not found");
@@ -221,6 +262,7 @@ namespace EducationSystem.Controllers
         /// <param name="inputModel">>Input model with all the properties for the new feedback</param>
         /// <returns>Output model of the created feedback</returns>
         [ProducesResponseType(typeof(FeedbackOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/id/feedback/
@@ -234,6 +276,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
 
             var feedbackDto = _mapper.Map<FeedbackDto>(inputModel);
             var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(_lessonService.AddFeedback(lessonId, feedbackDto)));
@@ -248,6 +292,7 @@ namespace EducationSystem.Controllers
         /// <param name="feedbackInputModel">Input model with all the properties for the feedback to update</param>
         /// <returns>Output model of the updated feedback</returns>
         [ProducesResponseType(typeof(FeedbackOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -262,6 +307,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
             if (feedbackDto == null)
                 return NotFound($"Feedback {feedbackId} was not found");
@@ -285,6 +332,7 @@ namespace EducationSystem.Controllers
         /// <param name="feedbackId">Id of the feedback</param>
         /// <returns>Status code 204 (no content) </returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:44365/api/lesson/3/feedback/3
@@ -295,6 +343,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
             if (feedbackDto == null)
                 return NotFound($"Feedback {feedbackId} was not found");
@@ -312,6 +362,7 @@ namespace EducationSystem.Controllers
         /// <param name="lessonId">Id of the lesson</param>
         /// <returns>List of attendences output models for the lesson</returns>
         [ProducesResponseType(typeof(List<AttendanceOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/5/attendance/
         [HttpGet("{lessonId}/attendance")]
@@ -321,6 +372,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
 
             var attendanceDtos = _lessonService.GetAttendancesByLessonId(lessonId);
             var listAttendances = _mapper.Map<List<AttendanceOutputModel>>(attendanceDtos);
@@ -334,6 +387,7 @@ namespace EducationSystem.Controllers
         /// <param name="attendanceId">Id of attendance</param>
         /// <returns>Attendence output model for the lesson</returns>
         [ProducesResponseType(typeof(AttendanceOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/5/attendance/3
@@ -344,6 +398,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
             if (attendanceDto == null)
                 return NotFound($"Attendence {attendanceId} was not found");
@@ -360,6 +416,7 @@ namespace EducationSystem.Controllers
         /// <param name="inputModel">Input model with all the properties for the attendence</param>
         /// <returns>Added attendence output model </returns>
         [ProducesResponseType(typeof(AttendanceOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5/attendance
@@ -373,6 +430,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
 
             var attendanceDto = _mapper.Map<AttendanceDto>(inputModel);
             var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(_lessonService.AddAttendance(lessonId, attendanceDto)));
@@ -389,6 +448,7 @@ namespace EducationSystem.Controllers
         /// <returns>Updated attendence output model</returns>
         // https://localhost:50221/api/lesson/2/attendance/2
         [ProducesResponseType(typeof(AttendanceOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -403,6 +463,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
             if (attendanceDto == null)
                 return NotFound($"Attendence {attendanceId} was not found");
@@ -422,6 +484,7 @@ namespace EducationSystem.Controllers
         /// <param name="attendanceId">Id of Attendance </param>
         /// <returns>Status code 204 (no content)</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // https://localhost:50221/api/lesson/Id/
@@ -432,6 +495,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
             if (attendanceDto == null)
                 return NotFound($"Attendence {attendanceId} was not found");
@@ -450,6 +515,7 @@ namespace EducationSystem.Controllers
         /// <returns>The list of Lesson output models</returns>
         // https://localhost:50221/api/lesson/by-theme/14
         [ProducesResponseType(typeof(List<LessonOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-theme/{themeId}")]
         [Authorize(Roles = "Администратор, Преподаватель, Студент, Тьютор")]
@@ -470,6 +536,7 @@ namespace EducationSystem.Controllers
         /// <param name="themeId">Id of the theme</param>
         /// <returns>Status code 201 (created)</returns>
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
         // https://localhost:50221/api/lesson/45/theme/54
@@ -480,6 +547,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             var themeDto = _courseService.GetThemeById(themeId);
             if (themeDto == null)
                 return NotFound($"Theme {themeId} was not found");
@@ -495,8 +564,9 @@ namespace EducationSystem.Controllers
         /// <param name="themeId">Id of the theme</param>
         /// <returns>Status code 204 (no content)</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/45/theme/54
         [HttpDelete("{lessonId}/theme/{themeId}")]
         [Authorize(Roles = "Администратор, Преподаватель")]
@@ -505,6 +575,8 @@ namespace EducationSystem.Controllers
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
+            if (!(_userGroups.Contains(lessonDto.Group.Id)) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
             var themeDto = _courseService.GetThemeById(themeId);
             if (themeDto == null)
                 return NotFound($"Theme {themeId} was not found");
