@@ -19,3 +19,18 @@ ALLOW_PAGE_LOCKS = ON
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[Comment]  WITH CHECK ADD  CONSTRAINT [Comment_fk0] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Comment] CHECK CONSTRAINT [Comment_fk0]
+GO
+
+ALTER TABLE [dbo].[Comment]  WITH CHECK ADD  CONSTRAINT [Comment_fk1] FOREIGN KEY([HomeworkAttemptId])
+REFERENCES [dbo].[HomeworkAttempt] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Comment] CHECK CONSTRAINT [Comment_fk1]
+GO

@@ -9,4 +9,6 @@
 ) ON [PRIMARY]
 GO
 
-
+ALTER TABLE [dbo].[Lesson_Theme]
+ADD CONSTRAINT UC_LessonTheme_LessonId_ThemeId UNIQUE(LessonId, ThemeId)
+GO
