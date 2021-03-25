@@ -53,7 +53,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/
         [HttpPost]
-        [Authorize(Roles = "Администратор, Преподаватель, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<LessonOutputModel> AddNewLesson([FromBody] LessonInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -314,6 +314,9 @@ namespace EducationSystem.Controllers
                 return NotFound($"Feedback {feedbackId} was not found");
             if (feedbackDto.Lesson.Id != lessonId)
                 return BadRequest($"Feedback with id {feedbackId} does not belong to the lesson with id {lessonId}");
+            if (!(feedbackDto.User.Id == _userId) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User cannot update feedback {feedbackDto.Id}");
+
 
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
@@ -350,6 +353,8 @@ namespace EducationSystem.Controllers
                 return NotFound($"Feedback {feedbackId} was not found");
             if (feedbackDto.Lesson.Id != lessonId)
                 return BadRequest($"Feedback with id {feedbackId} does not belong to the lesson with id {lessonId}");
+            if (!(feedbackDto.User.Id == _userId) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User cannot delete feedback {feedbackDto.Id}");
 
 
             _lessonService.DeleteFeedback(feedbackId);
@@ -470,6 +475,8 @@ namespace EducationSystem.Controllers
                 return NotFound($"Attendence {attendanceId} was not found");
             if (attendanceDto.Lesson.Id != lessonId)
                 return BadRequest($"Attendence with id {attendanceId} does not belong to the lesson with id {lessonId}");
+            if (!(attendanceDto.User.Id == _userId) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User cannot update attendence {attendanceDto.Id}");
 
             attendanceDto = _mapper.Map<AttendanceDto>(attendanceInputModel);
             _lessonService.UpdateAttendance(lessonId, attendanceId, attendanceDto);
@@ -503,6 +510,9 @@ namespace EducationSystem.Controllers
             if (attendanceDto.Lesson.Id != lessonId)
                 return BadRequest($"Attendence with id {attendanceId} does not belong to the lesson with id {lessonId}");
 
+            if (!(attendanceDto.User.Id == _userId) && !(User.IsInRole("Администратор")))
+                return StatusCode(StatusCodes.Status403Forbidden, $"User cannot delete  attendence {attendanceDto.Id}");
+
             _lessonService.DeleteAttendance(attendanceId);
             return StatusCode(StatusCodes.Status204NoContent);
         }
@@ -518,7 +528,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-theme/{themeId}")]
-        [Authorize(Roles = "Администратор, Преподаватель, Студент, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int themeId)
         {
             var themeDto = _courseService.GetThemeById(themeId);
