@@ -1,4 +1,4 @@
-using NUnit.Framework;
+  using NUnit.Framework;
 using System;
 using EducationSystem.Data.Models;
 using EducationSystem.Data;
@@ -241,7 +241,84 @@ namespace EducationSystem.Data.Tests
             var actual = _repository.GetUserById(addedEntityId);
             Assert.AreEqual(expected, actual);
         }
-
+        [TestCase(7)]
+        public void AddEmptyUserNegativeTest(int mockId)
+        {
+            //Given
+            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            //When, Then
+            try
+            {
+                var addedUserId = _repository.AddUser(userDto);
+                _addedUserDtoIds.Add(addedUserId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1)]
+        public void AddUserWithSomeEmptyParamsNegativeTest(int mockId)
+        {
+            //Given
+            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            userDto.Email = null;
+            userDto.FirstName = null;
+            //When, Then
+            try
+            {
+                var addedUserId = _repository.AddUser(userDto);
+                _addedUserDtoIds.Add(addedUserId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1)]
+        public void AddExistingUserWithEmailNegativeTest(int mockId)
+        {
+            //Given
+            var firstUserDto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            firstUserDto.Id = _repository.AddUser(firstUserDto);
+            _addedUserDtoIds.Add(firstUserDto.Id);
+            var secondUserDto = (UserDto)UserMockGetter.GetUserDtoMock(mockId + 1).Clone();
+            secondUserDto.Email = firstUserDto.Email;
+            //When, Then
+            try
+            {
+                var secondUserId = _repository.AddUser(secondUserDto);
+                _addedUserDtoIds.Add(secondUserId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1)]
+        public void AddExistingUserWithLoginNegativeTest(int mockId)
+        {
+            //Given
+            var firstUserDto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            firstUserDto.Id = _repository.AddUser(firstUserDto);
+            _addedUserDtoIds.Add(firstUserDto.Id);
+            var secondUserDto = (UserDto)UserMockGetter.GetUserDtoMock(mockId + 1).Clone();
+            secondUserDto.Login = firstUserDto.Login;
+            //When, Then
+            try
+            {
+                var secondUserId = _repository.AddUser(secondUserDto);
+                _addedUserDtoIds.Add(secondUserId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
 
         [TearDown]
         public void UserTestTearDown()
