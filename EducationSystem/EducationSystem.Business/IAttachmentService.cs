@@ -1,4 +1,6 @@
 ﻿using EducationSystem.Data.Models;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace EducationSystem.Business
 {
@@ -15,5 +17,6 @@ namespace EducationSystem.Business
 
         AttachmentDto GetAttachmentById(int id);
         int ModifyAttachment(AttachmentDto attachmentDto, int id);
+        
     }
 }

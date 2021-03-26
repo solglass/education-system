@@ -23,6 +23,7 @@ namespace EducationSystem.API.Config
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAttachmentService, AttachmentService>();
+            services.AddScoped<IFileService, FileService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITagRepository, TagRepository>();           

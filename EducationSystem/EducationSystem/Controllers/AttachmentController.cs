@@ -8,6 +8,8 @@ using AutoMapper;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace EducationSystem.API.Controllers
 {
@@ -18,11 +20,13 @@ namespace EducationSystem.API.Controllers
     public class AttachmentController : ControllerBase
     {  
         private IAttachmentService _service;
+        private IFileService _fileService;
         private IMapper _mapper;
 
-        public AttachmentController(IAttachmentService attachmentService, IMapper mapper)
+        public AttachmentController(IAttachmentService attachmentService, IFileService fileService, IMapper mapper)
         {
             _service = attachmentService;
+            _fileService = fileService;
             _mapper = mapper;
         }
 
@@ -160,6 +164,22 @@ namespace EducationSystem.API.Controllers
         {
             var result = _service.DeleteCommentAttachment(attachmentId, commentId);
             return NoContent();
+        }
+
+
+        [HttpPost("upload", Name = "upload")]
+        [ProducesResponseType(typeof(AttachmentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<AttachmentOutputModel>> UploadFile(IFormFile file)
+        {
+            var filePath = await _fileService.WriteFile(file);           
+            var attachmentAddedId = _service.AddAttachment(new AttachmentDto
+            {
+                Path = filePath,
+                AttachmentType = Core.Enums.AttachmentType.File
+            });
+            var result = _mapper.Map<AttachmentOutputModel>(_service.GetAttachmentById(attachmentAddedId));      
+            return Ok(result);
         }
     }
 }
