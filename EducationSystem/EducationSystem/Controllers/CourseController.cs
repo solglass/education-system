@@ -71,7 +71,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:50221/api/course/
         [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpPost]
-       [Authorize(Roles ="Админ, Менеджер, Методист")]
+       [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> CreateCourse([FromBody] CourseInputModel course)    
         {
             if (!ModelState.IsValid)
@@ -91,7 +91,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:50221/api/course/id
         [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)] 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
         {
             var courseDto = _mapper.Map<CourseDto>(course);
@@ -110,7 +110,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:50221/api/course/id
         [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> DeleteCourse(int id)
         {
             if (_courseService.GetCourseById(id) == null)
@@ -128,7 +128,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/id/recovery
         [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpPut("{id}/recovery")]
-        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> RecoverCourse(int id)
         {
             if (_courseService.GetCourseById(id) == null)
@@ -147,7 +147,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/3/theme/8
         [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("{courseId}/theme/{themeId}")]
-        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult AddThemeToCourse(int courseId, int themeId)
         {
             if (_courseService.GetThemeById(themeId) == null)
@@ -167,7 +167,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/3/theme/8
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("{courseId}/theme/{themeId}")]
-        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult RemoveThemeFromCourse(int courseId, int themeId)
         {
             if (_courseService.GetThemeById(themeId) == null)
@@ -185,7 +185,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/
         [ProducesResponseType(typeof(List<ThemeOutputModel>), StatusCodes.Status200OK)]
         [HttpGet("theme")]
-        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<List<ThemeOutputModel>> GetAllThemes()
         {
             var themes = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetThemes());
@@ -200,7 +200,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/id
         [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpGet("theme/{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<ThemeExtendedOutputModel> GetThemeById(int id)
         {
             if (_courseService.GetThemeById(id) == null)
@@ -218,7 +218,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/
         [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpPost("theme")]
-        [Authorize(Roles = "Админ, Методист, Преподаватель")]
+        [Authorize(Roles = "Администратор, Методист, Преподаватель")]
         public ActionResult<ThemeExtendedOutputModel> CreateTheme([FromBody] ThemeInputModel theme)
         {
             if (!ModelState.IsValid)
@@ -238,7 +238,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/id/tag/id
         [ProducesResponseType(StatusCodes.Status201Created)]
         [HttpPost("theme/{themeId}/tag/{tagId}")]
-        [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
         {
             if (_courseService.GetThemeById(themeId) == null)
@@ -258,7 +258,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/id/tag/id
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("theme/{themeId}/tag/{tagId}")]
-        [Authorize(Roles = "Админ, Методист, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Методист, Преподаватель, Тьютор")]
         public ActionResult RemoveTagFromTheme(int themeId, int tagId)
         {
             if (_courseService.GetThemeById(themeId) == null)
@@ -277,7 +277,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/id/
         [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpDelete("theme/{id}")]
-        [Authorize(Roles = "Админ, Методист, Преподаватель")]
+        [Authorize(Roles = "Администратор, Методист, Преподаватель")]
         public ActionResult<ThemeExtendedOutputModel> DeleteTheme(int id)
         {
             if (_courseService.GetThemeById(id) == null)
@@ -294,7 +294,7 @@ namespace EducationSystem.API.Controllers
         // https://localhost:XXXXX/api/course/theme/id/
         [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
         [HttpPut("theme/{id}")]
-        [Authorize(Roles = "Админ, Методист, Преподаватель")]
+        [Authorize(Roles = "Администратор, Методист, Преподаватель")]
         public ActionResult<ThemeExtendedOutputModel> RecoverTheme(int id)
         {
             if (_courseService.GetThemeById(id) == null)
