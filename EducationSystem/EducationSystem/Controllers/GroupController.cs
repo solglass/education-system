@@ -48,7 +48,8 @@ namespace EducationSystem.Controllers
         {
             var groups = _service.GetGroups();
             if (groups.Count==0)
-                return StatusCode(StatusCodes.Status404NotFound, "Группы еще не созданы");
+                return NotFound("Группы еще не созданы");
+
             var result = _mapper.Map<List<GroupOutputModel>>(groups);
 
             return Ok(result);
@@ -79,7 +80,7 @@ namespace EducationSystem.Controllers
                 var tutorGroups = _service.GetGroupsByTutorId(userId);
                 var studentGroups = _service.GetGroupsByStudentId(userId);
                 if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id) || studentGroups.Contains(group.Id)))
-                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+                    return Forbid($"Пользователь не связан с группой {group.Id}");
             }
             GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
             return Ok(result);
@@ -95,14 +96,14 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("by-theme/{themeId}")]
-        [Authorize(Roles = "Администратор, Менеджер, Методист, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<GroupOutputModel>> GetGroupByThemeId(int themeId)
+        [Authorize]
+        public ActionResult<List<GroupOutputModel>> GetGroupsByThemeId(int themeId)
         {
-            var group = _service.GetGroupByThemeId(themeId);
-            if (group.Count == 0)
-                return StatusCode(StatusCodes.Status404NotFound, $"Группы с id {themeId} темы не существует");
+            var groups = _service.GetGroupByThemeId(themeId);
+            if (groups.Count == 0)
+                return NotFound($"Групп с темой {themeId} не существует");
          
-            List<GroupOutputModel> result = _mapper.Map<List<GroupOutputModel>>(group);
+            List<GroupOutputModel> result = _mapper.Map<List<GroupOutputModel>>(groups);
             return Ok(result);
         }
 
@@ -123,7 +124,7 @@ namespace EducationSystem.Controllers
         }
 
         /// <summary>
-        /// Gets all the groups  with their courses, groupStatuses and list their themes
+        /// Gets only one group by its id with its course and list of themes
         /// </summary>
         /// <param name="id"> is used to find necessary groups by id</param>
         /// <returns>Returns the list of GroupOutputModels</returns>
@@ -137,14 +138,14 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupProgramsByGroupId(id);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Программы с id {id} не существует");
+                return NotFound($"Программы с id {id} не существует");
 
             if (!User.IsInRole("Администратор") || !User.IsInRole("Менеджер") || !User.IsInRole("Методист"))
             {
                 var userId = Convert.ToInt32(User.FindFirst("id").Value);
                 var teacherGroups = _service.GetGroupsByTeacherId(userId);
                 if (!(teacherGroups.Contains(group.Id)))
-                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+                    return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
@@ -192,7 +193,7 @@ namespace EducationSystem.Controllers
 
             if (_service.GetGroupById(id) == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, $"Ошибка! Отсутствует группа с введенным id {id}!");
+                return NotFound( $"Ошибка! Отсутствует группа с введенным id {id}!");
             }
 
             var groupDto = _mapper.Map<GroupDto>(group);
@@ -216,7 +217,7 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(id);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"группа c id {id} не найдена");
+                return NotFound($"группа c id {id} не найдена");
 
             var deletedRows = _service.DeleteGroup(id);
             var deleteResult = _mapper.Map<GroupOutputModel>(_service.GetGroupById(id));
@@ -252,7 +253,7 @@ namespace EducationSystem.Controllers
                 var tutorGroups = _service.GetGroupsByTutorId(userId);
         
                 if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id)))
-                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+                    return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             _service.AddGroup_Material(groupId, materialId);
@@ -274,11 +275,11 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(groupId);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {groupId} не найдена");
+                return NotFound($"Группа c id {groupId} не найдена");
 
             var material = _userService.GetUserById(materialId);
             if (material is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Материалы c id {materialId} не найдены");
+                return NotFound($"Материалы c id {materialId} не найдены");
 
             if (!User.IsInRole("Администратор"))
             {
@@ -287,7 +288,7 @@ namespace EducationSystem.Controllers
                 var tutorGroups = _service.GetGroupsByTutorId(userId);
 
                 if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id)))
-                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+                    return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             _service.DeleteGroup_Material(groupId, materialId);
@@ -311,11 +312,11 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(groupId);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {groupId} не найдена");
+                return NotFound($"Группа c id {groupId} не найдена");
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователи c id {userId} не найдены");
 
             _service.DeleteTeacherGroup(userId, groupId);
             return NoContent();
@@ -337,11 +338,11 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(groupId);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {groupId} не найдена");
+                return NotFound($"Группа c id {groupId} не найдена");
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователи c id {userId} не найдены");
 
             _service.AddTeacherGroup(groupId, userId);
             return StatusCode(StatusCodes.Status201Created);
@@ -364,11 +365,11 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(groupId);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {groupId} не найдена");
+                return NotFound($"Группа c id {groupId} не найдена");
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователи c id {userId} не найдены");
 
             _service.DeleteStudentGroup(userId, groupId);
             return NoContent();
@@ -422,11 +423,11 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(groupId);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {groupId} не найдена");
+                return NotFound($"Группа c id {groupId} не найдена");
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователи c id {userId} не найдены");
 
             _service.DeleteTutorGroup(userId, groupId);
             return NoContent();
@@ -449,11 +450,11 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(groupId);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {groupId} не найдена");
+                return NotFound( $"Группа c id {groupId} не найдена");
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователи c id {userId} не найдены");
 
             _service.AddTutorToGroup(userId, groupId);
             return StatusCode(StatusCodes.Status201Created);
@@ -508,7 +509,7 @@ namespace EducationSystem.Controllers
                 var tutorGroups = _service.GetGroupsByTutorId(userId);
 
                 if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id)))
-                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+                    return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             var result = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetUncoveredThemesByGroupId(id));
@@ -523,7 +524,7 @@ namespace EducationSystem.Controllers
         /// <returns>Returns the lust of AttendanceReportOutputModel</returns>
         [ProducesResponseType(typeof(List<AttendanceReportOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status418ImATeapot)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         // https://localhost:44365/api/group/3/percent-of-skip/0
         [HttpGet("{groupId}/percent-of-skip/{percent}")]
@@ -532,19 +533,19 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(groupId);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {groupId} не найдена");
+                return NotFound($"Группа c id {groupId} не найдена");
 
             if (percent < 0 || percent > 100)
-                //return StatusCode(StatusCodes.Status418ImATeapot, "Вы вышли за допустимые рамки числа процентов");
-                return BadRequest(ModelState);
+                return StatusCode(StatusCodes.Status409Conflict, "Вы вышли за допустимые рамки числа процентов");
+                
 
-            if (!User.IsInRole("Администратор") || !User.IsInRole("Менеджер"))
+            if (User.IsInRole("Преподаватель"))
             {
                 var userId = Convert.ToInt32(User.FindFirst("id").Value);
                 var teacherGroups = _service.GetGroupsByTeacherId(userId);
 
                 if (!(teacherGroups.Contains(group.Id)))
-                    return StatusCode(StatusCodes.Status403Forbidden, $"Пользователь не связан с группой {group.Id}");
+                    return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
