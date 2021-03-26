@@ -169,19 +169,7 @@ namespace EducationSystem.API.Controllers
                 return NotFound($"Tag with id {tagId} is not found");
 
             var homeworkDtos = _homeworkService.GetHomeworksByTagId(tagId);
-            var availableHomeworks = homeworkDtos;
-            var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор"))
-            {
-                availableHomeworks = new List<HomeworkDto>();
-                homeworkDtos.ForEach(homework =>
-                {
-                    if (userGroup.Contains(homework.Group.Id))
-                    {
-                        availableHomeworks.Add(homework);
-                    }
-                });
-            }
+            var availableHomeworks = GetAvailableHomeworks(homeworkDtos);
             var result = _mapper.Map<List<HomeworkSearchOutputModel>>(availableHomeworks);
 
             return Ok(result);
@@ -204,19 +192,7 @@ namespace EducationSystem.API.Controllers
                 return NotFound( $"Theme with id {themeId} is not found");
 
             var homeworkDtos = _homeworkService.GetHomeworksByThemeId(themeId);
-            var availableHomeworks = homeworkDtos;
-            var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор"))
-            {
-                availableHomeworks = new List<HomeworkDto>();
-                homeworkDtos.ForEach(homework =>
-                {
-                    if (userGroup.Contains(homework.Group.Id))
-                    {
-                        availableHomeworks.Add(homework);
-                    }
-                });
-            }
+            var availableHomeworks = GetAvailableHomeworks(homeworkDtos);
             var result = _mapper.Map<List<HomeworkSearchOutputModel>>(availableHomeworks);
 
             return Ok(result);
@@ -893,6 +869,25 @@ namespace EducationSystem.API.Controllers
             var result = _mapper.Map<List<HomeworkAttemptWithCountOutputModel>>(avaliableHomeworkAttempts);
 
             return Ok(result);
+        }
+
+        private List<HomeworkDto> GetAvailableHomeworks(List<HomeworkDto> homeworkDtos)
+        {
+            var availableHomeworks = homeworkDtos;
+            var userGroup = this.SupplyUserGroupsList(_groupService);
+            if (!User.IsInRole("Администратор"))
+            {
+                availableHomeworks = new List<HomeworkDto>();
+                homeworkDtos.ForEach(homework =>
+                {
+                    if (userGroup.Contains(homework.Group.Id))
+                    {
+                        availableHomeworks.Add(homework);
+                    }
+                });
+            }
+
+            return availableHomeworks;
         }
     }
 }
