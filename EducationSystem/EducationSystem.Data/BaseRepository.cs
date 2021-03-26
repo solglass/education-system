@@ -13,7 +13,7 @@ namespace EducationSystem.Data
         protected string _connectionString;
         public BaseRepository(IOptions<AppSettingsConfig> options)
         {
-            _connectionString = options.Value.ConnectionString;
+            _connectionString = options.Value.CONNECTION_STRING;
         }
     }
 }
