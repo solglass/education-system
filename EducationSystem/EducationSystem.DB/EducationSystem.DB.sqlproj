@@ -93,6 +93,7 @@
     <Folder Include="Tables" />
     <Folder Include="Scripts" />
     <Folder Include="StoredProcedures\Student" />
+    <Folder Include="StoredProcedures\Course_Material" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
@@ -266,6 +267,9 @@
     <Build Include="StoredProcedures\Group\Group_SelectAllByStudentId.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByTutorId.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByTeacherId.sql" />
+    <Build Include="Tables\dbo.Course_Material.sql" />
+    <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Delete.sql" />
+    <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Add_.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
