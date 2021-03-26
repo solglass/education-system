@@ -801,30 +801,22 @@ namespace EducationSystem.API.Controllers
         {
             var userDto = _userService.GetUserById(userId);
             if (userDto is null)
-                return NotFound( $"User with id {userId} is not found");
+                return NotFound($"User with id {userId} is not found");
 
             var requsterGroups = this.SupplyUserGroupsList(_groupService);
             var userGroups = _groupService.GetGroupsByStudentId(userId);
-            if(userGroups.Intersect(requsterGroups).Count() == 0)
+            if (userGroups.Intersect(requsterGroups).Count() == 0)
                 return Forbid($"User is not in group of requester");
 
             var homeworkAttempts = _homeworkService.GetHomeworkAttemptsByUserId(userId);
-            var avaliableHomeworkAttempts = homeworkAttempts;
-
-            if (User.IsInRole("Студент"))
-            {
-                avaliableHomeworkAttempts = new List<HomeworkAttemptWithCountDto>();
-                homeworkAttempts.ForEach(attempt =>
-                {
-                    if (userId == Convert.ToInt32(User.FindFirst("id").Value))
-                        avaliableHomeworkAttempts.Add(attempt);
-                });
-            }
-
+            var avaliableHomeworkAttempts = GetAvaliableHomeworkAttepts(homeworkAttempts);
             var result = _mapper.Map<List<HomeworkAttemptWithCountOutputModel>>(avaliableHomeworkAttempts);
 
             return Ok(result);
         }
+
+        
+
         /// <summary>
         /// Get homeworkAttempt by status Id and group Id
         /// </summary>
@@ -854,18 +846,7 @@ namespace EducationSystem.API.Controllers
             }
 
             var homeworkAttempts = _homeworkService.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
-            var avaliableHomeworkAttempts = homeworkAttempts;
-
-            if (User.IsInRole("Студент"))
-            {
-                avaliableHomeworkAttempts = new List<HomeworkAttemptWithCountDto>();
-                homeworkAttempts.ForEach(attempt =>
-                {
-                    if (attempt.Author.Id == Convert.ToInt32(User.FindFirst("id").Value))
-                        avaliableHomeworkAttempts.Add(attempt);
-                });
-            }
-
+            var avaliableHomeworkAttempts = GetAvaliableHomeworkAttepts( homeworkAttempts);
             var result = _mapper.Map<List<HomeworkAttemptWithCountOutputModel>>(avaliableHomeworkAttempts);
 
             return Ok(result);
@@ -888,6 +869,23 @@ namespace EducationSystem.API.Controllers
             }
 
             return availableHomeworks;
+        }
+
+        private List<HomeworkAttemptWithCountDto> GetAvaliableHomeworkAttepts(List<HomeworkAttemptWithCountDto> homeworkAttempts)
+        {
+            var avaliableHomeworkAttempts = homeworkAttempts;
+
+            if (User.IsInRole("Студент"))
+            {
+                avaliableHomeworkAttempts = new List<HomeworkAttemptWithCountDto>();
+                homeworkAttempts.ForEach(attempt =>
+                {
+                    if (attempt.Author.Id == Convert.ToInt32(User.FindFirst("id").Value))
+                        avaliableHomeworkAttempts.Add(attempt);
+                });
+            }
+
+            return avaliableHomeworkAttempts;
         }
     }
 }
