@@ -23,7 +23,7 @@ namespace EducationSystem.Data.Tests
         private List<(int, int)> _lessonThemeList;
         private List<(int, int)> _tagThemeList;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUpTest()
         {
             _courseRepo = new CourseRepository(_options);
@@ -86,7 +86,6 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
         public void GetThemesPositiveTest(int[] mockIds)
         {
             // Given
@@ -133,7 +132,6 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
         public void GetThemesByCourseIdPositiveTest(int[] mockIds)
         {
             // Given
@@ -161,10 +159,9 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [TestCase(new int[] { 1, 2, 3 })]
-        [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
-        public void GetUncoveredThemesByGroupIdPositiveTest(int[] mockIds)
+        [TestCase(new int[] { 1, 2, 3 }, new int[] { 4,5,6})]
+        [TestCase(new int[] { 4, 5, 6 }, new int[] { 3, 2, 1 })]
+        public void GetUncoveredThemesByGroupIdPositiveTest(int[] coveredMockIds, int[] uncoveredMockIds)
         {
             // Given
             var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
@@ -184,13 +181,13 @@ namespace EducationSystem.Data.Tests
             var addedLessonId = _lessonRepo.AddLesson(lessonDto);
             _lessonIdList.Add(addedLessonId);
 
-            var expected = AddThemeMocksToCourseAndLesson(mockIds, addedCourseId, addedLessonId);
-
+            var expected = AddThemeMocksToCourseAndLesson(uncoveredMockIds, addedCourseId, addedLessonId);
+           
             lessonDto.Date = DateTime.Now.AddDays(-10);
             addedLessonId = _lessonRepo.AddLesson(lessonDto);
             _lessonIdList.Add(addedLessonId);
 
-            AddThemeMocksToCourseAndLesson(mockIds, addedCourseId, addedLessonId);
+            AddThemeMocksToCourseAndLesson(coveredMockIds, addedCourseId, addedLessonId);
 
             // When
             var actual = _courseRepo.GetUncoveredThemesByGroupId(addedGroupId);
@@ -201,7 +198,6 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
         public void AddThemeTagPositiveTest(int[] mockIds)
         {
             // Given
@@ -278,7 +274,7 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void SampleTestTearDown()
         {
             DeleteCourseThemes();
