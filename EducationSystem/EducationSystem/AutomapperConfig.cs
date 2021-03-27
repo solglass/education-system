@@ -139,6 +139,11 @@ namespace EducationSystem.API
 
             CreateMap<MaterialInputModel, MaterialDto>();
             CreateMap<MaterialDto, MaterialOutputModel>();
+
+            CreateMap<NotificationInputModel, NotificationDto>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => Converters.StrToDateTime(src.Date)));
+            CreateMap<NotificationDto, NotificationOutputModel>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
         }
     }
 }

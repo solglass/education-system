@@ -5,12 +5,12 @@ namespace EducationSystem.Business
 {
     public interface INotificationService
     {
-        int AddNotification(NotificationDto notificationDto);
-        int AddNotificationsForAllStaff(NotificationDto notificationDto);
-        int AddNotificationsForAllUsers(NotificationDto notificationDto);
-        int AddNotificationsForGroup(int groupId, NotificationDto notificationDto);
-        int AddNotificationsForStudents(NotificationDto notificationDto);
-        int AddNotificationsForTeachers(NotificationDto notificationDto);
+        int AddNotification(int userId, int authorId, NotificationDto notificationDto);
+        int AddNotificationsForAllStaff(int authorId, NotificationDto notificationDto);
+        int AddNotificationsForAllUsers(int authorId, NotificationDto notificationDto);
+        int AddNotificationsForGroup(int groupId, int authorId, NotificationDto notificationDto);
+        int AddNotificationsForStudents(int authorId, NotificationDto notificationDto);
+        int AddNotificationsForTeachers(int authorId, NotificationDto notificationDto);
         int DeleteNotification(int id);
         NotificationDto GetNotificationById(int id);
         List<NotificationDto> GetNotificationsByUserId(int userId);

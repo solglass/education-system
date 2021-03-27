@@ -19,33 +19,39 @@ namespace EducationSystem.Business
             _userRepository = userRepository;
         }
 
-        public int AddNotification(NotificationDto notificationDto) => _notificationRepository.AddNotification(notificationDto);
+        public int AddNotification(int userId, int authorId, NotificationDto notificationDto)
+        {
+            notificationDto.User = new UserDto { Id = userId };
+            notificationDto.Author = new UserDto { Id = authorId };
+            return _notificationRepository.AddNotification(notificationDto);
+        }
         public int UpdateNotification(NotificationDto notificationDto) => _notificationRepository.UpdateNotification(notificationDto);
         public int DeleteNotification(int id) => _notificationRepository.DeleteNotification(id);
         public NotificationDto GetNotificationById(int id) => _notificationRepository.GetNotificationById(id);
         public List<NotificationDto> GetNotificationsByUserId(int userId) => _notificationRepository.GetNotificationsByUserId(userId);
         public int SetReadOrUnreadNotification(int id, bool isRead) => _notificationRepository.SetReadOrUnreadNotification(id, isRead);
-        public int AddNotificationsForStudents(NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Student }, notificationDto);
-        public int AddNotificationsForTeachers(NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Teacher }, notificationDto);
-        public int AddNotificationsForAllUsers(NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Admin,
+        public int AddNotificationsForStudents(int authorId, NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Student }, authorId, notificationDto);
+        public int AddNotificationsForTeachers(int authorId, NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Teacher }, authorId, notificationDto);
+        public int AddNotificationsForAllUsers(int authorId, NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Admin,
         Role.Student,
         Role.Teacher,
         Role.Tutor,
         Role.Methodist,
-        Role.Manager }, notificationDto);
-        public int AddNotificationsForAllStaff(NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Admin,
+        Role.Manager }, authorId, notificationDto);
+        public int AddNotificationsForAllStaff(int authorId, NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Admin,
         Role.Teacher,
         Role.Tutor,
         Role.Methodist,
-        Role.Manager }, notificationDto);
+        Role.Manager }, authorId, notificationDto);
 
-        public int AddNotificationsForGroup(int groupId, NotificationDto notificationDto)
+        public int AddNotificationsForGroup(int groupId, int authorId, NotificationDto notificationDto)
         {
             throw new NotImplementedException();
         }
 
-        private int AddNotificationForRole(Role[] role, NotificationDto notificationDto)
+        private int AddNotificationForRole(Role[] role, int authorId, NotificationDto notificationDto)
         {
+            notificationDto.Author = new UserDto { Id = authorId };
             var users = _userRepository.GetUsers();
             int i = 0;
             users.ForEach(user =>
