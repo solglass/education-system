@@ -24,8 +24,6 @@ namespace EducationSystem.Controllers
         private IGroupService _groupService;
         private ICourseService _courseService;
         private IMapper _mapper;
-        private int _userId;
-        private List<int> _userGroups;
 
         public LessonController(IMapper mapper, ILessonService lessonService, IGroupService groupService, ICourseService courseService)
         {
@@ -71,13 +69,13 @@ namespace EducationSystem.Controllers
         public ActionResult<List<LessonOutputModel>> GetLessonsByGroupId(int groupId)
         {
 
-            _userGroups = ControllerBaseExtension.SupplyUserGroupsList((ControllerBase) this,_groupService);
+            var _userGroups = ControllerBaseExtension.SupplyUserGroupsList((ControllerBase)this, _groupService);
             var group = _groupService.GetGroupById(groupId);
             if (group == null)
                 return NotFound($"Group {groupId} was not found");
 
-            if (!(_userGroups.Contains(groupId)))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {groupId}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(groupId)))
+                return Forbid($"User is not in group {groupId}");
 
             var lessonDtos = _lessonService.GetLessonsByGroupId(groupId);
             var lessonsList = _mapper.Map<List<LessonOutputModel>>(lessonDtos);
@@ -98,14 +96,14 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Преподаватель, Студент")]
         public ActionResult<LessonOutputModel> GetLessonById(int lessonId)
         {
-           _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
 
             var lessonDto = _lessonService.GetLessonById(lessonId);
 
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
 
             var lessonModel = _mapper.Map<LessonOutputModel>(lessonDto);
 
@@ -119,18 +117,18 @@ namespace EducationSystem.Controllers
         /// <returns>Output model of the soft-deleted Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/34
         [HttpDelete("{lessonId}")]
         [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<LessonOutputModel> DeleteLesson(int lessonId)
         {
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             _lessonService.DeleteLesson(lessonId);
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
@@ -143,18 +141,18 @@ namespace EducationSystem.Controllers
         /// <returns>Output model of the recovered Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:50221/api/lesson/44/recovery
         [HttpPut("{lessonId}/recovery")]
         [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult<LessonOutputModel> RecoverLesson(int lessonId)
         {
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             _lessonService.RecoverLesson(lessonId);
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
@@ -168,6 +166,7 @@ namespace EducationSystem.Controllers
         /// <returns>Output model of the updated Lesson</returns>
         [ProducesResponseType(typeof(LessonOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         // https://localhost:50221/api/lesson/5
         [HttpPut("{lessonId}")]
@@ -176,12 +175,12 @@ namespace EducationSystem.Controllers
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             lessonDto = _mapper.Map<LessonDto>(inputModel);
             lessonDto.Id = lessonId;
             _lessonService.UpdateLesson(lessonDto);
@@ -207,17 +206,17 @@ namespace EducationSystem.Controllers
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
             var groupDto = _groupService.GetGroupById((int)inputModel.GroupId);
             if (groupDto == null)
                 return NotFound($"Group {groupDto} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             if (lessonDto.Group.Id != (int)inputModel.GroupId)
-                return BadRequest($"Group with id {(int)inputModel.GroupId} does not belong to the lesson with id {lessonId}"); 
+                return BadRequest($"Lesson with id {lessonId} does not belong to the group with id {(int)inputModel.GroupId}");
             var feedbackDtos = _lessonService.GetFeedbacks(inputModel.LessonId, inputModel.GroupId, inputModel.CourseId);
             var feedbackList = _mapper.Map<List<FeedbackOutputModel>>(feedbackDtos);
             return Ok(feedbackList);
@@ -239,11 +238,11 @@ namespace EducationSystem.Controllers
         public ActionResult<FeedbackOutputModel> GetFeedbackById(int lessonId, int feedbackId)
         {
             var lessonDto = _lessonService.GetLessonById(lessonId);
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
             if (feedbackDto == null)
                 return NotFound($"Feedback {feedbackId} was not found");
@@ -273,12 +272,12 @@ namespace EducationSystem.Controllers
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
 
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
 
             var feedbackDto = _mapper.Map<FeedbackDto>(inputModel);
             var result = _mapper.Map<FeedbackOutputModel>(_lessonService.GetFeedbackById(_lessonService.AddFeedback(lessonId, feedbackDto)));
@@ -305,19 +304,20 @@ namespace EducationSystem.Controllers
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
 
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userId = Convert.ToInt32(User.FindFirst("id").Value);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
             if (feedbackDto == null)
                 return NotFound($"Feedback {feedbackId} was not found");
             if (feedbackDto.Lesson.Id != lessonId)
                 return BadRequest($"Feedback with id {feedbackId} does not belong to the lesson with id {lessonId}");
-            if (!(feedbackDto.User.Id == _userId) && !(User.IsInRole("Администратор")))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User cannot update feedback {feedbackDto.Id}");
+            if (feedbackDto.User.Id != _userId && !(User.IsInRole("Администратор")))
+                return Forbid($"User cannot update feedback {feedbackDto.Id}");
 
 
             if (!ModelState.IsValid)
@@ -345,20 +345,20 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Студент")]
         public ActionResult DeleteFeedback(int lessonId, int feedbackId)
         {
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userId = Convert.ToInt32(User.FindFirst("id").Value);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             var feedbackDto = _lessonService.GetFeedbackById(feedbackId);
             if (feedbackDto == null)
                 return NotFound($"Feedback {feedbackId} was not found");
             if (feedbackDto.Lesson.Id != lessonId)
                 return BadRequest($"Feedback with id {feedbackId} does not belong to the lesson with id {lessonId}");
-            if (!(feedbackDto.User.Id == _userId) && !(User.IsInRole("Администратор")))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User cannot delete feedback {feedbackDto.Id}");
-
+            if (feedbackDto.User.Id != _userId && !(User.IsInRole("Администратор")))
+                return Forbid($"User cannot delete feedback {feedbackDto.Id}");
 
             _lessonService.DeleteFeedback(feedbackId);
             return StatusCode(StatusCodes.Status204NoContent);
@@ -377,12 +377,12 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Преподаватель, Менеджер")]
         public ActionResult<List<AttendanceOutputModel>> GetAttendancesByLessonId(int lessonId)
         {
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
 
             var attendanceDtos = _lessonService.GetAttendancesByLessonId(lessonId);
             var listAttendances = _mapper.Map<List<AttendanceOutputModel>>(attendanceDtos);
@@ -404,12 +404,12 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Преподаватель, Менеджер")]
         public ActionResult<AttendanceOutputModel> GetAttendanceById(int lessonId, int attendanceId)
         {
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
             if (attendanceDto == null)
                 return NotFound($"Attendence {attendanceId} was not found");
@@ -437,12 +437,12 @@ namespace EducationSystem.Controllers
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
 
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
 
             var attendanceDto = _mapper.Map<AttendanceDto>(inputModel);
             var result = _mapper.Map<AttendanceOutputModel>(_lessonService.GetAttendanceById(_lessonService.AddAttendance(lessonId, attendanceDto)));
@@ -471,19 +471,20 @@ namespace EducationSystem.Controllers
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
 
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userId = Convert.ToInt32(User.FindFirst("id").Value);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
             if (attendanceDto == null)
                 return NotFound($"Attendence {attendanceId} was not found");
             if (attendanceDto.Lesson.Id != lessonId)
                 return BadRequest($"Attendence with id {attendanceId} does not belong to the lesson with id {lessonId}");
-            if (!(attendanceDto.User.Id == _userId) && !(User.IsInRole("Администратор")))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User cannot update attendence {attendanceDto.Id}");
+            if (attendanceDto.User.Id != _userId && !(User.IsInRole("Администратор")))
+                return Forbid($"User cannot update attendence {attendanceDto.Id}");
 
             attendanceDto = _mapper.Map<AttendanceDto>(attendanceInputModel);
             _lessonService.UpdateAttendance(lessonId, attendanceId, attendanceDto);
@@ -506,20 +507,21 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult DeleteAttendance(int lessonId, int attendanceId)
         {
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userId = Convert.ToInt32(User.FindFirst("id").Value);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             var attendanceDto = _lessonService.GetAttendanceById(attendanceId);
             if (attendanceDto == null)
                 return NotFound($"Attendence {attendanceId} was not found");
             if (attendanceDto.Lesson.Id != lessonId)
                 return BadRequest($"Attendence with id {attendanceId} does not belong to the lesson with id {lessonId}");
 
-            if (!(attendanceDto.User.Id == _userId) && !(User.IsInRole("Администратор")))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User cannot delete  attendence {attendanceDto.Id}");
+            if (attendanceDto.User.Id != _userId && !(User.IsInRole("Администратор")))
+                return Forbid($"User cannot delete  attendence {attendanceDto.Id}");
 
             _lessonService.DeleteAttendance(attendanceId);
             return StatusCode(StatusCodes.Status204NoContent);
@@ -533,17 +535,26 @@ namespace EducationSystem.Controllers
         /// <returns>The list of Lesson output models</returns>
         // https://localhost:50221/api/lesson/by-theme/14
         [ProducesResponseType(typeof(List<LessonOutputModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-theme/{themeId}")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
         public ActionResult<List<LessonOutputModel>> GetLessonsByThemeId(int themeId)
         {
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
+
+
             var themeDto = _courseService.GetThemeById(themeId);
             if (themeDto == null)
                 return NotFound($"Theme {themeId} was not found");
 
-            var lessons = _mapper.Map<List<LessonOutputModel>>(_lessonService.GetLessonsByThemeId(themeId));
+            lessonDtos = _lessonService.GetLessonsByThemeId(themeId);
+            lessonDtos.ForEach(lesson =>
+            {
+                if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lesson.Group.Id)))
+                    lessonDtos.Remove(lesson);
+            });
+
+            var lessons = _mapper.Map<List<LessonOutputModel>>(lessonDtos);
             return Ok(lessons);
         }
 
@@ -562,12 +573,12 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult AddNewLessonTheme(int lessonId, int themeId)
         {
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             var themeDto = _courseService.GetThemeById(themeId);
             if (themeDto == null)
                 return NotFound($"Theme {themeId} was not found");
@@ -591,16 +602,16 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult DeleteLessonTheme(int lessonId, int themeId)
         {
-            _userGroups = this.SupplyUserGroupsList(_groupService);
+            var _userGroups = this.SupplyUserGroupsList(_groupService);
             var lessonDto = _lessonService.GetLessonById(lessonId);
             if (lessonDto == null)
                 return NotFound($"Lesson {lessonId} was not found");
-            if (!(User.IsInRole("Администратор") && !(_userGroups.Contains(lessonDto.Group.Id))))
-                return StatusCode(StatusCodes.Status403Forbidden, $"User is not in group {lessonDto.Group.Id}");
+            if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lessonDto.Group.Id)))
+                return Forbid($"User is not in group {lessonDto.Group.Id}");
             var themeDto = _courseService.GetThemeById(themeId);
             if (themeDto == null)
                 return NotFound($"Theme {themeId} was not found");
-            var themeFound = lessonDto.Themes.First(theme => theme.Id == themeDto.Id);
+            var themeFound = lessonDto.Themes.FirstOrDefault(theme => theme.Id == themeDto.Id);
             if (themeFound == null)
                 return BadRequest($"Theme {themeId} with id {themeId} does not belong to the lesson with id {lessonId}");
 
