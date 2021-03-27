@@ -13,5 +13,6 @@ namespace EducationSystem.API.Models.OutputModels
         public int Duration { get; set; }
         
         public List<ThemeOutputModel> Themes { get; set; }
+        public List<MaterialOutputModel> Materials { get; set; }
     }
 }
