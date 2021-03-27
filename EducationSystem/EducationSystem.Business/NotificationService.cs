@@ -46,7 +46,17 @@ namespace EducationSystem.Business
 
         public int AddNotificationsForGroup(int groupId, int authorId, NotificationDto notificationDto)
         {
-            throw new NotImplementedException();
+            notificationDto.Author = new UserDto { Id = authorId };
+            var users = _userRepository.GetStudentsByGroupId(groupId);
+            int i = 0;
+            users.ForEach(user =>
+            {
+                notificationDto.User.Id = user.Id;
+                _notificationRepository.AddNotification(notificationDto);
+                i++;
+
+            });
+            return i;
         }
 
         private int AddNotificationForRole(Role[] role, int authorId, NotificationDto notificationDto)
