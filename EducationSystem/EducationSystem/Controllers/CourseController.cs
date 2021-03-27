@@ -51,6 +51,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:50221/api/course/id
         [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
        public ActionResult<CourseExtendedOutputModel> GetCourse(int id)       
         {
@@ -70,8 +71,9 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:50221/api/course/
         [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status409Conflict)]
         [HttpPost]
-       [Authorize(Roles = "Администратор, Менеджер, Методист")]
+         [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> CreateCourse([FromBody] CourseInputModel course)    
         {
             if (!ModelState.IsValid)
@@ -89,11 +91,14 @@ namespace EducationSystem.API.Controllers
         /// <param name="course"> is used to provide new information about selected course</param>
         /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:50221/api/course/id
-        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)] 
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
         {
+            if (_courseService.GetCourseById(id) is null)
+                return NotFound($"Course with id: {id} not found");
             var courseDto = _mapper.Map<CourseDto>(course);
             courseDto.Id = id;
             var result = _courseService.UpdateCourse(courseDto);
@@ -109,11 +114,12 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:50221/api/course/id
         [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> DeleteCourse(int id)
         {
-            if (_courseService.GetCourseById(id) == null)
+            if (_courseService.GetCourseById(id) is null)
                 return NotFound($"Course with id: {id} not found");
             var result = _courseService.DeleteCourse(id);          
             var deleteResult = _mapper.Map<CourseExtendedOutputModel>(_courseService.GetCourseById(id));
@@ -127,6 +133,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:XXXXX/api/course/id/recovery
         [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status404NotFound)]
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> RecoverCourse(int id)
@@ -146,6 +153,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns Created result</returns>
         // https://localhost:XXXXX/api/course/3/theme/8
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("{courseId}/theme/{themeId}")]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult AddThemeToCourse(int courseId, int themeId)
@@ -166,6 +174,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns NoContent result</returns>
         // https://localhost:XXXXX/api/course/3/theme/8
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{courseId}/theme/{themeId}")]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult RemoveThemeFromCourse(int courseId, int themeId)
@@ -199,6 +208,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns the ThemeExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:XXXXX/api/course/theme/id
         [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status404NotFound)]
         [HttpGet("theme/{id}")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<ThemeExtendedOutputModel> GetThemeById(int id)
@@ -217,6 +227,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns the ThemeExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:XXXXX/api/course/theme/
         [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status409Conflict)]
         [HttpPost("theme")]
         [Authorize(Roles = "Администратор, Методист, Преподаватель")]
         public ActionResult<ThemeExtendedOutputModel> CreateTheme([FromBody] ThemeInputModel theme)
@@ -237,6 +248,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns Created result</returns>
         // https://localhost:XXXXX/api/course/theme/id/tag/id
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("theme/{themeId}/tag/{tagId}")]
         [Authorize(Roles = "Администратор, Методист, Преподаватель, Тьютор")]
         public ActionResult AddTagToTheme(int themeId, int tagId)
@@ -257,6 +269,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns NoContent result</returns>
         // https://localhost:XXXXX/api/course/theme/id/tag/id
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("theme/{themeId}/tag/{tagId}")]
         [Authorize(Roles = "Администратор, Методист, Преподаватель, Тьютор")]
         public ActionResult RemoveTagFromTheme(int themeId, int tagId)
@@ -276,6 +289,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns the ThemeExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:XXXXX/api/course/theme/id/
         [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status404NotFound)]
         [HttpDelete("theme/{id}")]
         [Authorize(Roles = "Администратор, Методист, Преподаватель")]
         public ActionResult<ThemeExtendedOutputModel> DeleteTheme(int id)
@@ -293,6 +307,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns the ThemeExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:XXXXX/api/course/theme/id/
         [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ThemeExtendedOutputModel), StatusCodes.Status404NotFound)]
         [HttpPut("theme/{id}")]
         [Authorize(Roles = "Администратор, Методист, Преподаватель")]
         public ActionResult<ThemeExtendedOutputModel> RecoverTheme(int id)
