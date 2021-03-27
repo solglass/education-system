@@ -9,7 +9,7 @@ namespace EducationSystem.API.Controllers
 {
     public static class ControllerBaseExtension
     {
-        
+
         public static List<int> SupplyUserGroupsList(this ControllerBase controllerBase, IGroupService _groupService)
         {
 

@@ -82,6 +82,16 @@ namespace EducationSystem.Business
             return _courseRepo.DeleteCourse_Theme(courseId, themeId);
         }
 
+        public int AddMaterialToCourse(int courseId, int materialId)
+        {
+            return _courseRepo.AddCourse_Material(courseId, materialId);
+        }
+
+        public int DeleteMaterialFromCourse(int courseId, int materialId)
+        {
+            return _courseRepo.DeleteCourse_Material(courseId, materialId);
+        }
+
         public List<ThemeDto> GetThemes()
         {
             return _courseRepo.GetThemes();
