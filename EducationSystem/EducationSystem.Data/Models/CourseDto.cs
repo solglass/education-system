@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EducationSystem.Data.Models;
 
 namespace EducationSystem.Data.Models
 {
@@ -12,6 +11,7 @@ namespace EducationSystem.Data.Models
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
+        public List<MaterialDto> Materials { get; set; }
 
         public object Clone()
         {
@@ -21,7 +21,8 @@ namespace EducationSystem.Data.Models
                 Description = Description,
                 Duration = Duration,
                 IsDeleted = IsDeleted,
-                Themes = Themes
+                Themes = Themes,
+                Materials = Materials
             };
         }
 
