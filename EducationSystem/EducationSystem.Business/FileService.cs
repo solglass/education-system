@@ -10,7 +10,7 @@ namespace EducationSystem.Business
     public class FileService : IFileService
     {
         public FileStream GetFile(string path)
-        {
+        {           
             FileStream fileStream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), path), FileMode.Open);          
             return fileStream;            
         }
@@ -34,5 +34,6 @@ namespace EducationSystem.Business
             
             return path;
         }
+        public bool CheckFile(string path) => File.Exists(path);    
     }
 }

@@ -12,5 +12,6 @@ namespace EducationSystem.Business
     {
         Task<string> WriteFile(IFormFile file);
         FileStream GetFile(string path);
+        bool CheckFile(string path);
     }
 }

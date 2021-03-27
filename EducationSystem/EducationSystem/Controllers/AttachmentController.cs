@@ -186,12 +186,14 @@ namespace EducationSystem.API.Controllers
         [HttpPost("download")]
         [ProducesResponseType(typeof(AttachmentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<FileResult> DownloadFile([FromBody] FileInputModel fileInputModel)
+        public ActionResult DownloadFile([FromBody] FileInputModel fileInputModel)
         {
-            using var fileStream = _fileService.GetFile(fileInputModel.Path);
+            if (!_fileService.CheckFile(fileInputModel.Path))
+                return NotFound(StatusCodes.Status404NotFound);
+            var fileStream = _fileService.GetFile(fileInputModel.Path);           
             new FileExtensionContentTypeProvider().TryGetContentType(fileInputModel.Path, out var contentType);
             return File(fileStream, contentType);
-        }
+        }                         
     }
 }
 
