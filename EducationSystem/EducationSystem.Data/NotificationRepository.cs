@@ -11,7 +11,7 @@ using System.Text;
 
 namespace EducationSystem.Data
 {
-    public class NotificationRepository : BaseRepository
+    public class NotificationRepository : BaseRepository, INotificationRepository
     {
         public NotificationRepository(IOptions<AppSettingsConfig> options) : base(options)
         {
@@ -67,7 +67,7 @@ namespace EducationSystem.Data
                     "dbo.Notification_SelectById",
                     (notification, user, author) =>
                     {
-                        if(notification != null)
+                        if (notification != null)
                         {
                             notification.User = user;
                             notification.Author = author;
