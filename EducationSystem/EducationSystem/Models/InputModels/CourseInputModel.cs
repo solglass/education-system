@@ -14,5 +14,6 @@ namespace EducationSystem.API.Models
         [Required(ErrorMessage = "Duration is empty")]
         public int Duration { get; set; }
         public List<int> ThemeIds { get; set; }
+        public List<int> MaterialIds { get; set; }
     }
 }
