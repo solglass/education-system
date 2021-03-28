@@ -296,48 +296,64 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<CommentDto> GetComments()
+        public List<CommentDto> SearchHomeworks(int? homeworkAttamptId, int? homeworkId)
         {
-            var commentDictionary = new Dictionary<int, CommentDto>();
-            var userDictionary = new Dictionary<int, UserDto>();
-            var homeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
+            if (homeworkAttamptId == null && homeworkId == null)
+                throw new ArgumentNullException();
 
-            var comments = _connection
-                .Query<CommentDto, UserDto, HomeworkAttemptDto, int, CommentDto>(
-                    "dbo.Homework_SelectById",
-                    (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
+            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
+            var tagDictionary = new Dictionary<int, TagDto>();
+            var themeDictionary = new Dictionary<int, ThemeDto>();
+
+            _connection.Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
+                    "dbo.Homework_Search",
+                    (homework, group, tag, theme) =>
                     {
-                        if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
+                        if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
                         {
-                            commentEntry = comment;
-                            commentEntry.Author = new UserDto();
-                            commentEntry.HomeworkAttempt = new HomeworkAttemptDto();
-                            commentDictionary.Add(commentEntry.Id, commentEntry);
+                            homeworkEntry = homework;
+                            homeworkEntry.Group = group;
+                            homeworkEntry.Tags = new List<TagDto>();
+                            homeworkEntry.Themes = new List<ThemeDto>();
+                            homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
+                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
+                            tagDictionary.Clear();
+                            themeDictionary.Clear();
                         }
-                        if (homeworkAttempt != null 
-                        && homeworkAttemptStatus != 0
-                        && user != null 
-                        && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
+
+                        if (theme != null)
                         {
-                            homeworkAttemptEntry = homeworkAttempt;
-                            homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
-                            commentEntry.HomeworkAttempt = homeworkAttemptEntry;
-                            homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
+                            if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
+                            {
+                                themeEntry = theme;
+                                homeworkEntry.Themes.Add(themeEntry);
+                                themeDictionary.Add(themeEntry.Id, themeEntry);
+                            }
                         }
-                        if (user != null && !userDictionary.TryGetValue(user.Id, out UserDto userEntry))
+                        if (tag != null)
                         {
-                            userEntry = user;
-                            commentEntry.Author = user;
-                            userDictionary.Add(userEntry.Id, userEntry);
+                            if (!tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
+                            {
+                                tagEntry = tag;
+                                tagDictionary.Add(tagEntry.Id, tagEntry);
+                                homeworkEntry.Tags.Add(tagEntry);
+                            }
                         }
-                        return commentEntry;
+                        return homeworkEntry;
+                    },
+                    new
+                    {
+                        groupId = groupId,
+                        themeId = themeId,
+                        tagId = tagId
                     },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
-            return comments;
+            var homework = new List<HomeworkDto>();
+            homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
+            return homework;
         }
         public CommentDto GetCommentById(int id)
         {

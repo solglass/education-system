@@ -19,6 +19,11 @@ namespace EducationSystem.Data.Tests.Mocks
                     Message = "Test 2 mock",
                     IsDeleted = true
                 },
+                3 => new CommentDto
+                {
+                    Message = "Test 3 mock",
+                    IsDeleted = true
+                },
                 _ => null,
             };
         }

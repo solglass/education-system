@@ -16,6 +16,8 @@ namespace EducationSystem.Data.Models
         {
             return new CommentDto
             {
+                Author = Author != null ? (UserDto)Author.Clone() : null,
+                HomeworkAttempt = HomeworkAttempt != null ? (HomeworkAttemptDto)HomeworkAttempt.Clone() : null,
                 Message = Message,
                 IsDeleted = IsDeleted
             };
