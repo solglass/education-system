@@ -22,12 +22,14 @@ namespace EducationSystem.Controllers
         private IMapper _mapper;
         private IMaterialService _service;
         private IGroupService _serviceGroup;
+        private ITagService _serviceTag;
 
-        public MaterialController(IMapper mapper, IMaterialService materialService, IGroupService groupService)
+        public MaterialController(IMapper mapper, IMaterialService materialService, IGroupService groupService, ITagService tagService)
         {
             _mapper = mapper;
             _service = materialService;
             _serviceGroup = groupService;
+            _serviceTag = tagService;
         }
 
         // https://localhost:44365/api/material/
@@ -52,6 +54,8 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByGroupId(int id)
         {
+            if (_serviceGroup.GetGroupById(id) is null)
+                return NotFound($"Group {id} not found");
             if (User.IsInRole("Студент"))
             {
                 var groups = _serviceGroup.GetGroupsByStudentId(Convert.ToInt32(User.FindFirst("id").Value));
@@ -59,8 +63,6 @@ namespace EducationSystem.Controllers
                     return Forbid($"User cannot view materials of group {id}");
             }
             var dtos = _service.GetMaterialsByGroupId(id);
-            if (dtos is null)
-                return NotFound($"Group {id} not found");
             return Ok(_mapper.Map<List<MaterialOutputModel>>(dtos));
 
         }
@@ -75,9 +77,9 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<MaterialOutputModel>> GetMaterialsByTagId(int id)
         {
-            var dtos = _service.GetMaterialsByTagId(id);
-            if (dtos is null)
+            if (_serviceTag.GetTagById(id) is null)
                 return NotFound($"Tag {id} not found");
+            var dtos = _service.GetMaterialsByTagId(id);
             return Ok(_mapper.Map<List<MaterialOutputModel>>(dtos));
         }
 
