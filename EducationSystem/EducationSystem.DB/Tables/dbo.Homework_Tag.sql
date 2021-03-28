@@ -9,4 +9,22 @@
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[Homework_Tag]  WITH CHECK ADD  CONSTRAINT [Homework_Tag_fk0] FOREIGN KEY([TagId])
+REFERENCES [dbo].[Tag] ([Id])
+ON UPDATE NO ACTION
+GO
 
+ALTER TABLE [dbo].[Homework_Tag] CHECK CONSTRAINT [Homework_Tag_fk0]
+GO
+
+ALTER TABLE [dbo].[Homework_Tag]  WITH CHECK ADD  CONSTRAINT [Homework_Tag_fk1] FOREIGN KEY([HomeworkId])
+REFERENCES [dbo].[Homework] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Homework_Tag] CHECK CONSTRAINT [Homework_Tag_fk1]
+GO
+
+ALTER TABLE [dbo].[Homework_Tag] 
+ADD CONSTRAINT UC_HomeworkId_TagId UNIQUE(HomeworkId, TagId)
+GO

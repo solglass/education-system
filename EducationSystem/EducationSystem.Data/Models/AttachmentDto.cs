@@ -6,7 +6,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-    public class AttachmentDto
+    public class AttachmentDto: ICloneable
     {
         public int Id { get; set; }
         public string Path { get; set; }
@@ -22,6 +22,15 @@ namespace EducationSystem.Data.Models
             }
 
             return false;
+        }
+
+        public object Clone()
+        {
+            return new AttachmentDto
+            {
+                Path=Path,
+                AttachmentType = AttachmentType
+            };
         }
 
         public override int GetHashCode()
