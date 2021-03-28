@@ -93,10 +93,10 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<MaterialOutputModel> GetMaterialById(int id)
         {
-            var dtos = _service.GetMaterialById(id);
-            if (dtos is null)
+            var dto = _service.GetMaterialById(id);
+            if (dto is null)
                 return NotFound($"Material {id} not found");
-            return Ok(_mapper.Map<MaterialOutputModel>(dtos));
+            return Ok(_mapper.Map<MaterialOutputModel>(dto));
         }
 
         // https://localhost:44365/api/material
