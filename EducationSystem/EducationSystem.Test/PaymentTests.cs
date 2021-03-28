@@ -189,9 +189,9 @@ namespace EducationSystem.Data.Tests
             //Given
 
             //When
-            var course = _repository.GetPaymentById(-1);
+            var actual = _repository.GetPaymentById(-1);
             //Then
-            Assert.IsNull(course);
+            Assert.IsNull(actual);
         }
 
 
@@ -254,8 +254,17 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual, new PaymentComparer());
         }
 
+        [TestCase(-1)]
+        [TestCase(Int32.MaxValue)]
+        public void GetPaymentByContractNumberNegativeTestWrongContractNumber(int wrongnumber)
+        {     
+            //Given
 
-
+            //When
+            var actual = _repository.GetPaymentByContractNumber(wrongnumber);
+            //Then
+            Assert.IsEmpty(actual);
+        }
 
         [TestCase(new int[] { 1, 2, 3 }, "2021.01", "2021.02")]
         public void GetPaymentsByPeriodPositiveTest(int[] mockIds, string periodFrom, string periodTo)
@@ -309,6 +318,20 @@ namespace EducationSystem.Data.Tests
             // Then
             CollectionAssert.AreEqual(expected, actual, new PaymentComparer());
         }
+
+
+        [TestCase("0001.01", "0001.01")]
+        [TestCase( "2021.02", "2021.01")]
+        public void GetPaymentByPeriodNegativeTestWrongPeriod(string periodFrom, string periodTo)
+        {
+            //Given
+
+            //When
+            var actual = _repository.GetPaymentsByPeriod(periodFrom, periodTo);
+            //Then
+            Assert.IsEmpty(actual);
+        }
+
 
         [TestCase(new int[] { 1, 2, 3, 4, 5, 6 })]
         public void GetPaymentsByUserIdPositiveTest(int[] mockIds)
@@ -375,6 +398,18 @@ namespace EducationSystem.Data.Tests
 
             // Then
             CollectionAssert.AreEqual(expected, actual, new PaymentComparer());
+        }
+
+        [TestCase(-1)]
+        [TestCase(Int32.MaxValue)]
+        public void GetPaymentByUserIdNegativeTestWrongIdNumber(int wrongnumber)
+        {
+            //Given
+
+            //When
+            var actual = _repository.GetPaymentsByUserId (wrongnumber);
+            //Then
+            Assert.IsEmpty(actual);
         }
 
         [TestCase(1)]
@@ -482,7 +517,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 4, 5, 6, 7 }, "2021.05")]
         [TestCase(new int[] { 4, 5, 6, 7 }, "2021.06")]
-        public void GetListOfStudentsByPeriodWhoHaveNotPaid(int[] mockIds, string month)
+        public void GetListOfStudentsByPeriodWhoHaveNotPaidPositiveTest(int[] mockIds, string month)
         {
             var expected = new List<UserDto>();
             var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
@@ -533,6 +568,18 @@ namespace EducationSystem.Data.Tests
 
             // Then
             CollectionAssert.AreEqual(expected, actual, new UserComparer());
+        }
+
+        [TestCase("0001.01")]
+        [TestCase("2045.02")]
+        public void GetListOfStudentsByPeriodWhoHaveNotPaidNegativeTestWrongPeriod(string month)
+        {
+            //Given
+
+            //When
+            var actual = _repository.GetListOfStudentsByPeriodWhoHaveNotPaid(month);
+            //Then
+            Assert.IsEmpty(actual);
         }
 
         [TearDown]
