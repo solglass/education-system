@@ -547,7 +547,7 @@ namespace EducationSystem.Controllers
             if (themeDto == null)
                 return NotFound($"Theme {themeId} was not found");
 
-            lessonDtos = _lessonService.GetLessonsByThemeId(themeId);
+            var lessonDtos = _lessonService.GetLessonsByThemeId(themeId);
             lessonDtos.ForEach(lesson =>
             {
                 if (!(User.IsInRole("Администратор")) && !(_userGroups.Contains(lesson.Group.Id)))
