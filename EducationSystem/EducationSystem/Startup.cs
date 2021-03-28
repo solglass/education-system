@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 
@@ -16,6 +17,7 @@ namespace EducationSystem
         public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
                 .AddJsonFile("appsettings.json");
             if (!env.IsProduction())
             {
@@ -39,8 +41,10 @@ namespace EducationSystem
             services.SwaggerExtention();
             services.RegistrateServicesConfig();
             services.AddAutoMapper(typeof(Startup));
+
             services.Configure<AppSettingsConfig>(Configuration);
             services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +59,11 @@ namespace EducationSystem
             {
                 c.SwaggerEndpoint("v1/swagger.json", "EducationSystem");
             });
+            app.UseCors(
+                builder => builder
+                    .WithOrigins("http://localhost:3000", "https://80.78.240.16:3000", "https://80.78.240.16")
+                    .WithMethods("GET", "POST", "PUT", "DELETE")
+            );
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseRouting();           
