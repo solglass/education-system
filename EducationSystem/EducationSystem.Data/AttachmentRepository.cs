@@ -44,7 +44,8 @@ namespace EducationSystem.Data
                  new
                  {
                      id = attachmentDto.Id,
-                     Path = attachmentDto.Path,
+                     description = attachmentDto.Description,
+                     path = attachmentDto.Path,
                      attachmentTypeId = (int)attachmentDto.AttachmentType
                  },
                 commandType: System.Data.CommandType.StoredProcedure);
@@ -69,13 +70,36 @@ namespace EducationSystem.Data
                 .QuerySingleOrDefault<int>("dbo.Attachment_Add",
                 new
                 {
-                    path = attachmentDto.Path,
-                    attachmentTypeId = (int)attachmentDto.AttachmentType
+                    Description = attachmentDto.Description,
+                    Path = attachmentDto.Path,
+                    AttachmentTypeId = (int)attachmentDto.AttachmentType
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return value;
         }
 
+        public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
+        {
+            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
+            var comments = _connection
+                .Query<AttachmentDto, int, AttachmentDto>
+                ("dbo.Attachment_SelectByHomeworkAttemptId",
+                (attachment, type) =>
+                {
+                    if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
+                    {
+                        attachmentEntry = attachment;
+                        attachmentEntry.AttachmentType = (AttachmentType)type;
+                        attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
+                    }
+                    return attachmentEntry;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return comments;
+        }
         public int AddAttachmentToHomeworkAttempt(int homeworkAttemptId, int attachmentId)
         {
             var data = _connection

@@ -12,11 +12,13 @@ namespace EducationSystem.Data.Tests.Mocks
             {
                 1 => new AttachmentDto
                 {
+                    Description = "Test 1 Description",
                     Path = "Test 1 mock",
                     AttachmentType = AttachmentType.File
                 },
                 2 => new AttachmentDto
                 {
+                    Description = "Test 2 Description",
                     Path = "Test 2 mock"
                 },
                 3 => new AttachmentDto(),

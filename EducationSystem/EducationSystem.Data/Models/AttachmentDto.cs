@@ -9,6 +9,7 @@ namespace EducationSystem.Data.Models
     public class AttachmentDto: ICloneable
     {
         public int Id { get; set; }
+        public string Description { get; set; }
         public string Path { get; set; }
         public AttachmentType AttachmentType { get; set; }
 
@@ -16,6 +17,7 @@ namespace EducationSystem.Data.Models
         {
             return new AttachmentDto
             {
+                Description = Description,
                 Path = Path,
                 AttachmentType = AttachmentType
             };
@@ -23,14 +25,15 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
+            if (!(obj is AttachmentDto))
+                return false;
             AttachmentDto attDto = (AttachmentDto)obj;
-            
-            if (attDto.Path == Path && attDto.AttachmentType.Equals(AttachmentType))
-            {
-                return true;
-            }
-
-            return false;
+            return 
+                (attDto.Description == Description 
+                && attDto.Path == Path 
+                && attDto.AttachmentType.Equals(AttachmentType));
         }
 
         public override int GetHashCode()
@@ -42,7 +45,7 @@ namespace EducationSystem.Data.Models
         {
             string s = "";
 
-                s += Path + " "+ AttachmentType.ToString()+"; ";
+            s += Description + " " + Path + " "+ AttachmentType.ToString()+"; ";
             return s;
         }
 

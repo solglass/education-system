@@ -22,30 +22,30 @@ namespace EducationSystem.Data.Tests
         public void AttachmentAddPositiveTest(int mockId)
         {
             //Given
-            var dto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
+            var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
 
-            var addedAttachmentId = _attachmentRepo.AddAttachment(dto);
+            var addedAttachmentId = _attachmentRepo.AddAttachment(expected);
             Assert.Greater(addedAttachmentId, 0);
 
             _attachmentIdList.Add(addedAttachmentId);
-            dto.Id = addedAttachmentId;
+            expected.Id = addedAttachmentId;
 
             //When
             var actual = _attachmentRepo.GetAttachmentById(addedAttachmentId);
 
             //Then
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestCase(3)]
         public void AttachmentAdd_EmptyAttachment_NegativeTest(int mockId)
         {
             //Given
-            var dto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
+            var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
             //When, Then
             try
             {
-                var addedAttachmentId = _attachmentRepo.AddAttachment(dto);
+                var addedAttachmentId = _attachmentRepo.AddAttachment(expected);
                 _attachmentIdList.Add(addedAttachmentId);
             }
             catch
@@ -59,11 +59,11 @@ namespace EducationSystem.Data.Tests
         public void AttachmentAdd_WithoutAttachmentType_NegativeTest(int mockId)
         {
             //Given
-            var dto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
+            var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
             //When, Then
             try
             {
-                var addedAttachmentId = _attachmentRepo.AddAttachment(dto);
+                var addedAttachmentId = _attachmentRepo.AddAttachment(expected);
                 _attachmentIdList.Add(addedAttachmentId);
             }
             catch
@@ -95,17 +95,18 @@ namespace EducationSystem.Data.Tests
         public void AttachmentUpdatePositiveTest(int mockId)
         {
             //Given
-            var dto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
-            var addedAttachmentId = _attachmentRepo.AddAttachment(dto);
-            
-            dto = new AttachmentDto
+            var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
+            var addedAttachmentId = _attachmentRepo.AddAttachment(expected);
+
+            expected = new AttachmentDto
             {
                 Id = addedAttachmentId,
+                Description = "Update description",
                 Path = "Update Test",
                 AttachmentType = AttachmentType.Link
             };
 
-            var affectedRowsCount = _attachmentRepo.UpdateAttachment(dto);
+            var affectedRowsCount = _attachmentRepo.UpdateAttachment(expected);
             _attachmentIdList.Add(addedAttachmentId);
 
             //When
@@ -113,15 +114,15 @@ namespace EducationSystem.Data.Tests
 
             //Then
             Assert.AreEqual(1, affectedRowsCount);
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
 
         }
         [TestCase(1)]
         public void AttachmentDeletePositiveTest(int mockId)
         {
             // Given
-            var dto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
-            var addedAttachmentId = _attachmentRepo.AddAttachment(dto);
+            var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
+            var addedAttachmentId = _attachmentRepo.AddAttachment(expected);
             _attachmentIdList.Add(addedAttachmentId);
 
             // When
@@ -138,8 +139,8 @@ namespace EducationSystem.Data.Tests
         public void AttachmentUpdate_Null_NegativeTest()
         {
             //Given
-            var dto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(1).Clone();
-            var addedAttachmentId = _attachmentRepo.AddAttachment(dto);
+            var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(1).Clone();
+            var addedAttachmentId = _attachmentRepo.AddAttachment(expected);
             _attachmentIdList.Add(addedAttachmentId);
             //When, Then
             try
@@ -161,9 +162,9 @@ namespace EducationSystem.Data.Tests
 
         private void DeleteAttachment()
         {
-            foreach (int tagId in _attachmentIdList)
+            foreach (int attachmentId in _attachmentIdList)
             {
-                _attachmentRepo.DeleteAttachmentById(tagId);
+                _attachmentRepo.DeleteAttachmentById(attachmentId);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
+using System.Collections.Generic;
 
 namespace EducationSystem.Data
 {
@@ -13,7 +14,6 @@ namespace EducationSystem.Data
         int DeleteAttachmentFromComment(int attachmentId, int commentId);
         AttachmentDto GetAttachmentById(int id);
         int UpdateAttachment(AttachmentDto attachmentDto);
-
-
+        List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id);
     }
 }
