@@ -228,7 +228,6 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
         public void DeleteThemeTagPositiveTest(int[] mockIds)
         {
             // Given
@@ -244,30 +243,22 @@ namespace EducationSystem.Data.Tests
                 var addedTagId = _tagRepo.TagAdd(tagDto);
                 _tagIdList.Add(addedTagId);
                 tagDto.Id = addedTagId;
-                expected.Add(tagDto);
 
                 _tagRepo.ThemeTagAdd(addedThemeId, addedTagId);
                 _tagThemeList.Add((addedThemeId, addedTagId));
+
+                if (i<mockIds.Length/2)
+                {
+                    expected.Add(tagDto);
+                }
+                else
+                {
+                    var result = _tagRepo.ThemeTagDelete(themeDto.Id, tagDto.Id);
+                    Assert.AreEqual(1, result);
+                }
             }
-
-            var toDeleteIdList = new List<(int,int)>();
-            for (int i = 0; i < mockIds.Length; i++)
-            {
-                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
-                var addedTagId = _tagRepo.TagAdd(tagDto);
-                _tagIdList.Add(addedTagId);
-                tagDto.Id = addedTagId;
-
-                _tagRepo.ThemeTagAdd(addedThemeId, addedTagId);
-                toDeleteIdList.Add((addedThemeId, addedTagId));
-            }
-
-            // When
-            toDeleteIdList.ForEach(themeTag =>
-            {
-                _tagRepo.ThemeTagDelete(themeTag.Item1, themeTag.Item2);
-            });
-
+            
+            //When
             var actual = _courseRepo.GetThemeById(addedThemeId).Tags;
 
             // Then
