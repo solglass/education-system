@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using EducationSystem.Core.CustomExceptions;
 using Microsoft.AspNetCore.Http;
+using EducationSystem.API.Controllers;
 
 namespace EducationSystem.Controllers
 {
@@ -73,17 +74,14 @@ namespace EducationSystem.Controllers
             if (group == null)
                 return StatusCode(StatusCodes.Status404NotFound, $"группа c id {id} не найдена");
 
-            if (!User.IsInRole("Администратор") || !User.IsInRole("Менеджер") || !User.IsInRole("Методист"))
+            var userGroup = this.SupplyUserGroupsList(_service);
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
             {
-                var userId = Convert.ToInt32(User.FindFirst("id").Value);
-                var teacherGroups = _service.GetGroupsByTeacherId(userId);
-                var tutorGroups = _service.GetGroupsByTutorId(userId);
-                var studentGroups = _service.GetGroupsByStudentId(userId);
-                if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id) || studentGroups.Contains(group.Id)))
-                    return Forbid($"Пользователь не связан с группой {group.Id}");
+                return Forbid($"Пользователь не связан с группой {group.Id}");
             }
             GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
             return Ok(result);
+            
         }
 
         /// <summary>
@@ -140,12 +138,10 @@ namespace EducationSystem.Controllers
             if (group is null)
                 return NotFound($"Программы с id {id} не существует");
 
-            if (!User.IsInRole("Администратор") || !User.IsInRole("Менеджер") || !User.IsInRole("Методист"))
+            var userGroup = this.SupplyUserGroupsList(_service);
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
             {
-                var userId = Convert.ToInt32(User.FindFirst("id").Value);
-                var teacherGroups = _service.GetGroupsByTeacherId(userId);
-                if (!(teacherGroups.Contains(group.Id)))
-                    return Forbid($"Пользователь не связан с группой {group.Id}");
+                return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
@@ -246,14 +242,10 @@ namespace EducationSystem.Controllers
             if (material == null)
                 return NotFound($"Материалы c id {materialId} не найдены");
 
-            if (!User.IsInRole("Администратор"))
+            var userGroup = this.SupplyUserGroupsList(_service);
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
             {
-                var userId = Convert.ToInt32(User.FindFirst("id").Value);
-                var teacherGroups = _service.GetGroupsByTeacherId(userId);
-                var tutorGroups = _service.GetGroupsByTutorId(userId);
-        
-                if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id)))
-                    return Forbid($"Пользователь не связан с группой {group.Id}");
+                return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             _service.AddGroup_Material(groupId, materialId);
@@ -281,14 +273,10 @@ namespace EducationSystem.Controllers
             if (material is null)
                 return NotFound($"Материалы c id {materialId} не найдены");
 
-            if (!User.IsInRole("Администратор"))
+            var userGroup = this.SupplyUserGroupsList(_service);
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
             {
-                var userId = Convert.ToInt32(User.FindFirst("id").Value);
-                var teacherGroups = _service.GetGroupsByTeacherId(userId);
-                var tutorGroups = _service.GetGroupsByTutorId(userId);
-
-                if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id)))
-                    return Forbid($"Пользователь не связан с группой {group.Id}");
+                return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             _service.DeleteGroup_Material(groupId, materialId);
@@ -502,14 +490,10 @@ namespace EducationSystem.Controllers
             if (group is null)
                 return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {id} не найдена");
 
-            if (!User.IsInRole("Администратор"))
+            var userGroup = this.SupplyUserGroupsList(_service);
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
             {
-                var userId = Convert.ToInt32(User.FindFirst("id").Value);
-                var teacherGroups = _service.GetGroupsByTeacherId(userId);
-                var tutorGroups = _service.GetGroupsByTutorId(userId);
-
-                if (!(teacherGroups.Contains(group.Id) || tutorGroups.Contains(group.Id)))
-                    return Forbid($"Пользователь не связан с группой {group.Id}");
+                return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             var result = _mapper.Map<List<ThemeOutputModel>>(_courseService.GetUncoveredThemesByGroupId(id));
@@ -537,15 +521,12 @@ namespace EducationSystem.Controllers
 
             if (percent < 0 || percent > 100)
                 return StatusCode(StatusCodes.Status409Conflict, "Вы вышли за допустимые рамки числа процентов");
-                
 
-            if (User.IsInRole("Преподаватель"))
+
+            var userGroup = this.SupplyUserGroupsList(_service);
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
             {
-                var userId = Convert.ToInt32(User.FindFirst("id").Value);
-                var teacherGroups = _service.GetGroupsByTeacherId(userId);
-
-                if (!(teacherGroups.Contains(group.Id)))
-                    return Forbid($"Пользователь не связан с группой {group.Id}");
+                return Forbid($"Пользователь не связан с группой {group.Id}");
             }
 
             return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
