@@ -210,6 +210,31 @@ namespace EducationSystem.Data
                 .ToList();
             return groups;
         }
+
+        public List<int> GetGroupsByStudentId(int id)
+        {
+            var result = _connection.
+                Query<int>("dbo.Group_SelectAllByStudentId",
+                new { studentId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+        public List<int> GetGroupsByTutorId(int id)
+        {
+            var result = _connection.
+                Query<int>("dbo.Group_SelectAllByTutorId",
+                new { tutorId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+        public List<int> GetGroupsByTeacherId(int id)
+        {
+            var result = _connection.
+                Query<int>("dbo.Group_SelectAllByTeacherId",
+                new { teacherId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
         public int DeleteTutorGroup(int userId, int groupId)
         {
             return _connection.Execute("dbo.Tutor_Group_Delete", new { userId, groupId }, commandType: System.Data.CommandType.StoredProcedure);

@@ -93,6 +93,7 @@
     <Folder Include="Tables" />
     <Folder Include="Scripts" />
     <Folder Include="StoredProcedures\Student" />
+    <Folder Include="StoredProcedures\Course_Material" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
@@ -160,7 +161,6 @@
     <Build Include="Tables\dbo.Comment_Attachment.sql" />
     <Build Include="Tables\dbo.Group.sql" />
     <Build Include="Tables\dbo.Group_Material.sql" />
-    <None Include="Scripts\ForeignKeys.sql" />
     <Build Include="Tables\dbo.GroupStatus.sql" />
     <Build Include="Tables\dbo.Payment.sql" />
     <Build Include="StoredProcedures\Attachment\dbo.Attachment_SelectByCommentId.sql" />
@@ -250,7 +250,6 @@
     <Build Include="StoredProcedures\User\dbo.User_SelectAll.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectById.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectById.sql" />
-    <None Include="Scripts\UniqueConstraints.sql" />
     <Build Include="StoredProcedures\Attendance\dbo.Attendance_SelectByLessonId.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_Update.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPeriodAndIsNotPaid.sql" />
@@ -265,6 +264,12 @@
     <Build Include="StoredProcedures\User\dbo.Check_User_Authentification.sql" />
     <Build Include="StoredProcedures\dbo.FillEnumTables.sql" />
     <Build Include="StoredProcedures\dbo.CleanDatabase.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAllByStudentId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAllByTutorId.sql" />
+    <Build Include="StoredProcedures\Group\Group_SelectAllByTeacherId.sql" />
+    <Build Include="Tables\dbo.Course_Material.sql" />
+    <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Delete.sql" />
+    <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Add_.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
