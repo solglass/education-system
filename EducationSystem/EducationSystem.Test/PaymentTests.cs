@@ -185,7 +185,7 @@ namespace EducationSystem.Data.Tests
 
         [Test]
         public void GetPaymentByIdNegativeTestNotExist()
-        {      
+        {
             //Given
 
             //When
@@ -257,7 +257,7 @@ namespace EducationSystem.Data.Tests
 
 
 
-        [TestCase(new int[] { 1, 2, 3}, "2021.01", "2021.02")]
+        [TestCase(new int[] { 1, 2, 3 }, "2021.01", "2021.02")]
         public void GetPaymentsByPeriodPositiveTest(int[] mockIds, string periodFrom, string periodTo)
         {
             //Given
@@ -318,39 +318,43 @@ namespace EducationSystem.Data.Tests
             var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
             var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
             var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
+            var groupDtoSecond = (GroupDto)GroupMockGetter.GetGroupDtoMock(2).Clone();
 
             var studentGroupDtoFirst = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
             var studentGroupDtoSecond = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(2).Clone();
 
 
             var addedUserId = _userRepository.AddUser(userDto);
+            userDto.Id = addedUserId;
+
             var addedCourseId = _courseRepository.AddCourse(courseDto);
-            Assert.Greater(addedCourseId, 0);
 
             courseDto.Id = addedCourseId;
             groupDto.Course = courseDto;
-
+            groupDtoSecond.Course = courseDto;
             var addedGroupId = _groupRepository.AddGroup(groupDto);
-            userDto.Id = addedUserId;
-            Assert.Greater(addedUserId, 0);
-            Assert.Greater(addedGroupId, 0);
+
+
+            var addedGroupSecondId = _groupRepository.AddGroup(groupDtoSecond);
+
 
             studentGroupDtoFirst.User.Id = addedUserId;
             studentGroupDtoFirst.Group.Course = courseDto;
             studentGroupDtoFirst.Group.Id = addedGroupId;
             var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDtoFirst);
-            Assert.Greater(addedStudentGroupId, 0);
+
             studentGroupDtoSecond.User.Id = addedUserId;
             studentGroupDtoSecond.Group.Course = courseDto;
-            studentGroupDtoSecond.Group.Id = addedGroupId;
+            studentGroupDtoSecond.Group.Id = addedGroupSecondId;
             addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDtoSecond);
 
-            Assert.Greater(addedStudentGroupId, 0);
 
 
             _addedUserDtoIds.Add(addedUserId);
             _addedGroupDtoIds.Add(addedGroupId);
+            _addedGroupDtoIds.Add(addedGroupSecondId);
             _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
+            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupSecondId));
             _addedCourseDtoIds.Add(addedCourseId);
 
             foreach (var mockId in mockIds)
@@ -446,7 +450,7 @@ namespace EducationSystem.Data.Tests
             //When
             try
             {
-                 payment = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockToUpdate).Clone();
+                payment = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockToUpdate).Clone();
                 payment.Id = paymentId;
                 _repository.UpdatePayment(payment);
 
@@ -478,7 +482,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 4, 5, 6, 7 }, "2021.05")]
         [TestCase(new int[] { 4, 5, 6, 7 }, "2021.06")]
-        public void GetListOfStudentsByPeriodWhoHaveNotPaid (int[] mockIds, string month)
+        public void GetListOfStudentsByPeriodWhoHaveNotPaid(int[] mockIds, string month)
         {
             var expected = new List<UserDto>();
             var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
@@ -534,9 +538,9 @@ namespace EducationSystem.Data.Tests
         [TearDown]
         public void TearDownTest()
         {
+
             _addedStudentGroupDtoIds.ForEach(record =>
             _groupRepository.DeleteStudentGroup(record.Item1, record.Item2));
-
 
             _addedGroupDtoIds.ForEach(id =>
             {
@@ -544,18 +548,20 @@ namespace EducationSystem.Data.Tests
             });
 
 
-            _addedCourseDtoIds.ForEach(id =>
-           _courseRepository.HardDeleteCourse(id));
-
             _addedUserDtoIds.ForEach(id =>
             {
                 _userRepository.HardDeleteUser(id);
             });
 
+
             _addedPaymentDtoIds.ForEach(id =>
             {
                 _repository.DeletePayment(id);
             });
+
+            _addedCourseDtoIds.ForEach(id =>
+            _courseRepository.HardDeleteCourse(id));
+
 
         }
     }

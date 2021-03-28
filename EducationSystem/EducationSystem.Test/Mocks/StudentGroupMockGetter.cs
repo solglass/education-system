@@ -22,7 +22,7 @@ namespace EducationSystem.Data.Tests.Mocks
                 {
                     User = UserMockGetter.GetUserDtoMock(1),
                     ContractNumber = 11,
-                    Group = GroupMockGetter.GetGroupDtoMock(1)
+                    Group = GroupMockGetter.GetGroupDtoMock(2)
                 },
                 _ => throw new NotImplementedException()
             };
