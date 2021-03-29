@@ -85,10 +85,6 @@ namespace EducationSystem.Business
             return _homeworkRepository.DeleteHomework_Theme(homeworkId, themeId);
         }
 
-        public List<CommentDto> GetComments()
-        {
-            return _homeworkRepository.SearchComments(null, null);
-        }
         public List<CommentDto> GetCommentsByHomeworkAttemptId(int homeworkAttamptId)
         {
             return _homeworkRepository.SearchComments(null, homeworkAttamptId);
@@ -175,5 +171,10 @@ namespace EducationSystem.Business
             return _homeworkRepository.HomeworkTagAdd(homeworkId, tagId);
         }
         public int DeleteHomeworkTag(int homeworkId, int tagId) { return _homeworkRepository.HomeworkTagDelete(homeworkId, tagId); }
+
+        public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
+        {
+            return _homeworkRepository.GetHomeworkAttemptsByHomeworkId(id);
+        }
     }
 }

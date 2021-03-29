@@ -136,7 +136,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-group/{groupId}")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByGroupId(int groupId)
+        public ActionResult<List<HomeworkSearchOutputModel>> GetHomeworksByGroupId(int groupId)
         {
             var groupDto = _groupService.GetGroupById(groupId);
             if (groupDto is null)
@@ -162,7 +162,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-tag/{tagId}")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByTagId(int tagId)
+        public ActionResult<List<HomeworkSearchOutputModel>> GetHomeworksByTagId(int tagId)
         {
             var tagDto = _tagService.GetTagById(tagId);
             if (tagDto is null)
@@ -185,7 +185,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("by-theme/{themeId}")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
-        public ActionResult<List<HomeworkSearchOutputModel>> GetHomewroksByThemeId(int themeId)
+        public ActionResult<List<HomeworkSearchOutputModel>> GetHomeworksByThemeId(int themeId)
         {
             var themeDto = _courseService.GetThemeById(themeId);
             if (themeDto is null)
