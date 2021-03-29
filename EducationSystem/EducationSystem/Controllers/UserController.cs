@@ -90,7 +90,21 @@ namespace EducationSystem.Controllers
         public ActionResult<List<UserOutputModel>> GetUsers()
         {
             var users = _userService.GetUsers();
-            var outputModels = _mapper.Map<List<UserOutputModel>>(users);
+            var availableUsers = users;
+            if(!User.IsInRole("Администратор") && !User.IsInRole("Менеджер"))
+            {
+                availableUsers = new List<UserDto>();
+                var requesterGroup = this.SupplyUserGroupsList(_groupService);
+                users.ForEach(user =>
+                {
+                    var userGroups = _groupService.GetGroupsByStudentId(user.Id);
+                    if(requesterGroup.Intersect(userGroups).Count() != 0)
+                    {
+                        availableUsers.Add(user);
+                    }
+                });
+            }
+            var outputModels = _mapper.Map<List<UserOutputModel>>(availableUsers);
             return Ok(outputModels);
         }
 
@@ -100,6 +114,7 @@ namespace EducationSystem.Controllers
         /// <returns>Info of user</returns>
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("{userId}")]
         [Authorize(Roles = "Администратор, Менеджер, Преподаватель, Тьютор")]
         public ActionResult<UserOutputModel> GetUser(int userId)
@@ -109,6 +124,14 @@ namespace EducationSystem.Controllers
             {
                 return NotFound($"User with id {userId} is not found");
             }
+
+            var requesterGroup = this.SupplyUserGroupsList(_groupService);
+            var userGroups = _groupService.GetGroupsByStudentId(user.Id);
+            if (requesterGroup.Intersect(userGroups).Count() == 0)
+            {
+                Forbid($"User {userId} is not in group of requester");
+            }
+
             var outputModel = _mapper.Map<UserOutputModel>(user);
             return Ok(outputModel);
         }
@@ -146,22 +169,32 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPut("{userId}")]
-        [Authorize]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<UserOutputModel> UpdateUserInfo(int userId, [FromBody] UserInputModel inputModel)
         {
             if (!ModelState.IsValid)
             {
                 throw new ValidationException(ModelState);
             }
-            if (_userService.GetUserById(userId) == null)
+            var user = _userService.GetUserById(userId);
+            if (user == null)
             {
                 return NotFound($"User with id {userId} is not found");
             }
-            var userDto = _mapper.Map<UserDto>(inputModel);
-            _userService.UpdateUser(userId, userDto);
-            var outputModel = _mapper.Map<UserOutputModel>(_userService.GetUserById(userId));
-            return Ok(outputModel);
+            if (User.IsInRole("Администратор")
+                || (User.IsInRole("Менеджер") && user.Roles.Contains(Core.Enums.Role.Student)))
+            {
+                var userDto = _mapper.Map<UserDto>(inputModel);
+                _userService.UpdateUser(userId, userDto);
+                var outputModel = _mapper.Map<UserOutputModel>(_userService.GetUserById(userId));
+                return Ok(outputModel);
+            }
+            else
+            {
+                return Forbid("Updated user is not student");
+            }
         }
 
         // https://localhost:44365/api/user/42
@@ -171,6 +204,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<UserOutputExtendedModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpDelete("{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<UserOutputExtendedModel> DeleteUser(int userId)
@@ -205,6 +239,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<UserOutputExtendedModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPut("{userId}/recovery")]
         [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<UserOutputExtendedModel> RecoverUser(int userId)
@@ -226,7 +261,7 @@ namespace EducationSystem.Controllers
             }
             else
             {
-                return Forbid("Deleted user is not student");
+                return Forbid("Recovered user is not student");
             }
             outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(userId));
             return Ok(outputModel);
@@ -274,7 +309,7 @@ namespace EducationSystem.Controllers
                 throw new ValidationException(ModelState);
             }
             var payments = _userService.GetPaymentsByPeriod(Converters.StrToDateTimePeriod(periodInput.PeriodFrom), Converters.StrToDateTimePeriod(periodInput.PeriodTo));
-            if (payments == null)
+            if (payments.Count == 0)
             {
                 return NoContent();
             }
@@ -298,7 +333,7 @@ namespace EducationSystem.Controllers
                 return NotFound($"User with id {userId} is not found");
             }
             var payments = _userService.GetPaymentsByUserId(userId);
-            if (payments == null)
+            if (payments.Count == 0)
             {
                 return NoContent();
             }
@@ -367,7 +402,7 @@ namespace EducationSystem.Controllers
                 throw new ValidationException(ModelState);
             }
             var students = _userService.GetListOfStudentsByPeriodWhoHaveNotPaid(Converters.StrToDateTimePeriod(month.Period));
-            if (students == null)
+            if (students.Count == 0)
             {
                 return NoContent();
             }

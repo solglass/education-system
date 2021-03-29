@@ -17,7 +17,6 @@ namespace EducationSystem.API
     public class AutomapperConfig : Profile
     {
         private const string _dateFormat = "dd.MM.yyyy";
-        private const string _periodFormat = "MMM yyyy";
         public AutomapperConfig()
         {
             CreateMap<UserInputModel, UserDto>()
