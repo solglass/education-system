@@ -250,7 +250,6 @@ namespace EducationSystem.Data.Tests
             _lessonDtoMock = LessonMockGetter.GetLessonDtoMock(numMoq);
             _lessonDtoMock.Group = _groupDtoMock;
             var addedLessonId = _lessonRepo.AddLesson(_lessonDtoMock);
-            _lessonDtoMock.Date = _lessonRepo.GetLessonById(addedLessonId).Date;
             _lessonDtoMock.Id = addedLessonId;
             _lessonIdList.Add(addedLessonId);
         }
