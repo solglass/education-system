@@ -16,6 +16,7 @@ namespace EducationSystem.Data.Models
             return new ThemeDto
             {
                 Name = Name,
+                IsDeleted=IsDeleted,
                 Tags = Tags
             };
         }

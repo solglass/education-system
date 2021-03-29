@@ -6,10 +6,6 @@ begin
 		a.LessonId,
 		a.IsAbsent,
 		a.ReasonOfAbsence,
-		u.Id,
-		u.FirstName,
-		u.LastName,
-		u.UserPic,
 		l.Id,
 		l.Date,
 		l.Description
