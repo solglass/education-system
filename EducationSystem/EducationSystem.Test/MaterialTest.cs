@@ -159,7 +159,11 @@ namespace EducationSystem.Data.Tests
             var toDeleteIdList = new List<(int, int)>();
             for (int i = 0; i < mockIds.Length; i++)
             {
-                var tagDto = AddTag(mockIds[i]);
+                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
+                tagDto.Name += "toDelete";
+                var addedTagId = _tagRepository.TagAdd(tagDto);
+                _addedTagMockIds.Add(addedTagId);
+                tagDto.Id = addedTagId;
 
                 _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
                 toDeleteIdList.Add((materialDto.Id, tagDto.Id));
@@ -271,7 +275,7 @@ namespace EducationSystem.Data.Tests
             return dtoCourse;
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void MaterialOneTimeTearDown()
         {
             DeleteMaterialGroups();
