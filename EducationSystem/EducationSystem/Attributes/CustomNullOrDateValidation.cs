@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Attributes
 {
-    public class CustomDateTimeValidation : ValidationAttribute
+    public class CustomNullOrDateValidation : ValidationAttribute
     {
-        
+
         private const string _dateFormat = "dd.MM.yyyy H:mm:ss";
         public override bool IsValid(object value)
         {
-            return DateTime.TryParseExact(
+            return value != null ? DateTime.TryParseExact(
                 (string)value,
                 _dateFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
-                out DateTime result);           
+                out DateTime result) : true;
         }
     }
 }

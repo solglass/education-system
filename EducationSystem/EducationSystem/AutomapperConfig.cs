@@ -142,7 +142,7 @@ namespace EducationSystem.API
             CreateMap<MaterialDto, MaterialOutputModel>();
 
             CreateMap<NotificationInputModel, NotificationDto>()
-                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => DateTime.Now));
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => (src.Date == null) ? DateTime.Now : Converters.StrToDateTimeWithTime(src.Date)));
             CreateMap<NotificationDto, NotificationOutputModel>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormatWithTime)));
         }

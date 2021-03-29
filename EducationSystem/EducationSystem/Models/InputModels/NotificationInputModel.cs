@@ -12,5 +12,7 @@ namespace EducationSystem.API.Models.InputModels
         [Required]
         [StringLength(1000)]
         public string Message { get; set; }
+        [CustomNullOrDateValidation]
+        public string Date { get; set; }
     }
 }
