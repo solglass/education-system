@@ -1,7 +1,6 @@
 ﻿using EducationSystem.Core.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Models
 {
@@ -20,14 +19,14 @@ namespace EducationSystem.Data.Models
         {
             return new HomeworkAttemptDto
             {
-                Id = this.Id,
-                Comment = this.Comment,
-                IsDeleted = this.IsDeleted,
-                Author = this.Author,
-                Homework = this.Homework,
-                HomeworkAttemptStatus = this.HomeworkAttemptStatus,
-                Attachments = this.Attachments,
-                Comments = this.Comments
+                Id = Id,
+                Comment = Comment,
+                IsDeleted = IsDeleted,
+                Author = Author != null ? (UserDto)Author.Clone() : null,
+                Homework = Homework != null ? (HomeworkDto)Homework.Clone() : null,
+                HomeworkAttemptStatus = HomeworkAttemptStatus,
+                Attachments = Attachments,
+                Comments = Comments
             };
         }
 

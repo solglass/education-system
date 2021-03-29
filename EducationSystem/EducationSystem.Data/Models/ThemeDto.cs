@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Models
 {
@@ -17,6 +16,7 @@ namespace EducationSystem.Data.Models
             return new ThemeDto
             {
                 Name = Name,
+                IsDeleted=IsDeleted,
                 Tags = Tags
             };
         }

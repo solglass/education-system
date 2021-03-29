@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Theme](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](100) NOT NULL,
+	[Name] [nvarchar](100) unique NOT NULL,
 	[IsDeleted] BIT            CONSTRAINT [DF_Theme_IsDeleted] DEFAULT ((0)) NOT NULL,
  CONSTRAINT [PK_THEME] PRIMARY KEY CLUSTERED 
 (
@@ -12,3 +12,4 @@ ALLOW_ROW_LOCKS = ON,
 ALLOW_PAGE_LOCKS = ON
 --, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF
 ) ON [PRIMARY]) ON [PRIMARY]
+

@@ -1,8 +1,6 @@
 ﻿using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
@@ -10,32 +8,39 @@ namespace EducationSystem.Data.Tests.Mocks
     {
         public static HomeworkAttemptDto GetHomeworkAttemptDtoMock(int id)
         {
-            switch (id)
+            return id switch
             {
-                case 1:
-                    return new HomeworkAttemptDto()
-                    {
-                        Comment = "Test Comment1 (Description) Here",
-                        HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
-                    };
-                    break;
-                case 2:
-                    return new HomeworkAttemptDto()
-                    {
-                        Comment = "Test Comment2 (Description) Here",
-                        HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
-                    };
-                    break;
-                case 3:
-                    return new HomeworkAttemptDto()
-                    {
-                        Comment = "Test Comment3 (Description) Here",
-                        HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
-                    };
-                    break;
-                default:
-                    return null;
-            }
+                1 => new HomeworkAttemptDto()
+                {
+                    Comment = "Test Comment1 (Description) Here",
+                    HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
+                    Attachments = new List<AttachmentDto>(),
+                    Comments=new List<CommentDto>(),
+                    Author = new UserDto(),
+                    Homework= new HomeworkDto()
+                    
+                },
+                2 => new HomeworkAttemptDto()
+                {
+                    Comment = "Test Comment2 (Description) Here",
+                    HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
+                    Attachments = new List<AttachmentDto>(),
+                    Comments = new List<CommentDto>(),
+                    Author = new UserDto(),
+                    Homework = new HomeworkDto()
+                },
+                3 => new HomeworkAttemptDto()
+                {
+                    Comment = "Test Comment3 (Description) Here",
+                    HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
+                    Attachments = new List<AttachmentDto>(),
+                    Comments = new List<CommentDto>(),
+                    Author = new UserDto(),
+                    Homework = new HomeworkDto()
+                },
+                4 => new HomeworkAttemptDto(),
+                _ => null,
+            };
         }
     }
 }

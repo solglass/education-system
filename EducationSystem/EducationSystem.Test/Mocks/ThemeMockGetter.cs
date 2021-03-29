@@ -27,14 +27,15 @@ namespace EducationSystem.Data.Tests.Mocks
                 {
                     Name = "Test theme 4"
                 },
+                5 => new ThemeDto
+                {
+                    Name = "Test theme 5"
+                },
                 6 => new ThemeDto
                 {
                     Name = "Test theme 6"
                 },
-                7 => new ThemeDto
-                {
-                    Name = "Test theme 7"
-                },
+                7=>new ThemeDto(),
                 _ => null,
             };
         }

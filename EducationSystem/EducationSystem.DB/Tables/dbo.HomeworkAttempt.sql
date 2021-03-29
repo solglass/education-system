@@ -14,3 +14,28 @@
 ) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+
+
+ALTER TABLE [dbo].[HomeworkAttempt]  WITH CHECK ADD  CONSTRAINT [HomeworkAttempt_fk0] FOREIGN KEY([UserId])
+REFERENCES [dbo].[User] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt] CHECK CONSTRAINT [HomeworkAttempt_fk0]
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt]  WITH CHECK ADD  CONSTRAINT [HomeworkAttempt_fk1] FOREIGN KEY([HomeworkId])
+REFERENCES [dbo].[Homework] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt] CHECK CONSTRAINT [HomeworkAttempt_fk1]
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt]  WITH CHECK ADD  CONSTRAINT [HomeworkAttempt_fk2] FOREIGN KEY([StatusId])
+REFERENCES [dbo].[HomeworkAttemptStatus] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt] CHECK CONSTRAINT [HomeworkAttempt_fk2]
+GO
