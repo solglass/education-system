@@ -159,9 +159,9 @@ namespace EducationSystem.Data.Tests
             }
 
             // When
-            var actual = _homeworkRepo.GetCommentsByHomeworkId(_homeworkDtoMock.Id);
+            var actual = _homeworkRepo.GetComments(_homeworkDtoMock.Id);
 
-            // Then
+            // Then''[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
             // in simple case:
             CollectionAssert.AreEqual(expected, actual);
 

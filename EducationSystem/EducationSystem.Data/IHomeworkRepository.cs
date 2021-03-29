@@ -15,13 +15,13 @@ namespace EducationSystem.Data
         int DeleteOrRecoverHomeworkAttempt(int id, bool isDeleted);
         List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id);
         CommentDto GetCommentById(int id);
-        List<CommentDto> GetComments();
         HomeworkAttemptDto GetHomeworkAttemptById(int id);
         HomeworkDto GetHomeworkById(int id);
         int HardDeleteComment(int id);
         int HardDeleteHomework(int id);
         int HardDeleteHomeworkAttempt(int id);
         List<HomeworkDto> SearchHomeworks(int? groupId, int? themeId, int? tagId);
+        List<CommentDto> SearchComments(int? homeworkAttamptId, int? homeworkId);
         int UpdateComment(CommentDto commentDto);
         int UpdateHomework(HomeworkDto homework);
         int UpdateHomeworkAttempt(HomeworkAttemptDto homeworkAttempt);
