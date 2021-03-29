@@ -46,6 +46,7 @@ namespace EducationSystem.Data
 
         public MaterialDto GetMaterialById(int id)
         {
+            var materialDictionary = new Dictionary<int, MaterialDto>();
             var tagDictionary = new Dictionary<int, TagDto>();
             var materialEntry = new MaterialDto();
 
@@ -54,11 +55,12 @@ namespace EducationSystem.Data
                 "dbo.Material_SelectById",
                 (material, tag) =>
                 {
-                    if (materialEntry.Id == 0)
+                    if (!materialDictionary.TryGetValue(material.Id, out MaterialDto materialEntry))
                     {
                         materialEntry = material;
                         materialEntry.Tags = new List<TagDto>();
-                    }
+                        materialDictionary.Add(materialEntry.Id, materialEntry);
+                        }
                     if (tag != null && !tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
                     {
                         tagEntry = tag;

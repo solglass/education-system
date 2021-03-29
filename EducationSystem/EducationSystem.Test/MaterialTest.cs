@@ -244,6 +244,7 @@ namespace EducationSystem.Data.Tests
         public TagDto AddTag(int mockId)
         {
             var dtoTag = (TagDto)TagMockGetter.GetTagDtoMock(mockId).Clone();
+            dtoTag.Name += "Delete";
             dtoTag.Id = _tagRepository.TagAdd(dtoTag);
             Assert.Greater(dtoTag.Id, 0);
             _addedTagMockIds.Add(dtoTag.Id);
