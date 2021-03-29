@@ -16,7 +16,6 @@ namespace EducationSystem.Data.Models
         {
             return new MaterialDto
             {
-                Id = Id,
                 Link = Link,
                 Description = Description,
                 IsDeleted = IsDeleted,
@@ -32,7 +31,7 @@ namespace EducationSystem.Data.Models
                 return false;
 
             MaterialDto materialDto = (MaterialDto)obj;
-            if (Link != materialDto.Link || Description != materialDto.Description || IsDeleted !=materialDto.IsDeleted)
+            if (Id != materialDto.Id || Link != materialDto.Link || Description != materialDto.Description || IsDeleted !=materialDto.IsDeleted)
             {
                 return false;
             }

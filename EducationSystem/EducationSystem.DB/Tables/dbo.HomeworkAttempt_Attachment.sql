@@ -9,3 +9,26 @@
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[HomeworkAttempt_Attachment]  WITH CHECK ADD  CONSTRAINT [HomeworkAttempt_Attachment_fk0] FOREIGN KEY([HomeworkAttemptID])
+REFERENCES [dbo].[HomeworkAttempt] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt_Attachment] CHECK CONSTRAINT [HomeworkAttempt_Attachment_fk0]
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt_Attachment]  WITH CHECK ADD  CONSTRAINT [HomeworkAttempt_Attachment_fk1] FOREIGN KEY([AttachmentID])
+REFERENCES [dbo].[Attachment] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt_Attachment] CHECK CONSTRAINT [HomeworkAttempt_Attachment_fk1]
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt]
+ADD CONSTRAINT UC_HomeworkId_UserId UNIQUE(HomeworkId, UserId)
+GO
+
+ALTER TABLE [dbo].[HomeworkAttempt_Attachment]
+ADD CONSTRAINT UC_HomeworkAttemptId_AttachmentId UNIQUE(HomeworkAttemptId, AttachmentId)
+GO

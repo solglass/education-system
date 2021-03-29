@@ -1,10 +1,12 @@
-﻿using EducationSystem.Data.Models;
-using EducationSystem.Core.Enums;
+﻿using EducationSystem.Core.Enums;
+using EducationSystem.Data.Models;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
-    public static class AttachmentMockGetter
+   public static class AttachmentMockGetter
     {
         public static AttachmentDto GetAttachmentDtoMock(int id)
         {
@@ -12,17 +14,15 @@ namespace EducationSystem.Data.Tests.Mocks
             {
                 1 => new AttachmentDto
                 {
-                    Description = "Test 1 Description",
-                    Path = "Test 1 mock",
-                    AttachmentType = AttachmentType.File
+                    Path=@"C:\Example\Path",
+                    AttachmentType=(AttachmentType)1
                 },
                 2 => new AttachmentDto
                 {
-                    Description = "Test 2 Description",
-                    Path = "Test 2 mock"
+                    Path = @"D:\Example\Path",
+                    AttachmentType = (AttachmentType)2
                 },
-                3 => new AttachmentDto(),
-                _ => null,
+                _ => null
             };
         }
     }
