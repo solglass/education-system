@@ -20,7 +20,7 @@ namespace EducationSystem.Data.Tests
         private GroupDto _groupDtoMock;
         private CourseDto _courseDtoMock;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void OneTimeSerupTest()
         {
             _lessonRepository = new LessonRepository(_options);
@@ -252,6 +252,7 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                themeDto.Name += "toDelete";
                 var addedThemeId = _courseRepository.AddTheme(themeDto);
                 _addedThemeIds.Add(addedThemeId);
                 themeDto.Id = addedThemeId;
@@ -351,7 +352,7 @@ namespace EducationSystem.Data.Tests
 
 
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDownTest()
         {
             DeleteLessonThemes();
