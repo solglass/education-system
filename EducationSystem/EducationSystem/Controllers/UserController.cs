@@ -12,6 +12,7 @@ using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Utils;
 using Microsoft.AspNetCore.Http;
 using EducationSystem.Core.CustomExceptions;
+using EducationSystem.API.Controllers;
 
 namespace EducationSystem.Controllers
 {
@@ -41,7 +42,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("register")]
-        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
+        [Authorize(Roles = "Администратор,Менеджер")]
         public ActionResult<UserOutputModel> Register([FromBody] UserInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -64,7 +65,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("change-password")]
-        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
+        [Authorize]
         public ActionResult ChangePassword(int id, string oldPassword, string newPassword)
         {
             if (_userService.GetUserById(id) == null)
@@ -121,6 +122,11 @@ namespace EducationSystem.Controllers
             {
                 return NotFound($"Group with id {groupId} is not found");
             }
+            var userGroup = this.SupplyUserGroupsList(_groupService);
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(groupId))
+            {
+                return Forbid($"User is not in group {groupId}");
+            }
             var users = _userService.GetPassedStudentsAttempt_SelectByGroupId(groupId);
             var outputModel = _mapper.Map<List<UserOutputModel>>(users);
             return Ok(outputModel);
@@ -135,7 +141,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPut("{id}")]
-        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
+        [Authorize]
         public ActionResult<UserOutputModel> UpdateUserInfo(int id,[FromBody] UserInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -158,7 +164,7 @@ namespace EducationSystem.Controllers
         /// <returns>Update user, which is deleted</returns>
         [ProducesResponseType(typeof(List<UserOutputExtendedModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id}")]
         [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<UserOutputExtendedModel> DeleteUser(int id)
@@ -171,7 +177,7 @@ namespace EducationSystem.Controllers
             var outputModel = _mapper.Map<UserOutputExtendedModel>(user);      
             if (outputModel.IsDeleted == true)
             {
-                return Forbid($"User with id {id} has already been deleted");
+                return BadRequest($"User with id {id} has already been deleted");
             }
             _userService.DeleteUser(id);
             outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
@@ -184,7 +190,7 @@ namespace EducationSystem.Controllers
         /// <returns>Update user, which is not deleted</returns>
         [ProducesResponseType(typeof(List<UserOutputExtendedModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPut("{id}/recovery")]
         [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<UserOutputExtendedModel> RecoverUser(int id)
@@ -197,7 +203,7 @@ namespace EducationSystem.Controllers
             var outputModel = _mapper.Map<UserOutputExtendedModel>(user);
             if (outputModel.IsDeleted == false)
             {
-                return Forbid($"User with id {id} has not been deleted");
+                return BadRequest($"User with id {id} has not been deleted");
             }
             _userService.RecoverUser(id);
             outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));

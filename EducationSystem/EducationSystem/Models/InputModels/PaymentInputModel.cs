@@ -1,4 +1,5 @@
-﻿using EducationSystem.API.Models.InputModels;
+﻿using EducationSystem.API.Attributes;
+using EducationSystem.API.Models.InputModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +13,7 @@ namespace EducationSystem.API.Models
     {
         [Required]
         public decimal Amount { get; set; }
+        [CustomDateTimeValidation]
         [Required]
         public string Date { get; set; }
         [Required]
