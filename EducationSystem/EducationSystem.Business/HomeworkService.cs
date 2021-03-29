@@ -121,7 +121,7 @@ namespace EducationSystem.Business
                     //comment.Attachments = _homeworkRepository.GetAttachmentsByCommentId
                 }
 
-                item.Attachments = _homeworkRepository.GetAttachmentsByHomeworkAttemptId(item.Id);
+                item.Attachments = _attachmentRepository.GetAttachmentsByHomeworkAttemptId(item.Id);
             }
 
             return dtos;
