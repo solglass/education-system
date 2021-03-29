@@ -296,65 +296,65 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<CommentDto> SearchHomeworks(int? homeworkAttamptId, int? homeworkId)
-        {
-            if (homeworkAttamptId == null && homeworkId == null)
-                throw new ArgumentNullException();
+        //public List<CommentDto> SearchComments(int? homeworkAttamptId, int? homeworkId)
+        //{
+        //    if (homeworkAttamptId == null && homeworkId == null)
+        //        throw new ArgumentNullException();
 
-            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
-            var tagDictionary = new Dictionary<int, TagDto>();
-            var themeDictionary = new Dictionary<int, ThemeDto>();
+        //    var homeworkDictionary = new Dictionary<int, HomeworkDto>();
+        //    var tagDictionary = new Dictionary<int, TagDto>();
+        //    var themeDictionary = new Dictionary<int, ThemeDto>();
 
-            _connection.Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
-                    "dbo.Homework_Search",
-                    (homework, group, tag, theme) =>
-                    {
-                        if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
-                        {
-                            homeworkEntry = homework;
-                            homeworkEntry.Group = group;
-                            homeworkEntry.Tags = new List<TagDto>();
-                            homeworkEntry.Themes = new List<ThemeDto>();
-                            homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
-                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
-                            tagDictionary.Clear();
-                            themeDictionary.Clear();
-                        }
+        //    _connection.Query<CommentDto, GroupDto, TagDto, ThemeDto, CommentDto>(
+        //            "dbo.Comment_Search",
+        //            (homework, group, tag, theme) =>
+        //            {
+        //                if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
+        //                {
+        //                    homeworkEntry = homework;
+        //                    homeworkEntry.Group = group;
+        //                    homeworkEntry.Tags = new List<TagDto>();
+        //                    homeworkEntry.Themes = new List<ThemeDto>();
+        //                    homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
+        //                    homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
+        //                    tagDictionary.Clear();
+        //                    themeDictionary.Clear();
+        //                }
 
-                        if (theme != null)
-                        {
-                            if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                            {
-                                themeEntry = theme;
-                                homeworkEntry.Themes.Add(themeEntry);
-                                themeDictionary.Add(themeEntry.Id, themeEntry);
-                            }
-                        }
-                        if (tag != null)
-                        {
-                            if (!tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
-                            {
-                                tagEntry = tag;
-                                tagDictionary.Add(tagEntry.Id, tagEntry);
-                                homeworkEntry.Tags.Add(tagEntry);
-                            }
-                        }
-                        return homeworkEntry;
-                    },
-                    new
-                    {
-                        groupId = groupId,
-                        themeId = themeId,
-                        tagId = tagId
-                    },
-                    splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
-                .Distinct()
-                .ToList();
-            var homework = new List<HomeworkDto>();
-            homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
-            return homework;
-        }
+        //                if (theme != null)
+        //                {
+        //                    if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
+        //                    {
+        //                        themeEntry = theme;
+        //                        homeworkEntry.Themes.Add(themeEntry);
+        //                        themeDictionary.Add(themeEntry.Id, themeEntry);
+        //                    }
+        //                }
+        //                if (tag != null)
+        //                {
+        //                    if (!tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
+        //                    {
+        //                        tagEntry = tag;
+        //                        tagDictionary.Add(tagEntry.Id, tagEntry);
+        //                        homeworkEntry.Tags.Add(tagEntry);
+        //                    }
+        //                }
+        //                return homeworkEntry;
+        //            },
+        //            new
+        //            {
+        //                groupId = groupId,
+        //                themeId = themeId,
+        //                tagId = tagId
+        //            },
+        //            splitOn: "Id",
+        //            commandType: System.Data.CommandType.StoredProcedure)
+        //        .Distinct()
+        //        .ToList();
+        //    var homework = new List<HomeworkDto>();
+        //    homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
+        //    return homework;
+        //}
         public CommentDto GetCommentById(int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();

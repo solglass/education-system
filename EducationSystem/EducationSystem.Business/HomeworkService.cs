@@ -106,28 +106,6 @@ namespace EducationSystem.Business
             bool isDeleted = false;
             return _homeworkRepository.DeleteOrRecoverComment(id, isDeleted);
         }
-
-        public List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id)
-        {
-            var dtos = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(id);
-
-            foreach (var item in dtos)
-            {
-                item.Comments = _homeworkRepository.GetCommentsByHomeworkAttemptId(item.Id);
-
-                // check comments and then
-                foreach (var comment in item.Comments)
-                {
-                    //comment.Attachments = _homeworkRepository.GetAttachmentsByCommentId
-                }
-
-                item.Attachments = _homeworkRepository.GetAttachmentsByHomeworkAttemptId(item.Id);
-            }
-
-            return dtos;
-        }
-
-
         public int AddHomeworkAttempt(int homeworkId, HomeworkAttemptDto homeworkAttempt)
         {
             homeworkAttempt.Homework = new HomeworkDto { Id = homeworkId };
@@ -189,5 +167,6 @@ namespace EducationSystem.Business
             return _homeworkRepository.HomeworkTagAdd(homeworkId, tagId);
         }
         public int DeleteHomeworkTag(int homeworkId, int tagId) { return _homeworkRepository.HomeworkTagDelete(homeworkId, tagId); }
+
     }
 }

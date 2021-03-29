@@ -15,10 +15,8 @@ namespace EducationSystem.Data
         int DeleteOrRecoverHomeworkAttempt(int id, bool isDeleted);
         List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id);
         CommentDto GetCommentById(int id);
-        List<CommentDto> GetCommentsByHomeworkId(int id);
-        List<CommentDto> GetCommentsByHomeworkAttemptId(int id);
+        List<CommentDto> GetComments();
         HomeworkAttemptDto GetHomeworkAttemptById(int id);
-        List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id);
         HomeworkDto GetHomeworkById(int id);
         int HardDeleteComment(int id);
         int HardDeleteHomework(int id);
