@@ -13,19 +13,30 @@ namespace EducationSystem.Data.Tests.Mocks
                 {
                     Comment = "Test Comment1 (Description) Here",
                     HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
+                    Attachments = new List<AttachmentDto>(),
+                    Comments=new List<CommentDto>(),
+                    Author = new UserDto(),
+                    Homework= new HomeworkDto()
+                    
                 },
                 2 => new HomeworkAttemptDto()
                 {
                     Comment = "Test Comment2 (Description) Here",
                     HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
+                    Attachments = new List<AttachmentDto>(),
+                    Comments = new List<CommentDto>(),
+                    Author = new UserDto(),
+                    Homework = new HomeworkDto()
                 },
                 3 => new HomeworkAttemptDto()
                 {
                     Comment = "Test Comment3 (Description) Here",
                     HomeworkAttemptStatus = (HomeworkAttemptStatus)3,
+                    Attachments = new List<AttachmentDto>(),
+                    Comments = new List<CommentDto>(),
+                    Author = new UserDto(),
+                    Homework = new HomeworkDto()
                 },
-                4 => new HomeworkAttemptDto(),
-
                 _ => null,
             };
         }

@@ -9,3 +9,22 @@
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[Material_Tag]  WITH CHECK ADD  CONSTRAINT [Material_Tag_fk0] FOREIGN KEY([TagId])
+REFERENCES [dbo].[Tag] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Material_Tag] CHECK CONSTRAINT [Material_Tag_fk0]
+GO
+
+ALTER TABLE [dbo].[Material_Tag]  WITH CHECK ADD  CONSTRAINT [Material_Tag_fk1] FOREIGN KEY([MaterialId])
+REFERENCES [dbo].[Material] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Material_Tag] CHECK CONSTRAINT [Material_Tag_fk1]
+GO
+
+ALTER TABLE [dbo].[Material_Tag] 
+ADD CONSTRAINT UC_MaterialId_TagId_Script UNIQUE(MaterialId, TagId)
+GO
