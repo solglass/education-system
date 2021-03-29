@@ -238,8 +238,6 @@
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_DeleteOrRecover.sql" />
     <Build Include="StoredProcedures\Material\dbo.Material_DeleteOrRecover.sql" />
     <Build Include="StoredProcedures\User\dbo.User_DeleteOrRecover.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_SelectByGroupIdAndStatusId.sql" />
-    <Build Include="StoredProcedures\HomeworkAttempt\HomeworkAttempt_SelectByUserId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByTagId.sql" />
     <Build Include="StoredProcedures\Material\Material_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Student\Student_SelectByPercentOfSkip.sql" />
@@ -262,6 +260,9 @@
     <Build Include="Tables\DbVersion.sql" />
     <Build Include="StoredProcedures\User\dbo.PassedStudentsAttempt_SelectByGroupId.sql" />
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Add.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByGroupIdAndStatusId.sql" />
+    <Build Include="StoredProcedures\User\dbo.Check_User_Authentification.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />

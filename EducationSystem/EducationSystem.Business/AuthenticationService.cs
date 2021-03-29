@@ -38,7 +38,8 @@ namespace EducationSystem.Business
             var response = new
             {
                 access_token = encodedJwt,
-                username = identity.Name
+                username = identity.Name,
+                id = identity.FindFirst("id").Value
             };
             return response.ToString();
         }
@@ -46,7 +47,8 @@ namespace EducationSystem.Business
         {
             var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+                    new Claim("id", user.Id.ToString())
                 };
             foreach(Role role in user.Roles)
             {

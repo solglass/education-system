@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Models
 {
@@ -16,9 +14,8 @@ namespace EducationSystem.Data.Models
         {
             return new AttendanceDto
             {
-                Id = Id,
-                Lesson = Lesson,
-                User = User,
+                Lesson = (LessonDto)Lesson.Clone(),
+                User = (UserDto)User.Clone(),
                 IsAbsent = IsAbsent,
                 ReasonOfAbsence = ReasonOfAbsence
             };
@@ -39,13 +36,6 @@ namespace EducationSystem.Data.Models
                 return false;
             }
             return true;
-        }
-
-        public override string ToString()
-        {
-            string s = "";
-            s += Id + " " + IsAbsent + " " + ReasonOfAbsence + ";";
-            return s;
         }
     }
 }
