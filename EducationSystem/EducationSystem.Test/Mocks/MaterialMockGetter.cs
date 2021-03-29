@@ -9,6 +9,7 @@ namespace EducationSystem.Data.Tests.Mocks
         {
             return caseId switch
             {
+                0 => new MaterialDto(),
                 1 => new MaterialDto
                 {
                     Description = "Description test",
@@ -32,19 +33,18 @@ namespace EducationSystem.Data.Tests.Mocks
                     IsDeleted = false,
                     Tags = new List<TagDto>()
                 },
-
-                _ => null,
-            };
-                0 => new MaterialDto(),
-                2 => new MaterialDto
+                4 => new MaterialDto
                 {
-                    Link = "Link test",
-                    IsDeleted = false
+                    Description = "Description test2",
+                    IsDeleted = false,
+                    Tags = new List<TagDto>()
                 },
-                3 => new MaterialDto
+
+                5 => new MaterialDto
                 {
-                    Description = "Decriprion test",
-                    IsDeleted = false
+                    Link = "Link test3",
+                    IsDeleted = false,
+                    Tags = new List<TagDto>()
                 },
                 _ => null,
             };

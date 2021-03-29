@@ -76,10 +76,11 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1, 4)]
+        [TestCase(1, 0)]
         public void MaterialsGetByTagIdPositiveTest(int mockId, int amountRelations)
         {
             var dtoTag = AddTag(mockId);
-            var dtoOtherTag = AddTag(mockId);
+            var dtoOtherTag = AddTag(mockId+1);
 
             List<MaterialDto> expected = new List<MaterialDto>();
             for (int i = 0; i < amountRelations; i++)
@@ -101,6 +102,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1, 4)]
+        [TestCase(1, 0)]
         public void MaterialsGetByGroupIdPositiveTest(int mockId, int amountRelations)
         {
             var dtoGroup = AddGroup(mockId);
@@ -242,8 +244,8 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(-1)]
         [TestCase(0)]
-        [TestCase(2)]
-        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
         public void MaterialAddNullOrEmptyDataNegativeTest(int mockId)
         {
             try
@@ -265,6 +267,24 @@ namespace EducationSystem.Data.Tests
             _materialRepository.DeleteOrRecoverMaterial(dto.Id, isDeleted);
             var deletedDto = _materialRepository.GetMaterialById(dto.Id);
             Assert.IsNotNull(deletedDto);
+        }
+
+        [TestCase(1, 4)]
+        [TestCase(1, 5)]
+        public void MaterialUpdateNegativeTest(int mockId, int updateMock)
+        {
+            var dto = AddMaterial(mockId);
+            var updateDto = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(updateMock).Clone();
+            updateDto.Id = dto.Id;
+            try
+            {
+                var affectedRows = _materialRepository.UpdateMaterial(updateDto);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
         public MaterialDto AddMaterial(int mockId)
@@ -303,6 +323,16 @@ namespace EducationSystem.Data.Tests
             Assert.Greater(dtoCourse.Id, 0);
             _addedCourseIds.Add(dtoCourse.Id);
             return dtoCourse;
+        }
+        [TearDown]
+        public void MaterialTearDown()
+        {
+            DeleteMaterialGroups();
+            DeleteMaterialTags();
+            DeleteMaterials();
+            DeleteTags();
+            DeleteGroups();
+            DeleteCourses();
         }
 
         [OneTimeTearDown]
