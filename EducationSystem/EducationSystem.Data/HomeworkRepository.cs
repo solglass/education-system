@@ -465,29 +465,6 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
-        {
-            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
-            var attachments = _connection
-                .Query<AttachmentDto, int, AttachmentDto>
-                ("dbo.Attachment_SelectByHomeworkAttemptId",
-                (attachment, type) =>
-                {
-                    if (!attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
-                    {
-                        attachmentEntry = attachment;
-                        attachmentEntry.AttachmentType = (AttachmentType)type;
-                        attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
-                    }
-                    return attachmentEntry;
-                },
-                new { id },
-                splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return attachments;
-        }
-
         public int HomeworkTagAdd(int homeworkId, int tagId)
         {
             var result = _connection
