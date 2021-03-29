@@ -11,6 +11,7 @@ using AutoMapper;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Utils;
 using Microsoft.AspNetCore.Http;
+using EducationSystem.Core.CustomExceptions;
 
 namespace EducationSystem.Controllers
 {
@@ -23,12 +24,14 @@ namespace EducationSystem.Controllers
         private readonly IMapper _mapper;
         private IUserService _userService;
         private ILessonService _lessonService;
+        private IGroupService _groupService;
         
-        public UserController(IMapper mapper, IUserService userService, ILessonService lessonService)
+        public UserController(IMapper mapper, IUserService userService, ILessonService lessonService, IGroupService groupService)
         {
             _mapper = mapper;
             _userService = userService;
             _lessonService = lessonService;
+            _groupService = groupService;
         }
 
         // https://localhost:44365/api/user/register
@@ -36,15 +39,16 @@ namespace EducationSystem.Controllers
         /// <param name="inputModel">information about registered user</param>
         /// <returns>rReturn information about added user</returns>
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("register")]
-        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
+        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
         public ActionResult<UserOutputModel> Register([FromBody] UserInputModel inputModel)
         {
-            var userDto = _mapper.Map<UserDto>(inputModel);
-            if (String.IsNullOrEmpty(inputModel.Password) && String.IsNullOrEmpty(inputModel.Login))
+            if (!ModelState.IsValid)
             {
-                return Problem("Не заполнены поля Password и Login ");
+                throw new ValidationException(ModelState);
             }
+            var userDto = _mapper.Map<UserDto>(inputModel);
             var id = _userService.AddUser(userDto);
             var user = _userService.GetUserById(id);
             var outputModel = _mapper.Map<UserOutputModel>(user);
@@ -58,13 +62,14 @@ namespace EducationSystem.Controllers
         /// /// <param name="newPassword">New password of user</param>
         /// <returns>Status204NoContent response</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("change-password")]
-        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
+        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
         public ActionResult ChangePassword(int id, string oldPassword, string newPassword)
         {
-           if(_userService.GetUserById(id) == null)
+            if (_userService.GetUserById(id) == null)
             {
-                return Problem("Не найден пользователь");
+                return NotFound($"User with id {id} is not found");
             }
             _userService.ChangePassword(id, oldPassword,newPassword);
             return NoContent();
@@ -75,7 +80,7 @@ namespace EducationSystem.Controllers
         /// <returns>List of all users, but not deleted</returns>
         [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
-        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор")]
         public ActionResult<List<UserOutputModel>> GetUsers()
         {
             var users = _userService.GetUsers();
@@ -88,11 +93,16 @@ namespace EducationSystem.Controllers
         /// <param name="id">Id of user</param>
         /// <returns>Info of user</returns>
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
-        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор")]
         public ActionResult<UserOutputModel> GetUser(int id)
         {
             var user = _userService.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound($"User with id {id} is not found");
+            }
             var outputModel = _mapper.Map<UserOutputModel>(user);
             return Ok(outputModel);
         }
@@ -102,10 +112,15 @@ namespace EducationSystem.Controllers
         /// <param name="groupId">Id of group in which students study</param>
         /// <returns>List of students</returns>
         [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("passed-homework/by-group/{groupId}")]
-        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор")]
         public ActionResult<List<UserOutputModel>> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
+            if (_groupService.GetGroupById(groupId) == null)
+            {
+                return NotFound($"Group with id {groupId} is not found");
+            }
             var users = _userService.GetPassedStudentsAttempt_SelectByGroupId(groupId);
             var outputModel = _mapper.Map<List<UserOutputModel>>(users);
             return Ok(outputModel);
@@ -117,15 +132,21 @@ namespace EducationSystem.Controllers
         /// /// <param name="inputModel">Nonupdated info about  user </param>
         /// <returns>Updated info about user</returns>
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPut("{id}")]
-        [Authorize(Roles = "Админ,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
+        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор, Студент, Методист")]
         public ActionResult<UserOutputModel> UpdateUserInfo(int id,[FromBody] UserInputModel inputModel)
         {
-            var userDto = _mapper.Map<UserDto>(inputModel);
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             if (_userService.GetUserById(id) == null)
             {
-                return Problem("Не найден пользователь");
+                return NotFound($"User with id {id} is not found");
             }
+            var userDto = _mapper.Map<UserDto>(inputModel);
             _userService.UpdateUser(id, userDto);
             var outputModel = _mapper.Map<UserOutputModel>(_userService.GetUserById(id));
             return Ok(outputModel);
@@ -136,23 +157,25 @@ namespace EducationSystem.Controllers
         /// <param name="id">Id of user</param>
         /// <returns>Update user, which is deleted</returns>
         [ProducesResponseType(typeof(List<UserOutputExtendedModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Менеджер")]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<UserOutputExtendedModel> DeleteUser(int id)
         {
-            if (_userService.GetUserById(id) == null)
+            var user = _userService.GetUserById(id);
+            if (user == null)
             {
-                return Problem("Не найден пользователь");
+                return NotFound($"User with id {id} is not found");
             }
-
-            var result = _userService.DeleteUser(id);
-            if (result == 1)
+            var outputModel = _mapper.Map<UserOutputExtendedModel>(user);      
+            if (outputModel.IsDeleted == true)
             {
-                var outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
-                return Ok(outputModel);
+                return Forbid($"User with id {id} has already been deleted");
             }
-
-            return Problem($"Ошибка! Не удалось удалить пользователя #{id}!");
+            _userService.DeleteUser(id);
+            outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
+            return Ok(outputModel);
         }
 
         // https://localhost:44365/api/user/42/recovery
@@ -160,23 +183,25 @@ namespace EducationSystem.Controllers
         /// <param name="id">Id of user</param>
         /// <returns>Update user, which is not deleted</returns>
         [ProducesResponseType(typeof(List<UserOutputExtendedModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPut("{id}/recovery")]
-        [Authorize(Roles = "Админ, Менеджер")]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<UserOutputExtendedModel> RecoverUser(int id)
         {
-            if (_userService.GetUserById(id) == null)
+            var user = _userService.GetUserById(id);
+            if (user == null)
             {
-                return Problem("Не найден пользователь");
+                return NotFound($"User with id {id} is not found");
             }
-
-            var result = _userService.RecoverUser(id);
-            if (result == 1)
+            var outputModel = _mapper.Map<UserOutputExtendedModel>(user);
+            if (outputModel.IsDeleted == false)
             {
-                var outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
-                return Ok(outputModel);
+                return Forbid($"User with id {id} has not been deleted");
             }
-
-            return Problem($"Ошибка! Не удалось восстановить пользователя #{id}!");
+            _userService.RecoverUser(id);
+            outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(id));
+            return Ok(outputModel);
         }
 
         // https://localhost:44365/api/user/88/payment
@@ -185,10 +210,15 @@ namespace EducationSystem.Controllers
         /// /// <param name="payment">information about payment</param>
         /// <returns>Information about added payment</returns>
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("{userId}/payment")]
-        [Authorize(Roles = "Админ, Менеджер, Студент")]
+        [Authorize(Roles = "Администратор, Менеджер, Студент")]
         public ActionResult<PaymentOutputModel> AddPayment(int id, [FromBody] PaymentInputModel payment)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var paymentDto = _mapper.Map<PaymentDto>(payment);
             _userService.AddPayment(id, paymentDto);
             var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(id));
@@ -200,11 +230,21 @@ namespace EducationSystem.Controllers
         /// <param name="periodInput">information about period</param>
         /// <returns>List of payments for period</returns>
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("payment/by-period")]
-        [Authorize(Roles = "Админ, Менеджер")]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<List<PaymentOutputModel>> GetPaymentsByPeriod([FromBody] PeriodInputModel periodInput)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var payments = _userService.GetPaymentsByPeriod(Converters.StrToDateTimePeriod(periodInput.PeriodFrom), Converters.StrToDateTimePeriod(periodInput.PeriodTo));
+            if (payments == null)
+            {
+                return NotFound($"Payments not found");
+            }
             var outputModels = _mapper.Map<List<PaymentOutputModel>>(payments);
             return Ok(outputModels);
         }
@@ -214,11 +254,21 @@ namespace EducationSystem.Controllers
         /// <param name="id">Id of student</param>
         /// <returns>List of payments of student</returns>
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}/payment")]
-        [Authorize(Roles = "Админ,Менеджер")]
+        [Authorize(Roles = "Администратор,Менеджер")]
         public ActionResult<List<PaymentOutputModel>> GetPaymentsByUserId(int id)
         {
+            var user = _userService.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound($"User with id {id} is not found");
+            }
             var payments = _userService.GetPaymentsByUserId(id);
+            if (payments == null)
+            {
+                return NotFound($"Payments not found");
+            }
             var outputModel = _mapper.Map<List<PaymentOutputModel>>(payments);
             return Ok(outputModel);
         }
@@ -228,12 +278,16 @@ namespace EducationSystem.Controllers
         /// <param name="id">Id of payment</param>
         /// <returns>List of attached materials to tag</returns>
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("payment/{id}")]
-        [Authorize(Roles = "Админ,Менеджер")]
+        [Authorize(Roles = "Администратор,Менеджер")]
         public ActionResult<PaymentOutputModel> GetPayment(int id)
         {
-
             var payment = _userService.GetPaymentById(id);
+            if (payment == null)
+            {
+                return NotFound($"Payment with id {id} is not found");
+            }
             var outputModel = _mapper.Map<PaymentOutputModel>(payment);
             return Ok(outputModel);
         }
@@ -241,14 +295,24 @@ namespace EducationSystem.Controllers
         //https://localhost:44365/api/user/payment/42
         /// <summary>Update information about payment</summary>
         /// <param name="id">Id of payment</param>
-        /// <param name="payment">Nonupdated info about user </param>
+        /// <param name="paymentInputModel">Nonupdated info about user </param>
         /// <returns>Updated info about payment</returns>
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("payment/{id}")]
-        [Authorize(Roles = "Админ,Менеджер")]
-        public ActionResult<PaymentOutputModel> UpdatePayment(int id, [FromBody] PaymentInputModel payment)
+        [Authorize(Roles = "Администратор,Менеджер")]
+        public ActionResult<PaymentOutputModel> UpdatePayment(int id, [FromBody] PaymentInputModel paymentInputModel)
         {
-            var paymentDto = _mapper.Map<PaymentDto>(payment);
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
+            if (_userService.GetPaymentById(id) == null)
+            {
+                return NotFound($"Payment with id {id} is not found");
+            }
+            var paymentDto = _mapper.Map<PaymentDto>(paymentInputModel);
             _userService.UpdatePayment(id, paymentDto);
             var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(id));
             return Ok(outputModel);
@@ -259,11 +323,21 @@ namespace EducationSystem.Controllers
         /// <param name="month">month as selected period</param>
         /// <returns>List of students who not paid in selected month</returns>
         [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpGet("find-debt")]
-        [Authorize(Roles = "Админ, Менеджер")]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<List<UserOutputModel>> GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new ValidationException(ModelState);
+            }
             var students = _userService.GetStudentsNotPaidInMonth(Converters.StrToDateTimePeriod(month.Month));
+            if (students == null)
+            {
+                return NotFound($"Students not found");
+            }
             var outputModel = _mapper.Map<List<UserOutputModel>>(students);
             return Ok(outputModel);
         }
@@ -274,7 +348,7 @@ namespace EducationSystem.Controllers
         /// <returns>Status204NoContent response</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("payment/{id}")]
-        [Authorize(Roles = "Админ,Менеджер")]
+        [Authorize(Roles = "Администратор,Менеджер")]
         public ActionResult DeletePayment(int id)
         {
             _userService.DeletePayment(id);
@@ -286,11 +360,21 @@ namespace EducationSystem.Controllers
         /// <param name="userId">Id of user</param>
         /// <returns>List of attandences of current user</returns>
         [ProducesResponseType(typeof(List<AttendanceOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{userId}/attendances")]
-        [Authorize(Roles = "Админ, Преподаватель, Менеджер")]
+        [Authorize(Roles = "Администратор, Преподаватель, Менеджер")]
         public ActionResult GetAttendancesByUserId(int userId)
         {
+            var user = _userService.GetUserById(userId);
+            if (user == null)
+            {
+                return NotFound($"User with id {userId} is not found");
+            }
             var attendanceDto = _lessonService.GetAttendancesByUserId(userId);
+            if (attendanceDto == null)
+            {
+                return NotFound($"Attendance with userId {userId} is not found");
+            }
             var outputModel = _mapper.Map<List<AttendanceOutputModel>>(attendanceDto);
             return Ok(outputModel);
         }

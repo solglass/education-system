@@ -15,5 +15,6 @@ namespace EducationSystem.API.Models.OutputModels
         public string Phone { get; set; }
         public string UserPic { get; set; }
         public string Email { get; set; }
+        public string RegistrationDate { get; set; }
     }
 }
