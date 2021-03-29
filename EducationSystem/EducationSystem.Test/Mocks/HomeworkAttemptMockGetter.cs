@@ -38,6 +38,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     Author = new UserDto(),
                     Homework = new HomeworkDto()
                 },
+                4 => new HomeworkAttemptDto(),
                 _ => null,
             };
         }

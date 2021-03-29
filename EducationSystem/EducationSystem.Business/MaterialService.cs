@@ -16,6 +16,7 @@ namespace EducationSystem.Business
 
         public List<MaterialDto> GetMaterialsByTagId(int id) { return _materialRepository.GetMaterialsByTagId(id); }
         public List<MaterialDto> GetMaterialsByGroupId(int id) { return _materialRepository.GetMaterialsByGroupId(id); }
+        public List<MaterialDto> GetMaterials() { return _materialRepository.GetMaterials(); }
 
         public MaterialDto GetMaterialById(int id) { return _materialRepository.GetMaterialById(id); }
         public int AddMaterial(MaterialDto material) { return _materialRepository.AddMaterial(material); }
