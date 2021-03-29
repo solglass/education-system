@@ -16,12 +16,18 @@ namespace EducationSystem.Data.Models
         public UserDto Student { get; set; }
 
         public object Clone()
-        {           
+        {
+            UserDto studentClone = null;
+            if (Student != null)
+            {
+                studentClone = (UserDto)Student.Clone();
+            }
+
             return new PaymentDto()
             {
                 Amount = Amount,
                 ContractNumber = ContractNumber,
-                Student = Student,
+                Student = studentClone,
                 Date = Date,
                 IsPaid = IsPaid,
                 Period = Period
@@ -51,9 +57,8 @@ namespace EducationSystem.Data.Models
 
         public override string ToString()
         {
-            string s = "";
+            string s = $" {Id}  {ContractNumber}  {Amount}  {Date} ";
 
-            s += Id + " " + ContractNumber + " " + Amount + " " + Date + "; ";
             return s;
         }
 

@@ -13,10 +13,23 @@ namespace EducationSystem.Data.Models
 
         public object Clone()
         {
+            UserDto userClone = null;
+            GroupDto groupClone = null;
+
+            if (User != null)
+            {
+                userClone = (UserDto)User.Clone();
+            }
+
+            if (Group != null)
+            {
+               groupClone = (GroupDto)Group.Clone();
+            }
+
             return new StudentGroupDto()
             {
-                User = User,
-                Group = Group,
+                User = userClone,
+                Group = groupClone,
                 ContractNumber = ContractNumber
             };
         }
@@ -39,9 +52,7 @@ namespace EducationSystem.Data.Models
 
         public override string ToString()
         {
-            string s = "";
-
-            s += Id + " " + User + " " + Group + " " + ContractNumber + "; ";
+            string s = $" {Id} {User} {Group} {ContractNumber} ";
             return s;
         }
     }

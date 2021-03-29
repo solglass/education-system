@@ -46,36 +46,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
-            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
-            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
-            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
-            var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
-
-
-            var addedUserId = _userRepository.AddUser(userDto);
-            var addedCourseId = _courseRepository.AddCourse(courseDto);
-            Assert.Greater(addedCourseId, 0);
-            courseDto.Id = addedCourseId;
-            groupDto.Course = courseDto;
-
-            var addedGroupId = _groupRepository.AddGroup(groupDto);
-            userDto.Id = addedUserId;
-            studentGroupDto.User.Id = addedUserId;
-            studentGroupDto.Group.Course = courseDto;
-            studentGroupDto.Group.Id = addedGroupId;
-            studentGroupDto.ContractNumber = dto.ContractNumber;
-            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
-            Assert.Greater(addedUserId, 0);
-            Assert.Greater(addedGroupId, 0);
-            Assert.Greater(addedStudentGroupId, 0);
-
-            dto.Student = userDto;
-
-            _addedUserDtoIds.Add(addedUserId);
-            _addedGroupDtoIds.Add(addedGroupId);
-            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
-            _addedCourseDtoIds.Add(addedCourseId);
-
+            SetupRelatedEntititesRegulary(ref dto);
 
             //When
             var addedEntityId = _repository.AddPayment(dto);
@@ -139,35 +110,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
-            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
-            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
-            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
-            var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
-
-
-            var addedUserId = _userRepository.AddUser(userDto);
-            var addedCourseId = _courseRepository.AddCourse(courseDto);
-            Assert.Greater(addedCourseId, 0);
-            courseDto.Id = addedCourseId;
-            groupDto.Course = courseDto;
-
-            var addedGroupId = _groupRepository.AddGroup(groupDto);
-            userDto.Id = addedUserId;
-            studentGroupDto.User.Id = addedUserId;
-            studentGroupDto.Group.Course = courseDto;
-            studentGroupDto.Group.Id = addedGroupId;
-            studentGroupDto.ContractNumber = dto.ContractNumber;
-            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
-            Assert.Greater(addedUserId, 0);
-            Assert.Greater(addedGroupId, 0);
-            Assert.Greater(addedStudentGroupId, 0);
-
-            dto.Student = userDto;
-
-            _addedUserDtoIds.Add(addedUserId);
-            _addedGroupDtoIds.Add(addedGroupId);
-            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
-            _addedCourseDtoIds.Add(addedCourseId);
+            SetupRelatedEntititesRegulary(ref dto);
 
             var addedEntityId = _repository.AddPayment(dto);
 
@@ -209,30 +152,8 @@ namespace EducationSystem.Data.Tests
             var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
             var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
 
+            SetupRelatedEntitiesForSeveralPayments(ref userDto, ref groupDto, ref courseDto, ref studentGroupDto, contractNumber);
 
-            var addedUserId = _userRepository.AddUser(userDto);
-            var addedCourseId = _courseRepository.AddCourse(courseDto);
-            Assert.Greater(addedCourseId, 0);
-
-            courseDto.Id = addedCourseId;
-            groupDto.Course = courseDto;
-
-            var addedGroupId = _groupRepository.AddGroup(groupDto);
-            userDto.Id = addedUserId;
-            studentGroupDto.User.Id = addedUserId;
-            studentGroupDto.Group.Course = courseDto;
-            studentGroupDto.Group.Id = addedGroupId;
-            studentGroupDto.ContractNumber = contractNumber;
-            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
-            Assert.Greater(addedUserId, 0);
-            Assert.Greater(addedGroupId, 0);
-            Assert.Greater(addedStudentGroupId, 0);
-
-
-            _addedUserDtoIds.Add(addedUserId);
-            _addedGroupDtoIds.Add(addedGroupId);
-            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
-            _addedCourseDtoIds.Add(addedCourseId);
 
             for (int mockId = 1; mockId <= numberOfPayments; mockId++)
             {
@@ -266,7 +187,7 @@ namespace EducationSystem.Data.Tests
             Assert.IsEmpty(actual);
         }
 
-        [TestCase(new int[] { 1, 2, 3 }, "2021.01", "2021.02")]
+        [TestCase(new int[] { 1, 2, 3, 4 }, "2021.01", "2021.02")]
         public void GetPaymentsByPeriodPositiveTest(int[] mockIds, string periodFrom, string periodTo)
         {
             //Given
@@ -276,29 +197,7 @@ namespace EducationSystem.Data.Tests
             var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
             var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
 
-
-            var addedUserId = _userRepository.AddUser(userDto);
-            var addedCourseId = _courseRepository.AddCourse(courseDto);
-            Assert.Greater(addedCourseId, 0);
-
-            courseDto.Id = addedCourseId;
-            groupDto.Course = courseDto;
-
-            var addedGroupId = _groupRepository.AddGroup(groupDto);
-            userDto.Id = addedUserId;
-            studentGroupDto.User.Id = addedUserId;
-            studentGroupDto.Group.Course = courseDto;
-            studentGroupDto.Group.Id = addedGroupId;
-            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
-            Assert.Greater(addedUserId, 0);
-            Assert.Greater(addedGroupId, 0);
-            Assert.Greater(addedStudentGroupId, 0);
-
-
-            _addedUserDtoIds.Add(addedUserId);
-            _addedGroupDtoIds.Add(addedGroupId);
-            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
-            _addedCourseDtoIds.Add(addedCourseId);
+            SetupRelatedEntitiesForSeveralPayments(ref userDto, ref groupDto, ref courseDto, ref studentGroupDto);
 
             foreach (var mockId in mockIds)
             {
@@ -308,6 +207,7 @@ namespace EducationSystem.Data.Tests
 
                 _addedPaymentDtoIds.Add(addedEntityId);
                 dto.Id = addedEntityId;
+               if (mockId < 4)
                 expected.Add(dto);
 
             }
@@ -345,40 +245,10 @@ namespace EducationSystem.Data.Tests
 
             var studentGroupDtoFirst = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
             var studentGroupDtoSecond = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(2).Clone();
-
-
             var addedUserId = _userRepository.AddUser(userDto);
-            userDto.Id = addedUserId;
 
-            var addedCourseId = _courseRepository.AddCourse(courseDto);
+            SetupRelatedEntititesForSeveralPaymentsAndTwoStudentGroups(ref userDto, ref groupDto, ref groupDtoSecond, ref courseDto, ref studentGroupDtoFirst, ref studentGroupDtoSecond, addedUserId);
 
-            courseDto.Id = addedCourseId;
-            groupDto.Course = courseDto;
-            groupDtoSecond.Course = courseDto;
-            var addedGroupId = _groupRepository.AddGroup(groupDto);
-
-
-            var addedGroupSecondId = _groupRepository.AddGroup(groupDtoSecond);
-
-
-            studentGroupDtoFirst.User.Id = addedUserId;
-            studentGroupDtoFirst.Group.Course = courseDto;
-            studentGroupDtoFirst.Group.Id = addedGroupId;
-            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDtoFirst);
-
-            studentGroupDtoSecond.User.Id = addedUserId;
-            studentGroupDtoSecond.Group.Course = courseDto;
-            studentGroupDtoSecond.Group.Id = addedGroupSecondId;
-            addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDtoSecond);
-
-
-
-            _addedUserDtoIds.Add(addedUserId);
-            _addedGroupDtoIds.Add(addedGroupId);
-            _addedGroupDtoIds.Add(addedGroupSecondId);
-            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
-            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupSecondId));
-            _addedCourseDtoIds.Add(addedCourseId);
 
             foreach (var mockId in mockIds)
             {
@@ -417,35 +287,8 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
-            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
-            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
-            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
-            var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
 
-
-            var addedUserId = _userRepository.AddUser(userDto);
-            var addedCourseId = _courseRepository.AddCourse(courseDto);
-            Assert.Greater(addedCourseId, 0);
-            courseDto.Id = addedCourseId;
-            groupDto.Course = courseDto;
-
-            var addedGroupId = _groupRepository.AddGroup(groupDto);
-            userDto.Id = addedUserId;
-            studentGroupDto.User.Id = addedUserId;
-            studentGroupDto.Group.Course = courseDto;
-            studentGroupDto.Group.Id = addedGroupId;
-            studentGroupDto.ContractNumber = dto.ContractNumber;
-            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
-            Assert.Greater(addedUserId, 0);
-            Assert.Greater(addedGroupId, 0);
-            Assert.Greater(addedStudentGroupId, 0);
-
-            dto.Student = userDto;
-
-            _addedUserDtoIds.Add(addedUserId);
-            _addedGroupDtoIds.Add(addedGroupId);
-            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
-            _addedCourseDtoIds.Add(addedCourseId);
+            SetupRelatedEntititesRegulary(ref dto);
 
             var addedEntityId = _repository.AddPayment(dto);
             _addedPaymentDtoIds.Add(addedEntityId);
@@ -525,29 +368,7 @@ namespace EducationSystem.Data.Tests
             var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
             var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(2).Clone();
 
-
-            var addedUserId = _userRepository.AddUser(userDto);
-            var addedCourseId = _courseRepository.AddCourse(courseDto);
-            Assert.Greater(addedCourseId, 0);
-
-            courseDto.Id = addedCourseId;
-            groupDto.Course = courseDto;
-
-            var addedGroupId = _groupRepository.AddGroup(groupDto);
-            userDto.Id = addedUserId;
-            studentGroupDto.User.Id = addedUserId;
-            studentGroupDto.Group.Course = courseDto;
-            studentGroupDto.Group.Id = addedGroupId;
-            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
-            Assert.Greater(addedUserId, 0);
-            Assert.Greater(addedGroupId, 0);
-            Assert.Greater(addedStudentGroupId, 0);
-
-
-            _addedUserDtoIds.Add(addedUserId);
-            _addedGroupDtoIds.Add(addedGroupId);
-            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
-            _addedCourseDtoIds.Add(addedCourseId);
+            SetupRelatedEntitiesForSeveralPayments(ref userDto, ref groupDto, ref courseDto, ref studentGroupDto);
 
             foreach (var mockId in mockIds)
             {
@@ -610,6 +431,104 @@ namespace EducationSystem.Data.Tests
             _courseRepository.HardDeleteCourse(id));
 
 
+        }
+
+        private void SetupRelatedEntititesRegulary(ref PaymentDto dto )
+        {
+
+            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
+            var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
+
+
+            var addedUserId = _userRepository.AddUser(userDto);
+            var addedCourseId = _courseRepository.AddCourse(courseDto);
+            Assert.Greater(addedCourseId, 0);
+            courseDto.Id = addedCourseId;
+            groupDto.Course = courseDto;
+
+            var addedGroupId = _groupRepository.AddGroup(groupDto);
+            userDto.Id = addedUserId;
+            studentGroupDto.User.Id = addedUserId;
+            studentGroupDto.Group.Course = courseDto;
+            studentGroupDto.Group.Id = addedGroupId;
+            studentGroupDto.ContractNumber = dto.ContractNumber;
+            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
+            Assert.Greater(addedUserId, 0);
+            Assert.Greater(addedGroupId, 0);
+            Assert.Greater(addedStudentGroupId, 0);
+
+            dto.Student = userDto;
+
+            _addedUserDtoIds.Add(addedUserId);
+            _addedGroupDtoIds.Add(addedGroupId);
+            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
+            _addedCourseDtoIds.Add(addedCourseId);
+        }
+
+        private void SetupRelatedEntitiesForSeveralPayments( ref UserDto userDto, ref GroupDto groupDto, ref CourseDto courseDto, ref StudentGroupDto studentGroupDto, int contractNumber = -1)
+        {
+            var addedUserId = _userRepository.AddUser(userDto);
+            var addedCourseId = _courseRepository.AddCourse(courseDto);
+            Assert.Greater(addedCourseId, 0);
+
+            courseDto.Id = addedCourseId;
+            groupDto.Course = courseDto;
+
+            var addedGroupId = _groupRepository.AddGroup(groupDto);
+            userDto.Id = addedUserId;
+            studentGroupDto.User.Id = addedUserId;
+            studentGroupDto.Group.Course = courseDto;
+            studentGroupDto.Group.Id = addedGroupId;
+            if (contractNumber >= 0)
+                studentGroupDto.ContractNumber = contractNumber;
+            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDto);
+            Assert.Greater(addedUserId, 0);
+            Assert.Greater(addedGroupId, 0);
+            Assert.Greater(addedStudentGroupId, 0);
+
+
+            _addedUserDtoIds.Add(addedUserId);
+            _addedGroupDtoIds.Add(addedGroupId);
+            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
+            _addedCourseDtoIds.Add(addedCourseId);
+        }
+
+        private void SetupRelatedEntititesForSeveralPaymentsAndTwoStudentGroups(ref UserDto userDto, ref GroupDto groupDto, ref GroupDto groupDtoSecond, ref CourseDto courseDto, ref StudentGroupDto studentGroupDtoFirst, ref StudentGroupDto studentGroupDtoSecond,  int addedUserId)
+
+        {
+            userDto.Id = addedUserId;
+
+            var addedCourseId = _courseRepository.AddCourse(courseDto);
+
+            courseDto.Id = addedCourseId;
+            groupDto.Course = courseDto;
+            groupDtoSecond.Course = courseDto;
+            var addedGroupId = _groupRepository.AddGroup(groupDto);
+
+
+            var addedGroupSecondId = _groupRepository.AddGroup(groupDtoSecond);
+
+
+            studentGroupDtoFirst.User.Id = addedUserId;
+            studentGroupDtoFirst.Group.Course = courseDto;
+            studentGroupDtoFirst.Group.Id = addedGroupId;
+            var addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDtoFirst);
+
+            studentGroupDtoSecond.User.Id = addedUserId;
+            studentGroupDtoSecond.Group.Course = courseDto;
+            studentGroupDtoSecond.Group.Id = addedGroupSecondId;
+            addedStudentGroupId = _groupRepository.AddStudentGroup(studentGroupDtoSecond);
+
+
+
+            _addedUserDtoIds.Add(addedUserId);
+            _addedGroupDtoIds.Add(addedGroupId);
+            _addedGroupDtoIds.Add(addedGroupSecondId);
+            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupId));
+            _addedStudentGroupDtoIds.Add((addedUserId, addedGroupSecondId));
+            _addedCourseDtoIds.Add(addedCourseId);
         }
     }
 
@@ -686,5 +605,6 @@ namespace EducationSystem.Data.Tests
         }
 
     }
+
 
 }
