@@ -39,34 +39,15 @@ namespace EducationSystem.Data.Tests
             _groupIdList = new List<int>();
             _lessonIdList = new List<int>();
             _userIdList = new List<int>();
-
-            _userDtoMock = UserMockGetter.GetUserDtoMock(1);
-            var addedUserId = _userRepo.AddUser(_userDtoMock);
-            _userIdList.Add(addedUserId);
-            _userDtoMock.Id = addedUserId;
-
-            _courseDtoMock = CourseMockGetter.GetCourseDtoMock(1);
-            var addedCourseId = _courseRepo.AddCourse(_courseDtoMock);
-            _courseIdList.Add(addedCourseId);
-            _courseDtoMock.Id = addedCourseId;
-
-            _groupDtoMock = GroupMockGetter.GetGroupDtoMock(1);
-            _groupDtoMock.Course = _courseDtoMock;
-            var addedGroupId = _groupRepo.AddGroup(_groupDtoMock);
-            _groupIdList.Add(addedGroupId);
-            _groupDtoMock.Id = addedGroupId;
-
-            _lessonDtoMock = LessonMockGetter.GetLessonDtoMock(1);
-            _lessonDtoMock.Group = _groupDtoMock;
-            var addedLessonId = _lessonRepo.AddLesson(_lessonDtoMock);
-            _lessonIdList.Add(addedLessonId);
-            _lessonDtoMock.Id = addedLessonId;
         }
 
         [TestCase(1)]
         public void AddFeedbackPositiveTest(int mockId)
         {
             //Given
+            CreateUserEntity(mockId);
+            CreateLessonEntity(mockId);
+
             var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockId).Clone();
             dto.User = _userDtoMock;
             dto.Lesson= _lessonDtoMock;
@@ -90,6 +71,9 @@ namespace EducationSystem.Data.Tests
         public void UpdateFeedbackPositiveTest(int mockId)
         {
             //Given
+            CreateUserEntity(mockId);
+            CreateLessonEntity(mockId);
+
             var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockId).Clone();
             dto.User = _userDtoMock;
             dto.Lesson = _lessonDtoMock;
@@ -111,17 +95,20 @@ namespace EducationSystem.Data.Tests
             var actual = _lessonRepo.GetFeedbackById(addedFeedbackId);
 
             //Then
-            Assert.AreEqual(dto, actual);
+            Assert.IsTrue(CustomFeedbackEquels(dto, actual));
 
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
-        public void FeedbackByLessonIdSelectAllPositiveTest(int[] mockIds)
+        public void FeedbackIdSelectAllByLessonIdPositiveTest(int[] mockIds)
         {
             // Given
+            CreateLessonEntity(mockIds[0]);
             var expected = _lessonRepo.GetFeedbacks(_lessonDtoMock.Id, null, null);
             for (var i = 0; i < mockIds.Length; i++)
             {
+                CreateUserEntity(mockIds[i]);
+                
                 var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockIds[i]).Clone();
                 dto.User = _userDtoMock;
                 dto.Lesson = _lessonDtoMock;
@@ -131,16 +118,82 @@ namespace EducationSystem.Data.Tests
                 expected.Add(dto);
             }
             // When
-            var actual = _lessonRepo.GetFeedbacks(_lessonDtoMock.Id, null, null);
+                var actual = _lessonRepo.GetFeedbacks(_lessonDtoMock.Id, null, null);
             //Then
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.Count, actual.Count);
+
+            for (var i = 0; i < expected.Count; i++)
+            {
+                Assert.IsTrue(CustomFeedbackEquels(expected[i], actual[i]));
+            }
+        } 
+
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void FeedbackIdSelectAllByGroupIdPositiveTest(int[] mockIds)
+        {
+            // Given
+            CreateLessonEntity(mockIds[0]);
+            var expected = _lessonRepo.GetFeedbacks(null, _lessonDtoMock.Group.Id, null);
+            for (var i = 0; i < mockIds.Length; i++)
+            {
+                CreateUserEntity(mockIds[i]);
+                
+                var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockIds[i]).Clone();
+                dto.User = _userDtoMock;
+                dto.Lesson = _lessonDtoMock;
+                var addedEntityId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedEntityId);
+                dto.Id = addedEntityId;
+                expected.Add(dto);
+            }
+            // When
+                var actual = _lessonRepo.GetFeedbacks(null, _lessonDtoMock.Group.Id, null);
+            //Then
+            Assert.AreEqual(expected.Count, actual.Count);
+
+            for (var i = 0; i < expected.Count; i++)
+            {
+                Assert.IsTrue(CustomFeedbackEquels(expected[i], actual[i]));
+            }
         }
 
-     
+
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void FeedbackIdSelectAllByCourseIdPositiveTest(int[] mockIds)
+        {
+            // Given
+            CreateLessonEntity(mockIds[0]);
+            var expected = _lessonRepo.GetFeedbacks(null, null, _lessonDtoMock.Group.Course.Id);
+            for (var i = 0; i < mockIds.Length; i++)
+            {
+                CreateUserEntity(mockIds[i]);
+
+                var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockIds[i]).Clone();
+                dto.User = _userDtoMock;
+                dto.Lesson = _lessonDtoMock;
+                var addedEntityId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedEntityId);
+                dto.Id = addedEntityId;
+                expected.Add(dto);
+            }
+            // When
+            var actual = _lessonRepo.GetFeedbacks(null, null, _lessonDtoMock.Group.Course.Id);
+            //Then
+            Assert.AreEqual(expected.Count, actual.Count);
+
+            for (var i = 0; i < expected.Count; i++)
+            {
+                Assert.IsTrue(CustomFeedbackEquels(expected[i], actual[i]));
+            }
+        }
+
         [TestCase(1)]
         public void DeleteFeedbackPositiveTest(int mockId)
         {
             //Given
+            CreateUserEntity(mockId);
+            CreateLessonEntity(mockId);
+
             var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockId).Clone();
             dto.User = _userDtoMock;
             dto.Lesson = _lessonDtoMock;
@@ -161,7 +214,7 @@ namespace EducationSystem.Data.Tests
 
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDowTest()
         {
             DeleteFeedbacks();
@@ -173,7 +226,34 @@ namespace EducationSystem.Data.Tests
             DeleteCourse();
 
         }
+        public void CreateUserEntity(int numMoq)
+        {
+            _userDtoMock = UserMockGetter.GetUserDtoMock(numMoq);
+            var addedUserId = _userRepo.AddUser(_userDtoMock);
+            _userIdList.Add(addedUserId);
+            _userDtoMock.Id = addedUserId;
 
+        }
+        public void CreateLessonEntity(int numMoq)
+        {
+            _courseDtoMock = CourseMockGetter.GetCourseDtoMock(numMoq);
+            var addedCourseId = _courseRepo.AddCourse(_courseDtoMock);
+            _courseIdList.Add(addedCourseId);
+            _courseDtoMock.Id = addedCourseId;
+
+            _groupDtoMock = GroupMockGetter.GetGroupDtoMock(numMoq);
+            _groupDtoMock.Course = _courseDtoMock;
+            var addedGroupId = _groupRepo.AddGroup(_groupDtoMock);
+            _groupIdList.Add(addedGroupId);
+            _groupDtoMock.Id = addedGroupId;
+
+            _lessonDtoMock = LessonMockGetter.GetLessonDtoMock(numMoq);
+            _lessonDtoMock.Group = _groupDtoMock;
+            var addedLessonId = _lessonRepo.AddLesson(_lessonDtoMock);
+            _lessonDtoMock.Date = _lessonRepo.GetLessonById(addedLessonId).Date;
+            _lessonDtoMock.Id = addedLessonId;
+            _lessonIdList.Add(addedLessonId);
+        }
         public void DeleteGroups()
         {
             foreach (int groupId in _groupIdList)
