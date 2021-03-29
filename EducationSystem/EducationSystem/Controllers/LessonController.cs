@@ -69,7 +69,7 @@ namespace EducationSystem.Controllers
         public ActionResult<List<LessonOutputModel>> GetLessonsByGroupId(int groupId)
         {
 
-            var _userGroups = ControllerBaseExtension.SupplyUserGroupsList((ControllerBase)this, _groupService);
+            var _userGroups = this.SupplyUserGroupsList( _groupService);
             var group = _groupService.GetGroupById(groupId);
             if (group == null)
                 return NotFound($"Group {groupId} was not found");
