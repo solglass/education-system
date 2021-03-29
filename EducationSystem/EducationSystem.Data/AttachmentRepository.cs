@@ -37,23 +37,20 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return data;
         }
-
-        public int ModifyAttachment(AttachmentDto attachmentDto, int id)
-        {          
-            string path = attachmentDto.Path;
-            int attachmentTypeID = (int)attachmentDto.AttachmentType;
-            var data = _connection
+        public int UpdateAttachment(AttachmentDto attachmentDto)
+        {
+            var result = _connection
                 .Execute("dbo.Attachment_Update",
-                new 
-                { 
-                    id,
-                    path,
-                    attachmentTypeID 
-                },
+                 new
+                 {
+                     id = attachmentDto.Id,
+                     description = attachmentDto.Description,
+                     path = attachmentDto.Path,
+                     attachmentTypeId = (int)attachmentDto.AttachmentType
+                 },
                 commandType: System.Data.CommandType.StoredProcedure);
-            return data;
+            return result;
         }
-
 
         public int DeleteAttachmentById(int id)
         {
@@ -73,11 +70,45 @@ namespace EducationSystem.Data
                 .QuerySingleOrDefault<int>("dbo.Attachment_Add",
                 new
                 {
-                    path = attachmentDto.Path,
-                    attachmentTypeId = (int)attachmentDto.AttachmentType
+                    Description = attachmentDto.Description,
+                    Path = attachmentDto.Path,
+                    AttachmentTypeId = (int)attachmentDto.AttachmentType
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return value;
+        }
+
+        public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
+        {
+            var result = _connection
+                .Query<AttachmentDto, int, AttachmentDto>
+                ("dbo.Attachment_SelectByHomeworkAttemptId",
+                (attachment, type) =>
+                {
+                    attachment.AttachmentType = (AttachmentType)type;                        
+                    return attachment;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+        public List<AttachmentDto> GetAttachmentsByCommentId(int id)
+        {
+            var result = _connection
+                .Query<AttachmentDto, int, AttachmentDto>
+                ("dbo.Attachment_SelectByCommentId",
+                (attachment, type) =>
+                {
+                    attachment.AttachmentType = (AttachmentType)type;
+                    return attachment;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
         }
 
         public int AddAttachmentToHomeworkAttempt(int homeworkAttemptId, int attachmentId)
@@ -95,7 +126,6 @@ namespace EducationSystem.Data
 
         public int DeleteAttachmentFromHomeworkAttempt(int attachmentId, int homeworkAttemptId)
         {
-            int id = attachmentId;
           var result=  _connection.Execute("dbo.HomeworkAttempt_Attachment_Delete",
              new
              {
@@ -122,7 +152,6 @@ namespace EducationSystem.Data
 
         public int DeleteAttachmentFromComment(int attachmentId, int commentId)
         {
-            int id = attachmentId;
            var result= _connection
             .Execute("dbo.Comment_Attachment_Delete",
             new
@@ -133,6 +162,7 @@ namespace EducationSystem.Data
             commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
     }
 }
 

@@ -87,7 +87,7 @@ namespace EducationSystem.API.Controllers
                 throw new ValidationException(ModelState);
             var attDto = _mapper.Map<AttachmentDto>(attachmentInputModel);
             attDto.Id = id;
-            _service.ModifyAttachment(attDto, id);
+            _service.UpdateAttachment(attDto);
             var attachment = _service.GetAttachmentById(id);
             var result = _mapper.Map<AttachmentOutputModel>(attachment);
             return Ok(result);
