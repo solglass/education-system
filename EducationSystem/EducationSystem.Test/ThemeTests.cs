@@ -61,6 +61,66 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(1)]
+        public void ThemeAddNegativeTestNotUniqueEntity(int mockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
+            theme.Id = _courseRepo.AddTheme(theme);
+            _themeIdList.Add(theme.Id);
+            //When
+            try
+            {
+                var result = _courseRepo.AddTheme(theme);
+                _themeIdList.Add(result);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(7)]
+        public void ThemeAddNegativeTestEmptyEntity(int nockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(nockId).Clone();
+
+            //When
+            try
+            {
+                theme.Id = _courseRepo.AddTheme(theme);
+                _themeIdList.Add(theme.Id);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ThemeAddNegativeTestNullEntity()
+        {
+            //Given
+
+            //When
+            try
+            {
+                var themeId = _courseRepo.AddTheme(null);
+                _themeIdList.Add(themeId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+       
         [TestCase(1, 2)]
         [TestCase(2, 3)]
         [TestCase(3, 2)]
@@ -82,6 +142,84 @@ namespace EducationSystem.Data.Tests
             // Then
             Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
+        }
+
+        [TestCase(1)]
+        public void ThemeUpdateNegativeTestEntityNotExists(int mockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
+
+            //When
+            var result = _courseRepo.UpdateTheme(theme);
+
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
+        [TestCase(1,7)]
+        public void ThemeUpdateNegativeTestEmptyProperties(int mockToAddId, int mockToUpdateId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToAddId).Clone();
+            var themeId = _courseRepo.AddTheme(theme);
+            _themeIdList.Add(themeId);
+            //When
+            try
+            {
+                theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToUpdateId).Clone();
+                theme.Id = themeId;
+                _courseRepo.UpdateTheme(theme);
+            }
+            //Then
+            catch (Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1, 2)]
+        public void ThemeUpdateNegativeTestNotUniqueEntity(int mockToCompareId, int mockToUpdateId)
+        {
+            //Given
+            var themeToCompare = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToCompareId).Clone();
+            themeToCompare.Id = _courseRepo.AddTheme(themeToCompare);
+            _themeIdList.Add(themeToCompare.Id);
+
+            var themeToUpdate = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToUpdateId).Clone();
+           var themeToUpdateId = _courseRepo.AddTheme(themeToUpdate);
+            _themeIdList.Add(themeToUpdateId);
+
+            themeToUpdate = (ThemeDto)themeToCompare.Clone();
+            themeToUpdate.Id = themeToUpdateId;
+            //When
+            try
+            {
+                var result = _courseRepo.UpdateTheme(themeToUpdate);
+            }
+            //then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void ThemeUpdateNegativeTestNullEntity()
+        {
+            //Given
+
+            //Then
+            try
+            {
+                _courseRepo.UpdateTheme(null);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
@@ -130,6 +268,18 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(-1, true)]
+        [TestCase(-1, false)]
+        public void ThemeDeleteOrRecoverNegativeTestEntityNotExists(int id, bool isDeleted)
+        {
+            //Given
+
+            //When
+            var result = _courseRepo.DeleteOrRecoverTheme(id, isDeleted);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
         public void GetThemesByCourseIdPositiveTest(int[] mockIds)
@@ -158,9 +308,22 @@ namespace EducationSystem.Data.Tests
             // Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [Test]
+        public void GetThemesByCourseIdNegativeTestCourseNotExists()
+        {
+            //Given
+
+            //When
+            var actual = _courseRepo.GetThemesByCourseId(-1);
+
+            //Then
+            Assert.IsEmpty(actual);
+        }
 
         [TestCase(new int[] { 1, 2, 3 }, new int[] { 4,5,6})]
         [TestCase(new int[] { 4, 5, 6 }, new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { }, new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { 4, 5, 6 }, new int[] {  })]
         public void GetUncoveredThemesByGroupIdPositiveTest(int[] coveredMockIds, int[] uncoveredMockIds)
         {
             // Given
@@ -196,6 +359,18 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void GetUncoveredThemesByGroupIdNegativeTestGroupNotExists()
+        {
+            //Given
+
+            //When
+            var actual = _courseRepo.GetUncoveredThemesByGroupId(-1);
+
+            //Then
+            Assert.IsEmpty(actual);
+        }
+
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
         public void AddThemeTagPositiveTest(int[] mockIds)
@@ -224,6 +399,77 @@ namespace EducationSystem.Data.Tests
 
             // Then
             CollectionAssert.AreEqual(expected, actual);
+        }
+        [TestCase(1)]
+        public void AddThemeTagNegativeTestThemeNotExists(int tagMockId)
+        {
+            //Given
+            var tag = (TagDto)TagMockGetter.GetTagDtoMock(tagMockId).Clone();
+            tag.Id = _tagRepo.TagAdd(tag);
+            _tagIdList.Add(tag.Id);
+
+            //When
+            try
+            {
+                var result = _tagRepo.ThemeTagAdd(-1, tag.Id);
+                _tagThemeList.Add((-1, tag.Id));
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void AddThemeTagNegativeTestTagNotExists(int themeMockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+            theme.Id = _courseRepo.AddTheme(theme);
+            _themeIdList.Add(theme.Id);
+
+            //When
+            try
+            {
+                var result = _tagRepo.ThemeTagAdd(theme.Id, -1);
+                _tagThemeList.Add(( theme.Id,-1));
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1, 1)]
+        public void AddThemeTagNegativeTestNotUniqueEntity(int themeMockId, int tagMockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+            theme.Id = _courseRepo.AddTheme(theme);
+            _themeIdList.Add(theme.Id);
+
+            var tag = (TagDto)TagMockGetter.GetTagDtoMock(tagMockId).Clone();
+            tag.Id = _tagRepo.TagAdd(tag);
+            _tagIdList.Add(tag.Id);
+
+            var result = _tagRepo.ThemeTagAdd(theme.Id, tag.Id);
+            _tagThemeList.Add((theme.Id, tag.Id));
+            //When
+            try
+            {
+                result = _tagRepo.ThemeTagAdd(theme.Id, tag.Id);
+                _tagThemeList.Add((theme.Id, tag.Id));
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
@@ -263,6 +509,16 @@ namespace EducationSystem.Data.Tests
 
             // Then
             CollectionAssert.AreEqual(expected, actual);
+        }
+        [Test]
+        public void DeleteThemeTagNegativeTestEntityNotExists()
+        {
+            //Given
+
+            //When
+            var result = _tagRepo.ThemeTagDelete(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
         }
 
         [TearDown]
