@@ -14,3 +14,18 @@
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[User_Role]  WITH CHECK ADD  CONSTRAINT [User_Role_fk0] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[User_Role] CHECK CONSTRAINT [User_Role_fk0]
+GO
+
+ALTER TABLE [dbo].[User_Role]  WITH CHECK ADD  CONSTRAINT [User_Role_fk1] FOREIGN KEY([RoleID])
+REFERENCES [dbo].[Role] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[User_Role] CHECK CONSTRAINT [User_Role_fk1]
+GO
