@@ -9,10 +9,8 @@ namespace EducationSystem.API.Models.InputModels
 {
     public class NotificationInputModel
     {
-        [Required]        
-        public string Message { get; set; }
         [Required]
-        [CustomDateTimeValidation]
-        public string Date { get; set; }
+        [StringLength(1000)]
+        public string Message { get; set; }
     }
 }

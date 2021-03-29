@@ -2,7 +2,7 @@
 	@userId int,
     @authorId int,
 	@message nvarchar(1000),
-    @date datetime2(7)
+    @date datetime2
 AS
 begin
 	INSERT INTO [dbo].[Notification]

@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[Notification_ReadOrUnread]
+﻿CREATE PROCEDURE [dbo].[Notification_SetSeenStatus]
 	@Id int,
 	@isRead bit
 AS

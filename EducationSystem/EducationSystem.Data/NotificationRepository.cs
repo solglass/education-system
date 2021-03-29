@@ -49,7 +49,7 @@ namespace EducationSystem.Data
         public int SetReadOrUnreadNotification(int id, bool isRead)
         {
             var result = _connection
-                .Execute("dbo.Notification_ReadOrUnread",
+                .Execute("dbo.Notification_SetSeenStatus",
                 new
                 {
                     id,

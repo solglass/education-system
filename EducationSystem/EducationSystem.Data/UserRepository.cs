@@ -204,28 +204,10 @@ namespace EducationSystem.Data
 
         public List<UserDto> GetStudentsByGroupId(int groupId)
         {
-            var UserDictionary = new Dictionary<int, UserDto>();
-
-
             var users = _connection.
-                Query<UserDto, int, UserDto>(
+                Query<UserDto>(
                 "dbo.User_SelectStudentsByGroupId",
-                (user, role) =>
-                {
-
-
-                    if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
-                    {
-                        userEntry = user;
-                        userEntry.Roles = new List<Role>();
-                        UserDictionary.Add(userEntry.Id, userEntry);
-                    }
-
-                    userEntry.Roles.Add((Role)role);
-                    return userEntry;
-                },
-                new {groupId},
-                splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+                param: new {groupId}, commandType: System.Data.CommandType.StoredProcedure)
             .ToList();
             return users;
         }

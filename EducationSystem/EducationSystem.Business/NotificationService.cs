@@ -32,12 +32,7 @@ namespace EducationSystem.Business
         public int SetReadOrUnreadNotification(int id, bool isRead) => _notificationRepository.SetReadOrUnreadNotification(id, isRead);
         public int AddNotificationsForStudents(int authorId, NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Student }, authorId, notificationDto);
         public int AddNotificationsForTeachers(int authorId, NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Teacher }, authorId, notificationDto);
-        public int AddNotificationsForAllUsers(int authorId, NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Admin,
-        Role.Student,
-        Role.Teacher,
-        Role.Tutor,
-        Role.Methodist,
-        Role.Manager }, authorId, notificationDto);
+        public int AddNotificationsForAllUsers(int authorId, NotificationDto notificationDto) => AddNotificationForRole((IEnumerable<Role>)Enum.GetValues(typeof(Role)), authorId, notificationDto);
         public int AddNotificationsForAllStaff(int authorId, NotificationDto notificationDto) => AddNotificationForRole(new Role[] { Role.Admin,
         Role.Teacher,
         Role.Tutor,
@@ -59,14 +54,14 @@ namespace EducationSystem.Business
             return i;
         }
 
-        private int AddNotificationForRole(Role[] role, int authorId, NotificationDto notificationDto)
+        private int AddNotificationForRole(IEnumerable<Role> roles, int authorId, NotificationDto notificationDto)
         {
             notificationDto.Author = new UserDto { Id = authorId };
             var users = _userRepository.GetUsers();
             int i = 0;
             users.ForEach(user =>
             {
-                if (user.Roles.Intersect(role).Count() != 0)
+                if (user.Roles.Intersect(roles).Count() != 0)
                 {
                     notificationDto.User.Id = user.Id;
                     _notificationRepository.AddNotification(notificationDto);

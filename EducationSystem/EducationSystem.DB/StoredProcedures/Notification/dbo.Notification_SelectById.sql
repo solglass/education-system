@@ -4,8 +4,6 @@ AS
 begin
 	SELECT
 		N.Id,
-		N.UserId,
-		N.AuthorId,
 		N.Message,
 		N.Date,
 		N.IsRead,

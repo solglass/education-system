@@ -10,12 +10,9 @@ begin
       ,u.[LastName]
       ,u.[BirthDate]
       ,u.[Login]
-      ,u.[Password]
       ,u.[Phone]
       ,u.[UserPic]
-      ,u.[Email],
-      r.Id,
-	  r.Name as [Role]
+      ,u.[Email]
   FROM [dbo].[User] as u
     inner join dbo.[User_Role] as ur on u.Id = ur.UserID
     inner join dbo.[Role] as r on ur.RoleID = r.Id

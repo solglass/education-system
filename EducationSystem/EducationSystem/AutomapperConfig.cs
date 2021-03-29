@@ -17,6 +17,7 @@ namespace EducationSystem.API
     public class AutomapperConfig : Profile
     {
         private const string _dateFormat = "dd.MM.yyyy";
+        private const string _dateFormatWithTime = "dd.MM.yyyy H:mm:ss";
         public AutomapperConfig()
         {
             CreateMap<UserInputModel, UserDto>()
@@ -141,9 +142,9 @@ namespace EducationSystem.API
             CreateMap<MaterialDto, MaterialOutputModel>();
 
             CreateMap<NotificationInputModel, NotificationDto>()
-                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => Converters.StrToDateTime(src.Date)));
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => DateTime.Now));
             CreateMap<NotificationDto, NotificationOutputModel>()
-                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormatWithTime)));
         }
     }
 }

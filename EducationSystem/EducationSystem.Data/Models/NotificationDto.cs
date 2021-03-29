@@ -17,8 +17,8 @@ namespace EducationSystem.Data.Models
         {
             return new NotificationDto
             {
-                User = (UserDto) User.Clone(),
-                Author = (UserDto) Author.Clone(),
+                User = User != null ? (UserDto) User.Clone() : null,
+                Author = User != null ? (UserDto)Author.Clone() : null,
                 Message = Message,
                 Date = Date,
                 IsRead = IsRead
@@ -34,15 +34,10 @@ namespace EducationSystem.Data.Models
                 return false;
 
             NotificationDto notification = (NotificationDto)obj;
-            if (Id != notification.Id ||
-                Message != notification.Message ||
-                !Date.Equals(notification.Date) ||
-                IsRead != notification.IsRead)
-            {
-                return false;
-            }
-
-            return true;
+            return (Id == notification.Id
+                && Message == notification.Message
+                && Date.Equals(notification.Date)
+                && IsRead == notification.IsRead);
         }
     }
 }
