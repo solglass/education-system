@@ -86,7 +86,7 @@ namespace EducationSystem.Controllers
         /// <returns>List of all users, but not deleted</returns>
         [ProducesResponseType(typeof(List<UserOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
-        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Менеджер, Преподаватель, Тьютор")]
         public ActionResult<List<UserOutputModel>> GetUsers()
         {
             var users = _userService.GetUsers();
@@ -101,7 +101,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{userId}")]
-        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Менеджер, Преподаватель, Тьютор")]
         public ActionResult<UserOutputModel> GetUser(int userId)
         {
             var user = _userService.GetUserById(userId);
@@ -121,7 +121,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("passed-homework/by-group/{groupId}")]
-        [Authorize(Roles = "Администратор,Менеджер, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Менеджер, Преподаватель, Тьютор")]
         public ActionResult<List<UserOutputModel>> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
             if (_groupService.GetGroupById(groupId) == null)
@@ -129,7 +129,7 @@ namespace EducationSystem.Controllers
                 return NotFound($"Group with id {groupId} is not found");
             }
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(groupId))
+            if (!User.IsInRole("Администратор") && !User.IsInRole("Менеджер") && !userGroup.Contains(groupId))
             {
                 return Forbid($"User is not in group {groupId}");
             }
@@ -189,6 +189,10 @@ namespace EducationSystem.Controllers
                 || (User.IsInRole("Менеджер") && user.Roles.Contains(Core.Enums.Role.Student)))
             {
                 _userService.DeleteUser(userId);
+            } 
+            else
+            {
+                return Forbid("Deleted user is not student");
             }
             outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(userId));
             return Ok(outputModel);
@@ -219,6 +223,10 @@ namespace EducationSystem.Controllers
                 || (User.IsInRole("Менеджер") && user.Roles.Contains(Core.Enums.Role.Student)))
             {
                 _userService.RecoverUser(userId);
+            }
+            else
+            {
+                return Forbid("Deleted user is not student");
             }
             outputModel = _mapper.Map<UserOutputExtendedModel>(_userService.GetUserById(userId));
             return Ok(outputModel);
@@ -281,7 +289,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet("{id}/payment")]
-        [Authorize(Roles = "Администратор,Менеджер")]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<List<PaymentOutputModel>> GetPaymentsByUserId(int userId)
         {
             var user = _userService.GetUserById(userId);
@@ -305,7 +313,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(PaymentOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("payment/{paymentId}")]
-        [Authorize(Roles = "Администратор,Менеджер")]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<PaymentOutputModel> GetPayment(int paymentId)
         {
             var payment = _userService.GetPaymentById(paymentId);
@@ -326,7 +334,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("payment/{paymentId}")]
-        [Authorize(Roles = "Администратор,Менеджер")]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<PaymentOutputModel> UpdatePayment(int paymentId, [FromBody] PaymentInputModel paymentInputModel)
         {
             if (!ModelState.IsValid)
@@ -358,7 +366,7 @@ namespace EducationSystem.Controllers
             {
                 throw new ValidationException(ModelState);
             }
-            var students = _userService.GetStudentsNotPaidInMonth(Converters.StrToDateTimePeriod(month.Period));
+            var students = _userService.GetListOfStudentsByPeriodWhoHaveNotPaid(Converters.StrToDateTimePeriod(month.Period));
             if (students == null)
             {
                 return NoContent();
@@ -373,7 +381,7 @@ namespace EducationSystem.Controllers
         /// <returns>Status204NoContent response</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpDelete("payment/{paymentId}")]
-        [Authorize(Roles = "Администратор,Менеджер")]
+        [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult DeletePayment(int paymentId)
         {
             var payment = _userService.GetPaymentById(paymentId);
@@ -391,6 +399,7 @@ namespace EducationSystem.Controllers
         /// <returns>List of attandences of current user</returns>
         [ProducesResponseType(typeof(List<AttendanceOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("{userId}/attendances")]
         [Authorize(Roles = "Администратор, Преподаватель, Менеджер")]
@@ -401,14 +410,14 @@ namespace EducationSystem.Controllers
             {
                 return NotFound($"User with id {userId} is not found");
             }
+            if (!user.Roles.Contains(Core.Enums.Role.Student))
+            {
+                return BadRequest($"User {userId} is not student");
+            }
             var attendanceDto = _lessonService.GetAttendancesByUserId(userId);
             if (attendanceDto == null)
             {
                 return NotFound($"Attendance with userId {userId} is not found");
-            }
-            if (!user.Roles.Contains(Core.Enums.Role.Student))
-            {
-                return Forbid($"User {userId} is not student");
             }
 
             var requsterGroups = this.SupplyUserGroupsList(_groupService);
