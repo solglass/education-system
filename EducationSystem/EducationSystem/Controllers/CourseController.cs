@@ -158,6 +158,38 @@ namespace EducationSystem.API.Controllers
         }
 
         /// <summary>
+        /// Creates the connection between one material and one course
+        /// </summary>
+        /// <param name="courseId"> is used to find the course user wants to connect with material</param>
+        /// <param name="materialId"> is used to find the material user wants to connect with course</param>
+        /// <returns>Returns Created result</returns>
+        // https://localhost:XXXXX/api/course/3/material/8
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [HttpPost("{courseId}/material/{materialId}")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        public ActionResult AddMaterialToCourse(int courseId, int materialId)
+        {
+            int result = _courseService.AddMaterialToCourse(courseId, materialId);
+            return StatusCode(StatusCodes.Status201Created);
+        }
+
+        /// <summary>
+        /// Deletes the connection between one material and one course
+        /// </summary>
+        /// <param name="courseId"> is used to find the course user wants to break the connection with material</param>
+        /// <param name="materialId"> is used to find the material user wants to break the connection with course</param>
+        /// <returns>Returns NoContent result</returns>
+        // https://localhost:XXXXX/api/material/3/theme/8
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpDelete("{courseId}/material/{materialId}")]
+        [Authorize(Roles = "Админ, Менеджер, Методист")]
+        public ActionResult DeleteMaterialFromCourse(int courseId, int materialId)
+        {
+            var result = _courseService.DeleteMaterialFromCourse(courseId, materialId);
+            return NoContent();
+        }
+
+        /// <summary>
         /// Gets all the themes with their tags
         /// </summary>
         /// <returns>Returns the list of ThemeOutputModels</returns>

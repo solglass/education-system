@@ -20,7 +20,7 @@ namespace EducationSystem.Controllers
     {
         private ITagService _tagService;
         private readonly IMapper _mapper;
-        public TagController(ITagRepository tagRepository, ITagService tagService, IMapper mapper)
+        public TagController(ITagService tagService, IMapper mapper)
         {
             _mapper = mapper;
             _tagService = tagService;
@@ -34,7 +34,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист")]
         public ActionResult<TagOutputModel> AddTag([FromBody] TagInputModel tag)
         {
             if (!ModelState.IsValid)
@@ -51,7 +51,7 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/tag
         [ProducesResponseType(typeof(List<TagOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<TagOutputModel>> GetTags()
         {
             var tagsDtos = _tagService.GetTags();
@@ -67,7 +67,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist, Student")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<TagOutputModel> GetTag(int id)
         {
             var tagDto = _tagService.GetTagById(id);
@@ -85,7 +85,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin, Teacher, Tutor, Methodist")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteTag(int id)
         {
             if (_tagService.GetTagById(id) is null)

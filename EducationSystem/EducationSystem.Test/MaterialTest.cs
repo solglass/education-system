@@ -269,7 +269,7 @@ namespace EducationSystem.Data.Tests
 
         public MaterialDto AddMaterial(int mockId)
         {
-            var dto = (MaterialDto)MaterialMock.GetMaterialMock(mockId).Clone();
+            var dto = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(mockId).Clone();
             dto.Id = _materialRepository.AddMaterial(dto);
             Assert.Greater(dto.Id, 0);
             _addedMaterialMockIds.Add(dto.Id);
