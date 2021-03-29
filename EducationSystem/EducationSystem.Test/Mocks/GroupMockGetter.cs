@@ -1,6 +1,7 @@
 ﻿using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
+using System.Globalization;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
@@ -13,24 +14,29 @@ namespace EducationSystem.Data.Tests.Mocks
               1 => new GroupDto
               {
                 GroupStatus = GroupStatus.InProgress,
-                StartDate = DateTime.Today
+                StartDate = DateTime.ParseExact("06.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
               },
               2 => new GroupDto
               {
                 GroupStatus = GroupStatus.Finished,
-                StartDate = DateTime.Today
+                StartDate = DateTime.ParseExact("06.07.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
               },
               3 => new GroupDto
               {
                 GroupStatus = GroupStatus.ReadyToStart,
-                StartDate = DateTime.Today
+                StartDate = DateTime.ParseExact("06.08.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
               },
               4 => new GroupDto
               {
                 GroupStatus = GroupStatus.InProgress,
-                StartDate = DateTime.Today
+                StartDate = DateTime.ParseExact("06.09.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
               },
-              _ => null,
+                5 => new GroupDto
+                {
+                    GroupStatus = GroupStatus.InProgress,
+                    StartDate = DateTime.ParseExact("06.10.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                },
+                _ => null,
             };
         }
     }
