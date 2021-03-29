@@ -263,7 +263,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Админ, Менеджер")]
         public ActionResult<List<UserOutputModel>> GetStudentsNotPaidInMonth([FromBody] MonthInputModel month)
         {
-            var students = _userService.GetStudentsNotPaidInMonth(Converters.StrToDateTimePeriod(month.Month));
+            var students = _userService.GetListOfStudentsByPeriodWhoHaveNotPaid(Converters.StrToDateTimePeriod(month.Month));
             var outputModel = _mapper.Map<List<UserOutputModel>>(students);
             return Ok(outputModel);
         }
