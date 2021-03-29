@@ -17,7 +17,7 @@ namespace EducationSystem.Business
         }
         public List<UserDto> GetStudentsByIsPaidInPeriod(string period)
         {
-            return _paymentReportRepository.GetStudentsNotPaidInMonth(period);
+            return _paymentReportRepository.GetListOfStudentsByPeriodWhoHaveNotPaid(period);
         }
         public List<GroupReportDto> GetAttachments() { return _groupReportRepository.GenerateReport(); }
 

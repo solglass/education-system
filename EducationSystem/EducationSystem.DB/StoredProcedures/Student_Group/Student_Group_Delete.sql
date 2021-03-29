@@ -1,9 +1,8 @@
-﻿create proc [dbo].[Student_Group_Delete]
-	@userID int,
-	@groupID int,
-	@contractNumber int
-as
+﻿create proc [dbo].[Student_Group_Delete](
+	@UserId int,
+	@GroupId int
+) as
 begin
-	insert into dbo.Student_Group (UserID, GroupID, ContractNumber) 
-	values(@userID, @groupID, @contractNumber)
+	delete from dbo.Student_Group
+	where UserId = @UserId and GroupId = @GroupId
 end
