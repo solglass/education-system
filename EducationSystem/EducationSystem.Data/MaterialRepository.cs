@@ -17,7 +17,6 @@ namespace EducationSystem.Data
             _connection = new SqlConnection(_connectionString);
         }
 
-        // ToDo: протянуть в сервис и в контроллер
         public List<MaterialDto> GetMaterials()
         {
             var materials = _connection

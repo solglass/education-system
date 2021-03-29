@@ -1,4 +1,6 @@
-CREATE proc [dbo].[Payment_SelectById] (@id int)
+CREATE proc [dbo].[Payment_SelectById](
+	@id int
+)
 as
 begin
 	select
@@ -8,9 +10,7 @@ begin
 		p.Date,
 		p.Period,
 		p.IsPaid,
-		sg.UserId,
-		sg.GroupID,
-		sg.ContractNumber,
+		u.Id,
 		u.FirstName,
 		u.LastName,
 		u.BirthDate,
@@ -21,9 +21,8 @@ begin
 		u.Email,
 		u.RegistrationDate,
 		u.IsDeleted
-	from dbo.Payment p inner join dbo.[Student_Group] sg on p.ContractNumber=sg.ContractNumber
-	                   inner join dbo.[User] u on sg.UserID=u.Id
-where p.Id = @id
+	from dbo.Payment p inner join dbo.[Student_Group] sg on p.ContractNumber=sg.ContractNumber inner join dbo.[User] u on sg.UserID=u.Id
+	where p.Id = @id
 end
 
 
