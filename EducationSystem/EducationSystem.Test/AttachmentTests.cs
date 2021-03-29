@@ -140,7 +140,18 @@ namespace EducationSystem.Data.Tests
         }
 
         [Test]
-        public void AttachmentUpdate_Null_NegativeTest()
+        public void AttachmentDelete_NotExist_NegativeTest()
+        {
+            //Given
+
+            //When, Then
+
+            var affectionRows = _attachmentRepo.DeleteAttachmentById(-1);
+            Assert.AreEqual(0, affectionRows);
+        }
+
+        [Test]
+        public void AttachmentUpdate_Empty_NegativeTest()
         {
             //Given
             var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(1).Clone();

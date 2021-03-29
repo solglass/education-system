@@ -1,6 +1,6 @@
 create proc dbo.Attachment_Update (
 @id int,
-@description nvarchar(max),
+@description nvarchar(1000),
 @path nvarchar(250),
 @attachmentTypeID int
 ) as

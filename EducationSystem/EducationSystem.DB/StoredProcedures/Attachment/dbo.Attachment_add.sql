@@ -1,5 +1,5 @@
 create proc [dbo].[Attachment_Add] (
-@description nvarchar(max),
+@description nvarchar(1000),
 @path nvarchar(250), 
 @attachmentTypeId int
 ) as

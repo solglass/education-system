@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Attachment](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Description] [nvarchar](max),
+	[Description] [nvarchar](1000),
 	[Path] [nvarchar](250) NOT NULL,
 	[AttachmentTypeId] [int] NOT NULL,
  CONSTRAINT [PK_ATTACHMENT] PRIMARY KEY CLUSTERED 

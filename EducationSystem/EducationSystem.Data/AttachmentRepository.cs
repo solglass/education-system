@@ -81,7 +81,7 @@ namespace EducationSystem.Data
         public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
         {
             var attachmentDictionary = new Dictionary<int, AttachmentDto>();
-            var comments = _connection
+            var result = _connection
                 .Query<AttachmentDto, int, AttachmentDto>
                 ("dbo.Attachment_SelectByHomeworkAttemptId",
                 (attachment, type) =>
@@ -98,12 +98,12 @@ namespace EducationSystem.Data
                 splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
-            return comments;
+            return result;
         }
         public List<AttachmentDto> GetAttachmentsByCommentId(int id)
         {
             var attachmentDictionary = new Dictionary<int, AttachmentDto>();
-            var comments = _connection
+            var result = _connection
                 .Query<AttachmentDto, int, AttachmentDto>
                 ("dbo.Attachment_SelectByCommentId",
                 (attachment, type) =>
@@ -120,7 +120,7 @@ namespace EducationSystem.Data
                 splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
-            return comments;
+            return result;
         }
 
         public int AddAttachmentToHomeworkAttempt(int homeworkAttemptId, int attachmentId)
@@ -138,7 +138,6 @@ namespace EducationSystem.Data
 
         public int DeleteAttachmentFromHomeworkAttempt(int attachmentId, int homeworkAttemptId)
         {
-            int id = attachmentId;
           var result=  _connection.Execute("dbo.HomeworkAttempt_Attachment_Delete",
              new
              {
@@ -165,7 +164,6 @@ namespace EducationSystem.Data
 
         public int DeleteAttachmentFromComment(int attachmentId, int commentId)
         {
-            int id = attachmentId;
            var result= _connection
             .Execute("dbo.Comment_Attachment_Delete",
             new
