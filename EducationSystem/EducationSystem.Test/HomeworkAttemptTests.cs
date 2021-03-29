@@ -259,10 +259,10 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(0, deletedRows);
         }
 
-        [TestCase(new int[] { 1, 2, 3 })]
-        [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { })]
-        public void GetHomeworkAttemptsByUserIdPositiveTest(int[] mockIds)
+        [TestCase(new int[] {1, 2, 3 }, new int[] {1, 2, 3 })]
+        [TestCase(new int[] { 3, 2, 1 }, new int[] {3, 1, 1 })]
+        [TestCase(new int[] { }, new int[] { })]
+        public void GetHomeworkAttemptsByUserIdPositiveTest(int[] mockIds, int [] hwmockIds)
         {
             // Given
             var addedUserId = _userDtoMock.Id;
@@ -272,7 +272,12 @@ namespace EducationSystem.Data.Tests
             {
                 var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[i]).Clone();
                 dto.Author = _userDtoMock;
-                dto.Homework = _homeworkDtoMock;
+                var _hworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(hwmockIds[i]).Clone();
+                _hworkDtoMock.Group = _groupDtoMock;
+                var addedHomeworkId = _homeworkRepo.AddHomework(_hworkDtoMock);
+                _hworkDtoMock.Id = addedHomeworkId;
+                _homeworkIdList.Add(addedHomeworkId);
+                dto.Homework = _hworkDtoMock;
                 var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
                 _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
                 dto.Id = addedHomeworkAttemptId;
@@ -286,19 +291,23 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [TestCase(new int[] { 1, 2, 3 })]
-        [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { })]
-        public void GetHomeworkAttemptsByHomeworkIdPositiveTest(int[] mockIds)
+        [TestCase(new int[] { 1, 2, 3 }, new int[] { 4, 5, 6 })]
+        [TestCase(new int[] { 3, 2, 1 }, new int[] { 6, 5, 4 })]
+        [TestCase(new int[] { }, new int[] { })]
+        public void GetHomeworkAttemptsByHomeworkIdPositiveTest(int[] mockIds, int[] userMockIds)
         {
             // Given
-            var addedHomeworkId = _homeworkDtoMock.Id;
+             var addedHomeworkId = _homeworkDtoMock.Id;
 
             var expected = new List<HomeworkAttemptDto>();
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[i]).Clone();
-                dto.Author = _userDtoMock;
+                var _authorDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(userMockIds[i]).Clone();
+                var addedUserId = _userRepo.AddUser(_authorDtoMock);
+                _userIdList.Add(addedUserId);
+                _authorDtoMock.Id = addedUserId;
+                dto.Author = _authorDtoMock;
                 dto.Homework = _homeworkDtoMock;
                 var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
                 _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
@@ -313,9 +322,9 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [TestCase(new int[] { 1, 2, 3 }, 3)]
-        [TestCase(new int[] {  }, 3)]
-        public void GetHomeworkAttemptsByStatusIdAndGroupIdPositiveTest(int[] mockIds, int statusId)
+        [TestCase(new int[] { 1, 2, 3 }, 3, new int[] { 1, 2, 3 })]
+        [TestCase(new int[] {  }, 3, new int[] { 1, 2, 3 })]
+        public void GetHomeworkAttemptsByStatusIdAndGroupIdPositiveTest(int[] mockIds, int statusId, int[] hwmockIds)
         {
             // Given
             var groupId = _groupDtoMock.Id;
@@ -325,7 +334,12 @@ namespace EducationSystem.Data.Tests
             {
                 var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[i]).Clone();
                 dto.Author = _userDtoMock;
-                dto.Homework = _homeworkDtoMock;
+                var _hworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(hwmockIds[i]).Clone();
+                _hworkDtoMock.Group = _groupDtoMock;
+                var addedHomeworkId = _homeworkRepo.AddHomework(_hworkDtoMock);
+                _hworkDtoMock.Id = addedHomeworkId;
+                _homeworkIdList.Add(addedHomeworkId);
+                dto.Homework = _hworkDtoMock;
                 var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
                 _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
                 dto.Id = addedHomeworkAttemptId;
