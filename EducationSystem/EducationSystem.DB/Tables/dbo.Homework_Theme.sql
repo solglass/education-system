@@ -26,3 +26,7 @@ GO
 
 ALTER TABLE [dbo].[Homework_Theme] CHECK CONSTRAINT [Homework_Theme_fk1]
 GO
+
+ALTER TABLE [dbo].[Homework_Theme]
+ADD CONSTRAINT UC_HomeworkId_ThemeId UNIQUE(HomeworkId, ThemeId)
+GO

@@ -6,6 +6,6 @@ namespace EducationSystem.Core.Config
 {
     public class AppSettingsConfig
     {
-        public string ConnectionString { get; set; }
+        public string CONNECTION_STRING { get; set; }
     }
 }
