@@ -1,5 +1,6 @@
 ﻿using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
+using System.Collections.Generic;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
@@ -37,6 +38,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     Author = new UserDto(),
                     Homework = new HomeworkDto()
                 },
+                4 => new HomeworkAttemptDto(),
                 _ => null,
             };
         }
