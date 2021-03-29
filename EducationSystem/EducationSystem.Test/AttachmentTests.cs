@@ -22,12 +22,12 @@ namespace EducationSystem.Data.Tests
         public void AttachmentAddPositiveTest(int mockId)
         {
             //Given
-            var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
+            var expected = (AttachmentDto) AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
 
             var addedAttachmentId = _attachmentRepo.AddAttachment(expected);
-            Assert.Greater(addedAttachmentId, 0);
-
             _attachmentIdList.Add(addedAttachmentId);
+
+            Assert.Greater(addedAttachmentId, 0);
             expected.Id = addedAttachmentId;
 
             //When
@@ -55,7 +55,7 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
 
-        [TestCase(2)]
+        [TestCase(4)]
         public void AttachmentAdd_WithoutAttachmentType_NegativeTest(int mockId)
         {
             //Given
@@ -97,6 +97,9 @@ namespace EducationSystem.Data.Tests
             //Given
             var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
             var addedAttachmentId = _attachmentRepo.AddAttachment(expected);
+            _attachmentIdList.Add(addedAttachmentId);
+            addedAttachmentId = _attachmentRepo.AddAttachment(expected);
+            _attachmentIdList.Add(addedAttachmentId);
 
             expected = new AttachmentDto
             {
@@ -107,7 +110,6 @@ namespace EducationSystem.Data.Tests
             };
 
             var affectedRowsCount = _attachmentRepo.UpdateAttachment(expected);
-            _attachmentIdList.Add(addedAttachmentId);
 
             //When
             var actual = _attachmentRepo.GetAttachmentById(addedAttachmentId);
@@ -121,8 +123,10 @@ namespace EducationSystem.Data.Tests
         public void AttachmentDeletePositiveTest(int mockId)
         {
             // Given
-            var expected = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
-            var addedAttachmentId = _attachmentRepo.AddAttachment(expected);
+            var dto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
+            var addedAttachmentId = _attachmentRepo.AddAttachment(dto);
+            _attachmentIdList.Add(addedAttachmentId);
+            addedAttachmentId = _attachmentRepo.AddAttachment(dto);
             _attachmentIdList.Add(addedAttachmentId);
 
             // When

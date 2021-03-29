@@ -367,7 +367,7 @@ namespace EducationSystem.Data.Tests
             }
 
             //When
-            var actual = _homeworkRepo.GetAttachmentsByHomeworkAttemptId(addedHomeworkAttemptId);
+            var actual = _attachmentRepo.GetAttachmentsByHomeworkAttemptId(addedHomeworkAttemptId);
 
             //Then
             CollectionAssert.AreEqual(expected.Attachments, actual);
@@ -496,7 +496,7 @@ namespace EducationSystem.Data.Tests
                 Assert.AreEqual(1, result);
             }
             //When
-            var actual = _homeworkRepo.GetAttachmentsByHomeworkAttemptId(addedHomeworkAttemptId);
+            var actual = _attachmentRepo.GetAttachmentsByHomeworkAttemptId(addedHomeworkAttemptId);
 
             //Then
             CollectionAssert.AreEqual(expected.Attachments, actual);

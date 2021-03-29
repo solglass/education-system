@@ -100,6 +100,29 @@ namespace EducationSystem.Data
                 .ToList();
             return comments;
         }
+        public List<AttachmentDto> GetAttachmentsByCommentId(int id)
+        {
+            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
+            var comments = _connection
+                .Query<AttachmentDto, int, AttachmentDto>
+                ("dbo.Attachment_SelectByCommentId",
+                (attachment, type) =>
+                {
+                    if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
+                    {
+                        attachmentEntry = attachment;
+                        attachmentEntry.AttachmentType = (AttachmentType)type;
+                        attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
+                    }
+                    return attachmentEntry;
+                },
+                new { id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return comments;
+        }
+
         public int AddAttachmentToHomeworkAttempt(int homeworkAttemptId, int attachmentId)
         {
             var data = _connection
@@ -153,6 +176,7 @@ namespace EducationSystem.Data
             commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
     }
 }
 

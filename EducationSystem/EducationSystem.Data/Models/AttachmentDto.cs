@@ -35,16 +35,6 @@ namespace EducationSystem.Data.Models
                 && attDto.Path == Path 
                 && attDto.AttachmentType.Equals(AttachmentType));
         }
-
-        public object Clone()
-        {
-            return new AttachmentDto
-            {
-                Path=Path,
-                AttachmentType = AttachmentType
-            };
-        }
-
         public override int GetHashCode()
         {
             return base.GetHashCode();

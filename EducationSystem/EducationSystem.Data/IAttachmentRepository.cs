@@ -15,5 +15,6 @@ namespace EducationSystem.Data
         AttachmentDto GetAttachmentById(int id);
         int UpdateAttachment(AttachmentDto attachmentDto);
         List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id);
+        List<AttachmentDto> GetAttachmentsByCommentId(int id);
     }
 }
