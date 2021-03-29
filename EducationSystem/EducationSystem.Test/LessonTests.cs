@@ -351,8 +351,8 @@ namespace EducationSystem.Data.Tests
 
 
 
-        [OneTimeTearDown]
-        public void TearDownTest()
+        [TearDown]
+        public void LessonTestTearDown()
         {
             DeleteLessonThemes();
             DeleteThemes();

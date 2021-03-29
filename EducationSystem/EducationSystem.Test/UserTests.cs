@@ -87,8 +87,6 @@ namespace EducationSystem.Data.Tests
                 CollectionAssert.AreEqual(expected.First(item => item.Id == id).Roles, actual.First(item => item.Id == id).Roles);
             });
         
-
-
         }
 
 
@@ -312,6 +310,74 @@ namespace EducationSystem.Data.Tests
             {
                 var secondUserId = _repository.AddUser(secondUserDto);
                 _addedUserDtoIds.Add(secondUserId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1)]
+        public void DeleteNoExistUserRoleNegativeTest(int mockId)
+        {
+            //Given
+            var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            var addedEntityId = _repository.AddUser(expected);
+
+            _addedUserDtoIds.Add(addedEntityId);
+
+            _repository.AddRoleToUser(addedEntityId, 1);
+            _repository.AddRoleToUser(addedEntityId, 2);
+            _repository.AddRoleToUser(addedEntityId, 3);
+
+            _addedUserRoleIds.Add((addedEntityId, 1));
+            _addedUserRoleIds.Add((addedEntityId, 2));
+            _addedUserRoleIds.Add((addedEntityId, 3));
+
+            //When, Then
+            var deletedRows = _repository.DeleteRoleFromUser(addedEntityId, 4);
+            Assert.AreEqual(0, deletedRows);
+
+            expected.Id = addedEntityId;
+            expected.Roles = new List<Role> { Role.Admin, Role.Student, Role.Teacher };
+            var actual = _repository.GetUserById(addedEntityId);
+            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected.Roles, actual.Roles);
+        }
+
+        [TestCase(2)]
+        public void UserUpdateEmptyNegativeTest(int mockId)
+        {
+
+            //Given
+            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            userDto.Id = _repository.AddUser(userDto);            
+            _addedUserDtoIds.Add(userDto.Id);         
+            userDto = (UserDto)UserMockGetter.GetUserDtoMock(7).Clone();
+            //When, Then
+            try
+            {
+                _repository.UpdateUser(userDto);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();           
+        }
+
+        [TestCase(2)]
+        public void UserUpdateNullNegativeTest(int mockId)
+        {
+
+            //Given
+            var userDto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            userDto.Id = _repository.AddUser(userDto);
+            _addedUserDtoIds.Add(userDto.Id);           
+            //When, Then
+            try
+            {
+                _repository.UpdateUser(null);
             }
             catch
             {
