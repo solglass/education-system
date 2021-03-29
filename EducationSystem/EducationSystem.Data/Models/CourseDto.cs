@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EducationSystem.Data.Models;
 
 namespace EducationSystem.Data.Models
 {
@@ -12,30 +11,20 @@ namespace EducationSystem.Data.Models
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
-
-
+        public List<MaterialDto> Materials { get; set; }
 
         public object Clone()
-
         {
-
             return new CourseDto
-
             {
                 Name = Name,
-
                 Description = Description,
-
                 Duration = Duration,
-
                 IsDeleted = IsDeleted,
-
-                Themes = Themes
-
+                Themes = Themes,
+                Materials = Materials
             };
-
         }
-
 
         public override int GetHashCode()
         {
@@ -54,8 +43,6 @@ namespace EducationSystem.Data.Models
                     Description.Equals(courseObj.Description) &&
                     Duration == courseObj.Duration &&
                     IsDeleted == courseObj.IsDeleted);
-           
-           
         }
     }
 }

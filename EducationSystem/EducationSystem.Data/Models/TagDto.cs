@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 
 namespace EducationSystem.Data.Models
 {
@@ -12,7 +11,6 @@ namespace EducationSystem.Data.Models
         {
             return new TagDto
             {
-                Id = Id,
                 Name = Name
             };
         }

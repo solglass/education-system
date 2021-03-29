@@ -1,20 +1,14 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EducationSystem.API.Models;
-using EducationSystem.API.Mappers;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using EducationSystem.Business;
 using AutoMapper;
 using EducationSystem.API.Models.OutputModels;
-using System.Net;
 using Microsoft.AspNetCore.Http;
+using EducationSystem.Core.CustomExceptions;
 
 namespace EducationSystem.Controllers
 {
@@ -26,7 +20,7 @@ namespace EducationSystem.Controllers
     {
         private ITagService _tagService;
         private readonly IMapper _mapper;
-        public TagController(ITagRepository tagRepository, ITagService tagService, IMapper mapper)
+        public TagController(ITagService tagService, IMapper mapper)
         {
             _mapper = mapper;
             _tagService = tagService;
@@ -38,10 +32,14 @@ namespace EducationSystem.Controllers
         /// <returns>Returns the TagOutputModel which includes  Id and Name-property</returns>
         // https://localhost:50221/api/tag/
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист")]
         public ActionResult<TagOutputModel> AddTag([FromBody] TagInputModel tag)
         {
+            if (!ModelState.IsValid)
+                throw new ValidationException(ModelState);
+
             var id = _tagService.AddTag(_mapper.Map<TagDto>(tag));
             var result = _mapper.Map<TagOutputModel>(_tagService.GetTagById(id));
             return Ok(result);
@@ -53,7 +51,7 @@ namespace EducationSystem.Controllers
         // https://localhost:50221/api/tag
         [ProducesResponseType(typeof(List<TagOutputModel>), StatusCodes.Status200OK)]
         [HttpGet]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<List<TagOutputModel>> GetTags()
         {
             var tagsDtos = _tagService.GetTags();
@@ -67,11 +65,14 @@ namespace EducationSystem.Controllers
         /// <returns>Returns the TagOutputModel which includes Id and Name-property</returns>
         // https://localhost:50221/api/tag/3
         [ProducesResponseType(typeof(TagOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист,Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<TagOutputModel> GetTag(int id)
         {
             var tagDto = _tagService.GetTagById(id);
+            if (tagDto is null)
+                return NotFound($"Tag {id} was not found!");
             var tag = _mapper.Map<TagOutputModel>(tagDto);
             return Ok(tag);
         }
@@ -82,16 +83,15 @@ namespace EducationSystem.Controllers
         /// <returns>Returns NoContent result</returns>
         //https://localhost:50221/api/tag/3
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Админ, Преподаватель, Тьютор, Методист")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист")]
         public ActionResult DeleteTag(int id)
         {
-            var result = _tagService.DeleteTag(id);
-            if (result == 1)
-                return NoContent();
-            else
-                return Problem("Возникла ошибка при удалении тега");
+            if (_tagService.GetTagById(id) is null)
+                return NotFound($"Tag {id} was not found!");
+            _tagService.DeleteTag(id);
+            return NoContent();
         }
     }
 }

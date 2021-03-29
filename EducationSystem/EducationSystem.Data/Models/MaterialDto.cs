@@ -10,15 +10,16 @@ namespace EducationSystem.Data.Models
         public string Link { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
+        public List<TagDto> Tags { get; set; }
 
         public object Clone()
         {
             return new MaterialDto
             {
-                Id = Id,
                 Link = Link,
                 Description = Description,
-                IsDeleted = IsDeleted
+                IsDeleted = IsDeleted,
+                Tags=Tags
             };
         }
 
@@ -30,7 +31,7 @@ namespace EducationSystem.Data.Models
                 return false;
 
             MaterialDto materialDto = (MaterialDto)obj;
-            if (Link != materialDto.Link || Description != materialDto.Description || IsDeleted !=materialDto.IsDeleted)
+            if (Id != materialDto.Id || Link != materialDto.Link || Description != materialDto.Description || IsDeleted !=materialDto.IsDeleted)
             {
                 return false;
             }

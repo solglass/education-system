@@ -68,12 +68,8 @@ namespace EducationSystem.Data
 
         public List<HomeworkDto> SearchHomeworks(int? groupId, int? themeId, int? tagId)
         {
-            if(groupId == null &&
-               themeId == null &&
-               tagId   == null)
-            {
+            if(groupId == null && themeId == null && tagId == null)
                 throw new ArgumentNullException();
-            }
 
             var homeworkDictionary = new Dictionary<int, HomeworkDto>();
             var tagDictionary = new Dictionary<int, TagDto>();
@@ -501,12 +497,12 @@ namespace EducationSystem.Data
         public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
         {
             var attachmentDictionary = new Dictionary<int, AttachmentDto>();
-            var comments = _connection
+            var attachments = _connection
                 .Query<AttachmentDto, int, AttachmentDto>
                 ("dbo.Attachment_SelectByHomeworkAttemptId",
                 (attachment, type) =>
                 {
-                    if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
+                    if (!attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
                     {
                         attachmentEntry = attachment;
                         attachmentEntry.AttachmentType = (AttachmentType)type;
@@ -518,7 +514,7 @@ namespace EducationSystem.Data
                 splitOn: "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
-            return comments;
+            return attachments;
         }
 
         public int HomeworkTagAdd(int homeworkId, int tagId)

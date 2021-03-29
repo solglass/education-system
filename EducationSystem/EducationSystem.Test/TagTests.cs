@@ -7,16 +7,16 @@ using EducationSystem.Data.Tests.Mocks;
 
 namespace EducationSystem.Data.Tests
 {
-    public class TagRepositoryTests : BaseTest
+    public class TagTests : BaseTest
     {
         private ITagRepository _tagRepo;
-        private List<int> _tagIdList;
+        private List<int> _tagIds;
 
         [OneTimeSetUp]
         public void TagTestsSetup()
         {
             _tagRepo = new TagRepository(_options);
-            _tagIdList = new List<int>();
+            _tagIds = new List<int>();
         }
 
 
@@ -26,7 +26,7 @@ namespace EducationSystem.Data.Tests
             TagDto expected = (TagDto)TagMockGetter.GetTagDtoMock(dtoMockNumber).Clone();
             var addedTagId = _tagRepo.TagAdd(expected);
 
-            _tagRepo.TagDelete(addedTagId);
+            var rowsCount = _tagRepo.TagDelete(addedTagId);
 
             TagDto actual = _tagRepo.GetTagById(addedTagId);
             Assert.IsNull(actual);
@@ -40,7 +40,7 @@ namespace EducationSystem.Data.Tests
             {
                 var dto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
                 var addedEntityId = _tagRepo.TagAdd(dto);
-                _tagIdList.Add(addedEntityId);
+                _tagIds.Add(addedEntityId);
                 dto.Id = addedEntityId;
                 expected.Add(dto);
             }
@@ -56,7 +56,7 @@ namespace EducationSystem.Data.Tests
             var added = _tagRepo.TagAdd(expected);
             Assert.Greater(added, 0);
 
-            _tagIdList.Add(added);
+            _tagIds.Add(added);
             expected.Id = added;
 
             TagDto actual = _tagRepo.GetTagById(added);
@@ -71,10 +71,10 @@ namespace EducationSystem.Data.Tests
             try
             {
                 var added = _tagRepo.TagAdd(dto);
-                _tagIdList.Add(added);
+                _tagIds.Add(added);
             }
             //Then
-            catch (Exception ex)
+            catch
             {
                 Assert.Pass();
             }
@@ -88,10 +88,10 @@ namespace EducationSystem.Data.Tests
             try
             {
                 var added = _tagRepo.TagAdd(null);
-                _tagIdList.Add(added);
+                _tagIds.Add(added);
             }
             //Then
-            catch (Exception ex)
+            catch
             {
                 Assert.Pass();
             }
@@ -112,7 +112,7 @@ namespace EducationSystem.Data.Tests
         public void TagsTestsTearDown()
         {
 
-            foreach (int elem in _tagIdList)
+            foreach (int elem in _tagIds)
             {
                 _tagRepo.TagDelete(elem);
             }

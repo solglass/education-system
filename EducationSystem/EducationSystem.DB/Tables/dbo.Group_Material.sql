@@ -14,3 +14,23 @@ ALLOW_PAGE_LOCKS = ON
 ) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+ALTER TABLE [dbo].[Group_Material]  WITH CHECK ADD  CONSTRAINT [Group_Material_fk0] FOREIGN KEY([GroupID])
+REFERENCES [dbo].[Group] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Group_Material] CHECK CONSTRAINT [Group_Material_fk0]
+GO
+
+ALTER TABLE [dbo].[Group_Material]  WITH CHECK ADD  CONSTRAINT [Group_Material_fk1] FOREIGN KEY([MaterialID])
+REFERENCES [dbo].[Material] ([Id])
+ON UPDATE NO ACTION
+GO
+
+ALTER TABLE [dbo].[Group_Material] CHECK CONSTRAINT [Group_Material_fk1]
+GO
+
+ALTER TABLE [dbo].[Group_Material] 
+ADD CONSTRAINT UC_GroupID_MaterialID UNIQUE(GroupID,MaterialID)
+GO

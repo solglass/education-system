@@ -3,12 +3,10 @@ using EducationSystem.Core.Config;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 
 namespace EducationSystem.Data
 {
@@ -44,20 +42,17 @@ namespace EducationSystem.Data
                 splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
             .ToList();
             return users;
-
         }
+
+        // ToDo: покрыть тестом
         public List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
             var UserDictionary = new Dictionary<int, UserDto>();
-
-
             var users = _connection.
                 Query<UserDto, int, UserDto>(
                 "dbo.PassedStudentsAttempt_SelectByGroupId",
                 (user, role) =>
                 {
-
-
                     if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
                     {
                         userEntry = user;
@@ -69,7 +64,7 @@ namespace EducationSystem.Data
                     return userEntry;
                 },
                 new { groupId },
-                splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+                splitOn: "Id", commandType: CommandType.StoredProcedure)
             .ToList();
             return users;
 
@@ -98,10 +93,6 @@ namespace EducationSystem.Data
             .FirstOrDefault();
             return users;
         }
-        //public List<UserDto> PassedStudentsAttempt_SelectByGroupId(int groupId)
-        //{
-        //    var UserDictionary = new Dictionary<int, UserDto>();
-        //}
 
         public int ChangeUserPassword(int id, string oldPassword, string newPassword)
         {
@@ -179,7 +170,7 @@ namespace EducationSystem.Data
                commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public int DeleteRoleToUser(int userId, int roleId)
+        public int DeleteRoleFromUser(int userId, int roleId)
         {
             return _connection
                 .Execute("dbo.User_Role_Delete", 
