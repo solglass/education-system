@@ -46,7 +46,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
-            SetupRelatedEntititesRegulary(ref dto);
+            SetupRelatedEntititesRegulary(dto);
 
             //When
             var addedEntityId = _repository.AddPayment(dto);
@@ -110,7 +110,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
-            SetupRelatedEntititesRegulary(ref dto);
+            SetupRelatedEntititesRegulary(dto);
 
             var addedEntityId = _repository.AddPayment(dto);
 
@@ -152,7 +152,7 @@ namespace EducationSystem.Data.Tests
             var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
             var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
 
-            SetupRelatedEntitiesForSeveralPayments(ref userDto, ref groupDto, ref courseDto, ref studentGroupDto, contractNumber);
+            SetupRelatedEntitiesForSeveralPayments(userDto, groupDto, courseDto, studentGroupDto, contractNumber);
 
 
             for (int mockId = 1; mockId <= numberOfPayments; mockId++)
@@ -197,7 +197,7 @@ namespace EducationSystem.Data.Tests
             var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
             var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
 
-            SetupRelatedEntitiesForSeveralPayments(ref userDto, ref groupDto, ref courseDto, ref studentGroupDto);
+            SetupRelatedEntitiesForSeveralPayments(userDto, groupDto, courseDto, studentGroupDto);
 
             foreach (var mockId in mockIds)
             {
@@ -247,7 +247,7 @@ namespace EducationSystem.Data.Tests
             var studentGroupDtoSecond = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(2).Clone();
             var addedUserId = _userRepository.AddUser(userDto);
 
-            SetupRelatedEntititesForSeveralPaymentsAndTwoStudentGroups(ref userDto, ref groupDto, ref groupDtoSecond, ref courseDto, ref studentGroupDtoFirst, ref studentGroupDtoSecond, addedUserId);
+            SetupRelatedEntititesForSeveralPaymentsAndTwoStudentGroups(userDto, groupDto, groupDtoSecond, courseDto, studentGroupDtoFirst, studentGroupDtoSecond, addedUserId);
 
 
             foreach (var mockId in mockIds)
@@ -288,7 +288,7 @@ namespace EducationSystem.Data.Tests
             //Given
             var dto = (PaymentDto)PaymentMockGetter.GetPaymentDtoMock(mockId).Clone();
 
-            SetupRelatedEntititesRegulary(ref dto);
+            SetupRelatedEntititesRegulary(dto);
 
             var addedEntityId = _repository.AddPayment(dto);
             _addedPaymentDtoIds.Add(addedEntityId);
@@ -368,7 +368,7 @@ namespace EducationSystem.Data.Tests
             var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
             var studentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(2).Clone();
 
-            SetupRelatedEntitiesForSeveralPayments(ref userDto, ref groupDto, ref courseDto, ref studentGroupDto);
+            SetupRelatedEntitiesForSeveralPayments(userDto, groupDto, courseDto, studentGroupDto);
 
             foreach (var mockId in mockIds)
             {
@@ -433,7 +433,7 @@ namespace EducationSystem.Data.Tests
 
         }
 
-        private void SetupRelatedEntititesRegulary(ref PaymentDto dto )
+        private void SetupRelatedEntititesRegulary(PaymentDto dto )
         {
 
             var userDto = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
@@ -467,7 +467,7 @@ namespace EducationSystem.Data.Tests
             _addedCourseDtoIds.Add(addedCourseId);
         }
 
-        private void SetupRelatedEntitiesForSeveralPayments( ref UserDto userDto, ref GroupDto groupDto, ref CourseDto courseDto, ref StudentGroupDto studentGroupDto, int contractNumber = -1)
+        private void SetupRelatedEntitiesForSeveralPayments( UserDto userDto, GroupDto groupDto, CourseDto courseDto, StudentGroupDto studentGroupDto, int contractNumber = -1)
         {
             var addedUserId = _userRepository.AddUser(userDto);
             var addedCourseId = _courseRepository.AddCourse(courseDto);
@@ -495,7 +495,7 @@ namespace EducationSystem.Data.Tests
             _addedCourseDtoIds.Add(addedCourseId);
         }
 
-        private void SetupRelatedEntititesForSeveralPaymentsAndTwoStudentGroups(ref UserDto userDto, ref GroupDto groupDto, ref GroupDto groupDtoSecond, ref CourseDto courseDto, ref StudentGroupDto studentGroupDtoFirst, ref StudentGroupDto studentGroupDtoSecond,  int addedUserId)
+        private void SetupRelatedEntititesForSeveralPaymentsAndTwoStudentGroups(UserDto userDto, GroupDto groupDto, GroupDto groupDtoSecond, CourseDto courseDto, StudentGroupDto studentGroupDtoFirst, StudentGroupDto studentGroupDtoSecond,  int addedUserId)
 
         {
             userDto.Id = addedUserId;
