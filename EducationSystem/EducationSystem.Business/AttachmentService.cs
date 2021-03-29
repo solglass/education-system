@@ -43,19 +43,32 @@ namespace EducationSystem.Business
         {
             var attachmentId = _attachmentRepository.AddAttachment(attachmentDto);
             return _attachmentRepository.AddAttachmentToComment(attachmentId, commentId);
-        }
-
-        public int DeleteHomeworkAttemptAttachment(int attachmentId, int homeworkAttemptId)
-        {
-            var result = _attachmentRepository.DeleteAttachmentFromHomeworkAttempt(attachmentId, homeworkAttemptId);
-            return _attachmentRepository.DeleteAttachmentById(attachmentId);
-                
-        }
-
-        public int DeleteCommentAttachment(int attachmentId, int commentId)
-        {
-            var result = _attachmentRepository.DeleteAttachmentFromComment(attachmentId, commentId);
-            return _attachmentRepository.DeleteAttachmentById(attachmentId);
+        }
+
+
+
+        public int DeleteHomeworkAttemptAttachment(int attachmentId, int homeworkAttemptId)
+
+        {
+
+            var result = _attachmentRepository.DeleteAttachmentFromHomeworkAttempt(attachmentId, homeworkAttemptId);
+
+            return _attachmentRepository.DeleteAttachmentById(attachmentId);
+
+                
+
+        }
+
+
+
+        public int DeleteCommentAttachment(int attachmentId, int commentId)
+
+        {
+
+            var result = _attachmentRepository.DeleteAttachmentFromComment(attachmentId, commentId);
+
+            return _attachmentRepository.DeleteAttachmentById(attachmentId);
+
         }
     }
 }
