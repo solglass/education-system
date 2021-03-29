@@ -80,19 +80,13 @@ namespace EducationSystem.Data
 
         public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
         {
-            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
             var result = _connection
                 .Query<AttachmentDto, int, AttachmentDto>
                 ("dbo.Attachment_SelectByHomeworkAttemptId",
                 (attachment, type) =>
                 {
-                    if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
-                    {
-                        attachmentEntry = attachment;
-                        attachmentEntry.AttachmentType = (AttachmentType)type;
-                        attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
-                    }
-                    return attachmentEntry;
+                    attachment.AttachmentType = (AttachmentType)type;                        
+                    return attachment;
                 },
                 new { id },
                 splitOn: "Id",
@@ -102,19 +96,13 @@ namespace EducationSystem.Data
         }
         public List<AttachmentDto> GetAttachmentsByCommentId(int id)
         {
-            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
             var result = _connection
                 .Query<AttachmentDto, int, AttachmentDto>
                 ("dbo.Attachment_SelectByCommentId",
                 (attachment, type) =>
                 {
-                    if (attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
-                    {
-                        attachmentEntry = attachment;
-                        attachmentEntry.AttachmentType = (AttachmentType)type;
-                        attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
-                    }
-                    return attachmentEntry;
+                    attachment.AttachmentType = (AttachmentType)type;
+                    return attachment;
                 },
                 new { id },
                 splitOn: "Id",
