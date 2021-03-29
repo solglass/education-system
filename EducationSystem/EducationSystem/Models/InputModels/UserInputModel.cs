@@ -24,6 +24,7 @@ namespace EducationSystem.API.Models.InputModels
         [Required]
         public string UserPic { get; set; }
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
         public List<int> RoleIds { get; set; }
     }
