@@ -30,5 +30,6 @@ namespace EducationSystem.Data
 
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id);
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId);
+        List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id);
     }
 }

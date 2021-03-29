@@ -1,4 +1,4 @@
-﻿using EducationSystem.Data.Models;
+using EducationSystem.Data.Models;
 using System.Collections.Generic;
 
 namespace EducationSystem.Business

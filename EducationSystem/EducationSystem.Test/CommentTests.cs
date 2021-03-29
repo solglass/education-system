@@ -159,7 +159,7 @@ namespace EducationSystem.Data.Tests
             }
 
             // When
-            var actual = _homeworkRepo.GetComments(_homeworkDtoMock.Id);
+            var actual = _homeworkRepo.SearchComments(null, _homeworkDtoMock.Id);
 
             // Then''[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
             // in simple case:
