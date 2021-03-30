@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EducationSystem.API.Utils
 {
     public class Converters
     {
         private const string _dateFormat = "dd.MM.yyyy";
+        private const string _inputOutputPeriodDateFormat = "MMM yyyy";   // янв 2021, мар 2020
         private const string _periodDateFormat = "yyyy.MM";
+
         public static DateTime StrToDateTime(string strDate)
         {
             var date = DateTime
@@ -21,14 +20,22 @@ namespace EducationSystem.API.Utils
         {
             return date.ToString(_dateFormat);
         }
+
         public static string StrToDateTimePeriod(string period)
         {
-            DateTime.TryParseExact(period, _periodDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime periodParsed);
-            return PeriodDateToStr(periodParsed);
+            DateTime.TryParseExact(period, _inputOutputPeriodDateFormat, CultureInfo.GetCultureInfo("ru-ru"), DateTimeStyles.None, out DateTime periodParsed);
+            return PeriodDateToStr(periodParsed, _periodDateFormat);
         }
-        private static string PeriodDateToStr(DateTime period)
+
+        public static string StrToStrOutputPeriod(string period)
         {
-            return (period.ToString(_periodDateFormat));
+            DateTime.TryParseExact(period, _periodDateFormat, CultureInfo.GetCultureInfo("ru-ru"), DateTimeStyles.None, out DateTime periodParsed);
+            return PeriodDateToStr(periodParsed, _inputOutputPeriodDateFormat);
+        }
+
+        private static string PeriodDateToStr(DateTime period, string format)
+        {
+            return (period.ToString(format));
         }
     }
 }

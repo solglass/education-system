@@ -1,9 +1,7 @@
 ﻿using EducationSystem.Data.Models;
 using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Tests
 {
@@ -87,6 +85,58 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [Test]
+        public void AddHomeworkAttemptNullEntityNegativeTest()
+        {
+            //Given
+
+            //When
+            try
+            {
+                var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(null);
+                _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+            }
+
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void AddHomeworkAttemptEmptyPropertyNegativeTest()
+        {
+            //Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(4).Clone();
+
+            //When
+            try
+            {
+                var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
+                _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+            }
+
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void GetHomeworkAttemptByIdEntityNotExistNegativeTest()
+        {
+            //Given
+
+            //When
+            var hwattempt = _homeworkRepo.GetHomeworkAttemptById(-1);
+            //Then
+            Assert.IsNull(hwattempt);
+        }
+
         [TestCase(1, 2)]
         [TestCase(2, 3)]
         [TestCase(3, 1)]
@@ -109,6 +159,67 @@ namespace EducationSystem.Data.Tests
             // Then
             Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
+        }
+
+        [Test]
+        public void UpdateHomeworkAttemptNullEntityNegativeTest()
+        {
+            //Given
+            
+            //When
+            try
+            {
+                var homeworkAttemptId = _homeworkRepo.UpdateHomeworkAttempt(null);
+                _homeworkAttemptIdList.Add(homeworkAttemptId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateHomeworkAttemptEntityNotExistNegativeTest()
+        {
+            //Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
+            dto.Id = -1;
+
+            //When
+            var result = _homeworkRepo.UpdateHomeworkAttempt(dto);
+
+            //Then
+            Assert.AreEqual(0, result);
+
+        }
+
+        [Test]
+        public void UpdateHomeworkAttemptEmptyPropertyNegativeTest()
+        {
+            //Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
+            dto.Author = _userDtoMock;
+            dto.Homework = _homeworkDtoMock;
+            var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
+            _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+
+            var updto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(4).Clone();
+            updto.Id = addedHomeworkAttemptId;
+            //When
+            try
+            {
+
+                var homeworkAttemptId = _homeworkRepo.UpdateHomeworkAttempt(updto);
+                _homeworkAttemptIdList.Add(homeworkAttemptId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
         [TestCase(1, true)]
@@ -137,10 +248,21 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
-        [TestCase(new int[] { 1, 2, 3 })]
-        [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { })]
-        public void GetHomeworkAttemptsByUserIdPositiveTest(int[] mockIds)
+        [Test]
+        public void DeleteOrRecoverHomeworkAttemptNotExistEntityNegativeTest()
+        {
+            //Given
+            //When
+            var deletedRows = _homeworkRepo.DeleteOrRecoverHomeworkAttempt(-1, true);
+
+            //Then
+            Assert.AreEqual(0, deletedRows);
+        }
+
+        [TestCase(new int[] {1, 2, 3 }, new int[] {1, 2, 3 })]
+        [TestCase(new int[] { 3, 2, 1 }, new int[] {3, 1, 1 })]
+        [TestCase(new int[] { }, new int[] { })]
+        public void GetHomeworkAttemptsByUserIdPositiveTest(int[] mockIds, int [] hwmockIds)
         {
             // Given
             var addedUserId = _userDtoMock.Id;
@@ -150,7 +272,12 @@ namespace EducationSystem.Data.Tests
             {
                 var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[i]).Clone();
                 dto.Author = _userDtoMock;
-                dto.Homework = _homeworkDtoMock;
+                var _hworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(hwmockIds[i]).Clone();
+                _hworkDtoMock.Group = _groupDtoMock;
+                var addedHomeworkId = _homeworkRepo.AddHomework(_hworkDtoMock);
+                _hworkDtoMock.Id = addedHomeworkId;
+                _homeworkIdList.Add(addedHomeworkId);
+                dto.Homework = _hworkDtoMock;
                 var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
                 _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
                 dto.Id = addedHomeworkAttemptId;
@@ -164,19 +291,23 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [TestCase(new int[] { 1, 2, 3 })]
-        [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { })]
-        public void GetHomeworkAttemptsByHomeworkIdPositiveTest(int[] mockIds)
+        [TestCase(new int[] { 1, 2, 3 }, new int[] { 4, 5, 6 })]
+        [TestCase(new int[] { 3, 2, 1 }, new int[] { 6, 5, 4 })]
+        [TestCase(new int[] { }, new int[] { })]
+        public void GetHomeworkAttemptsByHomeworkIdPositiveTest(int[] mockIds, int[] userMockIds)
         {
             // Given
-            var addedHomeworkId = _homeworkDtoMock.Id;
+             var addedHomeworkId = _homeworkDtoMock.Id;
 
             var expected = new List<HomeworkAttemptDto>();
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[i]).Clone();
-                dto.Author = _userDtoMock;
+                var _authorDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(userMockIds[i]).Clone();
+                var addedUserId = _userRepo.AddUser(_authorDtoMock);
+                _userIdList.Add(addedUserId);
+                _authorDtoMock.Id = addedUserId;
+                dto.Author = _authorDtoMock;
                 dto.Homework = _homeworkDtoMock;
                 var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
                 _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
@@ -191,9 +322,9 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [TestCase(new int[] { 1, 2, 3 }, 3)]
-        [TestCase(new int[] {  }, 3)]
-        public void GetHomeworkAttemptsByStatusIdAndGroupIdPositiveTest(int[] mockIds, int statusId)
+        [TestCase(new int[] { 1, 2, 3 }, 3, new int[] { 1, 2, 3 })]
+        [TestCase(new int[] {  }, 3, new int[] { 1, 2, 3 })]
+        public void GetHomeworkAttemptsByStatusIdAndGroupIdPositiveTest(int[] mockIds, int statusId, int[] hwmockIds)
         {
             // Given
             var groupId = _groupDtoMock.Id;
@@ -203,7 +334,12 @@ namespace EducationSystem.Data.Tests
             {
                 var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[i]).Clone();
                 dto.Author = _userDtoMock;
-                dto.Homework = _homeworkDtoMock;
+                var _hworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(hwmockIds[i]).Clone();
+                _hworkDtoMock.Group = _groupDtoMock;
+                var addedHomeworkId = _homeworkRepo.AddHomework(_hworkDtoMock);
+                _hworkDtoMock.Id = addedHomeworkId;
+                _homeworkIdList.Add(addedHomeworkId);
+                dto.Homework = _hworkDtoMock;
                 var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
                 _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
                 dto.Id = addedHomeworkAttemptId;
@@ -245,7 +381,7 @@ namespace EducationSystem.Data.Tests
             }
 
             //When
-            var actual = _homeworkRepo.GetAttachmentsByHomeworkAttemptId(addedHomeworkAttemptId);
+            var actual = _attachmentRepo.GetAttachmentsByHomeworkAttemptId(addedHomeworkAttemptId);
 
             //Then
             CollectionAssert.AreEqual(expected.Attachments, actual);
@@ -374,7 +510,7 @@ namespace EducationSystem.Data.Tests
                 Assert.AreEqual(1, result);
             }
             //When
-            var actual = _homeworkRepo.GetAttachmentsByHomeworkAttemptId(addedHomeworkAttemptId);
+            var actual = _attachmentRepo.GetAttachmentsByHomeworkAttemptId(addedHomeworkAttemptId);
 
             //Then
             CollectionAssert.AreEqual(expected.Attachments, actual);
@@ -426,7 +562,7 @@ namespace EducationSystem.Data.Tests
             }
         }
 
-        public void DeleteCourse()
+        private void DeleteCourse()
         {
             foreach (int courseId in _courseIdList)
             {
@@ -434,7 +570,7 @@ namespace EducationSystem.Data.Tests
             }
         }
 
-        public void DeleteGroups()
+        private void DeleteGroups()
         {
             foreach (int groupId in _groupIdList)
             {

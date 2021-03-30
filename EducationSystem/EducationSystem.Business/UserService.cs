@@ -84,9 +84,9 @@ namespace EducationSystem.Business
         {
             return _paymentRepository.DeletePayment(id);
         }
-        public List<UserDto> GetStudentsNotPaidInMonth(string period)
+        public List<UserDto> GetListOfStudentsByPeriodWhoHaveNotPaid(string period)
         {
-            return _paymentRepository.GetStudentsNotPaidInMonth(period);
+            return _paymentRepository.GetListOfStudentsByPeriodWhoHaveNotPaid(period);
         }
     }
     
