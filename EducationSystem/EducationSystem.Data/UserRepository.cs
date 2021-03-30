@@ -201,5 +201,15 @@ namespace EducationSystem.Data
             return result;
 
         }
+
+        public List<UserDto> GetStudentsByGroupId(int groupId)
+        {
+            var users = _connection.
+                Query<UserDto>(
+                "dbo.User_SelectStudentsByGroupId",
+                param: new {groupId}, commandType: System.Data.CommandType.StoredProcedure)
+            .ToList();
+            return users;
+        }
     }
 }
