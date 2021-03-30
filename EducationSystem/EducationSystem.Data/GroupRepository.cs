@@ -35,7 +35,7 @@ namespace EducationSystem.Data
             return result;
         }
        
-        public List<GroupDto> GetGroupByThemeId(int id)
+        public List<GroupDto> GetGroupByThemeId(int themeid)
         {
             List<ThemeDto> Themes = new List<ThemeDto>();
             ThemeDto themeEntry = new ThemeDto();
@@ -55,7 +55,7 @@ namespace EducationSystem.Data
                        }
                        group.GroupStatus = (GroupStatus)groupStatus;
                        return group;
-                   },new { id },
+                   }, new { themeid },
                    splitOn: "Id",
                    commandType: System.Data.CommandType.StoredProcedure)
                .Distinct()
@@ -68,9 +68,9 @@ namespace EducationSystem.Data
             var courseEntry = new CourseDto();
             var themeDictionary = new Dictionary<int, ThemeDto>();
             var result = _connection
-                .Query<GroupDto, CourseDto, ThemeDto, GroupDto>(
+                .Query<GroupDto, CourseDto, ThemeDto, int, GroupDto>(
                     "dbo.Group_SelectByProgram",
-                    (group, course, theme) =>
+                    (group, course, theme, groupStatus) =>
                     {
                         if (groupEntry.Id == 0)
                         {
@@ -89,6 +89,7 @@ namespace EducationSystem.Data
                             courseEntry.Themes.Add(theme);
                             themeDictionary.Add(themeEntry.Id, themeEntry);
                         }
+                        groupEntry.GroupStatus = (GroupStatus)groupStatus;
                         return groupEntry;
                     },
                     new { id },
@@ -204,9 +205,19 @@ namespace EducationSystem.Data
         }
         public List<GroupDto> GetGroupsByCourseId(int id)
         {
+
             var groups = _connection.
-                Query<GroupDto>("dbo.Group_SelectAllByCourseId",
-                new { courseId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                Query<GroupDto, int, CourseDto, GroupDto>("dbo.Group_SelectAllByCourseId", (group, groupStatus, course ) =>
+                {
+                  group.Course = course;
+                  group.GroupStatus = (GroupStatus)groupStatus;
+                  return group;
+                
+                },
+                new { courseId = id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                
                 .ToList();
             return groups;
         }
