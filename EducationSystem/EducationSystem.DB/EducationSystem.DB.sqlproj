@@ -282,6 +282,7 @@
     <Build Include="StoredProcedures\Group\Group_HardDelete.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Add.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Delete.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByThemeId.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
