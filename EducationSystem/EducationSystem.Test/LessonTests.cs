@@ -114,7 +114,7 @@ namespace EducationSystem.Data.Tests
         public void UpdateLessonPositiveTest(int mockId)
         {
             //Given
-            var lessonDto = LessonMockGetter.GetLessonDtoMock(mockId);
+            var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(mockId).Clone();
             lessonDto.Group = _groupDtoMock;
             lessonDto.Id = _lessonRepository.AddLesson(lessonDto);
             _addedLessonIds.Add(lessonDto.Id);
@@ -132,6 +132,50 @@ namespace EducationSystem.Data.Tests
             var actual = _lessonRepository.GetLessonById(lessonDto.Id);
             //Then
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(5)]
+        public void UpdateLesson_Empty_NegativeTest(int mockId)
+        {
+            //Given
+
+            var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
+            lessonDto.Group = _groupDtoMock;
+            lessonDto.Id = _lessonRepository.AddLesson(lessonDto);
+            _addedLessonIds.Add(lessonDto.Id);
+            var dto = (LessonDto)LessonMockGetter.GetLessonDtoMock(mockId).Clone();
+            dto.Group = _groupDtoMock;
+            //When, Then
+            try
+            {
+                _lessonRepository.UpdateLesson(dto);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateLesson_Null_NegativeTest()
+        {
+            //Given
+
+            var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
+            lessonDto.Group = _groupDtoMock;
+            lessonDto.Id = _lessonRepository.AddLesson(lessonDto);
+            _addedLessonIds.Add(lessonDto.Id);
+            //When, Then
+            try
+            {
+                _lessonRepository.UpdateLesson(null);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
         [TestCase(new int[] { 1, 2 })]
@@ -176,6 +220,31 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(secondExpected, actualSecond);
         }
 
+        [TestCase(new int[] { 1, 2 })]
+        public void GetLessonsByGroupId_OtherGroup_NegativeTest(int[] lessonIdMock)
+        {
+            //Given
+
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = _courseDtoMock;
+            groupDto.Id = _groupRepository.AddGroup(groupDto);
+            _addedGroupIds.Add(groupDto.Id);
+
+            for (int i = 0; i < lessonIdMock.Length; i++)
+            {
+                var lessonMock = LessonMockGetter.GetLessonDtoMock(lessonIdMock[i]);
+                lessonMock.Group = groupDto;
+                var lessonId = _lessonRepository.AddLesson(lessonMock);
+                lessonMock.Id = lessonId;
+                _addedLessonIds.Add(lessonId);
+            }
+            //When
+
+            var actual = _lessonRepository.GetLessonsByGroupId(-1);
+            // Then
+            Assert.AreEqual(0, actual.Count);
+        }
+
         [TestCase(1)]
         public void GetLessonByIdPositiveTest(int lessonMockId)
         {
@@ -190,6 +259,22 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void GetLessonById_NotExist_NegativeTest()
+        {
+            //Given
+            var dto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
+            dto.Group = _groupDtoMock;
+            var addedLessonId = _lessonRepository.AddLesson(dto);
+            dto.Id = addedLessonId;
+            _addedLessonIds.Add(addedLessonId);
+            //When
+            var actual = _lessonRepository.GetLessonById(-1);
+            //Then
+            Assert.IsNull(actual);
+        }
+
         [TestCase(1, true)]
         [TestCase(2, false)]
         public void DeleteOrRecoverLessonPositiveTest(int lessonMockId, bool isDeleted)
@@ -206,6 +291,17 @@ namespace EducationSystem.Data.Tests
             var actual = _lessonRepository.GetLessonById(expected.Id);
             //Then
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DeleteOrRecoverLesson_NotExist_NegativeTest()
+        {
+            //Given
+            //When
+            var deletedRows = _lessonRepository.DeleteOrRecoverLesson(-1, true);
+
+            //Then
+            Assert.AreEqual(0, deletedRows);
         }
         [TestCase(new int[] { 1, 2 })]
         public void GetLessonByThemeIdPositiveTest(int[] lessonMockcId)
@@ -249,6 +345,29 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(secondExpected, actualSecond);
         }
 
+        [TestCase(new int[] { 1, 2 })]
+        public void GetLessonByThemeId_NotExistTheme_NegativeTest(int[] lessonMockcId)
+        {
+            //Given
+            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+            themeDto.Id = _courseRepository.AddTheme(themeDto);
+            _addedThemeIds.Add(themeDto.Id);
+
+            foreach (int id in lessonMockcId)
+            {
+                var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(id).Clone();
+                lessonDto.Group = _groupDtoMock;
+                lessonDto.Id = _lessonRepository.AddLesson(lessonDto);
+                _addedLessonIds.Add(lessonDto.Id);
+                _lessonRepository.AddLessonTheme(lessonDto.Id, themeDto.Id);
+                _addedLessonThemeIds.Add((lessonDto.Id, themeDto.Id));
+            }
+            //When
+            var actual = _lessonRepository.GetLessonsByThemeId(-1);
+            //Then
+            Assert.AreEqual(0, actual.Count);
+        }
+
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
         public void AddLessonThemePositiveTest(int[] mockIds)
@@ -278,6 +397,81 @@ namespace EducationSystem.Data.Tests
 
             // Then
             CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void AddLessonTheme_NotUnique_NegativeTest()
+        {
+            // Given
+            var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
+            lessonDto.Group = _groupDtoMock;
+            var addedLessonId = _lessonRepository.AddLesson(lessonDto);
+            _addedLessonIds.Add(addedLessonId);
+            lessonDto.Id = addedLessonId;
+
+            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+            var addedThemeId = _courseRepository.AddTheme(themeDto);
+            _addedThemeIds.Add(addedThemeId);
+            themeDto.Id = addedThemeId;
+            // When
+
+            _lessonRepository.AddLessonTheme(addedLessonId, addedThemeId);
+            _addedLessonThemeIds.Add((addedLessonId, addedThemeId));
+            try
+            {
+                _lessonRepository.AddLessonTheme(addedLessonId, addedThemeId);
+                _addedLessonThemeIds.Add((addedLessonId, addedThemeId));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void AddLessonTheme_NotExistLesson_NegativeTest()
+        {
+            // Given
+
+            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+            var addedThemeId = _courseRepository.AddTheme(themeDto);
+            _addedThemeIds.Add(addedThemeId);
+            themeDto.Id = addedThemeId;
+            // When
+            try
+            {
+                _lessonRepository.AddLessonTheme(-1, addedThemeId);
+                _addedLessonThemeIds.Add((-1, addedThemeId));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void AddLessonTheme_NotExistTheme_NegativeTest()
+        {
+            // Given
+
+            var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
+            lessonDto.Group = _groupDtoMock;
+            var addedLessonId = _lessonRepository.AddLesson(lessonDto);
+            _addedLessonIds.Add(addedLessonId);
+            lessonDto.Id = addedLessonId;
+            // When
+            try
+            {
+                _lessonRepository.AddLessonTheme(addedLessonId, -1);
+                _addedLessonThemeIds.Add((addedLessonId, -1));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
         [TestCase(new int[] { 1, 2, 3 })]
         public void DeleteLessonThemePositiveTest(int[] mockIds)
@@ -325,86 +519,6 @@ namespace EducationSystem.Data.Tests
             // Then
             CollectionAssert.AreEqual(expected, actual);
         }
-        [Test]
-        public void AddLessonTheme_NotExistLesson_NegativeTest()
-        {
-            //Given
-            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
-            var addedThemeId = _courseRepository.AddTheme(themeDto);
-            _addedThemeIds.Add(addedThemeId);
-            themeDto.Id = addedThemeId;
-            //When
-            try
-            {
-                _lessonRepository.AddLessonTheme(-1, addedThemeId);
-            }
-            //Then
-            catch
-            {
-                Assert.Pass();
-            }
-            Assert.Fail();
-        }
-
-        [Test]
-        public void AddLessonTheme_NotExistTheme_NegativeTest()
-        {
-            //Given
-            var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
-            lessonDto.Group = _groupDtoMock;
-            var addedLessonId = _lessonRepository.AddLesson(lessonDto);
-            _addedLessonIds.Add(addedLessonId);
-            lessonDto.Id = addedLessonId;
-            //When
-            try
-            {
-                _lessonRepository.AddLessonTheme(addedLessonId, -1);
-            }
-            //Then
-            catch
-            {
-                Assert.Pass();
-            }
-            Assert.Fail();
-        }
-        [Test]
-        public void DeleteLessonTheme_NotExistLessonTheme_NegativeTest()
-        {
-            //Given
-            //When
-            var result = _lessonRepository.DeleteLessonTheme(-1, -1);
-            //Then
-            Assert.AreEqual(0, result);
-        }
-        [Test]
-        public void AddLessonThemeDoubleNegativeTest()
-        {
-            var lessonDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(1).Clone();
-            lessonDto.Group = _groupDtoMock;
-            var addedLessonId = _lessonRepository.AddLesson(lessonDto);
-            _addedLessonIds.Add(addedLessonId);
-            lessonDto.Id = addedLessonId;
-
-            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
-            var addedThemeId = _courseRepository.AddTheme(themeDto);
-            _addedThemeIds.Add(addedThemeId);
-            themeDto.Id = addedThemeId;
-            try
-            {
-
-                _lessonRepository.AddLessonTheme(addedLessonId, addedThemeId);
-                _addedLessonThemeIds.Add((addedLessonId, addedThemeId));
-                _lessonRepository.AddLessonTheme(addedLessonId, addedThemeId);
-                _addedLessonThemeIds.Add((addedLessonId, addedThemeId));
-            }
-            catch
-            {
-                Assert.Pass();
-            }
-            Assert.Fail();
-        }
-
-
 
         [TearDown]
         public void TearDownTest()
