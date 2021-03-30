@@ -55,6 +55,60 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestCase(5)]
+        public void AddLesson_Empty_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (LessonDto)LessonMockGetter.GetLessonDtoMock(mockId).Clone();
+            dto.Group = _groupDtoMock;
+            //When, Then
+            try
+            {
+                var addedLessonId = _lessonRepository.AddLesson(dto);
+                _addedLessonIds.Add(addedLessonId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void AddLesson_WithoutGroup_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (LessonDto)LessonMockGetter.GetLessonDtoMock(mockId).Clone();
+            //When, Then
+            try
+            {
+                var addedLessonId = _lessonRepository.AddLesson(dto);
+                _addedLessonIds.Add(addedLessonId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void AddLesson_Null_NegativeTest()
+        {
+            //Given
+            //When, Then
+            try
+            {
+                var addedLessonId = _lessonRepository.AddLesson(null);
+                _addedLessonIds.Add(addedLessonId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(1)]
         [TestCase(2)]
         public void UpdateLessonPositiveTest(int mockId)
@@ -84,19 +138,19 @@ namespace EducationSystem.Data.Tests
         public void GetLessonsByGroupIdPositiveTest(int[] lessonIdMock)
         {
             //Given
-            var firstGroupDto = GroupMockGetter.GetGroupDtoMock(1);
+            var firstGroupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
             firstGroupDto.Course = _courseDtoMock;          
             firstGroupDto.Id = _groupRepository.AddGroup(firstGroupDto);
             _addedGroupIds.Add(firstGroupDto.Id);
-            var secondGroupDto = GroupMockGetter.GetGroupDtoMock(2);
+            var secondGroupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(2).Clone();
             secondGroupDto.Course = _courseDtoMock;
             secondGroupDto.Id = _groupRepository.AddGroup(secondGroupDto);
             _addedGroupIds.Add(secondGroupDto.Id);
             
             var firstExpected = new List<LessonDto>();
-            for (int id = 0; id < lessonIdMock.Length; id++)
+            for (int i = 0; i < lessonIdMock.Length; i++)
             {
-                var lessonMock = LessonMockGetter.GetLessonDtoMock(lessonIdMock[id]);
+                var lessonMock = LessonMockGetter.GetLessonDtoMock(lessonIdMock[i]);
                 lessonMock.Group = firstGroupDto;
                 var lessonId = _lessonRepository.AddLesson(lessonMock);
                 lessonMock.Id = lessonId;
@@ -105,9 +159,9 @@ namespace EducationSystem.Data.Tests
             }
 
             var secondExpected = new List<LessonDto>();
-            for (int id = 3; id < 5; id++)
+            for (int i = 0; i < lessonIdMock.Length; i++)
             {
-                var lessonMock = LessonMockGetter.GetLessonDtoMock(id);
+                var lessonMock = LessonMockGetter.GetLessonDtoMock(lessonIdMock[i]);
                 lessonMock.Group = secondGroupDto;
                 var lessonId = _lessonRepository.AddLesson(lessonMock);
                 lessonMock.Id = lessonId;
