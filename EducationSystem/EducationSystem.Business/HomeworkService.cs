@@ -117,7 +117,7 @@ namespace EducationSystem.Business
 
             foreach (var item in dtos)
             {
-                item.Comments = _homeworkRepository.GetCommentsByHomeworkAttemptId(item.Id);
+                item.Comments = _homeworkRepository.SearchComments(item.Id, null);
 
                 // check comments and then
                 foreach (var comment in item.Comments)
