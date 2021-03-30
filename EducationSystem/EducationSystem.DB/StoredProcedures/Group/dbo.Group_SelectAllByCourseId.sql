@@ -3,9 +3,12 @@
 begin
 	select 
 		g.Id,
-		g.CourseID,
 		g.StartDate,
-		g.StatusId as Id
+		g.StatusId as Id,
+		c.Id,
+		c.Name
+		
 	from dbo.[Group] g 
+	inner join dbo.[Course] c on c.Id = g.CourseID
 	where g.CourseID=@courseId
 end

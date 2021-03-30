@@ -205,9 +205,19 @@ namespace EducationSystem.Data
         }
         public List<GroupDto> GetGroupsByCourseId(int id)
         {
+
             var groups = _connection.
-                Query<GroupDto>("dbo.Group_SelectAllByCourseId",
-                new { courseId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                Query<GroupDto, int, CourseDto, GroupDto>("dbo.Group_SelectAllByCourseId", (group, groupStatus, course ) =>
+                {
+                  group.Course = course;
+                  group.GroupStatus = (GroupStatus)groupStatus;
+                  return group;
+                
+                },
+                new { courseId = id },
+                splitOn: "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                
                 .ToList();
             return groups;
         }
