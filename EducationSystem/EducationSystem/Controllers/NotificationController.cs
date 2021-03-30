@@ -19,7 +19,7 @@ namespace EducationSystem.API.Controllers
     [Authorize]
     public class NotificationController : ControllerBase
     {
-        private readonly IMapper _mapper;
+        private IMapper _mapper;
         private IUserService _userService;
         private INotificationService _notificationService;
         private IGroupService _groupService;
@@ -104,9 +104,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult<NotificationOutputModel> AddNotification(int userId, [FromBody] NotificationInputModel notification)
         {
             if (!ModelState.IsValid)
-            {
                 throw new ValidationException(ModelState);
-            }
 
             var userDto = _userService.GetUserById(userId);
             if (userDto is null)
@@ -137,9 +135,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddNotificationForAllStuff([FromBody] NotificationInputModel notification)
         {
             if (!ModelState.IsValid)
-            {
                 throw new ValidationException(ModelState);
-            }
 
             var notificationDto = _mapper.Map<NotificationDto>(notification);
             var authorId = Convert.ToInt32(User.FindFirst("id").Value);
@@ -158,9 +154,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddNotificationForAllUsers([FromBody] NotificationInputModel notification)
         {
             if (!ModelState.IsValid)
-            {
                 throw new ValidationException(ModelState);
-            }
 
             var notificationDto = _mapper.Map<NotificationDto>(notification);
             var authorId = Convert.ToInt32(User.FindFirst("id").Value);
@@ -179,9 +173,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddNotificationForAllStudents([FromBody] NotificationInputModel notification)
         {
             if (!ModelState.IsValid)
-            {
                 throw new ValidationException(ModelState);
-            }
 
             var notificationDto = _mapper.Map<NotificationDto>(notification);
             var authorId = Convert.ToInt32(User.FindFirst("id").Value);
@@ -200,9 +192,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddNotificationForAllTeachers([FromBody] NotificationInputModel notification)
         {
             if (!ModelState.IsValid)
-            {
                 throw new ValidationException(ModelState);
-            }
 
             var notificationDto = _mapper.Map<NotificationDto>(notification);
             var authorId = Convert.ToInt32(User.FindFirst("id").Value);
@@ -224,9 +214,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult AddNotificationForGroup(int groupId, [FromBody] NotificationInputModel notification)
         {
             if (!ModelState.IsValid)
-            {
                 throw new ValidationException(ModelState);
-            }
 
             var groupDto = _groupService.GetGroupById(groupId);
             if (groupDto is null)
@@ -283,9 +271,7 @@ namespace EducationSystem.API.Controllers
         public ActionResult<NotificationOutputModel> UpdateNotification(int notificationId, [FromBody] NotificationInputModel notification)
         {
             if (!ModelState.IsValid)
-            {
                 throw new ValidationException(ModelState);
-            }
 
             var userId = Convert.ToInt32(User.FindFirst("id").Value);
             var notificationDto = _notificationService.GetNotificationById(notificationId);

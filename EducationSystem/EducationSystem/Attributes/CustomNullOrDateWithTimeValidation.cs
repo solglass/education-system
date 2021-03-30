@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Attributes
 {
-    public class CustomNullOrDateValidation : ValidationAttribute
+    public class CustomNullOrDateWithTimeValidation : ValidationAttribute
     {
 
         private const string _dateFormat = "dd.MM.yyyy H:mm:ss";
