@@ -468,7 +468,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1,2,3 }, new int[] { 3,4},1)]
-        public void AddTeacherGroupPositiveTest(int[] groupWithTeacherMockIds, int[] groupWithoutTeacherMockIds, int userMockId)
+        public void AddTeacherGroupPositiveTest(int[] groupWithTeacherMockIds, int[] groupWithoutTutorMockIds, int userMockId)
         {
             //Given
             var teacher = (UserDto)UserMockGetter.GetUserDtoMock(userMockId).Clone();
@@ -477,6 +477,162 @@ namespace EducationSystem.Data.Tests
 
             var expected = new List<int>();
             foreach (var groupMockId in groupWithTeacherMockIds)
+            {
+                var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+                group.Course = _courseDtoMock;
+                group.Id = _groupRepo.AddGroup(group);
+                _groupIdList.Add(group.Id);
+                expected.Add(group.Id);
+            }
+
+            foreach (var groupMockId in groupWithoutTutorMockIds)
+            {
+                var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+                group.Course = _courseDtoMock;
+                group.Id = _groupRepo.AddGroup(group);
+                _groupIdList.Add(group.Id);
+            }
+            //When
+            foreach (var group in expected)
+            {
+                var result = _groupRepo.AddTeacherGroup(teacher.Id,group);
+                _addedTeacherToGroupIdList.Add((teacher.Id, group)); 
+            }
+            var actual = _groupRepo.GetGroupsByTeacherId(teacher.Id);
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+        [TestCase(1)]
+        public void AddTeacherGroupNegativeTestTeacherNotExists(int groupMockId)
+        {
+            //Given
+            var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+            group.Course = _courseDtoMock;
+            group.Id = _groupRepo.AddGroup(group);
+            _groupIdList.Add(group.Id);
+            //When
+            try
+            {
+                var result = _groupRepo.AddTeacherGroup(-1, group.Id);
+                _addedTeacherToGroupIdList.Add((-1, group.Id));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void AddTeacherGroupNegativeTestGroupNotExists(int teacherMockId)
+        {
+            //Given
+            var teacher = (UserDto)UserMockGetter.GetUserDtoMock(teacherMockId).Clone();
+            teacher.Id = _userRepo.AddUser(teacher);
+            _addedUserIdList.Add(teacher.Id);
+            //When
+            try
+            {
+                var result = _groupRepo.AddTeacherGroup(teacher.Id, -1);
+                _addedTeacherToGroupIdList.Add((teacher.Id, -1));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1,1)]
+        public void AddTeacherGroupNegativeTestNotUniqueEntity(int teacherMockId, int groupMockId)
+        {
+            //Given
+            var teacher = (UserDto)UserMockGetter.GetUserDtoMock(teacherMockId).Clone();
+            teacher.Id = _userRepo.AddUser(teacher);
+            _addedUserIdList.Add(teacher.Id);
+
+            var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+            group.Course = _courseDtoMock;
+            group.Id = _groupRepo.AddGroup(group);
+            _groupIdList.Add(group.Id);
+
+            var result = _groupRepo.AddTeacherGroup(teacher.Id, group.Id);
+            _addedTeacherToGroupIdList.Add((teacher.Id, group.Id));
+            //When
+            try
+            {
+                 result = _groupRepo.AddTeacherGroup(teacher.Id, group.Id);
+                _addedTeacherToGroupIdList.Add((teacher.Id, group.Id));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(new int[] { 1, 2, 3 }, new int[] { 3, 4 }, 1)]
+        public void DeleteTeacherGroupPositiveTest(int[] groupToDeleteMockIds, int[] groupToSaveMockIds, int teacherMockId)
+        {
+            //Given
+            var teacher = (UserDto)UserMockGetter.GetUserDtoMock(teacherMockId).Clone();
+            teacher.Id = _userRepo.AddUser(teacher);
+            _addedUserIdList.Add(teacher.Id);
+
+            var expected = new List<int>();
+            foreach (var groupMockId in groupToSaveMockIds)
+            {
+                var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+                group.Course = _courseDtoMock;
+                group.Id = _groupRepo.AddGroup(group);
+                _groupIdList.Add(group.Id);
+                expected.Add(group.Id);
+                var result = _groupRepo.AddTeacherGroup(teacher.Id, group.Id);
+                _addedTeacherToGroupIdList.Add((teacher.Id, group.Id));
+            }
+
+            var groupToDeleteIds = new List<int>();
+            foreach (var groupMockId in groupToDeleteMockIds)
+            {
+                var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+                group.Course = _courseDtoMock;
+                group.Id = _groupRepo.AddGroup(group);
+                _groupIdList.Add(group.Id);
+            }
+            //When
+            foreach (var group in groupToDeleteIds)
+            {
+                var result = _groupRepo.DeleteTeacherGroup(teacher.Id, group);
+                Assert.AreEqual(1, result);
+            }
+            var actual = _groupRepo.GetGroupsByTeacherId(teacher.Id);
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+        [Test]
+        public void DeleteTeacherGroupNegativeTestEntityNotExists()
+        {
+            //Given
+
+            //When
+            var result = _groupRepo.DeleteTeacherGroup(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
+
+
+
+
+        [TestCase(new int[] { 1, 2, 3 }, new int[] { 3, 4 }, 1)]
+        public void AddTutorGroupPositiveTest(int[] groupWithTutorMockIds, int[] groupWithoutTeacherMockIds, int userMockId)
+        {
+            //Given
+            var tutor = (UserDto)UserMockGetter.GetUserDtoMock(userMockId).Clone();
+            tutor.Id = _userRepo.AddUser(tutor);
+            _addedUserIdList.Add(tutor.Id);
+
+            var expected = new List<int>();
+            foreach (var groupMockId in groupWithTutorMockIds)
             {
                 var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
                 group.Course = _courseDtoMock;
@@ -495,42 +651,156 @@ namespace EducationSystem.Data.Tests
             //When
             foreach (var group in expected)
             {
-                var result = _groupRepo.AddTeacherGroup(teacher.Id,group);
-                _addedTeacherToGroupIdList.Add((teacher.Id, group)); 
+                var result = _groupRepo.AddTutorToGroup(tutor.Id, group);
+                _addedTutorToGroupIdList.Add((tutor.Id, group));
             }
-            var actual = _groupRepo.GetGroupsByTeacherId(teacher.Id);
+            var actual = _groupRepo.GetGroupsByTutorId(tutor.Id);
             //Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [TestCase(1)]
+        public void AddTutorGroupNegativeTestTutorNotExists(int groupMockId)
+        {
+            //Given
+            var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+            group.Course = _courseDtoMock;
+            group.Id = _groupRepo.AddGroup(group);
+            _groupIdList.Add(group.Id);
+            //When
+            try
+            {
+                var result = _groupRepo.AddTutorToGroup(-1, group.Id);
+                _addedTutorToGroupIdList.Add((-1, group.Id));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
 
-         
+        [TestCase(1)]
+        public void AddTutorGroupNegativeTestGroupNotExists(int tutorMockId)
+        {
+            //Given
+            var tutor = (UserDto)UserMockGetter.GetUserDtoMock(tutorMockId).Clone();
+            tutor.Id = _userRepo.AddUser(tutor);
+            _addedUserIdList.Add(tutor.Id);
+            //When
+            try
+            {
+                var result = _groupRepo.AddTutorToGroup(tutor.Id, -1);
+                _addedTutorToGroupIdList.Add((tutor.Id, -1));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
 
-    [TearDown]
-    public void TearDown()
-    { 
-      DeleteThemeHomeworks();
-      DeleteLessonTheme();
-      DeleteThemeHomeworks();
-      DeteleTagHomeworks();
-      DeleteTutorGroup();
-      DeleteStudentGroups();
-      DeleteGroupMaterials();
-      DeleteTeacherGroups();
-      DeleteMaterials();
-      DeleteThemes();
-      DeleteHomeworks();
-      DeleteGroups();
-      DeleteCourse();
+        [TestCase(1, 1)]
+        public void AddTutorGroupNegativeTestNotUniqueEntity(int tutorMockId, int groupMockId)
+        {
+            //Given
+            var tutor = (UserDto)UserMockGetter.GetUserDtoMock(tutorMockId).Clone();
+            tutor.Id = _userRepo.AddUser(tutor);
+            _addedUserIdList.Add(tutor.Id);
+
+            var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+            group.Course = _courseDtoMock;
+            group.Id = _groupRepo.AddGroup(group);
+            _groupIdList.Add(group.Id);
+
+            var result = _groupRepo.AddTutorToGroup(tutor.Id, group.Id);
+            _addedTutorToGroupIdList.Add((tutor.Id, group.Id));
+            //When
+            try
+            {
+                result = _groupRepo.AddTutorToGroup(tutor.Id, group.Id);
+                _addedTutorToGroupIdList.Add((tutor.Id, group.Id));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(new int[] { 1, 2, 3 }, new int[] { 3, 4 }, 1)]
+        public void DeleteTutorGroupPositiveTest(int[] groupToDeleteMockIds, int[] groupToSaveMockIds, int tutorMockId)
+        {
+            //Given
+            var tutor = (UserDto)UserMockGetter.GetUserDtoMock(tutorMockId).Clone();
+            tutor.Id = _userRepo.AddUser(tutor);
+            _addedUserIdList.Add(tutor.Id);
+
+            var expected = new List<int>();
+            foreach (var groupMockId in groupToSaveMockIds)
+            {
+                var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+                group.Course = _courseDtoMock;
+                group.Id = _groupRepo.AddGroup(group);
+                _groupIdList.Add(group.Id);
+                expected.Add(group.Id);
+                var result = _groupRepo.AddTutorToGroup(tutor.Id, group.Id);
+                _addedTutorToGroupIdList.Add((tutor.Id, group.Id));
+            }
+
+            var groupToDeleteIds = new List<int>();
+            foreach (var groupMockId in groupToDeleteMockIds)
+            {
+                var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+                group.Course = _courseDtoMock;
+                group.Id = _groupRepo.AddGroup(group);
+                _groupIdList.Add(group.Id);
+            }
+            //When
+            foreach (var group in groupToDeleteIds)
+            {
+                var result = _groupRepo.DeleteTutorGroup(tutor.Id, group);
+                Assert.AreEqual(1, result);
+            }
+            var actual = _groupRepo.GetGroupsByTutorId(tutor.Id);
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+        [Test]
+        public void DeleteTutorGroupNegativeTestEntityNotExists()
+        {
+            //Given
+
+            //When
+            var result = _groupRepo.DeleteTutorGroup(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
+        [TearDown]
+        public void TearDown()
+        { 
+          DeleteThemeHomeworks();
+          DeleteLessonTheme();
+          DeleteThemeHomeworks();
+          DeteleTagHomeworks();
+          DeleteTutorGroup();
+          DeleteStudentGroups();
+          DeleteGroupMaterials();
+          DeleteTeacherGroups();
+          DeleteMaterials();
+          DeleteThemes();
+          DeleteHomeworks();
+          DeleteGroups();
+          DeleteCourse();
             DeleteUsers();
-    }
+        }
 
-    private void DeteleTagHomeworks()
-    {
-      foreach (var tagHomework in _tagHomeworkList)
-      {
-        _homeworkRepo.HomeworkTagDelete(tagHomework.Item1, tagHomework.Item2);
-      }
-    }
+        private void DeteleTagHomeworks()
+        {
+          foreach (var tagHomework in _tagHomeworkList)
+          {
+            _homeworkRepo.HomeworkTagDelete(tagHomework.Item1, tagHomework.Item2);
+          }
+        }
         private void DeleteUsers()
         {
             foreach (var user in _addedUserIdList)
