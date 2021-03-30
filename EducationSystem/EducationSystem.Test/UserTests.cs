@@ -16,7 +16,7 @@ namespace EducationSystem.Data.Tests
         private List<(int, int)> _addedUserRoleIds;
         private UserRepository _repository;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void UserRepositoryTestsSetup()
         {
             _addedUserDtoIds = new List<int>();
@@ -40,7 +40,7 @@ namespace EducationSystem.Data.Tests
         //  entity tests are below:
 
         [TestCase(1)]
-        public void UserGetUserByIdPositiveTest(int mockId)
+        public void GetUserByIdPositiveTest(int mockId)
         {
             //Given
             var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
@@ -58,7 +58,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2, 3 })]
-        public void UserGetUsersPositiveTest(int[] mockIds)
+        public void GetUsersPositiveTest(int[] mockIds)
         {
 
             //Given
@@ -334,18 +334,19 @@ namespace EducationSystem.Data.Tests
             _addedUserRoleIds.Add((addedEntityId, 2));
             _addedUserRoleIds.Add((addedEntityId, 3));
 
-            //When, Then
+            
             var deletedRows = _repository.DeleteRoleFromUser(addedEntityId, 4);
             Assert.AreEqual(0, deletedRows);
 
             expected.Id = addedEntityId;
             expected.Roles = new List<Role> { Role.Admin, Role.Student, Role.Teacher };
+            //When, Then
             var actual = _repository.GetUserById(addedEntityId);
             Assert.AreEqual(expected, actual);
             CollectionAssert.AreEqual(expected.Roles, actual.Roles);
         }
 
-        [TestCase(2)]
+        [TestCase(1)]
         public void UserUpdateEmptyNegativeTest(int mockId)
         {
 
@@ -353,7 +354,7 @@ namespace EducationSystem.Data.Tests
             var userDto = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
             userDto.Id = _repository.AddUser(userDto);            
             _addedUserDtoIds.Add(userDto.Id);         
-            userDto = (UserDto)UserMockGetter.GetUserDtoMock(7).Clone();
+            userDto = new UserDto();
             //When, Then
             try
             {
@@ -386,6 +387,29 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
 
+        [TestCase(1)]
+        public void DeleteOrRecoverNoExistingUser(int mockId)
+        {
+            //Given
+            var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            var addedEntityId = _repository.AddUser(expected);           
+            //When, Then
+            var deletedID = _repository.DeleteOrRecoverUser(-1, true);               
+            Assert.AreEqual(0, deletedID);
+        }
+
+        [TestCase(1)]
+        public void GetUserByIdNegativeTest(int mockId)
+        {
+            //Given
+            var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
+            var addedEntityId = _repository.AddUser(expected);        
+            _addedUserDtoIds.Add(addedEntityId);        
+            expected.Id = addedEntityId;
+            //When, Then       
+            var actual = _repository.GetUserById(-1);
+            Assert.AreEqual(null, actual);        
+        }
         [TearDown]
         public void UserTestTearDown()
         {
