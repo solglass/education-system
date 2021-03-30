@@ -281,6 +281,7 @@
     <Build Include="StoredProcedures\Notification\dbo.Notification_ReadOrUnread.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectStudentsByGroupId.sql" />
     <Build Include="StoredProcedures\Comment\dbo.Comment_Search.sql" />
+    <Build Include="StoredProcedures\Group\Group_HardDelete.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
