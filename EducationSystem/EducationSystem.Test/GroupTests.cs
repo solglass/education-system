@@ -41,9 +41,11 @@ namespace EducationSystem.Data.Tests
         private CourseDto _courseDtoMock;
         private GroupDto _groupDtoMock;
 
+        private List<int> _groupsId;
+        private GroupRepository gRepo;
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        [SetUp]
+        public void SetUp()
         {
             _groupRepo = new GroupRepository(_options);
             _homeworkRepo = new HomeworkRepository(_options);
@@ -76,8 +78,7 @@ namespace EducationSystem.Data.Tests
             _courseIdList.Add(_courseDtoMock.Id);
         }
 
-        private List<int> _groupsId;
-        private GroupRepository gRepo;
+        
 
         [TestCase(1)]
         public void GroupAddPositiveTest(int mockId)
@@ -466,7 +467,45 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expectedGroups, actual);
         }
 
-        [TearDown]
+        [TestCase(new int[] { 1,2,3 }, new int[] { 3,4},1)]
+        public void AddTeacherGroupPositiveTest(int[] groupWithTeacherMockIds, int[] groupWithoutTeacherMockIds, int userMockId)
+        {
+            //Given
+            var teacher = (UserDto)UserMockGetter.GetUserDtoMock(userMockId).Clone();
+            teacher.Id = _userRepo.AddUser(teacher);
+            _addedUserIdList.Add(teacher.Id);
+
+            var expected = new List<int>();
+            foreach (var groupMockId in groupWithTeacherMockIds)
+            {
+                var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+                group.Course = _courseDtoMock;
+                group.Id = _groupRepo.AddGroup(group);
+                _groupIdList.Add(group.Id);
+                expected.Add(group.Id);
+            }
+
+            foreach (var groupMockId in groupWithoutTeacherMockIds)
+            {
+                var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+                group.Course = _courseDtoMock;
+                group.Id = _groupRepo.AddGroup(group);
+                _groupIdList.Add(group.Id);
+            }
+            //When
+            foreach (var group in expected)
+            {
+                var result = _groupRepo.AddTeacherGroup(teacher.Id,group);
+                _addedTeacherToGroupIdList.Add((teacher.Id, group)); 
+            }
+            var actual = _groupRepo.GetGroupsByTeacherId(teacher.Id);
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+         
+
+    [TearDown]
     public void TearDown()
     { 
       DeleteThemeHomeworks();
@@ -482,6 +521,7 @@ namespace EducationSystem.Data.Tests
       DeleteHomeworks();
       DeleteGroups();
       DeleteCourse();
+            DeleteUsers();
     }
 
     private void DeteleTagHomeworks()
@@ -491,7 +531,13 @@ namespace EducationSystem.Data.Tests
         _homeworkRepo.HomeworkTagDelete(tagHomework.Item1, tagHomework.Item2);
       }
     }
-
+        private void DeleteUsers()
+        {
+            foreach (var user in _addedUserIdList)
+            {
+                _userRepo.HardDeleteUser(user);
+            }
+        }
     private void DeleteThemeHomeworks()
     {
       foreach (var theneHomeworkPair in _themeHomeworkList)

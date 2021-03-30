@@ -8,7 +8,7 @@ namespace EducationSystem.Data
         int AddGroup(GroupDto groupDto);
         int AddGroup_Material(int groupId, int materialId);
         int AddStudentGroup(StudentGroupDto studentGroup);
-        int AddTeacherGroup(int groupId,int teacherId);
+        int AddTeacherGroup(int teacherId,int groupId);
         int AddTutorToGroup(int userId,int groupId);
         int DeleteGroup(int id);
         int DeleteGroup_Material(int groupId, int materialId);

@@ -31,12 +31,10 @@ namespace EducationSystem.Data.Models
 
             GroupDto groupDto = (GroupDto)obj;
 
-            if (groupDto.Id != Id ||
-                groupDto.GroupStatus != GroupStatus)
-            {
-                return false;
-            }
-            return true;
+            return (groupDto.Id == Id &&
+                groupDto.GroupStatus == GroupStatus
+                && groupDto.StartDate.Equals(StartDate));
+           
         }
 
         public override int GetHashCode()
