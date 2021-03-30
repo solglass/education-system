@@ -1,4 +1,4 @@
-﻿create procedure [dbo].[Lesson_AddTheme]
+﻿create procedure [dbo].[Lesson_Theme_Add]
 @lessonId int,
 @themeId int
 as

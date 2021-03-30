@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[dbo.Lesson_DeleteTheme]
+﻿CREATE PROCEDURE [dbo].[Lesson_Theme_Delete]
 	@lessonId int,
 	@themeId int
 as
