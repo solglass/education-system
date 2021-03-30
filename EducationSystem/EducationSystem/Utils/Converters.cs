@@ -7,12 +7,20 @@ namespace EducationSystem.API.Utils
     {
         private const string _dateFormat = "dd.MM.yyyy";
         private const string _inputOutputPeriodDateFormat = "MMM yyyy";   // янв 2021, мар 2020
+        private const string _dateWithTimeFormat = "dd.MM.yyyy H:mm:ss";
         private const string _periodDateFormat = "yyyy.MM";
 
         public static DateTime StrToDateTime(string strDate)
         {
             var date = DateTime
                 .ParseExact(strDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
+            return date;
+        }
+
+        public static DateTime StrToDateTimeWithTime(string strDate)
+        {
+            var date = DateTime
+                .ParseExact(strDate, _dateWithTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
             return date;
         }
 
