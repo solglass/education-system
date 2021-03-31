@@ -272,7 +272,7 @@
     <Build Include="Tables\dbo.Course_Material.sql" />
     <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Delete.sql" />
     <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Add_.sql" />
-    <Build Include="Tables\Notification.sql" />
+    <Build Include="Tables\dbo.Notification.sql" />
     <Build Include="StoredProcedures\Notification\dbo.Notification_Add.sql" />
     <Build Include="StoredProcedures\Notification\dbo.Notification_Update.sql" />
     <Build Include="StoredProcedures\Notification\dbo.Notification_Delete.sql" />
