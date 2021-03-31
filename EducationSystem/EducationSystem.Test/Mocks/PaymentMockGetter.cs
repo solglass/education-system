@@ -1,10 +1,10 @@
 ﻿using EducationSystem.Data.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
+    [ExcludeFromCodeCoverage]
     public static class PaymentMockGetter
     {
         public static PaymentDto GetPaymentDtoMock(int mockId)

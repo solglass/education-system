@@ -172,7 +172,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPut("{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
-        public ActionResult<UserOutputModel> UpdateUserInfo(int userId, [FromBody] UserInputModel inputModel)
+        public ActionResult<UserOutputModel> UpdateUserInfo(int userId, [FromBody] UpdateUserInputModel inputModel)
         {
             if (!ModelState.IsValid)
             {
