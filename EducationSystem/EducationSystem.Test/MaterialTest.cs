@@ -89,9 +89,9 @@ namespace EducationSystem.Data.Tests
                 expected.Add(dto);
 
                 _tagRepository.MaterialTagAdd(dto.Id, dtoTag.Id);
-                _tagRepository.MaterialTagAdd(dto.Id, dtoOtherTag.Id);
-
                 _addedMaterialTagIds.Add((dto.Id, dtoTag.Id));
+
+                _tagRepository.MaterialTagAdd(dto.Id, dtoOtherTag.Id);
                 _addedMaterialTagIds.Add((dto.Id, dtoOtherTag.Id));
             }
 
@@ -115,9 +115,9 @@ namespace EducationSystem.Data.Tests
                 expected.Add(dto);
 
                 _groupRepository.AddGroup_Material(dtoGroup.Id, dto.Id);
-                _groupRepository.AddGroup_Material(dtoOtherGroup.Id, dto.Id);
-
                 _addedMaterialGroupIds.Add((dtoGroup.Id, dto.Id));
+
+                _groupRepository.AddGroup_Material(dtoOtherGroup.Id, dto.Id);
                 _addedMaterialGroupIds.Add((dtoOtherGroup.Id, dto.Id));
             }
 
@@ -199,6 +199,7 @@ namespace EducationSystem.Data.Tests
             try
             {
                 _tagRepository.MaterialTagAdd(-1, tagDto.Id);
+                _addedMaterialTagIds.Add((-1, tagDto.Id));
             }
             //Then
             catch
@@ -217,6 +218,7 @@ namespace EducationSystem.Data.Tests
             try
             {
                 _tagRepository.MaterialTagAdd(materialDto.Id, -1);
+                _addedMaterialTagIds.Add((materialDto.Id, -1));
             }
             //Then
             catch
@@ -231,13 +233,13 @@ namespace EducationSystem.Data.Tests
         {
             try
             {
-                    var materialDto = AddMaterial(1);
-                    var tagDto = AddTag(1);
+                var materialDto = AddMaterial(1);
+                var tagDto = AddTag(1);
 
-                    _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
-                    _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
-                    _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
-                    _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+                _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+                _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
             }
             catch
             {
@@ -330,17 +332,6 @@ namespace EducationSystem.Data.Tests
         }
         [TearDown]
         public void MaterialTearDown()
-        {
-            DeleteMaterialGroups();
-            DeleteMaterialTags();
-            DeleteMaterials();
-            DeleteTags();
-            DeleteGroups();
-            DeleteCourses();
-        }
-
-        [TearDown]
-        public void MaterialOneTimeTearDown()
         {
             DeleteMaterialGroups();
             DeleteMaterialTags();
