@@ -18,6 +18,6 @@ namespace EducationSystem.Data
         int HardDeleteUser(int id);
         int UpdateUser(UserDto user);
         int DeleteOrRecoverUser(int id, bool isDeleted);
-
+        public List<UserDto> GetStudentsByGroupId(int groupId);
     }
 }

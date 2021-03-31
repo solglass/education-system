@@ -16,8 +16,8 @@ namespace EducationSystem.Business
         UserDto GetUserById(int id);
         PaymentDto GetPaymentById(int id);
         List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId);
-        List<UserDto> GetUsers();
-        List<UserDto> GetStudentsNotPaidInMonth(string period);
+        List<UserDto> GetUsers();
+        List<UserDto> GetListOfStudentsByPeriodWhoHaveNotPaid(string period);
         List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo);
         List<PaymentDto> GetPaymentsByUserId(int id);      
     }
