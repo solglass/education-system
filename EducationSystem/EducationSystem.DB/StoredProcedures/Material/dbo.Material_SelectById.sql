@@ -1,4 +1,4 @@
-create proc dbo.Material_SelectById (
+create proc [dbo].[Material_SelectById] (
 	@id int
 ) as
 begin
