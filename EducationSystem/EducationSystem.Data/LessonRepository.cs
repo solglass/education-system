@@ -151,7 +151,7 @@ namespace EducationSystem.Data
                 new
                 {
                     UserId = feedbackDto.User.Id,
-                    feedbackDto.Message,
+                    Message = feedbackDto.Message,
                     LessonId = feedbackDto.Lesson.Id,
                     UnderstandingLevelId = (int)feedbackDto.UnderstandingLevel
                 },
@@ -162,7 +162,11 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Feedback_Update",
-                new { feedbackDto.Id, feedbackDto.Message, feedbackDto.UnderstandingLevel },
+                new {
+                    Id = feedbackDto.Id,
+                    Message = feedbackDto.Message, 
+                    UnderstandingLevelId = (int)feedbackDto.UnderstandingLevel
+                },
                 commandType: CommandType.StoredProcedure);
         }
 
