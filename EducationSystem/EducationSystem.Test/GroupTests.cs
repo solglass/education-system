@@ -1,13 +1,14 @@
 ﻿using NUnit.Framework;
 using System;
 using EducationSystem.Data.Models;
-using EducationSystem.Data;
 using System.Collections.Generic;
 using EducationSystem.Core.Enums;
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class GroupTests
     {
         private List<int> _groupsId;

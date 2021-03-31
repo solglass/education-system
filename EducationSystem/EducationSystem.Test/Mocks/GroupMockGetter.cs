@@ -1,9 +1,11 @@
 ﻿using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
+    [ExcludeFromCodeCoverage]
     public static class GroupMockGetter
     {
         public static GroupDto GetGroupDtoMock(int id)

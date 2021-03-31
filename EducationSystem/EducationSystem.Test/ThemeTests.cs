@@ -3,13 +3,13 @@ using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class ThemeTests : BaseTest
     {
-
         private ICourseRepository _courseRepo;
         private IGroupRepository _groupRepo;
         private ILessonRepository _lessonRepo;

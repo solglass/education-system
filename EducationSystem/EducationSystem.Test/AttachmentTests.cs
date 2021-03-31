@@ -3,9 +3,11 @@ using EducationSystem.Data.Models;
 using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class AttachmentTests : BaseTest
     {
         private IAttachmentRepository _attachmentRepo;
