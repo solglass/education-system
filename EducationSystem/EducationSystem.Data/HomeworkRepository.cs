@@ -185,7 +185,6 @@ namespace EducationSystem.Data
 
         public HomeworkAttemptDto GetHomeworkAttemptById(int id)
         {
-            //var commentDictionary = new Dictionary<int, CommentDto>();
             var hwAttemptEntry = new HomeworkAttemptDto();
             var hwAttempt = _connection
                 .Query<HomeworkAttemptDto, UserDto, HomeworkDto, int, HomeworkAttemptDto>(
@@ -304,9 +303,9 @@ namespace EducationSystem.Data
             var commentDictionary = new Dictionary<int, CommentDto>();
             var attachmentDictionary = new Dictionary<int, AttachmentDto>();
 
-            _connection.Query<CommentDto, UserDto, AttachmentDto, CommentDto>(
+            _connection.Query<CommentDto, UserDto, AttachmentDto, int, CommentDto>(
                     "dbo.Comment_Search",
-                    (comment, user, attachment) =>
+                    (comment, user, attachment, attachmentType) =>
                     {
                         if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
                         {
@@ -322,6 +321,7 @@ namespace EducationSystem.Data
                             if (!attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
                             {
                                 attachmentEntry = attachment;
+                                attachmentEntry.AttachmentType = (AttachmentType)attachmentType;
                                 commentEntry.Attachments.Add(attachmentEntry);
                                 attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
                             }

@@ -31,7 +31,8 @@ namespace EducationSystem.Data.Models
                 return false;
             AttachmentDto attDto = (AttachmentDto)obj;
             return 
-                (attDto.Description == Description 
+                (attDto.Id == Id 
+                && attDto.Description == Description 
                 && attDto.Path == Path 
                 && attDto.AttachmentType.Equals(AttachmentType));
         }

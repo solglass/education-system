@@ -24,7 +24,7 @@ namespace EducationSystem.Data.Tests
         private List<int> _homeworkIdList;
         private List<int> _homeworkAttemptIdList;
 
-        private UserDto _userDtoMock;
+        private UserDto userDtoMock;
         private CourseDto _courseDtoMock;
         private GroupDto _groupDtoMock;
         private HomeworkDto _homeworkDtoMock;
@@ -59,10 +59,10 @@ namespace EducationSystem.Data.Tests
             _groupIdList.Add(addedGroupId);
             _groupDtoMock.Id = addedGroupId;
 
-            _userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(3).Clone();
-            var addedUserId = _userRepo.AddUser(_userDtoMock);
+            userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(3).Clone();
+            var addedUserId = _userRepo.AddUser(userDtoMock);
             _userIdList.Add(addedUserId);
-            _userDtoMock.Id = addedUserId;
+            userDtoMock.Id = addedUserId;
 
             _homeworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
             _homeworkDtoMock.Group = _groupDtoMock; 
@@ -71,7 +71,7 @@ namespace EducationSystem.Data.Tests
             _homeworkDtoMock.Id = addedhomeworkId;
 
             _homeworkAttemptDtoMock = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
-            _homeworkAttemptDtoMock.Author = _userDtoMock;
+            _homeworkAttemptDtoMock.Author = userDtoMock;
             _homeworkAttemptDtoMock.Homework = _homeworkDtoMock;
             var addedhomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(_homeworkAttemptDtoMock);
             _homeworkAttemptIdList.Add(addedhomeworkAttemptId);
@@ -83,7 +83,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
-            dto.Author = _userDtoMock;
+            dto.Author = userDtoMock;
             dto.HomeworkAttempt = _homeworkAttemptDtoMock;
 
             var addedCommentId = _homeworkRepo.AddComment(dto);
@@ -103,7 +103,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
-            dto.Author = _userDtoMock;
+            dto.Author = userDtoMock;
             dto.HomeworkAttempt = _homeworkAttemptDtoMock;
 
             var addedCommentId = _homeworkRepo.AddComment(dto);
@@ -131,7 +131,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
-            dto.Author = _userDtoMock;
+            dto.Author = userDtoMock;
             dto.HomeworkAttempt = _homeworkAttemptDtoMock;
 
             var addedCommentId = _homeworkRepo.AddComment(dto);
@@ -150,77 +150,107 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
 
         }
-        [TestCase(new int[] { 1 })]
+        [TestCase(new int[] { 1, 2 })]
         public void SearchCommentsByHomeworkAttemptIdPositiveTest(int[] mockIds)
         {
             //Given
-
             var expected = new List<CommentDto>();
             for (int i = 0; i < mockIds.Length; i++)
             {
-                var attachmentDto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockIds[i]).Clone();
-                var addedAttachmentId = _attachmentRepo.AddAttachment(attachmentDto);
-                _attachmentIdList.Add(addedAttachmentId);
-
                 var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockIds[i]).Clone();
-                dto.Author = _userDtoMock;
+                dto.Author = userDtoMock;
                 dto.HomeworkAttempt = _homeworkAttemptDtoMock;
                 dto.Attachments = new List<AttachmentDto>();
-                dto.Attachments.Add(attachmentDto);
 
                 var addedCommentId = _homeworkRepo.AddComment(dto);
                 _commentIdList.Add(addedCommentId);
                 dto.Id = addedCommentId;
 
-                _attachmentRepo.AddAttachmentToComment(addedCommentId, addedAttachmentId);
-                _commentAttachmentIdList.Add((addedCommentId, addedAttachmentId));
+                for (int j = 0; j < mockIds.Length; j++)
+                {
+                    var attachmentDto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockIds[j]).Clone();
+                    var addedAttachmentId = _attachmentRepo.AddAttachment(attachmentDto);
+                    _attachmentIdList.Add(addedAttachmentId);
+                    attachmentDto.Id = addedAttachmentId;
+                    dto.Attachments.Add(attachmentDto);
 
+                    _attachmentRepo.AddAttachmentToComment(addedCommentId, addedAttachmentId);
+                    _commentAttachmentIdList.Add((addedCommentId, addedAttachmentId));
+                }           
                 expected.Add(dto);
             }
+            //When
             var actual = _homeworkRepo.SearchComments(_homeworkAttemptDtoMock.Id, null);
 
             //Then
-            CollectionAssert.AreEqual(expected, actual);
+            for (var i = 0; i < actual.Count; i++)
+            {
+                Assert.IsTrue(CustomCompare(expected[i], actual[i]));
+            }
         }
-        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { 1, 2})]
         public void SearchCommentsByHomeworkIdPositiveTest(int[] mockIds)
         {
             //Given
-            //var groupDto = _groupDtoMock;
-            //var addedGroupId = _groupRepo.AddGroup(groupDto);
-            //_groupIdList.Add(addedGroupId);
-            //groupDto.Id = addedGroupId;
+            var expected = new List<CommentDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockIds[i]).Clone();
 
-            //var expected = new List<HomeworkDto>();
-            //for (int i = 0; i < mockIds.Length; i++)
-            //{
-            //    var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
-            //    dto.Group = groupDto;
-            //    var addedHomeworkId = _homeworkRepo.AddHomework(dto);
-            //    _homeworkIdList.Add(addedHomeworkId);
-            //    dto.Id = addedHomeworkId;
-            //    expected.Add(dto);
-            //}
+                var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(mockIds[i]).Clone();
+                var addedUserId = _userRepo.AddUser(userDtoMock);
+                _userIdList.Add(addedUserId);
+                userDtoMock.Id = addedUserId;
 
-            //var secondGroupDto = _groupDtoMock;
-            //var secondAddedGroupId = _groupRepo.AddGroup(secondGroupDto);
-            //_groupIdList.Add(secondAddedGroupId);
-            //secondGroupDto.Id = secondAddedGroupId;
+                var homeworkAttemptDtoMock = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[i]).Clone();
+                homeworkAttemptDtoMock.Author = userDtoMock;
+                homeworkAttemptDtoMock.Homework = _homeworkDtoMock;
+                var addedhomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(homeworkAttemptDtoMock);
+                _homeworkAttemptIdList.Add(addedhomeworkAttemptId);
+                homeworkAttemptDtoMock.Id = addedhomeworkAttemptId;
 
-            //for (int i = 0; i < mockIds.Length; i++)
-            //{
-            //    var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
-            //    dto.Group = secondGroupDto;
-            //    var addedHomeworkId = _homeworkRepo.AddHomework(dto);
-            //    _homeworkIdList.Add(addedHomeworkId);
-            //    dto.Id = addedHomeworkId;
-            //}
+                dto.Author = userDtoMock;
+                dto.HomeworkAttempt = homeworkAttemptDtoMock;
+                dto.Attachments = new List<AttachmentDto>();
 
+                var addedCommentId = _homeworkRepo.AddComment(dto);
+                _commentIdList.Add(addedCommentId);
+                dto.Id = addedCommentId;
+
+                for (int j = 0; j < mockIds.Length; j++)
+                {
+                    var attachmentDto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockIds[j]).Clone();
+                    var addedAttachmentId = _attachmentRepo.AddAttachment(attachmentDto);
+                    _attachmentIdList.Add(addedAttachmentId);
+                    attachmentDto.Id = addedAttachmentId;
+                    dto.Attachments.Add(attachmentDto);
+
+                    _attachmentRepo.AddAttachmentToComment(addedCommentId, addedAttachmentId);
+                    _commentAttachmentIdList.Add((addedCommentId, addedAttachmentId));
+                }
+                expected.Add(dto);
+            }
             //When
-            //var actual = _homeworkRepo.SearchHomeworks(addedGroupId, null, null);
+            var actual = _homeworkRepo.SearchComments(null, _homeworkDtoMock.Id);
 
             //Then
-            CollectionAssert.AreEqual(expected, actual);
+            for (var i = 0; i < actual.Count; i++)
+            {
+                Assert.IsTrue(CustomCompare(expected[i], actual[i]));
+            }
+        }
+        private bool CustomCompare(CommentDto expected, CommentDto actual)
+        {
+            bool isEqual = true;
+            for (int i = 0; i < actual.Attachments.Count; i++)
+            {
+                if (!expected.Attachments[i].Equals(actual.Attachments[i])) isEqual = false;
+            }
+            return isEqual && expected.Id == actual.Id
+                && expected.Message == actual.Message
+                && expected.Author.Id == actual.Author.Id
+                && expected.Author.FirstName == actual.Author.FirstName
+                && expected.Author.LastName == actual.Author.LastName;
         }
         [TearDown]
         public void TearDownTest()
