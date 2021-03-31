@@ -278,7 +278,7 @@
     <Build Include="StoredProcedures\Notification\dbo.Notification_Delete.sql" />
     <Build Include="StoredProcedures\Notification\dbo.Notification_SelectById.sql" />
     <Build Include="StoredProcedures\Notification\dbo.Notification_SelectByUserId.sql" />
-    <Build Include="StoredProcedures\Notification\dbo.Notification_ReadOrUnread.sql" />
+    <Build Include="StoredProcedures\Notification\dbo.Notification_SetSeenStatus.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectStudentsByGroupId.sql" />
   </ItemGroup>
   <ItemGroup>
