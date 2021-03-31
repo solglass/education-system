@@ -1,12 +1,11 @@
 ﻿using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
-   public static class AttachmentMockGetter
+    [ExcludeFromCodeCoverage]
+    public static class AttachmentMockGetter
     {
         public static AttachmentDto GetAttachmentDtoMock(int id)
         {

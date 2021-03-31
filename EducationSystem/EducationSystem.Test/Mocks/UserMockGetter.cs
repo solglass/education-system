@@ -1,11 +1,11 @@
 ﻿using EducationSystem.Data.Models;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
+    [ExcludeFromCodeCoverage]
     public static class UserMockGetter
     {
         public static UserDto GetUserDtoMock(int mockId)
