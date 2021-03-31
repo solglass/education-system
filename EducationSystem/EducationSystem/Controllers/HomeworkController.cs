@@ -805,7 +805,7 @@ namespace EducationSystem.API.Controllers
 
             var requsterGroups = this.SupplyUserGroupsList(_groupService);
             var userGroups = _groupService.GetGroupsByStudentId(userId);
-            if (userGroups.Intersect(requsterGroups).Count() == 0)
+            if (!User.IsInRole("Администратор") && userGroups.Intersect(requsterGroups).Count() == 0)
                 return Forbid($"User is not in group of requester");
 
             var homeworkAttempts = _homeworkService.GetHomeworkAttemptsByUserId(userId);

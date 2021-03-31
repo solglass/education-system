@@ -17,6 +17,7 @@ namespace EducationSystem.API
     public class AutomapperConfig : Profile
     {
         private const string _dateFormat = "dd.MM.yyyy";
+        private const string _dateFormatWithTime = "dd.MM.yyyy H:mm:ss";
         public AutomapperConfig()
         {
             CreateMap<UserInputModel, UserDto>()
@@ -28,9 +29,12 @@ namespace EducationSystem.API
             CreateMap<UserDto, UserOutputExtendedModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
 
-            CreateMap<PaymentInputModel, PaymentDto>();
+            CreateMap<PaymentInputModel, PaymentDto>()
+                .ForMember(dest => dest.Period, opts => opts.MapFrom(src => Converters.StrToDateTimePeriod(src.Period)))
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => Converters.StrToDateTime(src.Date)));
             CreateMap<PaymentDto, PaymentOutputModel>()
-                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)))
+                .ForMember(dest => dest.Period, opts => opts.MapFrom(src => Converters.StrToStrOutputPeriod(src.Period)));
 
             CreateMap<AttendanceInputModel, AttendanceDto>()
                 .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto() { Id = src.UserId }));
@@ -139,6 +143,11 @@ namespace EducationSystem.API
 
             CreateMap<MaterialInputModel, MaterialDto>();
             CreateMap<MaterialDto, MaterialOutputModel>();
+
+            CreateMap<NotificationInputModel, NotificationDto>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => (src.Date == null) ? DateTime.Now : Converters.StrToDateTimeWithTime(src.Date)));
+            CreateMap<NotificationDto, NotificationOutputModel>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormatWithTime)));
         }
     }
 }
