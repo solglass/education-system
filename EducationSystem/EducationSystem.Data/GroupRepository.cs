@@ -266,7 +266,10 @@ namespace EducationSystem.Data
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 return connection
-                    .QuerySingleOrDefault<StudentGroupDto>("dbo.Student_Group_SelectById", new { id }, commandType: System.Data.CommandType.StoredProcedure);
+                    .QuerySingleOrDefault<StudentGroupDto>
+                    ("dbo.Student_Group_SelectById", 
+                    new { id },
+                    commandType: System.Data.CommandType.StoredProcedure);
             }
 
         }

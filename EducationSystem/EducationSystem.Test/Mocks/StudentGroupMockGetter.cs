@@ -24,6 +24,24 @@ namespace EducationSystem.Data.Tests.Mocks
                     ContractNumber = 11,
                     Group = GroupMockGetter.GetGroupDtoMock(2)
                 },
+                3 => new StudentGroupDto()
+                {
+                    User = UserMockGetter.GetUserDtoMock(2),
+                    ContractNumber = 93,
+                    Group = GroupMockGetter.GetGroupDtoMock(1)
+                },
+                4 => new StudentGroupDto()
+                {
+                    User = UserMockGetter.GetUserDtoMock(3),
+                    ContractNumber = 15,
+                    Group = GroupMockGetter.GetGroupDtoMock(2)
+                },
+                5 => new StudentGroupDto()
+                {
+                    User = UserMockGetter.GetUserDtoMock(4),
+                    ContractNumber = 21,
+                    Group = GroupMockGetter.GetGroupDtoMock(2)
+                },
                 _ => throw new NotImplementedException()
             };
             return studentGroupDto;
