@@ -138,8 +138,8 @@ namespace EducationSystem.Data.Tests
             {
                 Id = addedHomeworkId,
                 Description = "Homework Updated Test",
-                StartDate = DateTime.Now.AddDays(1),
-                DeadlineDate = DateTime.Now.AddDays(2),
+                StartDate = dto.StartDate.AddDays(2),
+                DeadlineDate = dto.DeadlineDate.AddDays(2),
                 IsOptional = false,
                 Group = new GroupDto
                 {
