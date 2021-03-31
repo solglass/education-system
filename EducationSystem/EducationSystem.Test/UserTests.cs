@@ -1,15 +1,16 @@
-  using NUnit.Framework;
+using NUnit.Framework;
 using System;
 using EducationSystem.Data.Models;
-using EducationSystem.Data;
 using System.Collections.Generic;
 using System.Globalization;
 using EducationSystem.Data.Tests.Mocks;
 using EducationSystem.Core.Enums;
 using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class UserTests : BaseTest
     {
         private List<int> _addedUserDtoIds;

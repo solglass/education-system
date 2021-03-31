@@ -3,10 +3,11 @@ using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     class LessonTests : BaseTest
     {
         private ILessonRepository _lessonRepository;
