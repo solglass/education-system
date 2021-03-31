@@ -17,10 +17,7 @@ namespace EducationSystem.API.Models.InputModels
         public string LastName { get; set; }
         [CustomDateTimeValidation]
         [Required]
-        public string BirthDate { get; set; }
-        [Required]
-        [StringLength(50)]
-        public string Login { get; set; }            
+        public string BirthDate { get; set; }               
         [Required]
         [StringLength(20)]
         public string Phone { get; set; }
@@ -30,7 +27,6 @@ namespace EducationSystem.API.Models.InputModels
         [Required]
         [EmailAddress]
         [StringLength(60)]
-        public string Email { get; set; }
-        public List<int> RoleIds { get; set; }
+        public string Email { get; set; }       
     }
 }
