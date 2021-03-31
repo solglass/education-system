@@ -653,7 +653,6 @@ namespace EducationSystem.Data.Tests
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
-
         }
 
         [TestCase(new int[] { 1, 2, 3 })]

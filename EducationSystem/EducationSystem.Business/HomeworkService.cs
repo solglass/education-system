@@ -87,7 +87,7 @@ namespace EducationSystem.Business
 
         public List<CommentDto> GetCommentsByHomeworkAttemptId(int homeworkAttamptId)
         {
-            return _homeworkRepository.SearchComments(null, homeworkAttamptId);
+            return _homeworkRepository.SearchComments(homeworkAttamptId, null);
         }
         public List<CommentDto> GetCommentsByHomeworkId(int homeworkId)
         {

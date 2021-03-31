@@ -18,5 +18,5 @@ begin
 		left join [dbo].[Attachment] a on ca.AttachmentId = a.Id 
 		where c.IsDeleted = 0 and
 		(@homeworkAttemptId is not null and ha.Id = @homeworkAttemptId or @homeworkAttemptId is null) and 
-		(@homeworkId is not null and ha.HomeworkId = homeworkId or homeworkId is null)
+		(@homeworkId is not null and ha.HomeworkId = @homeworkId or @homeworkId is null)
 end

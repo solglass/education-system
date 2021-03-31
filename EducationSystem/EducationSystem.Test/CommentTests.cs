@@ -13,7 +13,10 @@ namespace EducationSystem.Data.Tests
         private IUserRepository _userRepo;
         private IGroupRepository _groupRepo;
         private ICourseRepository _courseRepo;
+        private IAttachmentRepository _attachmentRepo;
 
+        private List<(int, int)> _commentAttachmentIdList;
+        private List<int> _attachmentIdList;
         private List<int> _commentIdList;
         private List<int> _groupIdList;
         private List<int> _courseIdList;
@@ -30,11 +33,14 @@ namespace EducationSystem.Data.Tests
         [SetUp]
         public void SetUpTest()
         {
+            _attachmentRepo = new AttachmentRepository(_options);
             _homeworkRepo = new HomeworkRepository(_options);
             _userRepo = new UserRepository(_options);
             _courseRepo = new CourseRepository(_options);
             _groupRepo = new GroupRepository(_options);
 
+            _commentAttachmentIdList = new List<(int,int)>();
+            _attachmentIdList = new List<int>();
             _commentIdList = new List<int>();
             _userIdList = new List<int>();
             _groupIdList = new List<int>();
@@ -144,43 +150,89 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
 
         }
-        [TestCase(new int[] { 1, 2, 3 })]
-        public void GetCommentsByHomeworkIdPositiveTest(int[] mockIds)
+        [TestCase(new int[] { 1 })]
+        public void SearchCommentsByHomeworkAttemptIdPositiveTest(int[] mockIds)
         {
-            // Given
+            //Given
+
             var expected = new List<CommentDto>();
-            for (var i = 0; i < mockIds.Length; i++)
+            for (int i = 0; i < mockIds.Length; i++)
             {
+                var attachmentDto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockIds[i]).Clone();
+                var addedAttachmentId = _attachmentRepo.AddAttachment(attachmentDto);
+                _attachmentIdList.Add(addedAttachmentId);
+
                 var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockIds[i]).Clone();
+                dto.Author = _userDtoMock;
+                dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+                dto.Attachments = new List<AttachmentDto>();
+                dto.Attachments.Add(attachmentDto);
+
                 var addedCommentId = _homeworkRepo.AddComment(dto);
                 _commentIdList.Add(addedCommentId);
                 dto.Id = addedCommentId;
+
+                _attachmentRepo.AddAttachmentToComment(addedCommentId, addedAttachmentId);
+                _commentAttachmentIdList.Add((addedCommentId, addedAttachmentId));
+
                 expected.Add(dto);
             }
+            var actual = _homeworkRepo.SearchComments(_homeworkAttemptDtoMock.Id, null);
 
-            // When
-            var actual = _homeworkRepo.SearchComments(null, _homeworkDtoMock.Id);
-
-            // Then''[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
-            // in simple case:
+            //Then
             CollectionAssert.AreEqual(expected, actual);
+        }
+        [TestCase(new int[] { 1, 2, 3 })]
+        public void SearchCommentsByHomeworkIdPositiveTest(int[] mockIds)
+        {
+            //Given
+            //var groupDto = _groupDtoMock;
+            //var addedGroupId = _groupRepo.AddGroup(groupDto);
+            //_groupIdList.Add(addedGroupId);
+            //groupDto.Id = addedGroupId;
 
-            // in worst case
-            for (var i = 0; i < actual.Count; i++)
-            {
-                //Assert.IsTrue(CustomCompare(expected[i], actual[i]));
-            }
+            //var expected = new List<HomeworkDto>();
+            //for (int i = 0; i < mockIds.Length; i++)
+            //{
+            //    var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
+            //    dto.Group = groupDto;
+            //    var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+            //    _homeworkIdList.Add(addedHomeworkId);
+            //    dto.Id = addedHomeworkId;
+            //    expected.Add(dto);
+            //}
+
+            //var secondGroupDto = _groupDtoMock;
+            //var secondAddedGroupId = _groupRepo.AddGroup(secondGroupDto);
+            //_groupIdList.Add(secondAddedGroupId);
+            //secondGroupDto.Id = secondAddedGroupId;
+
+            //for (int i = 0; i < mockIds.Length; i++)
+            //{
+            //    var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
+            //    dto.Group = secondGroupDto;
+            //    var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+            //    _homeworkIdList.Add(addedHomeworkId);
+            //    dto.Id = addedHomeworkId;
+            //}
+
+            //When
+            //var actual = _homeworkRepo.SearchHomeworks(addedGroupId, null, null);
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
         }
         [TearDown]
         public void TearDownTest()
         {
+            DeleteCommentAttachment();
+            DeleteAttachment();
             DeleteComment();
             DeleteHomeworkAttempt();
             DeleteHomework();
             DeleteUser();
             DeleteGroup();
             DeleteCourse();
-            
         }
 
         private void DeleteComment()
@@ -227,6 +279,20 @@ namespace EducationSystem.Data.Tests
             foreach (var homeworkAttempt in _homeworkAttemptIdList)
             {
                 _homeworkRepo.HardDeleteHomeworkAttempt(homeworkAttempt);
+            }
+        }
+        private void DeleteAttachment()
+        {
+            foreach (var attachment in _attachmentIdList)
+            {
+                _attachmentRepo.DeleteAttachmentById(attachment);
+            }
+        }
+        private void DeleteCommentAttachment()
+        {
+            foreach (var commentAttachmentPair in _commentAttachmentIdList)
+            {
+                _attachmentRepo.DeleteAttachmentFromComment(commentAttachmentPair.Item2, commentAttachmentPair.Item1);
             }
         }
     }

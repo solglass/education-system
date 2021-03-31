@@ -296,64 +296,50 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<CommentDto> SearchComments(int? homeworkAttamptId, int? homeworkId)
+        public List<CommentDto> SearchComments(int? homeworkAttemptId, int? homeworkId)
         {
-            //if (homeworkAttamptId == null && homeworkId == null)
-            //    throw new ArgumentNullException();
+            if (homeworkAttemptId == null && homeworkId == null)
+                throw new ArgumentNullException();
 
-            //var homeworkDictionary = new Dictionary<int, HomeworkDto>();
-            //var tagDictionary = new Dictionary<int, TagDto>();
-            //var themeDictionary = new Dictionary<int, ThemeDto>();
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
 
-            //_connection.Query<CommentDto, GroupDto, TagDto, ThemeDto, CommentDto>(
-            //        "dbo.Comment_Search",
-            //        (homework, group, tag, theme) =>
-            //        {
-            //            if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
-            //            {
-            //                homeworkEntry = homework;
-            //                homeworkEntry.Group = group;
-            //                homeworkEntry.Tags = new List<TagDto>();
-            //                homeworkEntry.Themes = new List<ThemeDto>();
-            //                homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
-            //                homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
-            //                tagDictionary.Clear();
-            //                themeDictionary.Clear();
-            //            }
+            _connection.Query<CommentDto, UserDto, AttachmentDto, CommentDto>(
+                    "dbo.Comment_Search",
+                    (comment, user, attachment) =>
+                    {
+                        if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
+                        {
+                            commentEntry = comment;
+                            commentEntry.Author = user;
+                            commentEntry.Attachments = new List<AttachmentDto>();
+                            commentDictionary.Add(commentEntry.Id, commentEntry);
+                            attachmentDictionary.Clear();
+                        }
 
-            //            if (theme != null)
-            //            {
-            //                if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-            //                {
-            //                    themeEntry = theme;
-            //                    homeworkEntry.Themes.Add(themeEntry);
-            //                    themeDictionary.Add(themeEntry.Id, themeEntry);
-            //                }
-            //            }
-            //            if (tag != null)
-            //            {
-            //                if (!tagDictionary.TryGetValue(tag.Id, out TagDto tagEntry))
-            //                {
-            //                    tagEntry = tag;
-            //                    tagDictionary.Add(tagEntry.Id, tagEntry);
-            //                    homeworkEntry.Tags.Add(tagEntry);
-            //                }
-            //            }
-            //            return homeworkEntry;
-            //        },
-            //        new
-            //        {
-            //            groupId = groupId,
-            //            themeId = themeId,
-            //            tagId = tagId
-            //        },
-            //        splitOn: "Id",
-            //        commandType: System.Data.CommandType.StoredProcedure)
-            //    .Distinct()
-            //    .ToList();
-            //var homework = new List<HomeworkDto>();
-            //homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
-            return null; /* homework;*/
+                        if (attachment != null)
+                        {
+                            if (!attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
+                            {
+                                attachmentEntry = attachment;
+                                commentEntry.Attachments.Add(attachmentEntry);
+                                attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
+                            }
+                        }
+                        return commentEntry;
+                    },
+                    new
+                    {
+                        homeworkAttemptId = homeworkAttemptId,
+                        homeworkId = homeworkId
+                    },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
+                .ToList();
+            var comment = new List<CommentDto>();
+            commentDictionary.AsList().ForEach(r => comment.Add(r.Value));
+            return comment;
         }
         public CommentDto GetCommentById(int id)
         {

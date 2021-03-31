@@ -486,6 +486,80 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
         /// <summary>
+        /// Delete comment
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>      
+        /// <param name="commentId">Comment Id</param>
+        /// <returns>Return deleted comment</returns>
+        //https://localhost:44365/api/homework/2/attempt/2/comment/2
+        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
+        public ActionResult<CommentOutputModel> DeleteComment(int homeworkId, int attemptId, int commentId)
+        {
+            var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
+            if (homeworkDto is null)
+                return NotFound($"Homework with id {homeworkId} is not found");
+
+            var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
+            if (attemptDto is null)
+                return NotFound($"Attempt with id {attemptId} is not found");
+
+            var commentDto = _homeworkService.GetCommentById(commentId);
+            if (commentDto is null)
+                return NotFound($"Comment with id {commentId} is not found");
+
+            var userGroup = this.SupplyUserGroupsList(_groupService);
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            {
+                return Forbid($"User is not in group {homeworkDto.Group.Id}");
+            }
+
+            var deletedRows = _homeworkService.DeleteComment(commentId);
+            var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
+            return Ok(result);
+        }
+        /// <summary>
+        /// Recover comment
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="attemptId">Attempt Id</param>      
+        /// <param name="commentId">Comment Id</param>
+        /// <returns>Return recovered comment</returns>
+        // https://localhost:44365/api/homework/2/attempt/2/comment/2/recovery
+        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPut("{homeworkId}/attempt/{attemptId}/comment/{commentId}/recovery")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
+        public ActionResult<CommentOutputModel> RecoverComment(int homeworkId, int attemptId, int commentId)
+        {
+            var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
+            if (homeworkDto is null)
+                return NotFound($"Homework with id {homeworkId} is not found");
+
+            var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
+            if (attemptDto is null)
+                return NotFound($"Attempt with id {attemptId} is not found");
+
+            var commentDto = _homeworkService.GetCommentById(commentId);
+            if (commentDto is null)
+                return NotFound($"Comment with id {commentId} is not found");
+
+            var userGroup = this.SupplyUserGroupsList(_groupService);
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            {
+                return Forbid($"User is not in group {homeworkDto.Group.Id}");
+            }
+
+            var recoveredRows = _homeworkService.RecoverComment(commentId);
+            var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
+            return Ok(result);
+        }
+        /// <summary>
         /// Get comment by Id
         /// </summary>
         /// <param name="homeworkId">Homework Id</param>
@@ -520,6 +594,75 @@ namespace EducationSystem.API.Controllers
 
             if (User.IsInRole("Студент") && attemptDto.Author.Id != Convert.ToInt32(User.FindFirst("id").Value))
                 return Forbid( $"User is not author attempt {attemptId}");
+
+            var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
+
+            return Ok(result);
+        }
+        /// <summary>
+        /// Get comment by HomeworkAttemptId
+        /// </summary>
+        /// <param name="attemptId">Attempt Id</param>      
+        /// <param name="commentId">Comment Id</param>
+        /// <returns>Return searchable comment</returns>
+        //https://localhost:44365/api/homework/2/attempt/2/comment/2
+        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("attempt/{attemptId}/comment/{commentId}")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
+        public ActionResult<CommentOutputModel> GetCommentsByHomeworkAttemptId(int attemptId, int commentId)
+        {
+            var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
+            if (attemptDto is null)
+                return NotFound($"Attempt with id {attemptId} is not found");
+
+            var homeworkDto = _homeworkService.GetHomeworkById(attemptDto.Homework.Id);
+
+            var commentDto = _homeworkService.GetCommentById(commentId);
+            if (commentDto is null)
+                return NotFound($"Comment with id {commentId} is not found");
+
+            var userGroup = this.SupplyUserGroupsList(_groupService);
+            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !userGroup.Contains(homeworkDto.Group.Id))
+            {
+                return Forbid($"User is not in group {homeworkDto.Group.Id}");
+            }
+
+            if (User.IsInRole("Студент") && attemptDto.Author.Id != Convert.ToInt32(User.FindFirst("id").Value))
+                return Forbid($"User is not author attempt {attemptId}");
+
+            var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
+
+            return Ok(result);
+        }
+        /// <summary>
+        /// Get comment by HomeworkId
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>   
+        /// <param name="commentId">Comment Id</param>
+        /// <returns>Return searchable comment</returns>
+        //https://localhost:44365/api/homework/2/attempt/2/comment/2
+        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("{homeworkId}/comment/{commentId}")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
+        public ActionResult<CommentOutputModel> GetCommentsByHomeworkId(int homeworkId, int commentId)
+        {
+            var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
+            if (homeworkDto is null)
+                return NotFound($"Homework with id {homeworkId} is not found");
+
+            var commentDto = _homeworkService.GetCommentById(commentId);
+            if (commentDto is null)
+                return NotFound($"Comment with id {commentId} is not found");
+
+            var userGroup = this.SupplyUserGroupsList(_groupService);
+            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !userGroup.Contains(homeworkDto.Group.Id))
+            {
+                return Forbid($"User is not in group {homeworkDto.Group.Id}");
+            }
 
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
 
@@ -613,80 +756,6 @@ namespace EducationSystem.API.Controllers
             var recoveredRows = _homeworkService.RecoverHomeworkAttempt(attemptId);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
 
-            return Ok(result);
-        }
-        /// <summary>
-        /// Delete comment
-        /// </summary>
-        /// <param name="homeworkId">Homework Id</param>
-        /// <param name="attemptId">Attempt Id</param>      
-        /// <param name="commentId">Comment Id</param>
-        /// <returns>Return deleted comment</returns>
-        //https://localhost:44365/api/homework/2/attempt/2/comment/2
-        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpDelete("{homeworkId}/attempt/{attemptId}/comment/{commentId}")]
-        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
-        public ActionResult<CommentOutputModel> DeleteComment(int homeworkId, int attemptId, int commentId)
-        {
-            var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
-            if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
-
-            var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
-            if (attemptDto is null)
-                return NotFound( $"Attempt with id {attemptId} is not found");
-
-            var commentDto = _homeworkService.GetCommentById(commentId);
-            if (commentDto is null)
-                return NotFound( $"Comment with id {commentId} is not found");
-
-            var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
-            {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
-            }
-
-            var deletedRows = _homeworkService.DeleteComment(commentId);
-            var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
-            return Ok(result);
-        }
-        /// <summary>
-        /// Recover comment
-        /// </summary>
-        /// <param name="homeworkId">Homework Id</param>
-        /// <param name="attemptId">Attempt Id</param>      
-        /// <param name="commentId">Comment Id</param>
-        /// <returns>Return recovered comment</returns>
-        // https://localhost:44365/api/homework/2/attempt/2/comment/2/recovery
-        [ProducesResponseType(typeof(CommentOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpPut("{homeworkId}/attempt/{attemptId}/comment/{commentId}/recovery")]
-        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
-        public ActionResult<CommentOutputModel> RecoverComment(int homeworkId, int attemptId, int commentId)
-        {
-            var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
-            if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
-
-            var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
-            if (attemptDto is null)
-                return NotFound( $"Attempt with id {attemptId} is not found");
-
-            var commentDto = _homeworkService.GetCommentById(commentId);
-            if (commentDto is null)
-                return NotFound( $"Comment with id {commentId} is not found");
-
-            var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
-            {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
-            }
-
-            var recoveredRows = _homeworkService.RecoverComment(commentId);
-            var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
             return Ok(result);
         }
         /// <summary>
