@@ -62,7 +62,7 @@ namespace EducationSystem.Data.Tests
             var actual = _lessonRepo.GetFeedbackById(addedFeedbackId);
 
             //Then
-            Assert.IsTrue(CustomFeedbackEquels(dto, actual));
+            Assert.IsTrue(CustomFeedbackEquals(dto, actual));
 
 
         }
@@ -95,7 +95,7 @@ namespace EducationSystem.Data.Tests
             var actual = _lessonRepo.GetFeedbackById(addedFeedbackId);
 
             //Then
-            Assert.IsTrue(CustomFeedbackEquels(dto, actual));
+            Assert.IsTrue(CustomFeedbackEquals(dto, actual));
 
         }
 
@@ -124,7 +124,7 @@ namespace EducationSystem.Data.Tests
 
             for (var i = 0; i < expected.Count; i++)
             {
-                Assert.IsTrue(CustomFeedbackEquels(expected[i], actual[i]));
+                Assert.IsTrue(CustomFeedbackEquals(expected[i], actual[i]));
             }
         } 
 
@@ -153,7 +153,7 @@ namespace EducationSystem.Data.Tests
 
             for (var i = 0; i < expected.Count; i++)
             {
-                Assert.IsTrue(CustomFeedbackEquels(expected[i], actual[i]));
+                Assert.IsTrue(CustomFeedbackEquals(expected[i], actual[i]));
             }
         }
 
@@ -183,7 +183,7 @@ namespace EducationSystem.Data.Tests
 
             for (var i = 0; i < expected.Count; i++)
             {
-                Assert.IsTrue(CustomFeedbackEquels(expected[i], actual[i]));
+                Assert.IsTrue(CustomFeedbackEquals(expected[i], actual[i]));
             }
         }
 
@@ -291,15 +291,15 @@ namespace EducationSystem.Data.Tests
             }
         }
 
-        public bool CustomFeedbackEquels(FeedbackDto firstDto, FeedbackDto secondDto)
+        public bool CustomFeedbackEquals(FeedbackDto firstDto, FeedbackDto secondDto)
         {
             if
                (
                    firstDto.Id != secondDto.Id ||
                    firstDto.Message != secondDto.Message ||
                    firstDto.UnderstandingLevel != firstDto.UnderstandingLevel ||
-                   !CustomLessonEquels(firstDto.Lesson, secondDto.Lesson) ||
-                   !CustomUserEquels(firstDto.User, secondDto.User)
+                   !CustomLessonEquals(firstDto.Lesson, secondDto.Lesson) ||
+                   !CustomUserEquals(firstDto.User, secondDto.User)
                )
             {
                 return false;
@@ -309,7 +309,7 @@ namespace EducationSystem.Data.Tests
                 return true;
             }
         }
-        public bool CustomLessonEquels(LessonDto firstDto, LessonDto secondDto)
+        public bool CustomLessonEquals(LessonDto firstDto, LessonDto secondDto)
         {
             if (firstDto.Id != secondDto.Id || !firstDto.Date.Equals(secondDto.Date))
             {
@@ -321,7 +321,7 @@ namespace EducationSystem.Data.Tests
             }
 
         }
-        public bool CustomUserEquels(UserDto firstDto, UserDto secondDto)
+        public bool CustomUserEquals(UserDto firstDto, UserDto secondDto)
         {
             if
                 (
