@@ -392,14 +392,15 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
-            var addedEntityId = _repository.AddUser(expected);           
+            expected.Id = _repository.AddUser(expected);
+            _addedUserDtoIds.Add(expected.Id);
             //When, Then
-            var deletedID = _repository.DeleteOrRecoverUser(-1, true);               
-            Assert.AreEqual(0, deletedID);
+            var affectedRows = _repository.DeleteOrRecoverUser(-1, true);               
+            Assert.AreEqual(0, affectedRows);
         }
 
         [TestCase(1)]
-        public void GetUserByIdNegativeTest(int mockId)
+        public void GetUserByIdNegativeTestUserNotExists(int mockId)
         {
             //Given
             var expected = (UserDto)UserMockGetter.GetUserDtoMock(mockId).Clone();
@@ -408,7 +409,7 @@ namespace EducationSystem.Data.Tests
             expected.Id = addedEntityId;
             //When, Then       
             var actual = _repository.GetUserById(-1);
-            Assert.AreEqual(null, actual);        
+            Assert.IsNull(actual);
         }
         [TearDown]
         public void UserTestTearDown()
