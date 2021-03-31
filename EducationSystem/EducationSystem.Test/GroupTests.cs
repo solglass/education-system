@@ -571,10 +571,6 @@ namespace EducationSystem.Data.Tests
     }
     private void DeleteUserRoles()
     {
-            //foreach (var userRolePair in _addedUserRoleIdList)
-            //{
-            //    _userRepo.DeleteRoleFromUser(userRolePair.Item1, userRolePair.Item2);
-            //}
 
             _addedUserRoleIdList.ForEach(record =>
             {
