@@ -39,6 +39,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     IsDeleted = false,
                     Date = new DateTime(2020, 10, 10, 18, 30, 0).AddDays(+20)
                 },
+                5 => new LessonDto(),
                 _ => new LessonDto
                 {
                     Description = $"Test Lesson {id}",

@@ -87,6 +87,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     UserPic = "00",
                     Login = "DELETEDLogin"
                 },
+                7 => new UserDto(),
                 _ => throw new NotImplementedException()
             };
 
