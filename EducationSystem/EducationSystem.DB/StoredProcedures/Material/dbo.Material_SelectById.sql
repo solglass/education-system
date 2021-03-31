@@ -3,7 +3,7 @@ create proc [dbo].[Material_SelectById] (
 ) as
 begin
 	select
-		m.Id,
+	    m.Id,
 		m.Link,
 		m.Description,
 		m.IsDeleted,

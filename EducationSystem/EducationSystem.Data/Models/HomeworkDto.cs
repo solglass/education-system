@@ -38,8 +38,8 @@ namespace EducationSystem.Data.Models
             HomeworkDto homeworkObj = (HomeworkDto)obj;
             if (Id != homeworkObj.Id ||
                 Description != homeworkObj.Description ||
-                StartDate.Equals(homeworkObj.StartDate) ||
-                DeadlineDate.Equals(homeworkObj.DeadlineDate)  ||
+                !StartDate.Equals(homeworkObj.StartDate) ||
+                !DeadlineDate.Equals(homeworkObj.DeadlineDate)  ||
                 IsOptional != homeworkObj.IsOptional ||
                 IsDeleted != homeworkObj.IsDeleted)
             {
