@@ -94,6 +94,7 @@
     <Folder Include="Scripts" />
     <Folder Include="StoredProcedures\Student" />
     <Folder Include="StoredProcedures\Course_Material" />
+    <Folder Include="StoredProcedures\Notification" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
@@ -261,6 +262,7 @@
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Add.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByUserId.sql" />
     <Build Include="StoredProcedures\HomeworkAttempt\dbo.HomeworkAttempt_SelectByGroupIdAndStatusId.sql" />
+    <Build Include="StoredProcedures\Create_Report.sql" />
     <Build Include="StoredProcedures\User\dbo.Check_User_Authentification.sql" />
     <Build Include="StoredProcedures\dbo.FillEnumTables.sql" />
     <Build Include="StoredProcedures\dbo.CleanDatabase.sql" />
@@ -270,6 +272,14 @@
     <Build Include="Tables\dbo.Course_Material.sql" />
     <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Delete.sql" />
     <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Add_.sql" />
+    <Build Include="Tables\Notification.sql" />
+    <Build Include="StoredProcedures\Notification\dbo.Notification_Add.sql" />
+    <Build Include="StoredProcedures\Notification\dbo.Notification_Update.sql" />
+    <Build Include="StoredProcedures\Notification\dbo.Notification_Delete.sql" />
+    <Build Include="StoredProcedures\Notification\dbo.Notification_SelectById.sql" />
+    <Build Include="StoredProcedures\Notification\dbo.Notification_SelectByUserId.sql" />
+    <Build Include="StoredProcedures\Notification\dbo.Notification_ReadOrUnread.sql" />
+    <Build Include="StoredProcedures\User\dbo.User_SelectStudentsByGroupId.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
