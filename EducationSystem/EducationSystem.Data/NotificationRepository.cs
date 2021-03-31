@@ -101,7 +101,7 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .Query<NotificationDto, UserDto, UserDto, NotificationDto>(
-                    "dbo.Notification_SelectById",
+                    "dbo.Notification_SelectByUserId",
                     (notification, user, author) =>
                     {
                         if (notification != null)
