@@ -40,7 +40,8 @@ namespace EducationSystem.Data
                 new
                 {
                     dto.Id,
-                    dto.Message
+                    dto.Message,
+                    dto.Date
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;

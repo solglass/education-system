@@ -93,6 +93,143 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        //[Test]
+        //public void AddHomeworkAttemptNullEntityNegativeTest()
+        //{
+        //    //Given
+
+        //    //When
+        //    try
+        //    {
+        //        var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(null);
+        //        _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+        //    }
+
+        //    //Then
+        //    catch
+        //    {
+        //        Assert.Pass();
+        //    }
+        //    Assert.Fail();
+        //}
+
+        //[Test]
+        //public void AddHomeworkAttemptEmptyPropertyNegativeTest()
+        //{
+        //    //Given
+        //    var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(4).Clone();
+
+        //    //When
+        //    try
+        //    {
+        //        var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
+        //        _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+        //    }
+
+        //    //Then
+        //    catch
+        //    {
+        //        Assert.Pass();
+        //    }
+        //    Assert.Fail();
+        //}
+
+        //[Test]
+        //public void GetHomeworkAttemptByIdEntityNotExistNegativeTest()
+        //{
+        //    //Given
+
+        //    //When
+        //    var hwattempt = _homeworkRepo.GetHomeworkAttemptById(-1);
+        //    //Then
+        //    Assert.IsNull(hwattempt);
+        //}
+
+        [TestCase(1, 2)]
+        [TestCase(2, 3)]
+        [TestCase(3, 1)]
+        public void UpdateNotificationTest(int mockId, int updateMockId)
+        {
+            // Given
+            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
+            dto.User = _userDtoMock;
+            dto.Author = _authorDtoMock;
+            var addedNotificationId = _notificationRepo.AddNotification(dto);
+            _notificationIdList.Add(addedNotificationId);
+
+            dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(updateMockId).Clone();
+            dto.Id = addedNotificationId;
+            var affectedRowsCount = _notificationRepo.UpdateNotification(dto);
+
+            // When
+            var actual = _notificationRepo.GetNotificationById(addedNotificationId);
+
+            // Then
+            Assert.AreEqual(1, affectedRowsCount);
+            Assert.AreEqual(dto, actual);
+        }
+
+        [Test]
+        public void UpdateHomeworkAttemptNullEntityNegativeTest()
+        {
+            //Given
+            
+            //When
+            try
+            {
+                var homeworkAttemptId = _homeworkRepo.UpdateHomeworkAttempt(null);
+                _homeworkAttemptIdList.Add(homeworkAttemptId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateHomeworkAttemptEntityNotExistNegativeTest()
+        {
+            //Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
+            dto.Id = -1;
+
+            //When
+            var result = _homeworkRepo.UpdateHomeworkAttempt(dto);
+
+            //Then
+            Assert.AreEqual(0, result);
+
+        }
+
+        [Test]
+        public void UpdateHomeworkAttemptEmptyPropertyNegativeTest()
+        {
+            //Given
+            var dto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
+            dto.Author = _userDtoMock;
+            dto.Homework = _homeworkDtoMock;
+            var addedHomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(dto);
+            _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+
+            var updto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(4).Clone();
+            updto.Id = addedHomeworkAttemptId;
+            //When
+            try
+            {
+
+                var homeworkAttemptId = _homeworkRepo.UpdateHomeworkAttempt(updto);
+                _homeworkAttemptIdList.Add(homeworkAttemptId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         
 
         [TearDown]

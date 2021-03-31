@@ -39,5 +39,13 @@ namespace EducationSystem.Data.Models
                 && Date.Equals(notification.Date)
                 && IsRead == notification.IsRead);
         }
+
+        public override string ToString()
+        {
+            string s = "";
+
+            s += Id + " " + Message + " " + Date + " " + IsRead + "; ";
+            return s;
+        }
     }
 }
