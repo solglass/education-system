@@ -1,12 +1,12 @@
 using NUnit.Framework;
-using System;
 using EducationSystem.Data.Models;
-using EducationSystem.Data;
 using System.Collections.Generic;
 using EducationSystem.Data.Tests.Mocks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class TagTests : BaseTest
     {
         private ITagRepository _tagRepo;

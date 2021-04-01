@@ -92,7 +92,7 @@ namespace EducationSystem.API.Controllers
         /// <returns>Returns the CourseExtendedOutputModel which includes IsDeleted-property</returns>
         // https://localhost:50221/api/course/id
         [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CourseExtendedOutputModel), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseExtendedOutputModel> UpdateCourseInfo(int id, [FromBody] CourseInputModel course)
