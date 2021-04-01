@@ -106,7 +106,11 @@ namespace EducationSystem.API
           .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
           .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
 
-      CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
+            CreateMap<GroupWithCountDto, NumberOfLessonsForGroupToCompleteTheThemeOutputModel>()
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
+
+            CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
 
             CreateMap<HomeworkInputModel, HomeworkDto>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))

@@ -92,19 +92,18 @@ namespace EducationSystem.Controllers
         /// <param name="themeId"> is used to find necessary groups by theme-id</param>
         /// <returns>Returns the list of GroupOutputModels</returns>
         // https://localhost:44365/api/group/3
-        [ProducesResponseType(typeof(List<GroupOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<NumberOfLessonsForGroupToCompleteTheThemeOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("by-theme/{themeId}")]
         [Authorize]
-        public ActionResult<List<GroupOutputModel>> GetGroupsByThemeId(int themeId)
+        public ActionResult<List<NumberOfLessonsForGroupToCompleteTheThemeOutputModel>> GetGroupsByThemeId(int themeId)
         {
-            // пожалуйста, разберись, что же происходит в этом методе
+            if (_courseService.GetThemeById(themeId) == null)
+                return NotFound($"Тема с id:{themeId} не найдена");
+
             var groups = _service.GetGroupByThemeId(themeId);
-            if (groups.Count == 0)
-                return NotFound($"Групп с темой {themeId} не существует");
-         
-            List<GroupOutputModel> result = _mapper.Map<List<GroupOutputModel>>(groups);
+            List<NumberOfLessonsForGroupToCompleteTheThemeOutputModel> result = _mapper.Map<List<NumberOfLessonsForGroupToCompleteTheThemeOutputModel>>(groups);
             return Ok(result);
         }
 
@@ -457,25 +456,20 @@ namespace EducationSystem.Controllers
         /// <returns>Returns the list of GroupReportOutputModel</returns>
         [ProducesResponseType(typeof(List<GroupReportOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         // https://localhost:XXXXX/api/group/report
         [HttpGet("report")]
         [Authorize(Roles = "Администратор, Менеджер, Преподаватель, Тьютор, Методист")]
         public ActionResult<List<GroupReportOutputModel>> GetReport()
         {
-            List<GroupReportOutputModel> report ;
+            var reportDto = _service.GenerateReport();
+            if (reportDto.Count == 0)
+                return NotFound("Отчет не был создан");
 
-            // вот и зачем тут try .. catch?
-            try
-            {
-                var reportDto = _service.GenerateReport();
-                report = _mapper.Map<List<GroupReportOutputModel>>(reportDto);
-      }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok(report);
+            var report = _mapper.Map<List<GroupReportOutputModel>>(reportDto);
+                return Ok(report);
         }
+
 
         /// <summary>
         /// Gets a list of themes not covered by the group

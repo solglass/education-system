@@ -25,7 +25,7 @@ namespace EducationSystem.Data
         List<GroupDto> GetGroupsWithoutTutors();
         StudentGroupDto GetStudentGroupById(int id);
         int UpdateGroup(GroupDto groupDto);
-        List<GroupDto> GetGroupByThemeId(int id);
+        List<NumberOfLessonsForGroupToCompleteTheThemeDto> GetGroupByThemeId(int id);
         int DeleteTutorGroup(int userId, int groupId);
     }
 }
