@@ -1,8 +1,10 @@
 ﻿using EducationSystem.Data.Models;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
+    [ExcludeFromCodeCoverage]
     public static class CourseMockGetter
     {
         public static CourseDto GetCourseDtoMock(int id)

@@ -95,6 +95,7 @@
     <Folder Include="StoredProcedures\Student" />
     <Folder Include="StoredProcedures\Course_Material" />
     <Folder Include="StoredProcedures\Notification" />
+    <Folder Include="StoredProcedures\Lesson_Theme" />
     <Folder Include="StoredProcedures\Tutor_Group" />
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +284,10 @@
     <Build Include="StoredProcedures\Notification\dbo.Notification_SelectByUserId.sql" />
     <Build Include="StoredProcedures\Notification\dbo.Notification_ReadOrUnread.sql" />
     <Build Include="StoredProcedures\User\dbo.User_SelectStudentsByGroupId.sql" />
+    <Build Include="StoredProcedures\Group\Group_HardDelete.sql" />
+    <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByThemeId.sql" />
+    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Add.sql" />
+    <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />

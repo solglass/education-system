@@ -1,12 +1,11 @@
-﻿using EducationSystem.Core.Enums;
-using EducationSystem.Data.Models;
+﻿using EducationSystem.Data.Models;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
+    [ExcludeFromCodeCoverage]
     public static class UserMockGetter
     {
         public static UserDto GetUserDtoMock(int mockId)
@@ -88,19 +87,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     UserPic = "00",
                     Login = "DELETEDLogin"
                 },
-                7 => new UserDto
-                {
-                    Email = "DELETED@mail.ru",
-                    FirstName = "Anton",
-                    BirthDate = DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture),
-                    IsDeleted = true,
-                    LastName = "Negodyaj",
-                    Password = "1234567",
-                    Phone = "5555595555",
-                    UserPic = "00",
-                    Login = "DELETEDLogin228"
-                    
-                },
+                7 => new UserDto(),
                 _ => throw new NotImplementedException()
             };
 

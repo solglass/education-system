@@ -172,7 +172,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpPut("{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
-        public ActionResult<UserOutputModel> UpdateUserInfo(int userId, [FromBody] UserInputModel inputModel)
+        public ActionResult<UserOutputModel> UpdateUserInfo(int userId, [FromBody] UpdateUserInputModel inputModel)
         {
             if (!ModelState.IsValid)
             {
@@ -323,7 +323,7 @@ namespace EducationSystem.Controllers
         /// <returns>List of payments of student</returns>
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [HttpGet("{id}/payment")]
+        [HttpGet("{userId}/payment")]
         [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<List<PaymentOutputModel>> GetPaymentsByUserId(int userId)
         {

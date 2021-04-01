@@ -1,7 +1,9 @@
 ﻿using EducationSystem.Data.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
+    [ExcludeFromCodeCoverage]
     public static class AttendanceMockGetter
     {
         public static AttendanceDto GetAttendance(int caseId)

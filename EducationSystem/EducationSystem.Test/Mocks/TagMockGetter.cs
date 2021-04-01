@@ -1,10 +1,9 @@
 ﻿using EducationSystem.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
+    [ExcludeFromCodeCoverage]
     public static class TagMockGetter
     {
         public static TagDto GetTagDtoMock(int id)
