@@ -44,7 +44,6 @@ namespace EducationSystem.Data
             return users;
         }
 
-        // ToDo: покрыть тестом
         public List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
             var UserDictionary = new Dictionary<int, UserDto>();
