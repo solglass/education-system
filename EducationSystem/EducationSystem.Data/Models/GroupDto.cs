@@ -32,7 +32,9 @@ namespace EducationSystem.Data.Models
             GroupDto groupDto = (GroupDto)obj;
 
             if (groupDto.Id != Id ||
+                !groupDto.StartDate.Equals(StartDate) ||
                 groupDto.GroupStatus != GroupStatus)
+                
             {
                 return false;
             }

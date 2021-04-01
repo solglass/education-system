@@ -105,7 +105,7 @@ namespace EducationSystem.Data.Tests
             dto = new GroupDto
             {
                 Id = addedGroupId,
-                StartDate = DateTime.Today.AddDays(1),
+                StartDate = dto.StartDate.AddDays(1),
                 Course = _courseDtoMock,
                 GroupStatus = (GroupStatus)statusId
             };
@@ -126,14 +126,13 @@ namespace EducationSystem.Data.Tests
 
             //Given
             var expected = new List<GroupDto>();
-            var _addedGroupDtoIdsLocal = new List<int>();
+
             foreach (int mockId in mockIds)
             {
                 var dto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
                 dto.Course = _courseDtoMock;
                 var addedEntityId = _groupRepo.AddGroup(dto);
                 _groupIdList.Add(addedEntityId);
-                _addedGroupDtoIdsLocal.Add(addedEntityId);
 
                 dto.Id = addedEntityId;
                 expected.Add(dto);
@@ -243,7 +242,6 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var expectedGroups = new List<GroupDto>();
-            var GroupsWithTutors = new List<GroupDto>();
 
 
             var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
@@ -260,7 +258,6 @@ namespace EducationSystem.Data.Tests
                 var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[i]).Clone();
                 groupDto.Course = _courseDtoMock;
                 groupDto.Id = _groupRepo.AddGroup(groupDto);
-                GroupsWithTutors.Add(groupDto);
                 _groupIdList.Add(groupDto.Id);
 
                 _groupRepo.AddTutorToGroup(userDtoMock.Id, groupDto.Id);
@@ -389,9 +386,9 @@ namespace EducationSystem.Data.Tests
             //Given
             var expectedGroups = new List<int>();
 
-            var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
+            var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(tutorMockId).Clone();
             userDtoMock.Id = _userRepo.AddUser(userDtoMock);
-            _userRepo.AddRoleToUser(userDtoMock.Id, tutorMockId);
+            _userRepo.AddRoleToUser(userDtoMock.Id, (int)Role.Tutor);
             Assert.Greater(userDtoMock.Id, 0);
             userDtoMock.Roles = new List<Role> { Role.Tutor };
             _addedUserRoleIdList.Add((userDtoMock.Id, (int)Role.Tutor));
@@ -422,11 +419,11 @@ namespace EducationSystem.Data.Tests
             //Given
             var expectedGroups = new List<int>();
 
-            var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
+            var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(teacherMockId).Clone();
 
 
             userDtoMock.Id = _userRepo.AddUser(userDtoMock);
-            _userRepo.AddRoleToUser(userDtoMock.Id, teacherMockId);
+            _userRepo.AddRoleToUser(userDtoMock.Id, (int)Role.Teacher);
             Assert.Greater(userDtoMock.Id, 0);
             userDtoMock.Roles = new List<Role> { Role.Teacher };
             _addedUserRoleIdList.Add((userDtoMock.Id, (int)Role.Teacher));
@@ -468,7 +465,7 @@ namespace EducationSystem.Data.Tests
 
             var tutorDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(tutorMockId).Clone();
             tutorDtoMock.Id = _userRepo.AddUser(tutorDtoMock);
-            _userRepo.AddRoleToUser(tutorDtoMock.Id, tutorMockId);
+            _userRepo.AddRoleToUser(tutorDtoMock.Id, (int)Role.Tutor);
             Assert.Greater(tutorDtoMock.Id, 0);
             tutorDtoMock.Roles = new List<Role> { Role.Tutor };
             _addedUserRoleIdList.Add((tutorDtoMock.Id, (int)Role.Tutor));
@@ -476,7 +473,7 @@ namespace EducationSystem.Data.Tests
 
             var studentDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(studentMockId).Clone();
             studentDtoMock.Id = _userRepo.AddUser(studentDtoMock);
-            _userRepo.AddRoleToUser(studentDtoMock.Id, studentMockId);
+            _userRepo.AddRoleToUser(studentDtoMock.Id, (int)Role.Student);
             Assert.Greater(studentDtoMock.Id, 0);
             studentDtoMock.Roles = new List<Role> { Role.Student };
             _addedUserRoleIdList.Add((studentDtoMock.Id, (int)Role.Student));
@@ -486,8 +483,7 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[i]).Clone();
-                groupDto.Course = _courseDtoMock;
-                //(DateTime.)_courseDtoMock.Duration 
+                groupDto.Course = _courseDtoMock; 
                 groupDto.Id = _groupRepo.AddGroup(groupDto);
                 _groupIdList.Add(groupDto.Id);
                 groupsId.Add(groupDto.Id);
@@ -513,7 +509,7 @@ namespace EducationSystem.Data.Tests
 
                 _studentGroupIdList.Add((studentDtoMock.Id, groupDto.Id));
 
-                groupReportDto.StudentCount++;
+                groupReportDto.StudentCount= groupReportDto.StudentCount+1;
                 groupReportDto.TutorCount++;
                 groupReportDto.TeacherCount++;
 
