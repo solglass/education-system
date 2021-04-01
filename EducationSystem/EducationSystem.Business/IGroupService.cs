@@ -15,7 +15,7 @@ namespace EducationSystem.Business
         public int AddStudentGroup(int groupId, int userId, StudentGroupDto studentGroupDto);
         int DeleteTutorGroup(int groupId, int userId);
         int AddTutorToGroup(int groupId, int userId);
-        public StudentGroupDto GetStudentGroupById(int userGroupId);
+        StudentGroupDto GetStudentGroupByGroupAndUserIds(int groupId, int stusentId);
         GroupDto GetGroupById(int id);
         GroupDto GetGroupProgramsByGroupId(int id);
         List<GroupDto> GetGroups();

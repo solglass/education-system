@@ -775,7 +775,7 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(0, result);
         }
 
-        [TestCase( 1,  1)]
+        [TestCase( 1, 1 )]
         public void AddStudentGroupPositiveTest(int groupMockId, int studentMockId)
         {
             //Given
@@ -788,8 +788,6 @@ namespace EducationSystem.Data.Tests
             student.Id = _userRepo.AddUser(student);
             _addedUserIdList.Add(student.Id);
 
-
-
             var expected =new StudentGroupDto { 
                 Group=group,
                 User=student,
@@ -800,12 +798,122 @@ namespace EducationSystem.Data.Tests
             
             expected.Id = _groupRepo.AddStudentGroup(expected);
             _studentGroupIdList.Add((expected.User.Id, expected.Group.Id));
-            var actual = _groupRepo.GetStudentGroupById(expected.Id);
+            var actual = _groupRepo.GetStudentGroupByGroupAndUserIds(expected.Group.Id,expected.User.Id);
             Assert.AreEqual(expected, actual);
 
         }
+        [TestCase(1)]
+        public void AddStudentGroupNegativeTestUserNotExists(int groupMockId)
+        {
+            //Given
+            var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+            group.Course = _courseDtoMock;
+            group.Id = _groupRepo.AddGroup(group);
+            _groupIdList.Add(group.Id);
 
-            [TearDown]
+            var expected = new StudentGroupDto
+            {
+                Group = group,
+                User = new UserDto { Id=-1},
+                ContractNumber = 1
+            };
+            //When,Then
+            try
+            {
+                expected.Id = _groupRepo.AddStudentGroup(expected);
+                _studentGroupIdList.Add((expected.User.Id, expected.Group.Id));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void AddStudentGroupNegativeTestGroupNotExists(int studentMockId)
+        {
+            //Given
+            var student = (UserDto)UserMockGetter.GetUserDtoMock(studentMockId).Clone();
+            student.Id = _userRepo.AddUser(student);
+            _addedUserIdList.Add(student.Id);
+
+            var expected = new StudentGroupDto
+            {
+                Group = new GroupDto { Id=-1},
+                User = student,
+                ContractNumber = 1
+            };
+            //When,Then
+            try
+            {
+                expected.Id = _groupRepo.AddStudentGroup(expected);
+                _studentGroupIdList.Add((expected.User.Id, expected.Group.Id));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1, new int[] { 1, 2 })]
+        public void DeleteStudentGroupPositiveTest(int groupMockId, int[] studentMockIds)
+        {
+            //Given
+            var group = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+            group.Course = _courseDtoMock;
+            group.Id = _groupRepo.AddGroup(group);
+            _groupIdList.Add(group.Id);
+
+            var studentToRemove = (UserDto)UserMockGetter.GetUserDtoMock(studentMockIds[0]).Clone();
+            studentToRemove.Id = _userRepo.AddUser(studentToRemove);
+            _addedUserIdList.Add(studentToRemove.Id);
+
+            var studentGroupToRemove = new StudentGroupDto
+            {
+                Group = group,
+                User = studentToRemove,
+                ContractNumber = 1
+            };
+
+            var studentToSave = (UserDto)UserMockGetter.GetUserDtoMock(studentMockIds[1]).Clone();
+            studentToSave.Id = _userRepo.AddUser(studentToSave);
+            _addedUserIdList.Add(studentToSave.Id);
+
+            var studentGroupToSave = new StudentGroupDto
+            {
+                Group = group,
+                User = studentToSave,
+                ContractNumber = 2
+            };
+
+            studentGroupToSave.Id = _groupRepo.AddStudentGroup(studentGroupToSave);
+            _studentGroupIdList.Add((studentGroupToSave.User.Id, studentGroupToSave.Group.Id));
+            studentGroupToRemove.Id = _groupRepo.AddStudentGroup(studentGroupToRemove);
+            _studentGroupIdList.Add((studentGroupToRemove.User.Id, studentGroupToRemove.Group.Id));
+
+            //When, then
+            var result = _groupRepo.DeleteStudentGroup(studentGroupToRemove.User.Id, studentGroupToRemove.Group.Id);
+            Assert.AreEqual(1, result);
+
+            var actual = _groupRepo.GetStudentGroupByGroupAndUserIds(studentGroupToSave.Group.Id, studentGroupToSave.User.Id);
+            Assert.AreEqual(studentGroupToSave, actual);
+
+            actual = _groupRepo.GetStudentGroupByGroupAndUserIds(studentGroupToRemove.Group.Id, studentGroupToRemove.User.Id);
+            Assert.IsNull(actual);
+        }
+        [Test]
+        public void DeleteStudentGroupNegativeTestEntityNotExists()
+        {
+            //Given
+            //When
+            var result = _groupRepo.DeleteStudentGroup(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
+        [TearDown]
             public void TearDown()
             { 
               DeleteThemeHomeworks();
@@ -867,20 +975,20 @@ namespace EducationSystem.Data.Tests
         }
     }
         private void DeleteMaterials()
-    {
-        foreach (var materialId in _materialIdList)
         {
-          _materialRepo.HardDeleteMaterial(materialId);
+            foreach (var materialId in _materialIdList)
+            {
+                _materialRepo.HardDeleteMaterial(materialId);
+            }
         }
-    }
 
         private void DeleteThemes()
-    {
-      foreach (int themeId in _themeIdList)
-      {
-        _courseRepo.HardDeleteTheme(themeId);
-      }
-    }
+        {
+            foreach (int themeId in _themeIdList)
+            {
+                _courseRepo.HardDeleteTheme(themeId);
+            }
+        }
 
     private void DeleteHomeworks()
     {
@@ -905,12 +1013,12 @@ namespace EducationSystem.Data.Tests
             }
         }
         public void DeleteCourse()
-    {
-      foreach (int courseId in _courseIdList)
-      {
-        _courseRepo.HardDeleteCourse(courseId);
-      }
-    }
+        {
+            foreach (int courseId in _courseIdList)
+            {
+                _courseRepo.HardDeleteCourse(courseId);
+            }
+        }
         
         public void DeleteLessonTheme()
         {

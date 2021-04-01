@@ -23,7 +23,7 @@ namespace EducationSystem.Data
         public List<int> GetGroupsByTutorId(int id);
         public List<int> GetGroupsByTeacherId(int id);
         List<GroupDto> GetGroupsWithoutTutors();
-        StudentGroupDto GetStudentGroupById(int id);
+        StudentGroupDto GetStudentGroupByGroupAndUserIds(int groupId, int userId);
         int HardDeleteGroup(int id);
         int UpdateGroup(GroupDto groupDto);
         List<GroupDto> GetGroupByThemeId(int id);

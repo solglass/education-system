@@ -1,5 +1,5 @@
-﻿create proc [dbo].[Student_Group_SelectById]
-	@id int
+﻿create proc [dbo].[Student_Group_SelectByGroupAndUserId] (
+@groupId int, @userId int)
 as
 begin
 	select
@@ -17,6 +17,6 @@ begin
 	from dbo.Student_Group a 
 		inner join dbo.[User] u on u.ID=a.UserID
 		inner join dbo.[Group] g on g.Id = a.GroupId
-	where a.Id = @id 
+	where UserID = @userId and GroupID=@groupId
 
 end

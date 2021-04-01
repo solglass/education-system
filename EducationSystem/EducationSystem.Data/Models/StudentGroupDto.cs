@@ -36,11 +36,14 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
+            if (obj is null || !(obj is StudentGroupDto))
+                return false;
+
             var studentGroupDto = (StudentGroupDto)obj;
-            return ((studentGroupDto.Id == Id) &&
-                User.Equals(studentGroupDto.User) &&
-                Group.Equals(studentGroupDto.Group) &&
-               (ContractNumber == ContractNumber));
+            return (studentGroupDto.Id == Id &&
+                User.Id==studentGroupDto.User.Id &&
+                Group.Id==studentGroupDto.Group.Id &&
+               ContractNumber == ContractNumber);
 
 
         }
@@ -52,7 +55,7 @@ namespace EducationSystem.Data.Models
 
         public override string ToString()
         {
-            string s = $" {Id} {User} {Group} {ContractNumber} ";
+            string s = $" #{Id} user#{User.Id} {User.FirstName} {User.LastName} group#{Group.Id} {Group.GroupStatus} contract#{ContractNumber} ";
             return s;
         }
     }

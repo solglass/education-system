@@ -92,9 +92,9 @@ namespace EducationSystem.Business
             studentGroupDto.User.Id = userId;
             return _groupRepository.AddStudentGroup(studentGroupDto);
         }
-        public StudentGroupDto GetStudentGroupById(int userGroupId)
+        public StudentGroupDto GetStudentGroupByGroupAndUserIds(int groupId, int stusentId)
         {
-            return _groupRepository.GetStudentGroupById(userGroupId);
+            return _groupRepository.GetStudentGroupByGroupAndUserIds(groupId, stusentId);
         }
         public int DeleteTutorGroup(int groupId, int userId)
         {

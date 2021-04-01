@@ -265,7 +265,7 @@ namespace EducationSystem.Controllers
         {
             var studentGroupDto = _mapper.Map<StudentGroupDto>(studentGroupInputModel);
             var id = _service.AddStudentGroup(groupId, userId, studentGroupDto);
-            var outputModel = _mapper.Map<StudentGroupOutputModel>(_service.GetStudentGroupById(id));
+            var outputModel = _mapper.Map<StudentGroupOutputModel>(_service.GetStudentGroupByGroupAndUserIds(groupId, userId));
             return Ok(outputModel);
         }
 
