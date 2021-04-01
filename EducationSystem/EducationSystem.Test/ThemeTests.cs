@@ -3,13 +3,13 @@ using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class ThemeTests : BaseTest
     {
-
         private ICourseRepository _courseRepo;
         private IGroupRepository _groupRepo;
         private ILessonRepository _lessonRepo;
@@ -23,7 +23,7 @@ namespace EducationSystem.Data.Tests
         private List<(int, int)> _lessonThemeList;
         private List<(int, int)> _tagThemeList;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUpTest()
         {
             _courseRepo = new CourseRepository(_options);
@@ -61,6 +61,66 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(1)]
+        public void ThemeAddNegativeTestNotUniqueEntity(int mockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
+            theme.Id = _courseRepo.AddTheme(theme);
+            _themeIdList.Add(theme.Id);
+            //When
+            try
+            {
+                var result = _courseRepo.AddTheme(theme);
+                _themeIdList.Add(result);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(7)]
+        public void ThemeAddNegativeTestEmptyEntity(int nockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(nockId).Clone();
+
+            //When
+            try
+            {
+                theme.Id = _courseRepo.AddTheme(theme);
+                _themeIdList.Add(theme.Id);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void ThemeAddNegativeTestNullEntity()
+        {
+            //Given
+
+            //When
+            try
+            {
+                var themeId = _courseRepo.AddTheme(null);
+                _themeIdList.Add(themeId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+       
         [TestCase(1, 2)]
         [TestCase(2, 3)]
         [TestCase(3, 2)]
@@ -84,9 +144,86 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(1)]
+        public void ThemeUpdateNegativeTestEntityNotExists(int mockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
+
+            //When
+            var result = _courseRepo.UpdateTheme(theme);
+
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
+        [TestCase(1,7)]
+        public void ThemeUpdateNegativeTestEmptyProperties(int mockToAddId, int mockToUpdateId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToAddId).Clone();
+            var themeId = _courseRepo.AddTheme(theme);
+            _themeIdList.Add(themeId);
+            //When
+            try
+            {
+                theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToUpdateId).Clone();
+                theme.Id = themeId;
+                _courseRepo.UpdateTheme(theme);
+            }
+            //Then
+            catch (Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1, 2)]
+        public void ThemeUpdateNegativeTestNotUniqueEntity(int mockToCompareId, int mockToUpdateId)
+        {
+            //Given
+            var themeToCompare = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToCompareId).Clone();
+            themeToCompare.Id = _courseRepo.AddTheme(themeToCompare);
+            _themeIdList.Add(themeToCompare.Id);
+
+            var themeToUpdate = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToUpdateId).Clone();
+           var themeToUpdateId = _courseRepo.AddTheme(themeToUpdate);
+            _themeIdList.Add(themeToUpdateId);
+
+            themeToUpdate = (ThemeDto)themeToCompare.Clone();
+            themeToUpdate.Id = themeToUpdateId;
+            //When
+            try
+            {
+                var result = _courseRepo.UpdateTheme(themeToUpdate);
+            }
+            //then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void ThemeUpdateNegativeTestNullEntity()
+        {
+            //Given
+
+            //Then
+            try
+            {
+                _courseRepo.UpdateTheme(null);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
         public void GetThemesPositiveTest(int[] mockIds)
         {
             // Given
@@ -131,9 +268,20 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(dto, actual);
         }
 
+        [TestCase(-1, true)]
+        [TestCase(-1, false)]
+        public void ThemeDeleteOrRecoverNegativeTestEntityNotExists(int id, bool isDeleted)
+        {
+            //Given
+
+            //When
+            var result = _courseRepo.DeleteOrRecoverTheme(id, isDeleted);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
         public void GetThemesByCourseIdPositiveTest(int[] mockIds)
         {
             // Given
@@ -160,11 +308,23 @@ namespace EducationSystem.Data.Tests
             // Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [Test]
+        public void GetThemesByCourseIdNegativeTestCourseNotExists()
+        {
+            //Given
 
-        [TestCase(new int[] { 1, 2, 3 })]
-        [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
-        public void GetUncoveredThemesByGroupIdPositiveTest(int[] mockIds)
+            //When
+            var actual = _courseRepo.GetThemesByCourseId(-1);
+
+            //Then
+            Assert.IsEmpty(actual);
+        }
+
+        [TestCase(new int[] { 1, 2, 3 }, new int[] { 4,5,6})]
+        [TestCase(new int[] { 4, 5, 6 }, new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { }, new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { 4, 5, 6 }, new int[] {  })]
+        public void GetUncoveredThemesByGroupIdPositiveTest(int[] coveredMockIds, int[] uncoveredMockIds)
         {
             // Given
             var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
@@ -184,13 +344,13 @@ namespace EducationSystem.Data.Tests
             var addedLessonId = _lessonRepo.AddLesson(lessonDto);
             _lessonIdList.Add(addedLessonId);
 
-            var expected = AddThemeMocksToCourseAndLesson(mockIds, addedCourseId, addedLessonId);
-
+            var expected = AddThemeMocksToCourseAndLesson(uncoveredMockIds, addedCourseId, addedLessonId);
+           
             lessonDto.Date = DateTime.Now.AddDays(-10);
             addedLessonId = _lessonRepo.AddLesson(lessonDto);
             _lessonIdList.Add(addedLessonId);
 
-            AddThemeMocksToCourseAndLesson(mockIds, addedCourseId, addedLessonId);
+            AddThemeMocksToCourseAndLesson(coveredMockIds, addedCourseId, addedLessonId);
 
             // When
             var actual = _courseRepo.GetUncoveredThemesByGroupId(addedGroupId);
@@ -199,9 +359,20 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void GetUncoveredThemesByGroupIdNegativeTestGroupNotExists()
+        {
+            //Given
+
+            //When
+            var actual = _courseRepo.GetUncoveredThemesByGroupId(-1);
+
+            //Then
+            Assert.IsEmpty(actual);
+        }
+
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
         public void AddThemeTagPositiveTest(int[] mockIds)
         {
             // Given
@@ -229,10 +400,80 @@ namespace EducationSystem.Data.Tests
             // Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [TestCase(1)]
+        public void AddThemeTagNegativeTestThemeNotExists(int tagMockId)
+        {
+            //Given
+            var tag = (TagDto)TagMockGetter.GetTagDtoMock(tagMockId).Clone();
+            tag.Id = _tagRepo.TagAdd(tag);
+            _tagIdList.Add(tag.Id);
+
+            //When
+            try
+            {
+                var result = _tagRepo.ThemeTagAdd(-1, tag.Id);
+                _tagThemeList.Add((-1, tag.Id));
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void AddThemeTagNegativeTestTagNotExists(int themeMockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+            theme.Id = _courseRepo.AddTheme(theme);
+            _themeIdList.Add(theme.Id);
+
+            //When
+            try
+            {
+                var result = _tagRepo.ThemeTagAdd(theme.Id, -1);
+                _tagThemeList.Add(( theme.Id,-1));
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1, 1)]
+        public void AddThemeTagNegativeTestNotUniqueEntity(int themeMockId, int tagMockId)
+        {
+            //Given
+            var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+            theme.Id = _courseRepo.AddTheme(theme);
+            _themeIdList.Add(theme.Id);
+
+            var tag = (TagDto)TagMockGetter.GetTagDtoMock(tagMockId).Clone();
+            tag.Id = _tagRepo.TagAdd(tag);
+            _tagIdList.Add(tag.Id);
+
+            var result = _tagRepo.ThemeTagAdd(theme.Id, tag.Id);
+            _tagThemeList.Add((theme.Id, tag.Id));
+            //When
+            try
+            {
+                result = _tagRepo.ThemeTagAdd(theme.Id, tag.Id);
+                _tagThemeList.Add((theme.Id, tag.Id));
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { 3, 2, 1 })]
-        [TestCase(new int[] { 1, 2, 3, 2, 1, 3, 2, 1 })]
         public void DeleteThemeTagPositiveTest(int[] mockIds)
         {
             // Given
@@ -248,37 +489,39 @@ namespace EducationSystem.Data.Tests
                 var addedTagId = _tagRepo.TagAdd(tagDto);
                 _tagIdList.Add(addedTagId);
                 tagDto.Id = addedTagId;
-                expected.Add(tagDto);
 
                 _tagRepo.ThemeTagAdd(addedThemeId, addedTagId);
                 _tagThemeList.Add((addedThemeId, addedTagId));
+
+                if (i<mockIds.Length/2)
+                {
+                    expected.Add(tagDto);
+                }
+                else
+                {
+                    var result = _tagRepo.ThemeTagDelete(themeDto.Id, tagDto.Id);
+                    Assert.AreEqual(1, result);
+                }
             }
-
-            var toDeleteIdList = new List<(int,int)>();
-            for (int i = 0; i < mockIds.Length; i++)
-            {
-                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
-                var addedTagId = _tagRepo.TagAdd(tagDto);
-                _tagIdList.Add(addedTagId);
-                tagDto.Id = addedTagId;
-
-                _tagRepo.ThemeTagAdd(addedThemeId, addedTagId);
-                toDeleteIdList.Add((addedThemeId, addedTagId));
-            }
-
-            // When
-            toDeleteIdList.ForEach(themeTag =>
-            {
-                _tagRepo.ThemeTagDelete(themeTag.Item1, themeTag.Item2);
-            });
-
+            
+            //When
             var actual = _courseRepo.GetThemeById(addedThemeId).Tags;
 
             // Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [Test]
+        public void DeleteThemeTagNegativeTestEntityNotExists()
+        {
+            //Given
 
-        [OneTimeTearDown]
+            //When
+            var result = _tagRepo.ThemeTagDelete(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
+        [TearDown]
         public void SampleTestTearDown()
         {
             DeleteCourseThemes();

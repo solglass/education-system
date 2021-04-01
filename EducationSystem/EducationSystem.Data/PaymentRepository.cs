@@ -16,7 +16,7 @@ namespace EducationSystem.Data
             _connection = new SqlConnection(_connectionString);
         }
 
-        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string PeriodTo)
+        public List<PaymentDto> GetPaymentsByPeriod(string periodFrom, string periodTo)
         {
             var payments = _connection.Query<PaymentDto, UserDto, PaymentDto>(
                     "dbo.Payment_SelectByPeriod",
@@ -25,7 +25,8 @@ namespace EducationSystem.Data
                         payment.Student = user;
                         return payment;
                     },
-                            splitOn: "Id",
+                    new {periodFrom, periodTo },        
+                    splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return payments;
@@ -79,7 +80,7 @@ namespace EducationSystem.Data
             return payments;
         }
 
-        public List<UserDto> GetStudentsNotPaidInMonth(string month)
+        public List<UserDto> GetListOfStudentsByPeriodWhoHaveNotPaid(string month)
         {
             var result = _connection
                .Query<UserDto>("dbo.Student_SelectByPeriodAndIsNotPaid", new { period = month },
@@ -107,10 +108,10 @@ namespace EducationSystem.Data
         public int UpdatePayment(PaymentDto payment)
         {
             var result = _connection
-                .Execute("dbo.Course_Update",
+                .Execute("dbo.Payment_Update",
                 new
                 {
-                    payment.ContractNumber,
+                    payment.Id,
                     payment.Amount,
                     payment.Date,
                     payment.Period,

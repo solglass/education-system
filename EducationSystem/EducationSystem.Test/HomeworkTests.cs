@@ -3,9 +3,11 @@ using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class HomeworkTests : BaseTest
     {
         private IHomeworkRepository _homeworkRepo;
@@ -138,8 +140,8 @@ namespace EducationSystem.Data.Tests
             {
                 Id = addedHomeworkId,
                 Description = "Homework Updated Test",
-                StartDate = DateTime.Now.AddDays(1),
-                DeadlineDate = DateTime.Now.AddDays(2),
+                StartDate = dto.StartDate.AddDays(2),
+                DeadlineDate = dto.DeadlineDate.AddDays(2),
                 IsOptional = false,
                 Group = new GroupDto
                 {
@@ -358,6 +360,7 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                themeDto.Name += "toDelete";
                 var addedThemeId = _courseRepo.AddTheme(themeDto);
                 _themeIdList.Add(addedThemeId);
                 themeDto.Id = addedThemeId;
@@ -548,6 +551,7 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
+                tagDto.Name += "toDelete";
                 var addedTagId = _tagRepo.TagAdd(tagDto);
                 _tagIdList.Add(addedTagId);
                 tagDto.Id = addedTagId;
@@ -616,7 +620,7 @@ namespace EducationSystem.Data.Tests
         public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
         {
             //Given
-            var groupDto = (GroupDto)_groupDtoMock.Clone();
+            var groupDto = _groupDtoMock;
             var addedGroupId = _groupRepo.AddGroup(groupDto);
             _groupIdList.Add(addedGroupId);
             groupDto.Id = addedGroupId;
@@ -632,10 +636,10 @@ namespace EducationSystem.Data.Tests
                 expected.Add(dto);
             }
 
-            var secondGroupDto = (GroupDto)_groupDtoMock.Clone();
-            addedGroupId = _groupRepo.AddGroup(secondGroupDto);
-            _groupIdList.Add(addedGroupId);
-            secondGroupDto.Id = addedGroupId;
+            var secondGroupDto = _groupDtoMock;
+            var secondAddedGroupId = _groupRepo.AddGroup(secondGroupDto);
+            _groupIdList.Add(secondAddedGroupId);
+            secondGroupDto.Id = secondAddedGroupId;
 
             for (int i = 0; i < mockIds.Length; i++)
             {
@@ -647,7 +651,7 @@ namespace EducationSystem.Data.Tests
             }
 
             //When
-            var actual = _homeworkRepo.SearchHomeworks(groupDto.Id, null, null);
+            var actual = _homeworkRepo.SearchHomeworks(addedGroupId, null, null);
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
@@ -660,14 +664,16 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var groupDto = (GroupDto)_groupDtoMock.Clone();
+            groupDto.Course = _groupDtoMock.Course;
             var addedGroupId = _groupRepo.AddGroup(groupDto);
             _groupIdList.Add(addedGroupId);
             groupDto.Id = addedGroupId;
 
             var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
             var addedThemeId = _courseRepo.AddTheme(themeDto);
-            var secondAddedThemeId = _courseRepo.AddTheme(themeDto);
             _themeIdList.Add(addedThemeId);
+            themeDto.Name += "secondTheme";
+            var secondAddedThemeId = _courseRepo.AddTheme(themeDto);
             _themeIdList.Add(secondAddedThemeId);
 
             var expected = new List<HomeworkDto>();
@@ -705,14 +711,15 @@ namespace EducationSystem.Data.Tests
         public void SearchHomeworksByTagIdPositiveTest(int[] mockIds)
         {
             //Given
-            var groupDto = (GroupDto)_groupDtoMock.Clone();
+            var groupDto = _groupDtoMock;
             var addedGroupId = _groupRepo.AddGroup(groupDto);
             _groupIdList.Add(addedGroupId);
 
             var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(1).Clone();
             var addedTagId = _tagRepo.TagAdd(tagDto);
-            var secondAddedTagId = _tagRepo.TagAdd(tagDto);
             _tagIdList.Add(addedTagId);
+            tagDto.Name += "secondTag";
+            var secondAddedTagId = _tagRepo.TagAdd(tagDto);
             _tagIdList.Add(secondAddedTagId);
 
             // должны быть хоумворки с другими тегами
@@ -746,37 +753,36 @@ namespace EducationSystem.Data.Tests
         }
 
         [Test]
-        public void SearchHomeworks_NotExistHomework_NegativeTest()
+        public void SearchHomeworks_Null_NegativeTest()
         {
             //Given
-            for (int i = 0; i < 2; i++)
-            {
 
-                var groupDto = (GroupDto)_groupDtoMock.Clone();
-                var addedGroupId = _groupRepo.AddGroup(groupDto);
-                _groupIdList.Add(addedGroupId);
-                groupDto.Id = addedGroupId;
+            var groupDto = (GroupDto)_groupDtoMock.Clone();
+            groupDto.Course = _groupDtoMock.Course;
+            var addedGroupId = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(addedGroupId);
+            groupDto.Id = addedGroupId;
 
-                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
-                var addedThemeId = _courseRepo.AddTheme(themeDto);
-                _themeIdList.Add(addedThemeId);
+            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
+            var addedThemeId = _courseRepo.AddTheme(themeDto);
+            _themeIdList.Add(addedThemeId);
 
-                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(1).Clone();
-                var addedTagId = _tagRepo.TagAdd(tagDto);
-                _tagIdList.Add(addedTagId);
+            var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(1).Clone();
+            var addedTagId = _tagRepo.TagAdd(tagDto);
+            _tagIdList.Add(addedTagId);
 
-                var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-                dto.Group = groupDto;
-                var addedHomeworkId = _homeworkRepo.AddHomework(dto);
-                _homeworkIdList.Add(addedHomeworkId);
-                dto.Id = addedHomeworkId;
+            var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            dto.Group = groupDto;
+            var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+            _homeworkIdList.Add(addedHomeworkId);
+            dto.Id = addedHomeworkId;
 
-                var addedThemeHomework = _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
-                _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
+            var addedThemeHomework = _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
+            _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
 
-                var addedTagHomework = _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
-                _tagHomeworkList.Add((addedHomeworkId, addedTagId));
-            }
+            var addedTagHomework = _homeworkRepo.HomeworkTagAdd(addedHomeworkId, addedTagId);
+            _tagHomeworkList.Add((addedHomeworkId, addedTagId));
+
             //When, Then
             try
             {

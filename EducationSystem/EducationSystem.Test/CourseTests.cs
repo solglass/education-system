@@ -3,9 +3,11 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using EducationSystem.Data.Tests.Mocks;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class CourseTests:BaseTest
     {
         private ICourseRepository _courseRepo;
