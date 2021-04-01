@@ -33,7 +33,36 @@ namespace EducationSystem.Data.Tests
             _authorDtoMock.Id = _userRepo.AddUser(_authorDtoMock);
             _userIdList.Add(_authorDtoMock.Id);
         }
-       
+
+        [TestCase(1, 4, 5)]
+        [TestCase(2, 3, 4)]
+        public void GetNotificationByIdPositiveTest(int mockId, int userId, int authorId)
+        {
+            //Given
+            var expected = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
+
+            var user = (UserDto)UserMockGetter.GetUserDtoMock(userId).Clone();
+            user.Id = _userRepo.AddUser(user);
+            _userIdList.Add(user.Id);
+            expected.User = user;
+
+            var author = (UserDto)UserMockGetter.GetUserDtoMock(authorId).Clone();
+            author.Id = _userRepo.AddUser(author);
+            _userIdList.Add(author.Id);
+            expected.Author = author;
+
+            expected.Id = _notificationRepo.AddNotification(expected);
+            Assert.Greater(expected.Id, 0);
+            _notificationIdList.Add(expected.Id);
+            //When
+            var actual = _notificationRepo.GetNotificationById(expected.Id);
+
+            //Then
+            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.User.Id, actual.User.Id);
+            Assert.AreEqual(expected.Author.Id, actual.Author.Id);
+        }
+
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
@@ -128,10 +157,10 @@ namespace EducationSystem.Data.Tests
             Assert.IsNull(actual);
         }
 
-        [TestCase(new int[] {1, 2, 3 }, new int[] {1, 2, 3 })]
-        [TestCase(new int[] { 3, 2, 1 }, new int[] {3, 1, 1 })]
-        [TestCase(new int[] { }, new int[] { })]
-        public void GetNotificationsByUserIdPositiveTest(int[] mockIds, int [] hwmockIds)
+        [TestCase(new int[] {1, 2, 3 })]
+        [TestCase(new int[] { 3, 2, 1 })]
+        [TestCase(new int[] { })]
+        public void GetNotificationsByUserIdPositiveTest(int[] mockIds)
         {
             // Given
             var addedUserId = _userDtoMock.Id;

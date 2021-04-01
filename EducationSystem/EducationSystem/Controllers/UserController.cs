@@ -323,7 +323,7 @@ namespace EducationSystem.Controllers
         /// <returns>List of payments of student</returns>
         [ProducesResponseType(typeof(List<PaymentOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [HttpGet("{id}/payment")]
+        [HttpGet("{userId}/payment")]
         [Authorize(Roles = "Администратор, Менеджер")]
         public ActionResult<List<PaymentOutputModel>> GetPaymentsByUserId(int userId)
         {

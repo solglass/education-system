@@ -62,7 +62,6 @@ namespace EducationSystem.Data
 
         public NotificationDto GetNotificationById(int id)
         {
-
             var result = _connection
                 .Query<NotificationDto, UserDto, UserDto, NotificationDto>(
                     "dbo.Notification_SelectById",
