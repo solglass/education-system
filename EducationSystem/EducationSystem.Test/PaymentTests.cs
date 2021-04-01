@@ -3,10 +3,11 @@ using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class PaymentTests : BaseTest
     {
         private UserRepository _userRepository;
@@ -532,6 +533,7 @@ namespace EducationSystem.Data.Tests
         }
     }
 
+    [ExcludeFromCodeCoverage]
     internal class PaymentComparer : System.Collections.IComparer
     {
         internal PaymentComparer()
@@ -571,7 +573,7 @@ namespace EducationSystem.Data.Tests
 
     }
 
-
+    [ExcludeFromCodeCoverage]
     internal class UserComparer : System.Collections.IComparer
     {
         internal UserComparer()
