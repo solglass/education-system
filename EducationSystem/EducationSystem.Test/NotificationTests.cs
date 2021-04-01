@@ -92,7 +92,9 @@ namespace EducationSystem.Data.Tests
             // Given
             var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
             dto.User = _userDtoMock;
+            var userId = dto.User.Id;
             dto.Author = _authorDtoMock;
+            var authorId = dto.Author.Id;
             var addedNotificationId = _notificationRepo.AddNotification(dto);
             _notificationIdList.Add(addedNotificationId);
 
@@ -106,6 +108,8 @@ namespace EducationSystem.Data.Tests
             // Then
             Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
+            Assert.AreEqual(userId, actual.User.Id);
+            Assert.AreEqual(authorId, actual.Author.Id);
         }
 
         [TestCase(1, true)]
@@ -177,6 +181,16 @@ namespace EducationSystem.Data.Tests
                 expected.Add(dto);
             }
 
+            var notification = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(1).Clone();
+            var _userDtoMock2 = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
+            _userDtoMock2.Id = _userRepo.AddUser(_userDtoMock2);
+            _userIdList.Add(_userDtoMock2.Id);
+            notification.User = _userDtoMock2;
+            notification.Author = _authorDtoMock;
+            var notificationId = _notificationRepo.AddNotification(notification);
+            _notificationIdList.Add(notificationId);
+
+
             // When
             var actual = _notificationRepo.GetNotificationsByUserId(addedUserId);
 
@@ -215,11 +229,12 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
 
-        [Test]
-        public void AddNotificationEmptyPropertyNegativeTest()
+        [TestCase(4)]
+        [TestCase(5)]
+        public void AddNotificationEmptyPropertyNegativeTest(int mockId)
         {
             //Given
-            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(4).Clone();
+            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
 
             //When
             try
@@ -250,7 +265,8 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1, 4)]
-        public void UpdateNotificationEmptyPropertiesNegativeTest(int mockToAddId, int mockToUpdate)
+        [TestCase(1, 6)]
+        public void UpdateNotificationEmptyPropertiesNegativeTest(int mockToAddId, int mockToUpdateId)
         {
             //Given
             var notification = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockToAddId).Clone();
@@ -262,7 +278,7 @@ namespace EducationSystem.Data.Tests
             //When
             try
             {
-                notification = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockToUpdate).Clone();
+                notification = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockToUpdateId).Clone();
                 notification.Id = notificationId;
                 _notificationRepo.UpdateNotification(notification);
             }

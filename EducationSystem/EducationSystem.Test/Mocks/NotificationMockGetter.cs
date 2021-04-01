@@ -34,6 +34,20 @@ namespace EducationSystem.Data.Tests.Mocks
                     IsRead = false
                 },
                 4 => new NotificationDto(),
+                5 => new NotificationDto()
+                {
+                    Author = new UserDto(),
+                    Message = "Нет получателя",
+                    Date = new DateTime(2021, 03, 30, 11, 30, 0).AddDays(+4),
+                    IsRead = false
+                },
+                6 => new NotificationDto()
+                {
+                    User = new UserDto(),
+                    Author = new UserDto(),
+                    Date = new DateTime(2021, 03, 30, 11, 30, 0).AddDays(+5),
+                    IsRead = false
+                },
                 _ => null,
             };
         }
