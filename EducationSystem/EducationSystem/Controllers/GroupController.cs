@@ -24,14 +24,16 @@ namespace EducationSystem.Controllers
         private ICourseService _courseService;
         private ILessonService _lessonService;
         private IUserService _userService;
+        private IMaterialService _materialService;
         private IMapper _mapper;
-        public GroupController(IMapper mapper, IGroupService groupService, 
+        public GroupController(IMapper mapper, IGroupService groupService, IMaterialService materialService,
             ICourseService courseService, ILessonService lessonService, IUserService userService)
         {
             _service = groupService;
             _courseService = courseService;
             _lessonService = lessonService;
             _userService = userService;
+            _materialService = materialService;
             _mapper = mapper;
         }
 
@@ -72,7 +74,7 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(id);
             if (group == null)
-                return StatusCode(StatusCodes.Status404NotFound, $"группа c id {id} не найдена");
+                return NotFound($"группа c id {id} не найдена");
 
             var userGroup = this.SupplyUserGroupsList(_service);
             if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
@@ -97,6 +99,7 @@ namespace EducationSystem.Controllers
         [Authorize]
         public ActionResult<List<GroupOutputModel>> GetGroupsByThemeId(int themeId)
         {
+            // пожалуйста, разберись, что же происходит в этом методе
             var groups = _service.GetGroupByThemeId(themeId);
             if (groups.Count == 0)
                 return NotFound($"Групп с темой {themeId} не существует");
@@ -124,22 +127,22 @@ namespace EducationSystem.Controllers
         /// <summary>
         /// Gets only one group by its id with its course and list of themes
         /// </summary>
-        /// <param name="id"> is used to find necessary groups by id</param>
+        /// <param name="groupId"> is used to find necessary groups by id</param>
         /// <returns>Returns the list of GroupOutputModels</returns>
         // https://localhost:44365/api/group/2/programs
         [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [HttpGet("{id}/programs")]
+        [HttpGet("{groupId}/program")]
         [Authorize(Roles = "Администратор, Менеджер, Методист, Преподаватель")]
-        public ActionResult<GroupOutputModel> GetGroupProgramsByGroupId(int id)
+        public ActionResult<GroupOutputModel> GetGroupProgramsByGroupId(int groupId)
         {
-            var group = _service.GetGroupProgramsByGroupId(id);
+            var group = _service.GetGroupProgramsByGroupId(groupId);
             if (group is null)
-                return NotFound($"Программы с id {id} не существует");
+                return NotFound($"Группы с id {groupId} не существует");
 
             var userGroup = this.SupplyUserGroupsList(_service);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
+            if (User.IsInRole("Преподаватель") && !userGroup.Contains(group.Id))
             {
                 return Forbid($"Пользователь не связан с группой {group.Id}");
             }
@@ -204,7 +207,7 @@ namespace EducationSystem.Controllers
         /// /// <param name="id"> is used to find the group user wants to delete</param>
         /// <returns>Returns the GroupOutputModel</returns>
         // https://localhost:44365/api/group/2
-        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpDelete("{id}")]
@@ -215,9 +218,8 @@ namespace EducationSystem.Controllers
             if (group is null)
                 return NotFound($"группа c id {id} не найдена");
 
-            var deletedRows = _service.DeleteGroup(id);
-            var deleteResult = _mapper.Map<GroupOutputModel>(_service.GetGroupById(id));
-            return Ok(deleteResult);
+            _service.DeleteGroup(id);
+            return NoContent();
         }
 
         /// <summary>
@@ -238,9 +240,9 @@ namespace EducationSystem.Controllers
             if (group == null)
                 return NotFound($"Группа c id {groupId} не найдена");
 
-            var material = _userService.GetUserById(materialId);
+            var material = _materialService.GetMaterialById(materialId);
             if (material == null)
-                return NotFound($"Материалы c id {materialId} не найдены");
+                return NotFound($"Материал c id {materialId} не найден");
 
             var userGroup = this.SupplyUserGroupsList(_service);
             if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
@@ -269,9 +271,9 @@ namespace EducationSystem.Controllers
             if (group is null)
                 return NotFound($"Группа c id {groupId} не найдена");
 
-            var material = _userService.GetUserById(materialId);
+            var material = _materialService.GetMaterialById(materialId);
             if (material is null)
-                return NotFound($"Материалы c id {materialId} не найдены");
+                return NotFound($"Материал c id {materialId} не найден");
 
             var userGroup = this.SupplyUserGroupsList(_service);
             if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
@@ -281,7 +283,7 @@ namespace EducationSystem.Controllers
 
             _service.DeleteGroup_Material(groupId, materialId);
   
-                return NoContent();
+            return NoContent();
         }
 
         /// <summary>
@@ -304,7 +306,7 @@ namespace EducationSystem.Controllers
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return NotFound($"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователь c id {userId} не найден");
 
             _service.DeleteTeacherGroup(userId, groupId);
             return NoContent();
@@ -330,7 +332,7 @@ namespace EducationSystem.Controllers
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return NotFound($"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователь c id {userId} не найден");
 
             _service.AddTeacherGroup(groupId, userId);
             return StatusCode(StatusCodes.Status201Created);
@@ -357,7 +359,7 @@ namespace EducationSystem.Controllers
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return NotFound($"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователь c id {userId} не найден");
 
             _service.DeleteStudentGroup(userId, groupId);
             return NoContent();
@@ -368,6 +370,7 @@ namespace EducationSystem.Controllers
         /// </summary>
         /// <param name="groupId"> is used to find the group which one user wants to connect with student</param>
         /// <param name="userId"> is used to find the student which one user wants to connect with group</param>
+        /// <param name="studentGroupInputModel"> request body with contract number</param>
         /// <returns>Returns Created result</returns>
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -376,18 +379,18 @@ namespace EducationSystem.Controllers
         // https://localhost:XXXXX/api/group/id/student/id
         [HttpPost("{groupId}/student/{userId}")]
         [Authorize(Roles = "Администратор, Менеджер")]
-        public ActionResult AddStudentGroup(int groupId, int userId, StudentGroupInputModel studentGroupInputModel)
+        public ActionResult AddStudentGroup(int groupId, int userId, [FromBody] StudentGroupInputModel studentGroupInputModel)
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
             
             var group = _service.GetGroupById(groupId);
             if (group is null) 
-                return NotFound($"группа c id {groupId} не найдена");
+                return NotFound($"Группа c id {groupId} не найдена");
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return NotFound($"пользователь c id {userId} не найден");
+                return NotFound($"Пользователь c id {userId} не найден");
 
             var studentGroupDto = _mapper.Map<StudentGroupDto>(studentGroupInputModel);
             var id = _service.AddStudentGroup(groupId, userId, studentGroupDto);
@@ -415,7 +418,7 @@ namespace EducationSystem.Controllers
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return NotFound($"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователь c id {userId} не найден");
 
             _service.DeleteTutorGroup(userId, groupId);
             return NoContent();
@@ -442,7 +445,7 @@ namespace EducationSystem.Controllers
 
             var user = _userService.GetUserById(userId);
             if (user is null)
-                return NotFound($"Пользователи c id {userId} не найдены");
+                return NotFound($"Пользователь c id {userId} не найден");
 
             _service.AddTutorToGroup(userId, groupId);
             return StatusCode(StatusCodes.Status201Created);
@@ -461,6 +464,7 @@ namespace EducationSystem.Controllers
         {
             List<GroupReportOutputModel> report ;
 
+            // вот и зачем тут try .. catch?
             try
             {
                 var reportDto = _service.GenerateReport();
@@ -488,7 +492,7 @@ namespace EducationSystem.Controllers
         {
             var group = _service.GetGroupById(id);
             if (group is null)
-                return StatusCode(StatusCodes.Status404NotFound, $"Группа c id {id} не найдена");
+                return NotFound($"Группа c id {id} не найдена");
 
             var userGroup = this.SupplyUserGroupsList(_service);
             if (!User.IsInRole("Администратор") && !userGroup.Contains(group.Id))
