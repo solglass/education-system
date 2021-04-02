@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Models
 {
@@ -39,5 +37,7 @@ namespace EducationSystem.Data.Models
                 && Date.Equals(notification.Date)
                 && IsRead == notification.IsRead);
         }
+
+        public override string ToString() => $"{Id} {Message} {Date} {IsRead}";
     }
 }

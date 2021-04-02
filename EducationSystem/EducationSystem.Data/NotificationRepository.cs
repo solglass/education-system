@@ -40,7 +40,8 @@ namespace EducationSystem.Data
                 new
                 {
                     dto.Id,
-                    dto.Message
+                    dto.Message,
+                    dto.Date
                 },
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
@@ -61,7 +62,6 @@ namespace EducationSystem.Data
 
         public NotificationDto GetNotificationById(int id)
         {
-
             var result = _connection
                 .Query<NotificationDto, UserDto, UserDto, NotificationDto>(
                     "dbo.Notification_SelectById",
@@ -100,7 +100,7 @@ namespace EducationSystem.Data
         {
             var result = _connection
                 .Query<NotificationDto, UserDto, UserDto, NotificationDto>(
-                    "dbo.Notification_SelectById",
+                    "dbo.Notification_SelectByUserId",
                     (notification, user, author) =>
                     {
                         if (notification != null)
