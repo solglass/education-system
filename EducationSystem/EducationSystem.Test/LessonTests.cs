@@ -534,7 +534,7 @@ namespace EducationSystem.Data.Tests
         {
             foreach (int groupId in _addedGroupIds)
             {
-                _groupRepository.HardDeleteGroup(groupId);
+                _groupRepository.DeleteGroup(groupId);
             }
         }
         public void DeleteLessons()
