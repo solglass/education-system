@@ -186,8 +186,8 @@ namespace EducationSystem.API.Controllers
         /// <param name="commentId">Id of the comment where attachment to be deleted</param>
         /// <returns>Return deleted AttachmentOutputModel</returns>
         //   https://localhost:44365/api/attachment/comment/4/5
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [HttpDelete("comment/{commentId}/{attachmentId}")]
         [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
         public ActionResult DeleteCommentAttachment(int attachmentId , int commentId)
