@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EducationSystem.Data.Models
 {
@@ -40,12 +38,6 @@ namespace EducationSystem.Data.Models
                 && IsRead == notification.IsRead);
         }
 
-        public override string ToString()
-        {
-            string s = "";
-
-            s += Id + " " + Message + " " + Date + " " + IsRead + "; ";
-            return s;
-        }
+        public override string ToString() => $"{Id} {Message} {Date} {IsRead}";
     }
 }

@@ -37,6 +37,23 @@ namespace EducationSystem.Data.Tests
             _addedMaterialGroupIds = new List<(int, int)>();
         }
 
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(10)]
+        public void MaterialGetAllPositiveTest(int amountMaterials)
+        {
+            List<MaterialDto> expected = _materialRepository.GetMaterials();
+            for (int i =0; i < amountMaterials; i++)
+            {
+                expected.Add(AddMaterial(1));
+            }
+
+            List<MaterialDto> actual = _materialRepository.GetMaterials();
+
+            Assert.AreEqual(expected.Count, actual.Count);
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestCase(1)]
         public void MaterialAddPositiveTest(int mockId)
         {
@@ -361,7 +378,7 @@ namespace EducationSystem.Data.Tests
         {
             _addedGroupIds.ForEach(id =>
             {
-                _groupRepository.HardDeleteGroup(id);
+                _groupRepository.DeleteGroup(id);
             });
         }
         public void DeleteMaterialTags()

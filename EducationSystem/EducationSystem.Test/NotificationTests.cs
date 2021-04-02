@@ -90,6 +90,8 @@ namespace EducationSystem.Data.Tests
             var dto = GetNotificationMockWithAuthorAndUser(mockId);
             dto.Id = GetAddedToDbandDtoListNotificationId(dto);
             var addedNotificationId = dto.Id;
+            var userId = dto.User.Id;
+            var authorId = dto.Author.Id;
 
             dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(updateMockId).Clone();
             dto.Id = addedNotificationId;
@@ -101,6 +103,8 @@ namespace EducationSystem.Data.Tests
             // Then
             Assert.AreEqual(1, affectedRowsCount);
             Assert.AreEqual(dto, actual);
+            Assert.AreEqual(userId, actual.User.Id);
+            Assert.AreEqual(authorId, actual.Author.Id);
         }
 
         [TestCase(1, true)]
@@ -160,12 +164,157 @@ namespace EducationSystem.Data.Tests
                 expected.Add(dto);
             }
 
+            var notification = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(1).Clone();
+            var _userDtoMock2 = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
+            _userDtoMock2.Id = _userRepo.AddUser(_userDtoMock2);
+            _userIdList.Add(_userDtoMock2.Id);
+            notification.User = _userDtoMock2;
+            notification.Author = _authorDtoMock;
+            var notificationId = _notificationRepo.AddNotification(notification);
+            _notificationIdList.Add(notificationId);
+
+
             // When
             var actual = _notificationRepo.GetNotificationsByUserId(addedUserId);
 
             // Then
             CollectionAssert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void GetNotificationByIdEntityNotExistNegativeTest()
+        {
+            //Given
+
+            //When
+            var notificationDto = _notificationRepo.GetNotificationById(-1);
+            //Then
+            Assert.IsNull(notificationDto);
+        }
+
+        [Test]
+        public void AddNotificationNullEntityNegativeTest()
+        {
+            //Given
+
+            //When
+            try
+            {
+                var addedNotificationId = _notificationRepo.AddNotification(null);
+                _notificationIdList.Add(addedNotificationId);
+            }
+
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(4)]
+        [TestCase(5)]
+        public void AddNotificationEmptyPropertyNegativeTest(int mockId)
+        {
+            //Given
+            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
+
+            //When
+            try
+            {
+                var addedNotificationId = _notificationRepo.AddNotification(dto);
+                _notificationIdList.Add(addedNotificationId);
+            }
+
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateNotificationEntityNotExistsNegativeTest()
+        {
+            //Given
+            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(1).Clone();
+
+            //When
+            var result = _notificationRepo.UpdateNotification(dto);
+
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
+        [TestCase(1, 4)]
+        [TestCase(1, 6)]
+        public void UpdateNotificationEmptyPropertiesNegativeTest(int mockToAddId, int mockToUpdateId)
+        {
+            //Given
+            var notification = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockToAddId).Clone();
+            notification.User = _userDtoMock;
+            notification.Author = _authorDtoMock;
+            var notificationId = _notificationRepo.AddNotification(notification);
+            _notificationIdList.Add(notificationId);
+
+            //When
+            try
+            {
+                notification = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockToUpdateId).Clone();
+                notification.Id = notificationId;
+                _notificationRepo.UpdateNotification(notification);
+            }
+
+            //Then
+            catch 
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void UpdateNotificationNullEntityNegativeTest()
+        {
+            //Given
+
+            //When
+            try
+            {
+                _notificationRepo.UpdateNotification(null);
+            }
+
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void SetReadOrUnreadNotificationNotExistEntityNegativeTest()
+        {
+            //Given
+            //When
+            var affectedRows = _notificationRepo.SetReadOrUnreadNotification(-1, true);
+
+            //Then
+            Assert.AreEqual(0, affectedRows);
+        }
+
+        [Test]
+        public void DeleteNotificationNotExistEntityNegativeTest()
+        {
+            //Given
+            //When
+            var affectedRows = _notificationRepo.DeleteNotification(-1);
+
+            //Then
+            Assert.AreEqual(0, affectedRows);
+        }
+
 
         private NotificationDto GetNotificationMockWithAuthorAndUser(int mockId)
         {
