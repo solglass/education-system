@@ -214,6 +214,190 @@ namespace EducationSystem.Data.Tests
 
         }
 
+        [TestCase(4)]
+        public void FeedbackkAdd_EmptyFeedback_NegativeTest(int mockId)
+        {
+            //Given
+            CreateUserEntity(mockId - 1);
+            CreateLessonEntity(mockId - 1);
+            var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockId).Clone();
+            dto.Lesson = _lessonDtoMock;
+            dto.User = _userDtoMock;
+
+            //When, Then
+            try
+            {
+                var addedFeedbackId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedFeedbackId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void FeedbackAdd_WithoutLesson_NegativeTest(int mockId)
+        {
+            //Given
+            CreateUserEntity(mockId);
+            var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockId).Clone();
+            dto.User = _userDtoMock;
+
+            //When, Then
+            try
+            {
+                var addedFeedbackId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedFeedbackId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void FeedbackAdd_WithoutUser_NegativeTest(int mockId)
+        {
+            //Given
+            CreateLessonEntity(mockId);
+            var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockId).Clone();
+            dto.Lesson = _lessonDtoMock;
+
+            //When, Then
+            try
+            {
+                var addedFeedbackId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedFeedbackId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase (1)]
+        public void FeedbackAdd_Null_NegativeTest(int mockId)
+        {
+            //Given
+                CreateUserEntity(mockId);
+                CreateLessonEntity(mockId);
+
+                var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockId).Clone();
+                dto.User = _userDtoMock;
+                dto.Lesson = _lessonDtoMock;
+
+            //When, Then
+            try
+            {
+                var addedFeedbackId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedFeedbackId);
+
+                addedFeedbackId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedFeedbackId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void FeedbackAdd_EqualFedbacks_NegativeTest()
+        {
+            //Given
+
+            //When, Then
+            try
+            {
+                var addedFeedbackId = _lessonRepo.AddFeedback(null);
+                _feedbackIdList.Add(addedFeedbackId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(4)]
+        public void FeedbackUpdate_Empty_NegativeTest(int mockId)
+        {
+            //Given
+            CreateUserEntity(1);
+            CreateLessonEntity(1);
+            var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(1).Clone();
+            dto.Lesson = _lessonDtoMock;
+            dto.User = _userDtoMock;
+
+            var addedFeedbackId = _lessonRepo.AddFeedback(dto);
+            _feedbackIdList.Add(addedFeedbackId);
+         
+            dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockId).Clone();
+            dto.Id = addedFeedbackId;
+
+            //When, Then
+            try
+            {
+                _lessonRepo.UpdateFeedback(dto);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void FeedbackUpdate_Null_NegativeTest()
+        {
+            //Given
+            CreateUserEntity(1);
+            CreateLessonEntity(1);
+            var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(1).Clone();
+            dto.Lesson = _lessonDtoMock;
+            dto.User = _userDtoMock;
+
+            var addedFeedbackId = _lessonRepo.AddFeedback(dto);
+            _feedbackIdList.Add(addedFeedbackId);
+            //When, Then
+            try
+            {
+                _lessonRepo.UpdateFeedback(null);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [Test]
+        public void FeedbackDelete_NotExistFeedback_NegativeTest()
+        {
+            //Given
+            //When
+            var deletedRows = _lessonRepo.DeleteFeedback(-1);
+
+            //Then
+            Assert.AreEqual(0, deletedRows);
+        }
+
+
+        [Test]
+        public void FeedbackSelectAll_WithoutAllParamsNull_NegativeTest()
+        {
+            //Given
+            //When
+            var affectedRows = _lessonRepo.GetFeedbacks(null, null, null);
+
+            //Then
+            Assert.AreEqual(0, affectedRows.Count);
+        }
+
         [TearDown]
         public void TearDowTest()
         {
