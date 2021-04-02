@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class GroupTests : BaseTest
     {
         private IHomeworkRepository _homeworkRepo;
@@ -77,45 +78,45 @@ namespace EducationSystem.Data.Tests
         public void GroupAddPositiveTest(int mockId)
         {
             //Given
-            var dto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
-            dto.Course = _courseDtoMock;
+            var expected = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
+            expected.Course = _courseDtoMock;
 
-            var addedGroupId = _groupRepo.AddGroup(dto);
+            var addedGroupId = _groupRepo.AddGroup(expected);
             Assert.Greater(addedGroupId, 0);
 
             _groupIdList.Add(addedGroupId);
-            dto.Id = addedGroupId;
+            expected.Id = addedGroupId;
 
             //When
             var actual = _groupRepo.GetGroupById(addedGroupId);
 
             //Then
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
 
         }
         [TestCase(1, 3)]
         public void GroupUpdatePositiveTest(int mockId, int statusId)
         {
             //Given
-            var dto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
-            dto.Course = _courseDtoMock;
-            var addedGroupId = _groupRepo.AddGroup(dto);
+            var expected = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
+            expected.Course = _courseDtoMock;
+            var addedGroupId = _groupRepo.AddGroup(expected);
             _groupIdList.Add(addedGroupId);
 
-            dto = new GroupDto
+            expected = new GroupDto
             {
                 Id = addedGroupId,
-                StartDate = dto.StartDate.AddDays(1),
+                StartDate = expected.StartDate.AddDays(1),
                 Course = _courseDtoMock,
                 GroupStatus = (GroupStatus)statusId
             };
-            _groupRepo.UpdateGroup(dto);
+            _groupRepo.UpdateGroup(expected);
 
             //When
             var actual = _groupRepo.GetGroupById(addedGroupId);
 
             //Then
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
 
         }
         [TestCase(new int[] { 1, 2, 3 })]
@@ -147,21 +148,21 @@ namespace EducationSystem.Data.Tests
         public void GetGroupByThemeIdPositiveTest(int themeMockId)
         {
             //Given;
-            var expectedGroups = new List<GroupDto>();
+            var expected = new List<GroupDto>();
             var groupMockIds = new int[] { 1, 2, 3 };
             for (int i = 0; i < groupMockIds.Length; i++)
             {
                 var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockIds[i]).Clone();
                 groupDto.Course = _courseDtoMock;
                 groupDto.Id = _groupRepo.AddGroup(groupDto);
-                expectedGroups.Add(groupDto);
+                expected.Add(groupDto);
                 _groupIdList.Add(groupDto.Id);
             }
             var listLesson = new List<LessonDto>();
             for (int i = 0; i < groupMockIds.Length; i++)
             {
                 var lessonMockDto = (LessonDto)LessonMockGetter.GetLessonDtoMock(i + 1).Clone();
-                lessonMockDto.Group = expectedGroups[i];
+                lessonMockDto.Group = expected[i];
                 lessonMockDto.Id = _lessonRepo.AddLesson(lessonMockDto);
                 _lessonIdList.Add(lessonMockDto.Id);
                 listLesson.Add(lessonMockDto);
@@ -181,67 +182,75 @@ namespace EducationSystem.Data.Tests
             var actual = _groupRepo.GetGroupByThemeId(themeMockDto.Id);
 
             //Then
-            CollectionAssert.AreEqual(expectedGroups, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestCase(2,1)]
         public void GetGroupProgramsByGroupIdPositiveTest(int groupMockId, int themeMockId)
         {
             //Given;
+            var themes = new List<ThemeDto>();
+            var expected = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+            expected.Course = _courseDtoMock;
 
-            var expectedGroup = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
-            expectedGroup.Course = _courseDtoMock;
+            expected.Course.Themes = themes;
 
-            var addedGroupId = _groupRepo.AddGroup(expectedGroup);
+            var addedGroupId = _groupRepo.AddGroup(expected);
             Assert.Greater(addedGroupId, 0);
 
             _groupIdList.Add(addedGroupId);
-            expectedGroup.Id = addedGroupId;
+            expected.Id = addedGroupId;
 
-            var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockId).Clone();
+            
 
+            var groupMockIds = new int[] { 1, 2, 3 };
+            for (int i = 0; i < groupMockIds.Length; i++) 
+            {
+                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(groupMockIds[i]).Clone();
+                var addedThemeId = _courseRepo.AddTheme(themeDto);
+                Assert.Greater(addedThemeId, 0);
 
-            var addedThemeId = _courseRepo.AddTheme(themeDto);
-            Assert.Greater(addedThemeId, 0);
+                _themeIdList.Add(addedThemeId);
+                themeDto.Id = addedThemeId;
+                themes.Add(themeDto);
 
-            _themeIdList.Add(addedThemeId);
-            themeDto.Id = addedThemeId;
+                _courseRepo.AddCourse_Theme(_courseDtoMock.Id, themeDto.Id);
+                _courseThemeIdList.Add((_courseDtoMock.Id, themeDto.Id));
+            }
 
-
-            _courseRepo.AddCourse_Theme(_courseDtoMock.Id, themeDto.Id);
-            _courseThemeIdList.Add((_courseDtoMock.Id, themeDto.Id));
+            
 
             //When
-            var actual = _groupRepo.GetGroupProgramsByGroupId(expectedGroup.Id);
+            var actual = _groupRepo.GetGroupProgramsByGroupId(expected.Id);
             //Then
-            Assert.AreEqual(expectedGroup, actual);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestCase(1)]
         public void GetGroupByIdPositiveTest(int mockId)
         {
             //Given
-            var dto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
-            dto.Course = _courseDtoMock;
+            var expected = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockId).Clone();
+            expected.Course = _courseDtoMock;
 
-            var addedGroupId = _groupRepo.AddGroup(dto);
+            var addedGroupId = _groupRepo.AddGroup(expected);
             Assert.Greater(addedGroupId, 0);
 
             _groupIdList.Add(addedGroupId);
-            dto.Id = addedGroupId;
+            expected.Id = addedGroupId;
 
             //When
             var actual = _groupRepo.GetGroupById(addedGroupId);
 
             //Then
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
         }
         [TestCase(new int[] { 1, 2, 3 },4)]
 
         public void GetGroupsWithoutTutorsPositiveTest(int[] mockIds,int tutorMockId)
         {
             //Given
-            var expectedGroups = new List<GroupDto>();
+            var expected = new List<GroupDto>();
 
 
             var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
@@ -271,7 +280,7 @@ namespace EducationSystem.Data.Tests
                 var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockIds[i]).Clone();
                 groupDto.Course = _courseDtoMock;
                 groupDto.Id = _groupRepo.AddGroup(groupDto);
-                expectedGroups.Add(groupDto);
+                expected.Add(groupDto);
                 _groupIdList.Add(groupDto.Id);
             }
 
@@ -279,7 +288,7 @@ namespace EducationSystem.Data.Tests
             var actual = _groupRepo.GetGroupsWithoutTutors();
 
             //Then
-            CollectionAssert.AreEqual(expectedGroups, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestCase(new int[] { 1, 2 })]
@@ -287,9 +296,9 @@ namespace EducationSystem.Data.Tests
         public void AddGroupMaterialPositiveTest(int[] mockIds)
         {
             //Given
-            var expectedMaterials = new List<MaterialDto>();
+            var expected = new List<MaterialDto>();
 
-            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[1]);
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[1]).Clone();
             groupDto.Course = _courseDtoMock;
             groupDto.Id = _groupRepo.AddGroup(groupDto);
             _groupIdList.Add(groupDto.Id);
@@ -297,10 +306,10 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
 
-                var materialDto = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(mockIds[i]);
+                var materialDto = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(mockIds[i]).Clone();
                 materialDto.Id = _materialRepo.AddMaterial(materialDto);
                 _materialIdList.Add(materialDto.Id);
-                expectedMaterials.Add(materialDto);
+                expected.Add(materialDto);
 
                 _groupRepo.AddGroup_Material(groupDto.Id, materialDto.Id);
                 _groupMaterialIdList.Add((groupDto.Id, materialDto.Id));
@@ -311,7 +320,7 @@ namespace EducationSystem.Data.Tests
             var actual = _materialRepo.GetMaterialsByGroupId(groupDto.Id);
 
             //Then
-            CollectionAssert.AreEqual(expectedMaterials, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestCase(new int[] { 1, 2 })]
@@ -319,7 +328,7 @@ namespace EducationSystem.Data.Tests
         public void GetGroupsByCourseIdPositiveTest(int [] mockIds)
         {
             //Given
-            var expectedGroups = new List<GroupDto>();
+            var expected = new List<GroupDto>();
 
             for (int i = 0; i < mockIds.Length; i++) 
             {
@@ -327,15 +336,15 @@ namespace EducationSystem.Data.Tests
                 groupDto.Course = _courseDtoMock;
                 groupDto.Id = _groupRepo.AddGroup(groupDto);
                 _groupIdList.Add(groupDto.Id);
-                expectedGroups.Add(groupDto);
+                expected.Add(groupDto);
             }
 
             //When
-            var courseId = expectedGroups[1].Course.Id;
+            var courseId = expected[1].Course.Id;
             var actual = _groupRepo.GetGroupsByCourseId(courseId);
 
             //Then
-            CollectionAssert.AreEqual(expectedGroups, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestCase(new int[] { 1, 2 }, 2)]
@@ -343,7 +352,7 @@ namespace EducationSystem.Data.Tests
         public void GetGroupsByStudentIdPositiveTest(int [] mockIds, int studentMockId)
         {
             //Given
-            var expectedGroups = new List<int>();
+            var expected = new List<int>();
 
             var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
             
@@ -361,7 +370,7 @@ namespace EducationSystem.Data.Tests
                 groupDto.Course = _courseDtoMock;
                 groupDto.Id = _groupRepo.AddGroup(groupDto);
                 _groupIdList.Add(groupDto.Id);
-                expectedGroups.Add(groupDto.Id);
+                expected.Add(groupDto.Id);
 
                 
 
@@ -377,14 +386,14 @@ namespace EducationSystem.Data.Tests
             var actual = _groupRepo.GetGroupsByStudentId(userDtoMock.Id);
 
             //Then
-            CollectionAssert.AreEqual(expectedGroups, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestCase(new int[] { 1, 2 }, 4)]
         public void GetGroupsByTutorIdPositiveTest(int[] mockIds, int tutorMockId)
         {
             //Given
-            var expectedGroups = new List<int>();
+            var expected = new List<int>();
 
             var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(tutorMockId).Clone();
             userDtoMock.Id = _userRepo.AddUser(userDtoMock);
@@ -400,7 +409,7 @@ namespace EducationSystem.Data.Tests
                 groupDto.Course = _courseDtoMock;
                 groupDto.Id = _groupRepo.AddGroup(groupDto);
                 _groupIdList.Add(groupDto.Id);
-                expectedGroups.Add(groupDto.Id);
+                expected.Add(groupDto.Id);
 
                 _groupRepo.AddTutorToGroup(userDtoMock.Id, groupDto.Id);
                 _addedTutorToGroupIdList.Add((userDtoMock.Id, groupDto.Id));
@@ -410,14 +419,14 @@ namespace EducationSystem.Data.Tests
             var actual = _groupRepo.GetGroupsByTutorId(userDtoMock.Id);
 
             //Then
-            CollectionAssert.AreEqual(expectedGroups, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestCase(new int[] { 1, 2 }, 3)]
         public void GetGroupsByTeacherIdPositiveTest(int[] mockIds, int teacherMockId)
         {
             //Given
-            var expectedGroups = new List<int>();
+            var expected = new List<int>();
 
             var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(teacherMockId).Clone();
 
@@ -435,7 +444,7 @@ namespace EducationSystem.Data.Tests
                 groupDto.Course = _courseDtoMock;
                 groupDto.Id = _groupRepo.AddGroup(groupDto);
                 _groupIdList.Add(groupDto.Id);
-                expectedGroups.Add(groupDto.Id);
+                expected.Add(groupDto.Id);
 
                 _groupRepo.AddTeacherGroup(userDtoMock.Id, groupDto.Id);
                 _addedTeacherToGroupIdList.Add((userDtoMock.Id, groupDto.Id));
@@ -445,14 +454,14 @@ namespace EducationSystem.Data.Tests
             var actual = _groupRepo.GetGroupsByTeacherId(userDtoMock.Id);
 
             //Then
-            CollectionAssert.AreEqual(expectedGroups, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
         [TestCase(new int[] { 1, 2 },3,4,2)]
         public void GenerateReportPositiveTest(int[] mockIds, int teacherMockId, int tutorMockId, int studentMockId)
         {
             //Given
             var groupsId = new List<int>();
-            var expectedReport = new List<GroupReportDto>();
+            var expected = new List<GroupReportDto>();
             //var userDtoMock = new List<UserDto>();
 
             var teacherDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(teacherMockId).Clone();
@@ -513,12 +522,12 @@ namespace EducationSystem.Data.Tests
                 groupReportDto.TutorCount++;
                 groupReportDto.TeacherCount++;
 
-                expectedReport.Add(groupReportDto);
+                expected.Add(groupReportDto);
             }
             //When
             var actual = _groupRepo.GenerateReport();
             //Then
-            CollectionAssert.AreEqual(expectedReport, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TearDown]
@@ -553,9 +562,9 @@ namespace EducationSystem.Data.Tests
 
     private void DeleteThemeHomeworks()
     {
-      foreach (var theneHomeworkPair in _themeHomeworkList)
+      foreach (var themeHomeworkPair in _themeHomeworkList)
       {
-        _homeworkRepo.DeleteHomework_Theme(theneHomeworkPair.Item1, theneHomeworkPair.Item2);
+        _homeworkRepo.DeleteHomework_Theme(themeHomeworkPair.Item1, themeHomeworkPair.Item2);
       }
     }
     private void DeleteGroupMaterials()
@@ -582,14 +591,14 @@ namespace EducationSystem.Data.Tests
     }
     private void DeleteStudentGroups()
     {
-        foreach ((int, int) groupStudentPair in _studentGroupIdList)
+        foreach (var groupStudentPair in _studentGroupIdList)
         {
             _groupRepo.DeleteStudentGroup(groupStudentPair.Item1, groupStudentPair.Item2);
         }
     }
     private void DeleteTeacherGroups()
     {
-        foreach ((int, int) groupTeacherPair in _addedTeacherToGroupIdList)
+        foreach (var groupTeacherPair in _addedTeacherToGroupIdList)
         {
             _groupRepo.DeleteTeacherGroup(groupTeacherPair.Item1, groupTeacherPair.Item2);
         }
@@ -611,7 +620,7 @@ namespace EducationSystem.Data.Tests
 
         private void DeleteThemes()
     {
-      foreach (int themeId in _themeIdList)
+      foreach (var themeId in _themeIdList)
       {
         _courseRepo.HardDeleteTheme(themeId);
       }
@@ -619,7 +628,7 @@ namespace EducationSystem.Data.Tests
 
     private void DeleteHomeworks()
     {
-      foreach (int homeworkId in _homeworkIdList)
+      foreach (var homeworkId in _homeworkIdList)
       {
         _homeworkRepo.HardDeleteHomework(homeworkId);
       }
@@ -627,14 +636,14 @@ namespace EducationSystem.Data.Tests
 
     public void DeleteGroups()
     {
-      foreach (int groupId in _groupIdList)
+      foreach (var groupId in _groupIdList)
       {
         _groupRepo.HardDeleteGroup(groupId);
       }
     }
         public void DeleteLesson()
         {
-            foreach (int lessonId in _lessonIdList)
+            foreach (var lessonId in _lessonIdList)
             {
                 _lessonRepo.HardDeleteLesson(lessonId);
             }
@@ -642,14 +651,14 @@ namespace EducationSystem.Data.Tests
 
         public void DeleteTutorGroup()
         {
-            foreach ((int, int) groupId in _addedTutorToGroupIdList)
+            foreach (var tutorGroupPair in _addedTutorToGroupIdList)
             {
-                _groupRepo.DeleteTutorGroup(groupId.Item1, groupId.Item2);
+                _groupRepo.DeleteTutorGroup(tutorGroupPair.Item1, tutorGroupPair.Item2);
             }
         }
         public void DeleteCourse()
     {
-      foreach (int courseId in _courseIdList)
+      foreach (var courseId in _courseIdList)
       {
         _courseRepo.HardDeleteCourse(courseId);
       }
@@ -657,9 +666,9 @@ namespace EducationSystem.Data.Tests
         
         public void DeleteLessonTheme()
         {
-            foreach ((int,int) courseId in _lessonThemeIdList)
+            foreach (var lessonThemePair in _lessonThemeIdList)
             {
-                _lessonRepo.DeleteLessonTheme(courseId.Item1,courseId.Item2);
+                _lessonRepo.DeleteLessonTheme(lessonThemePair.Item1, lessonThemePair.Item2);
             }
         }
 

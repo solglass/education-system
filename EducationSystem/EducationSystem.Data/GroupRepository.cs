@@ -40,6 +40,7 @@ namespace EducationSystem.Data
             List<ThemeDto> Themes = new List<ThemeDto>();
             ThemeDto themeEntry = new ThemeDto();
             CourseDto courseEntry = new CourseDto();
+
             var result = _connection
                .Query<GroupDto,CourseDto, int, GroupDto>("dbo.Group_SelectByTheme",
                    (group, course, groupStatus) =>
