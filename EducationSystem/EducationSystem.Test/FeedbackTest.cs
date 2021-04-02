@@ -279,8 +279,34 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
 
+        [TestCase (1)]
+        public void FeedbackAdd_Null_NegativeTest(int mockId)
+        {
+            //Given
+                CreateUserEntity(mockId);
+                CreateLessonEntity(mockId);
+
+                var dto = (FeedbackDto)FeedbackMockGetter.GetFeedbackDtoMock(mockId).Clone();
+                dto.User = _userDtoMock;
+                dto.Lesson = _lessonDtoMock;
+
+            //When, Then
+            try
+            {
+                var addedFeedbackId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedFeedbackId);
+
+                addedFeedbackId = _lessonRepo.AddFeedback(dto);
+                _feedbackIdList.Add(addedFeedbackId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
         [Test]
-        public void FeedbackAdd_Null_NegativeTest()
+        public void FeedbackAdd_EqualFedbacks_NegativeTest()
         {
             //Given
 
@@ -359,6 +385,7 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(0, deletedRows);
         }
+
 
         [Test]
         public void FeedbackSelectAll_WithoutAllParamsNull_NegativeTest()
