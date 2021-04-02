@@ -69,16 +69,13 @@ namespace EducationSystem.Data.Tests
         public void AddNotificationPositiveTest(int mockId)
         {
             // Given
-            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
-            dto.User = _userDtoMock;
-            dto.Author = _authorDtoMock;
-            var addedNotificationId = _notificationRepo.AddNotification(dto);
-            Assert.Greater(addedNotificationId, 0);
-            dto.Id = addedNotificationId;
-            _notificationIdList.Add(addedNotificationId);
+            var dto = GetNotificationMockWithAuthorAndUser(mockId);
+            dto.Id = GetAddedToDbandDtoListNotificationId(dto);
+            Assert.Greater(dto.Id, 0);
+
 
             // When
-            var actual = _notificationRepo.GetNotificationById(addedNotificationId);
+            var actual = _notificationRepo.GetNotificationById(dto.Id);
 
             // Then
             Assert.AreEqual(dto, actual);
@@ -90,13 +87,11 @@ namespace EducationSystem.Data.Tests
         public void UpdateNotificationTest(int mockId, int updateMockId)
         {
             // Given
-            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
-            dto.User = _userDtoMock;
+            var dto = GetNotificationMockWithAuthorAndUser(mockId);
+            dto.Id = GetAddedToDbandDtoListNotificationId(dto);
+            var addedNotificationId = dto.Id;
             var userId = dto.User.Id;
-            dto.Author = _authorDtoMock;
             var authorId = dto.Author.Id;
-            var addedNotificationId = _notificationRepo.AddNotification(dto);
-            _notificationIdList.Add(addedNotificationId);
 
             dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(updateMockId).Clone();
             dto.Id = addedNotificationId;
@@ -120,18 +115,14 @@ namespace EducationSystem.Data.Tests
         public void SetReadOrUnreadNotificationPositiveTest(int mockId, bool isRead)
         {
             //Given
-            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
-            dto.User = _userDtoMock;
-            dto.Author = _authorDtoMock;
-            var addedNotificationId = _notificationRepo.AddNotification(dto);
-            _notificationIdList.Add(addedNotificationId);
-            dto.Id = addedNotificationId;
+            var dto = GetNotificationMockWithAuthorAndUser(mockId);
+            dto.Id = GetAddedToDbandDtoListNotificationId(dto);
             dto.IsRead = isRead;
 
             // When
-            var affectedRowsCount = _notificationRepo.SetReadOrUnreadNotification(addedNotificationId, isRead);
+            var affectedRowsCount = _notificationRepo.SetReadOrUnreadNotification(dto.Id, isRead);
 
-            var actual = _notificationRepo.GetNotificationById(addedNotificationId);
+            var actual = _notificationRepo.GetNotificationById(dto.Id);
 
             // Then
             Assert.AreEqual(1, affectedRowsCount);
@@ -144,15 +135,12 @@ namespace EducationSystem.Data.Tests
         public void DeleteNotificationPositiveTest(int mockId)
         {
             //Given
-            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
-            dto.User = _userDtoMock;
-            dto.Author = _authorDtoMock;
-            var addedNotificationId = _notificationRepo.AddNotification(dto);
-            _notificationIdList.Add(addedNotificationId);
+            var dto = GetNotificationMockWithAuthorAndUser(mockId);
+            var addedNotificationId = GetAddedToDbandDtoListNotificationId(dto);
 
-            var deletedRows = _notificationRepo.DeleteNotification(addedNotificationId);
+            var deletedRow = _notificationRepo.DeleteNotification(addedNotificationId);
 
-            Assert.Greater(deletedRows, 0);
+            Assert.Greater(deletedRow, 0);
 
             //When
             var actual = _notificationRepo.GetNotificationById(addedNotificationId);
@@ -161,10 +149,9 @@ namespace EducationSystem.Data.Tests
             Assert.IsNull(actual);
         }
 
-        [TestCase(new int[] {1, 2, 3 }, new int[] {1, 2, 3 })]
-        [TestCase(new int[] { 3, 2, 1 }, new int[] {3, 1, 1 })]
-        [TestCase(new int[] { }, new int[] { })]
-        public void GetNotificationsByUserIdPositiveTest(int[] mockIds, int [] hwmockIds)
+        [TestCase(new int[] {1, 2, 3 })]
+        [TestCase(new int[] { })]
+        public void GetNotificationsByUserIdPositiveTest(int[] mockIds)
         {
             // Given
             var addedUserId = _userDtoMock.Id;
@@ -172,12 +159,8 @@ namespace EducationSystem.Data.Tests
             var expected = new List<NotificationDto>();
             for (int i = 0; i < mockIds.Length; i++)
             {
-                var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockIds[i]).Clone();
-                dto.User = _userDtoMock;
-                dto.Author = _authorDtoMock;
-                var addedNotificationId = _notificationRepo.AddNotification(dto);
-                _notificationIdList.Add(addedNotificationId);
-                dto.Id = addedNotificationId;
+                var dto = GetNotificationMockWithAuthorAndUser(mockIds[i]);
+                dto.Id = GetAddedToDbandDtoListNotificationId(dto);
                 expected.Add(dto);
             }
 
@@ -332,11 +315,27 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(0, affectedRows);
         }
 
+
+        private NotificationDto GetNotificationMockWithAuthorAndUser(int mockId)
+        {
+            var dto = (NotificationDto)NotificationMockGetter.GetNotificationDtoMock(mockId).Clone();
+            dto.User = _userDtoMock;
+            dto.Author = _authorDtoMock;
+            return dto;
+        }
+
+        private int GetAddedToDbandDtoListNotificationId(NotificationDto dto)
+        {
+            var addedNotificationId = _notificationRepo.AddNotification(dto);
+            _notificationIdList.Add(addedNotificationId);
+            return addedNotificationId;
+        }
+
         [TearDown]
         public void TestTearDown()
         {
             DeleteNotifications();
-            DeleteUser();
+            DeleteUsers();
         }
 
         private void DeleteNotifications()
@@ -347,7 +346,7 @@ namespace EducationSystem.Data.Tests
             }
         }
 
-        private void DeleteUser()
+        private void DeleteUsers()
         {
             foreach (var userId in _userIdList)
             {
