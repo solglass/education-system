@@ -1,27 +1,50 @@
-  using NUnit.Framework;
+using NUnit.Framework;
 using System;
 using EducationSystem.Data.Models;
-using EducationSystem.Data;
 using System.Collections.Generic;
 using System.Globalization;
 using EducationSystem.Data.Tests.Mocks;
 using EducationSystem.Core.Enums;
 using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class UserTests : BaseTest
     {
-        private List<int> _addedUserDtoIds;
-        private List<(int, int)> _addedUserRoleIds;
+
         private UserRepository _repository;
+        private HomeworkRepository _homeworkRepository;
+        private GroupRepository _groupRepository;
+        private CourseRepository _courseRepository;
+
+
+        private List<int> _addedUserDtoIds;
+        private List<int> _homeworkAttemptIdList;
+        private List<int> _homeworkIdList;
+        private List<int> _addedGroupDtoIds;
+        private List<int> _addedCourseDtoIds;
+        private List<(int, int)> _addedUserRoleIds;
+        private List<(int, int)> _addedStudentGroupDtoIds;
+
 
         [SetUp]
         public void UserRepositoryTestsSetup()
         {
             _addedUserDtoIds = new List<int>();
-            _repository = new UserRepository(_options);
+            _homeworkAttemptIdList = new List<int>();
+            _homeworkIdList = new List<int>();
+            _addedGroupDtoIds = new List<int>();
+            _addedCourseDtoIds = new List<int>();
             _addedUserRoleIds = new List<(int, int)>();
+            _addedStudentGroupDtoIds = new List<(int, int)>();
+
+            _repository = new UserRepository(_options);
+            _courseRepository = new CourseRepository(_options);
+            _homeworkRepository = new HomeworkRepository(_options);
+            _groupRepository = new GroupRepository(_options);
+
             var junk = _repository.GetUsers();
             if (junk.Count > 0)
             {
@@ -411,9 +434,128 @@ namespace EducationSystem.Data.Tests
             var actual = _repository.GetUserById(-1);
             Assert.IsNull(actual);
         }
-        [TearDown]
+        [Test]
+        public void GetPassedStudentsAttempt_SelectByGroupId_PositiveTest()
+        {
+            //Given
+            var expected = new List<UserDto>();
+            var passedUser = (UserDto)UserMockGetter.GetUserDtoMock(1).Clone();
+            var addedEntityId = _repository.AddUser(passedUser);
+            passedUser.Id = addedEntityId;
+            _repository.AddRoleToUser(addedEntityId, (int)Role.Student);
+            passedUser.Roles = new List<Role> { Role.Student };
+            passedUser.BirthDate = new DateTime();
+            passedUser.Password = null;
+            passedUser.Phone = null;
+            passedUser.UserPic = null;
+            passedUser.Email = null;
+            expected.Add(passedUser);
+
+            _addedUserDtoIds.Add(passedUser.Id);
+            _addedUserRoleIds.Add((passedUser.Id, (int)Role.Student));
+
+            var notPassedUser = (UserDto)UserMockGetter.GetUserDtoMock(2).Clone();
+            var addedSecondEntityId = _repository.AddUser(notPassedUser);
+            notPassedUser.Id = addedSecondEntityId;
+
+            _repository.AddRoleToUser(notPassedUser.Id, (int)Role.Student);
+            notPassedUser.Roles = new List<Role> { Role.Student };
+
+            _addedUserDtoIds.Add(notPassedUser.Id);
+            _addedUserRoleIds.Add((notPassedUser.Id, (int)Role.Student));
+
+
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            var courseDto = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
+            var passedStudentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
+            var notPassedStudentGroupDto = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(1).Clone();
+
+            var addedCourseId = _courseRepository.AddCourse(courseDto);
+            Assert.Greater(addedCourseId, 0);
+            courseDto.Id = addedCourseId;
+            groupDto.Course = courseDto;
+
+            var addedGroupId = _groupRepository.AddGroup(groupDto);
+            groupDto.Id = addedGroupId;
+
+            var homeworkAttemptDto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
+            var _homeworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            _homeworkDtoMock.Group = groupDto;
+            var addedHomeworkId = _homeworkRepository.AddHomework(_homeworkDtoMock);
+            _homeworkDtoMock.Id = addedHomeworkId;
+            _homeworkIdList.Add(addedHomeworkId);
+
+
+            homeworkAttemptDto.Author = passedUser;
+            homeworkAttemptDto.Homework = _homeworkDtoMock;
+            homeworkAttemptDto.HomeworkAttemptStatus = HomeworkAttemptStatus.Passed;
+            var addedHomeworkAttemptId = _homeworkRepository.AddHomeworkAttempt(homeworkAttemptDto);
+            Assert.Greater(addedHomeworkAttemptId, 0);
+
+            _homeworkAttemptIdList.Add(addedHomeworkAttemptId);
+
+
+
+            passedStudentGroupDto.User = passedUser;
+            passedStudentGroupDto.Group.Course = courseDto;
+            passedStudentGroupDto.Group.Id = addedGroupId;
+            passedStudentGroupDto.ContractNumber = 1;
+            var addedStudentGroupId = _groupRepository.AddStudentGroup(passedStudentGroupDto);
+            Assert.Greater(addedGroupId, 0);
+            Assert.Greater(addedStudentGroupId, 0);
+
+
+            notPassedStudentGroupDto.User = notPassedUser;
+            notPassedStudentGroupDto.Group.Course = courseDto;
+            notPassedStudentGroupDto.Group.Id = addedGroupId;
+            notPassedStudentGroupDto.ContractNumber = 0;
+            var notPassedStudentGroupId = _groupRepository.AddStudentGroup(notPassedStudentGroupDto);
+            Assert.Greater(notPassedStudentGroupId, 0);
+
+
+            _addedGroupDtoIds.Add(addedGroupId);
+            _addedStudentGroupDtoIds.Add((passedUser.Id, addedGroupId));
+            _addedStudentGroupDtoIds.Add((notPassedUser.Id, addedGroupId));
+            _addedCourseDtoIds.Add(addedCourseId);
+
+            //When, Then
+           var actual = _repository.GetPassedStudentsAttempt_SelectByGroupId(addedGroupId);
+           CollectionAssert.AreEqual(expected, actual); 
+
+        }
+
+
+        [TestCase(-1)]
+        [TestCase(Int32.MaxValue)]
+        public void GetPassedStudentsAttempt_SelectByGroupId_NegativeTestWrongGroupId(int wrongid)
+        {
+
+            var actual = _repository.GetPassedStudentsAttempt_SelectByGroupId(wrongid);
+            Assert.IsEmpty(actual);
+        }
+          
+       [TearDown]
         public void UserTestTearDown()
         {
+
+            _homeworkAttemptIdList.ForEach(homeworkAttempId =>
+            {
+                _homeworkRepository.HardDeleteHomeworkAttempt(homeworkAttempId);
+            });
+
+            _homeworkIdList.ForEach(homeworkId =>
+            {
+                _homeworkRepository.HardDeleteHomework(homeworkId);
+            });
+
+
+            _addedStudentGroupDtoIds.ForEach(record =>
+            _groupRepository.DeleteStudentGroup(record.Item1, record.Item2));
+
+            _addedGroupDtoIds.ForEach(id =>
+            {
+                _groupRepository.DeleteGroup(id);
+            });
 
             _addedUserRoleIds.ForEach(record =>
             {
@@ -424,6 +566,9 @@ namespace EducationSystem.Data.Tests
             {
                 _repository.HardDeleteUser(id); 
             });
+
+            _addedCourseDtoIds.ForEach(id =>
+            _courseRepository.HardDeleteCourse(id));
 
         }
 

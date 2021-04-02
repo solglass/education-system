@@ -1,12 +1,11 @@
 ﻿using EducationSystem.Core.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public static class TestHelper
     {
         public static IConfigurationRoot GetIConfigurationRoot(string outputPath)
