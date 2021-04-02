@@ -87,10 +87,10 @@ namespace EducationSystem.Controllers
         }
 
         /// <summary>
-        /// Gets all the groups with their courses and groupStatuses
+        /// Gets a report with number of lessons for groups to complete the theme
         /// </summary>
         /// <param name="themeId"> is used to find necessary groups by theme-id</param>
-        /// <returns>Returns the list of GroupOutputModels</returns>
+        /// <returns>Returns the report</returns>
         // https://localhost:44365/api/group/3
         [ProducesResponseType(typeof(List<NumberOfLessonsForGroupToCompleteTheThemeOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
