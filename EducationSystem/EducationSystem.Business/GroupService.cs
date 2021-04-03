@@ -41,9 +41,9 @@ namespace EducationSystem.Business
         {
             return _groupRepository.GetGroupsWithoutTutors();
         }
-        public List<GroupDto> GetGroupByThemeId(int id)
+        public List<NumberOfLessonsForGroupToCompleteTheThemeDto> GetGroupByThemeId(int themeId)
         {
-            return _groupRepository.GetGroupByThemeId(id);
+            return _groupRepository.GetGroupByThemeId(themeId);
         }
         public GroupDto GetGroupProgramsByGroupId(int id)
         {

@@ -24,6 +24,6 @@ begin
 		inner join [User] u on ha.UserId = u.Id
 		inner join Student_Group sg on u.id = sg.UserID
 		inner join [Group] g on sg.GroupID = g.Id
-		where g.Id = @groupId and ha.StatusId !=3
+		where g.Id = @groupId and ha.StatusId !=5
 	) 
 end

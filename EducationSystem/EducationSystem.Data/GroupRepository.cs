@@ -35,14 +35,14 @@ namespace EducationSystem.Data
             return result;
         }
        
-        public List<GroupDto> GetGroupByThemeId(int themeid)
+        public List<NumberOfLessonsForGroupToCompleteTheThemeDto> GetGroupByThemeId(int themeId)
         {
             List<ThemeDto> Themes = new List<ThemeDto>();
             ThemeDto themeEntry = new ThemeDto();
             CourseDto courseEntry = new CourseDto();
 
             var result = _connection
-               .Query<GroupDto,CourseDto, int, GroupDto>("dbo.Group_SelectByTheme",
+               .Query<NumberOfLessonsForGroupToCompleteTheThemeDto, CourseDto, int, NumberOfLessonsForGroupToCompleteTheThemeDto>("dbo.Group_SelectByTheme",
                    (group, course, groupStatus) =>
                    {
                        if (course == null)
@@ -56,7 +56,7 @@ namespace EducationSystem.Data
                        }
                        group.GroupStatus = (GroupStatus)groupStatus;
                        return group;
-                   }, new { themeid },
+                   },new { themeId },
                    splitOn: "Id",
                    commandType: System.Data.CommandType.StoredProcedure)
                .Distinct()
@@ -169,17 +169,7 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int HardDeleteGroup(int id)
-        {
-            var result = _connection
-                .Execute("dbo.Group_HardDelete",
-                new
-                {
-                    id
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
+
         public int AddGroup_Material(int groupId, int materialId)
         {
             var result = _connection

@@ -576,7 +576,7 @@ namespace EducationSystem.Data.Tests
         {
             foreach (int groupId in _groupIdList)
             {
-                _groupRepo.HardDeleteGroup(groupId);
+                _groupRepo.DeleteGroup(groupId);
             }
         }
 

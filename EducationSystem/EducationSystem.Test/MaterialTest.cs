@@ -378,7 +378,7 @@ namespace EducationSystem.Data.Tests
         {
             _addedGroupIds.ForEach(id =>
             {
-                _groupRepository.HardDeleteGroup(id);
+                _groupRepository.DeleteGroup(id);
             });
         }
         public void DeleteMaterialTags()

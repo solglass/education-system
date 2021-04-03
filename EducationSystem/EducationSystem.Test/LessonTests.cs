@@ -123,8 +123,7 @@ namespace EducationSystem.Data.Tests
             {
                 Id = lessonDto.Id,
                 Description = "Update description",
-                Date = DateTime.Now.AddDays(-20)
-               
+                Date = lessonDto.Date.AddDays(-20)               
             };
             expected.IsDeleted = true;
             _lessonRepository.UpdateLesson(expected);
@@ -534,7 +533,7 @@ namespace EducationSystem.Data.Tests
         {
             foreach (int groupId in _addedGroupIds)
             {
-                _groupRepository.HardDeleteGroup(groupId);
+                _groupRepository.DeleteGroup(groupId);
             }
         }
         public void DeleteLessons()
