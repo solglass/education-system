@@ -108,7 +108,7 @@ namespace EducationSystem.API
           .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
           .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
 
-            CreateMap<GroupWithCountDto, NumberOfLessonsForGroupToCompleteTheThemeOutputModel>()
+            CreateMap<NumberOfLessonsForGroupToCompleteTheThemeDto, NumberOfLessonsForGroupToCompleteTheThemeOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
 
