@@ -25,6 +25,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     Message = "Test 3 mock",
                     UnderstandingLevel = Core.Enums.UnderstandingLevel.Good
                 },
+                4 => new FeedbackDto(),
                 _ => null,
             };
         }
