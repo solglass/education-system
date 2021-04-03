@@ -24,7 +24,7 @@ namespace EducationSystem.Data.Tests
         private List<int> _homeworkIdList;
         private List<int> _homeworkAttemptIdList;
 
-        private UserDto userDtoMock;
+        private UserDto _userDtoMock;
         private CourseDto _courseDtoMock;
         private GroupDto _groupDtoMock;
         private HomeworkDto _homeworkDtoMock;
@@ -59,10 +59,21 @@ namespace EducationSystem.Data.Tests
             _groupIdList.Add(addedGroupId);
             _groupDtoMock.Id = addedGroupId;
 
-            userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(3).Clone();
-            var addedUserId = _userRepo.AddUser(userDtoMock);
+            var groupDtoMock = (GroupDto)GroupMockGetter.GetGroupDtoMock(2).Clone();
+            groupDtoMock.Course = _courseDtoMock;
+            var addedGroupId1 = _groupRepo.AddGroup(groupDtoMock);
+            _groupIdList.Add(addedGroupId1);
+            groupDtoMock.Id = addedGroupId1;
+
+            _userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(3).Clone();
+            var addedUserId = _userRepo.AddUser(_userDtoMock);
             _userIdList.Add(addedUserId);
-            userDtoMock.Id = addedUserId;
+            _userDtoMock.Id = addedUserId;
+
+            var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
+            var addedUserId1 = _userRepo.AddUser(userDtoMock);
+            _userIdList.Add(addedUserId1);
+            userDtoMock.Id = addedUserId1;
 
             _homeworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
             _homeworkDtoMock.Group = _groupDtoMock; 
@@ -70,58 +81,77 @@ namespace EducationSystem.Data.Tests
             _homeworkIdList.Add(addedhomeworkId);
             _homeworkDtoMock.Id = addedhomeworkId;
 
+            var homeworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(3).Clone();
+            homeworkDtoMock.Group = groupDtoMock;
+            var addedhomeworkId1 = _homeworkRepo.AddHomework(homeworkDtoMock);
+            _homeworkIdList.Add(addedhomeworkId1);
+            homeworkDtoMock.Id = addedhomeworkId1;
+
             _homeworkAttemptDtoMock = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
             _homeworkAttemptDtoMock.Author = userDtoMock;
             _homeworkAttemptDtoMock.Homework = _homeworkDtoMock;
             var addedhomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(_homeworkAttemptDtoMock);
             _homeworkAttemptIdList.Add(addedhomeworkAttemptId);
             _homeworkAttemptDtoMock.Id = addedhomeworkAttemptId;
+
+            var homeworkAttemptDtoMock = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(3).Clone();
+            homeworkAttemptDtoMock.Author = userDtoMock;
+            homeworkAttemptDtoMock.Homework = homeworkDtoMock;
+            var addedhomeworkAttemptId1 = _homeworkRepo.AddHomeworkAttempt(homeworkAttemptDtoMock);
+            _homeworkAttemptIdList.Add(addedhomeworkAttemptId1);
+            homeworkAttemptDtoMock.Id = addedhomeworkAttemptId1;
+
         }
 
         [TestCase(1)]
         public void CommentAddPositiveTest(int mockId)
         {
             //Given
-            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
-            dto.Author = userDtoMock;
-            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+            var expected = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            expected.Author = _userDtoMock;
+            expected.HomeworkAttempt = _homeworkAttemptDtoMock;
 
-            var addedCommentId = _homeworkRepo.AddComment(dto);
+            var addedCommentId = _homeworkRepo.AddComment(expected);
             Assert.Greater(addedCommentId, 0);
 
             _commentIdList.Add(addedCommentId);
-            dto.Id = addedCommentId;
+            expected.Id = addedCommentId;
 
             //When
             var actual = _homeworkRepo.GetCommentById(addedCommentId);
 
             //Then
-            Assert.AreEqual(dto, actual);
+            Assert.IsTrue(CustomCompare(expected, actual));
         }
         [TestCase(1)]
         public void CommentUpdatePositiveTest(int mockId)
         {
             //Given
-            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
-            dto.Author = userDtoMock;
-            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+            var expected = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            expected.Author = _userDtoMock;
+            expected.HomeworkAttempt = _homeworkAttemptDtoMock;
 
-            var addedCommentId = _homeworkRepo.AddComment(dto);
+            var addedCommentId = _homeworkRepo.AddComment(expected);
             _commentIdList.Add(addedCommentId);
 
-            dto = new CommentDto
+            var dto = new CommentDto
             {
                 Id = addedCommentId,
                 Message = "Test 2 mock",
                 IsDeleted = false
             };
-            _homeworkRepo.UpdateComment(dto);
+            expected.Id = addedCommentId;
+            expected.Message = dto.Message;
+            expected.IsDeleted = dto.IsDeleted;
+
+            var affectedRowsCount = _homeworkRepo.UpdateComment(dto);
 
             //When
             var actual = _homeworkRepo.GetCommentById(addedCommentId);
 
             //Then
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(1, affectedRowsCount);
+            Assert.IsTrue(CustomCompare(expected, actual));
 
         }
 
@@ -130,15 +160,15 @@ namespace EducationSystem.Data.Tests
         public void CommentDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
         {
             //Given
-            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
-            dto.Author = userDtoMock;
-            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+            var expected = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            expected.Author = _userDtoMock;
+            expected.HomeworkAttempt = _homeworkAttemptDtoMock;
 
-            var addedCommentId = _homeworkRepo.AddComment(dto);
+            var addedCommentId = _homeworkRepo.AddComment(expected);
             _commentIdList.Add(addedCommentId);
 
-            dto.Id = addedCommentId;
-            dto.IsDeleted = isDeleted;
+            expected.Id = addedCommentId;
+            expected.IsDeleted = isDeleted;
 
             //When
             var affectedRowsCount = _homeworkRepo.DeleteOrRecoverComment(addedCommentId, isDeleted);
@@ -147,7 +177,7 @@ namespace EducationSystem.Data.Tests
 
             //Then
             Assert.AreEqual(1, affectedRowsCount);
-            Assert.AreEqual(dto, actual);
+            Assert.AreEqual(expected, actual);
 
         }
         [TestCase(new int[] { 1, 2 })]
@@ -158,7 +188,7 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockIds[i]).Clone();
-                dto.Author = userDtoMock;
+                dto.Author = _userDtoMock;
                 dto.HomeworkAttempt = _homeworkAttemptDtoMock;
                 dto.Attachments = new List<AttachmentDto>();
 
@@ -239,19 +269,6 @@ namespace EducationSystem.Data.Tests
                 Assert.IsTrue(CustomCompare(expected[i], actual[i]));
             }
         }
-        private bool CustomCompare(CommentDto expected, CommentDto actual)
-        {
-            bool isEqual = true;
-            for (int i = 0; i < actual.Attachments.Count; i++)
-            {
-                if (!expected.Attachments[i].Equals(actual.Attachments[i])) isEqual = false;
-            }
-            return isEqual && expected.Id == actual.Id
-                && expected.Message == actual.Message
-                && expected.Author.Id == actual.Author.Id
-                && expected.Author.FirstName == actual.Author.FirstName
-                && expected.Author.LastName == actual.Author.LastName;
-        }
         [TearDown]
         public void TearDownTest()
         {
@@ -264,7 +281,23 @@ namespace EducationSystem.Data.Tests
             DeleteGroup();
             DeleteCourse();
         }
-
+        private bool CustomCompare(CommentDto expected, CommentDto actual)
+        {
+            bool isEqual = true;
+            if(actual.Attachments != null)
+            {
+                for (int i = 0; i < actual.Attachments.Count; i++)
+                {
+                    if (!expected.Attachments[i].Equals(actual.Attachments[i])) isEqual = false;
+                }
+            }
+            return isEqual && expected.Id == actual.Id
+                && expected.Message == actual.Message
+                && expected.HomeworkAttempt.Id == actual.HomeworkAttempt.Id
+                && expected.Author.Id == actual.Author.Id
+                && expected.Author.FirstName == actual.Author.FirstName
+                && expected.Author.LastName == actual.Author.LastName;
+        }
         private void DeleteComment()
         {
             foreach (int commentId in _commentIdList)

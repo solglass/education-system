@@ -5,6 +5,7 @@ as
 begin
 	select c.Id,
 		c.Message,
+		ha.Id,
 		u.Id,
 		u.FirstName,
 		u.LastName,
