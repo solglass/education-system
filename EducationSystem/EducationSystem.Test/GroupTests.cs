@@ -638,7 +638,7 @@ namespace EducationSystem.Data.Tests
     {
       foreach (var groupId in _groupIdList)
       {
-        _groupRepo.HardDeleteGroup(groupId);
+        _groupRepo.DeleteGroup(groupId);
       }
     }
         public void DeleteLesson()
