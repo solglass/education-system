@@ -40,6 +40,7 @@ namespace EducationSystem.Data
                     return userEntry;
                 },
                 splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
             .ToList();
             return users;
         }
@@ -64,6 +65,7 @@ namespace EducationSystem.Data
                 },
                 new { groupId },
                 splitOn: "Id", commandType: CommandType.StoredProcedure)
+                .Distinct()
             .ToList();
             return users;
 
@@ -207,6 +209,7 @@ namespace EducationSystem.Data
                 Query<UserDto>(
                 "dbo.User_SelectStudentsByGroupId",
                 param: new {groupId}, commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
             .ToList();
             return users;
         }
