@@ -88,7 +88,7 @@ namespace EducationSystem.Data.Tests
             homeworkDtoMock.Id = addedhomeworkId1;
 
             _homeworkAttemptDtoMock = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
-            _homeworkAttemptDtoMock.Author = userDtoMock;
+            _homeworkAttemptDtoMock.Author = _userDtoMock;
             _homeworkAttemptDtoMock.Homework = _homeworkDtoMock;
             var addedhomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(_homeworkAttemptDtoMock);
             _homeworkAttemptIdList.Add(addedhomeworkAttemptId);
@@ -127,6 +127,11 @@ namespace EducationSystem.Data.Tests
         public void CommentUpdatePositiveTest(int mockId)
         {
             //Given
+            var comment = (CommentDto)CommentMockGetter.GetCommentDtoMock(2).Clone();
+            comment.Author = _userDtoMock;
+            comment.HomeworkAttempt = _homeworkAttemptDtoMock;
+            _commentIdList.Add(_homeworkRepo.AddComment(comment));
+
             var expected = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
             expected.Author = _userDtoMock;
             expected.HomeworkAttempt = _homeworkAttemptDtoMock;
@@ -160,6 +165,11 @@ namespace EducationSystem.Data.Tests
         public void CommentDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
         {
             //Given
+            var comment = (CommentDto)CommentMockGetter.GetCommentDtoMock(2).Clone();
+            comment.Author = _userDtoMock;
+            comment.HomeworkAttempt = _homeworkAttemptDtoMock;
+            _commentIdList.Add(_homeworkRepo.AddComment(comment));
+
             var expected = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
             expected.Author = _userDtoMock;
             expected.HomeworkAttempt = _homeworkAttemptDtoMock;
@@ -294,6 +304,7 @@ namespace EducationSystem.Data.Tests
             return isEqual && expected.Id == actual.Id
                 && expected.Message == actual.Message
                 && expected.HomeworkAttempt.Id == actual.HomeworkAttempt.Id
+                && expected.HomeworkAttempt.Comment == actual.HomeworkAttempt.Comment
                 && expected.Author.Id == actual.Author.Id
                 && expected.Author.FirstName == actual.Author.FirstName
                 && expected.Author.LastName == actual.Author.LastName;

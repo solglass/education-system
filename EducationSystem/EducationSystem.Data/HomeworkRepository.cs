@@ -341,17 +341,31 @@ namespace EducationSystem.Data
         public CommentDto GetCommentById(int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
-            var comment = _connection
-                .Query<CommentDto,HomeworkAttemptDto, UserDto, CommentDto>(
+            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
+            var commentById = _connection
+                .Query<CommentDto, HomeworkAttemptDto, UserDto, AttachmentDto, int?, CommentDto>(
                     "dbo.Comment_SelectById",
-                    (comment, homeworkAttempt, user) =>
+                    (comment, homeworkAttempt, user, attachment, attachmentType) =>
                     {
                         if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
                         {
                             commentEntry = comment;
                             commentEntry.Author = user;
                             commentEntry.HomeworkAttempt = homeworkAttempt;
+                            commentEntry.Attachments = new List<AttachmentDto>();
                             commentDictionary.Add(commentEntry.Id, commentEntry);
+                            attachmentDictionary.Clear();
+                        }
+
+                        if (attachment != null)
+                        {
+                            if (!attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
+                            {
+                                attachmentEntry = attachment;
+                                attachmentEntry.AttachmentType = (AttachmentType)attachmentType;
+                                commentEntry.Attachments.Add(attachmentEntry);
+                                attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
+                            }
                         }
                         return commentEntry;
                     },
@@ -360,7 +374,7 @@ namespace EducationSystem.Data
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
-            return comment;
+            return commentById;
         }
         public int UpdateComment(CommentDto commentDto)
         {
