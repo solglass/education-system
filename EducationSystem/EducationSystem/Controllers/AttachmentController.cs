@@ -9,6 +9,10 @@ using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using EducationSystem.Core.CustomExceptions;
+using System.Threading.Tasks;
+using System.Threading;
+using Microsoft.AspNetCore.StaticFiles;
+using EducationSystem.API.Models.InputModels;
 
 namespace EducationSystem.API.Controllers
 {
@@ -21,11 +25,14 @@ namespace EducationSystem.API.Controllers
         private IAttachmentService _service;
         private IHomeworkService _homeworkService;
         private IMapper _mapper;
+        private IFileService _fileService;
 
-        public AttachmentController(IAttachmentService attachmentService, IMapper mapper)
+        public AttachmentController(IAttachmentService attachmentService, IMapper mapper, IHomeworkService homeworkService, IFileService fileService)
         {
             _service = attachmentService;
             _mapper = mapper;
+            _homeworkService = homeworkService;
+            _fileService = fileService;
         }
 
         /// <summary>
@@ -201,6 +208,32 @@ namespace EducationSystem.API.Controllers
             var result = _service.DeleteCommentAttachment(attachmentId, commentId);
             return NoContent();
         }
+        [HttpPost("upload", Name = "upload")]
+        [ProducesResponseType(typeof(AttachmentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<AttachmentOutputModel>> UploadFile(IFormFile file)
+        {
+            var filePath = await _fileService.WriteFile(file);
+            var attachmentAddedId = _service.AddAttachment(new AttachmentDto
+            {
+                Path = filePath,
+                AttachmentType = Core.Enums.AttachmentType.File
+            });
+            var result = _mapper.Map<AttachmentOutputModel>(_service.GetAttachmentById(attachmentAddedId));
+            return Ok(result);
+        }
+        [HttpPost("download")]
+        [ProducesResponseType(typeof(AttachmentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public ActionResult DownloadFile([FromBody] FileInputModel fileInputModel)
+        {
+            if (!_fileService.CheckFile(fileInputModel.Path))
+                return NotFound(StatusCodes.Status404NotFound);
+            var fileStream = _fileService.GetFile(fileInputModel.Path);
+            new FileExtensionContentTypeProvider().TryGetContentType(fileInputModel.Path, out var contentType);
+            return File(fileStream, contentType);
+        }
     }
 }
+
 

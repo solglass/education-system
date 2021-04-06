@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using EducationSystem.Core.CustomExceptions;
 using EducationSystem.API.Controllers;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EducationSystem.Controllers
 {
@@ -27,13 +28,15 @@ namespace EducationSystem.Controllers
         private IUserService _userService;
         private ILessonService _lessonService;
         private IGroupService _groupService;
+        private IFileService _fileService;
         
-        public UserController(IMapper mapper, IUserService userService, ILessonService lessonService, IGroupService groupService)
+        public UserController(IMapper mapper, IUserService userService, ILessonService lessonService, IGroupService groupService, IFileService fileService)
         {
             _mapper = mapper;
             _userService = userService;
             _lessonService = lessonService;
             _groupService = groupService;
+            _fileService = fileService;
         }
 
         // https://localhost:44365/api/user/register
@@ -462,6 +465,20 @@ namespace EducationSystem.Controllers
 
             var outputModel = _mapper.Map<List<AttendanceOutputModel>>(attendanceDto);
             return Ok(outputModel);
+        }
+
+        [HttpPost("download")]
+        [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<UserOutputModel>> UploadUserPick(IFormFile file)
+        {
+            var filePath = await _fileService.WriteFile(file);
+            var userAddedId = _userService.AddUser(new UserDto
+            {
+                UserPic = filePath
+            });
+            var result = _mapper.Map<UserOutputModel>(_userService.GetUserById(userAddedId));
+            return result;
         }
     }
 }
