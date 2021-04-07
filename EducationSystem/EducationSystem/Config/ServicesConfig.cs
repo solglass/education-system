@@ -24,6 +24,7 @@ namespace EducationSystem.API.Config
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAttachmentService, AttachmentService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IFileService, FileService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITagRepository, TagRepository>();           

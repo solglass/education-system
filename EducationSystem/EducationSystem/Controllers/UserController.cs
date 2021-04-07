@@ -467,7 +467,7 @@ namespace EducationSystem.Controllers
             return Ok(outputModel);
         }
 
-        [HttpPost("download")]
+        [HttpPost("userpickload", Name = "userpickload")]
         [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserOutputModel>> UploadUserPick(IFormFile file)
