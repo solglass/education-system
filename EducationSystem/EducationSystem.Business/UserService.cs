@@ -37,7 +37,15 @@ namespace EducationSystem.Business
         public int AddUser(UserDto userDto)
         {
             userDto.Password = new SecurityService().GetHash(userDto.Password);
-            return _userRepository.AddUser(userDto);
+            var result= _userRepository.AddUser(userDto);
+            if(userDto.Roles!=null && userDto.Roles.Count>0)
+            {
+                foreach(var role in userDto.Roles)
+                {
+                    _userRepository.AddRoleToUser(result, (int)role);
+                }
+            }
+            return result;
         }
 
         public int DeleteUser(int id)
@@ -84,9 +92,9 @@ namespace EducationSystem.Business
         {
             return _paymentRepository.DeletePayment(id);
         }
-        public List<UserDto> GetStudentsNotPaidInMonth(string period)
+        public List<UserDto> GetListOfStudentsByPeriodWhoHaveNotPaid(string period)
         {
-            return _paymentRepository.GetStudentsNotPaidInMonth(period);
+            return _paymentRepository.GetListOfStudentsByPeriodWhoHaveNotPaid(period);
         }
     }
     

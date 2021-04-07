@@ -1,11 +1,11 @@
 ﻿using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
+    [ExcludeFromCodeCoverage]
     public static class HomeworkAttemptMockGetter
     {
         public static HomeworkAttemptDto GetHomeworkAttemptDtoMock(int id)
@@ -40,6 +40,7 @@ namespace EducationSystem.Data.Tests.Mocks
                     Author = new UserDto(),
                     Homework = new HomeworkDto()
                 },
+                4 => new HomeworkAttemptDto(),
                 _ => null,
             };
         }

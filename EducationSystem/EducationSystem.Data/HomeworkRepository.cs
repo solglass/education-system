@@ -75,7 +75,7 @@ namespace EducationSystem.Data
             var tagDictionary = new Dictionary<int, TagDto>();
             var themeDictionary = new Dictionary<int, ThemeDto>();
 
-            _connection.Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
+            var homeworks = _connection.Query<HomeworkDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
                     "dbo.Homework_Search",
                     (homework, group, tag, theme) =>
                     {
@@ -113,17 +113,15 @@ namespace EducationSystem.Data
                     },
                     new
                     {
-                        groupId = groupId,
-                        themeId = themeId,
-                        tagId = tagId
+                        groupId,
+                        themeId,
+                        tagId
                     },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
-            var homework = new List<HomeworkDto>();
-            homeworkDictionary.AsList().ForEach(r => homework.Add(r.Value));
-            return homework;
+            return homeworks;
         }
 
         public int AddHomework(HomeworkDto homework)
@@ -185,7 +183,6 @@ namespace EducationSystem.Data
 
         public HomeworkAttemptDto GetHomeworkAttemptById(int id)
         {
-            //var commentDictionary = new Dictionary<int, CommentDto>();
             var hwAttemptEntry = new HomeworkAttemptDto();
             var hwAttempt = _connection
                 .Query<HomeworkAttemptDto, UserDto, HomeworkDto, int, HomeworkAttemptDto>(
@@ -296,42 +293,44 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<CommentDto> GetComments()
+        public List<CommentDto> SearchComments(int? homeworkAttemptId, int? homeworkId)
         {
-            var commentDictionary = new Dictionary<int, CommentDto>();
-            var userDictionary = new Dictionary<int, UserDto>();
-            var homeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
+            if (homeworkAttemptId == null && homeworkId == null)
+                throw new ArgumentNullException();
 
-            var comments = _connection
-                .Query<CommentDto, UserDto, HomeworkAttemptDto, int, CommentDto>(
-                    "dbo.Homework_SelectById",
-                    (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
+            var commentDictionary = new Dictionary<int, CommentDto>();
+            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
+
+            var comments = _connection.Query<CommentDto, HomeworkAttemptDto, UserDto, AttachmentDto, int, CommentDto>(
+                    "dbo.Comment_Search",
+                    (comment, homeworkAttempt, user, attachment, attachmentType) =>
                     {
                         if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
                         {
                             commentEntry = comment;
-                            commentEntry.Author = new UserDto();
-                            commentEntry.HomeworkAttempt = new HomeworkAttemptDto();
-                            commentDictionary.Add(commentEntry.Id, commentEntry);
-                        }
-                        if (homeworkAttempt != null 
-                        && homeworkAttemptStatus != 0
-                        && user != null 
-                        && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
-                        {
-                            homeworkAttemptEntry = homeworkAttempt;
-                            homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
-                            commentEntry.HomeworkAttempt = homeworkAttemptEntry;
-                            homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
-                        }
-                        if (user != null && !userDictionary.TryGetValue(user.Id, out UserDto userEntry))
-                        {
-                            userEntry = user;
                             commentEntry.Author = user;
-                            userDictionary.Add(userEntry.Id, userEntry);
+                            commentEntry.HomeworkAttempt = homeworkAttempt;
+                            commentEntry.Attachments = new List<AttachmentDto>();
+                            commentDictionary.Add(commentEntry.Id, commentEntry);
+                            attachmentDictionary.Clear();
+                        }
+
+                        if (attachment != null)
+                        {
+                            if (!attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
+                            {
+                                attachmentEntry = attachment;
+                                attachmentEntry.AttachmentType = (AttachmentType)attachmentType;
+                                commentEntry.Attachments.Add(attachmentEntry);
+                                attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
+                            }
                         }
                         return commentEntry;
+                    },
+                    new
+                    {
+                        homeworkAttemptId,
+                        homeworkId
                     },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
@@ -339,74 +338,44 @@ namespace EducationSystem.Data
                 .ToList();
             return comments;
         }
-
         public CommentDto GetCommentById(int id)
         {
             var commentDictionary = new Dictionary<int, CommentDto>();
-            var userDictionary = new Dictionary<int, UserDto>();
-            var homeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
-
-            var comment = _connection
-                .Query<CommentDto, UserDto, HomeworkAttemptDto, int?, CommentDto>(
-                    "dbo.Homework_SelectById",
-                    (comment, user, homeworkAttempt, homeworkAttemptStatus) =>
+            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
+            var commentById = _connection
+                .Query<CommentDto, HomeworkAttemptDto, UserDto, AttachmentDto, int?, CommentDto>(
+                    "dbo.Comment_SelectById",
+                    (comment, homeworkAttempt, user, attachment, attachmentType) =>
                     {
                         if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
                         {
                             commentEntry = comment;
-                            commentEntry.Author = new UserDto();
-                            commentEntry.HomeworkAttempt = new HomeworkAttemptDto();
+                            commentEntry.Author = user;
+                            commentEntry.HomeworkAttempt = homeworkAttempt;
+                            commentEntry.Attachments = new List<AttachmentDto>();
                             commentDictionary.Add(commentEntry.Id, commentEntry);
+                            attachmentDictionary.Clear();
                         }
 
-                        if (homeworkAttempt != null 
-                        && homeworkAttemptStatus != 0 
-                        && user != null 
-                        && !homeworkAttemptDictionary.TryGetValue(homeworkAttempt.Id, out HomeworkAttemptDto homeworkAttemptEntry))
+                        if (attachment != null)
                         {
-                            homeworkAttemptEntry = homeworkAttempt;
-                            homeworkAttemptEntry.Author = user;
-                            homeworkAttemptEntry.HomeworkAttemptStatus = (HomeworkAttemptStatus)homeworkAttemptStatus;
-                            commentEntry.HomeworkAttempt = homeworkAttemptEntry;
-                            homeworkAttemptDictionary.Add(homeworkAttemptEntry.Id, homeworkAttemptEntry);
-                        }
-                        if (user != null && !userDictionary.TryGetValue(user.Id, out UserDto userEntry))
-                        {
-                            userEntry = user;
-                            commentEntry.Author = user;
-                            userDictionary.Add(userEntry.Id, userEntry);
+                            if (!attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
+                            {
+                                attachmentEntry = attachment;
+                                attachmentEntry.AttachmentType = (AttachmentType)attachmentType;
+                                commentEntry.Attachments.Add(attachmentEntry);
+                                attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
+                            }
                         }
                         return commentEntry;
                     },
+                    new
+                    { id },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)
                 .FirstOrDefault();
-            return comment;
+            return commentById;
         }
-
-        public List<CommentDto> Comment_SelectByHomeworkId(int id)
-        {
-            var commentDictionary = new Dictionary<int, CommentDto>();
-            var result = _connection.Query<CommentDto, UserDto, HomeworkAttemptDto, CommentDto>(
-                "dbo.Comment_SelectByHomeworkId",
-                (comment, user, attempt) =>
-                {
-                    if (!commentDictionary.TryGetValue(comment.Id, out CommentDto commentEntry))
-                    {
-                        commentEntry = comment;
-                        commentEntry.Author = user;
-                        comment.HomeworkAttempt = attempt;
-                        commentDictionary.Add(commentEntry.Id, commentEntry);
-                    }
-                    return commentEntry;
-                },
-                new { id },
-                splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return result;
-        }
-
         public int UpdateComment(CommentDto commentDto)
         {
             return _connection.Execute(
@@ -463,58 +432,6 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return homeworkAttempts;
-        }
-
-        public List<CommentDto> GetCommentsByHomeworkAttemptId(int id)
-        {
-            var commentDictionary = new Dictionary<int, CommentDto>();
-            var result = _connection.Query<CommentDto, UserDto, AttachmentDto, int?, CommentDto>(
-                "dbo.Comment_SelectByHomeworkAttemptId",
-                (comment, user, attachment, attachmentType) =>
-                {
-                    if (!commentDictionary.TryGetValue(comment.Id, out var commentEntry))
-                    {
-                        commentEntry = comment;
-                        commentEntry.Author = user;
-                        commentEntry.Attachments = new List<AttachmentDto>();
-                        commentDictionary.Add(commentEntry.Id, commentEntry);
-                    }
-                    if (attachment != null)
-                    {
-                        attachment.AttachmentType = (AttachmentType)attachmentType;
-                        commentEntry.Attachments.Add(attachment);
-                    }
-                    return commentEntry;
-                },
-                new { AttemptId = id },
-                splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
-                .Distinct()
-                .ToList();
-            return result;
-        }
-
-        public List<AttachmentDto> GetAttachmentsByHomeworkAttemptId(int id)
-        {
-            var attachmentDictionary = new Dictionary<int, AttachmentDto>();
-            var attachments = _connection
-                .Query<AttachmentDto, int, AttachmentDto>
-                ("dbo.Attachment_SelectByHomeworkAttemptId",
-                (attachment, type) =>
-                {
-                    if (!attachmentDictionary.TryGetValue(attachment.Id, out AttachmentDto attachmentEntry))
-                    {
-                        attachmentEntry = attachment;
-                        attachmentEntry.AttachmentType = (AttachmentType)type;
-                        attachmentDictionary.Add(attachmentEntry.Id, attachmentEntry);
-                    }
-                    return attachmentEntry;
-                },
-                new { id },
-                splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return attachments;
         }
 
         public int HomeworkTagAdd(int homeworkId, int tagId)

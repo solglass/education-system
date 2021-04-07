@@ -4,6 +4,7 @@
 begin
 	select 
 		a.Id, 
+		a.Description,
 		a.Path,
 		at.Id
 	from dbo.HomeworkAttempt_Attachment haa 

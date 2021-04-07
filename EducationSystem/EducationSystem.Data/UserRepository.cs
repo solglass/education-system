@@ -40,11 +40,11 @@ namespace EducationSystem.Data
                     return userEntry;
                 },
                 splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
             .ToList();
             return users;
         }
 
-        // ToDo: покрыть тестом
         public List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
             var UserDictionary = new Dictionary<int, UserDto>();
@@ -65,6 +65,7 @@ namespace EducationSystem.Data
                 },
                 new { groupId },
                 splitOn: "Id", commandType: CommandType.StoredProcedure)
+                .Distinct()
             .ToList();
             return users;
 
@@ -200,6 +201,17 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return result;
 
+        }
+
+        public List<UserDto> GetStudentsByGroupId(int groupId)
+        {
+            var users = _connection.
+                Query<UserDto>(
+                "dbo.User_SelectStudentsByGroupId",
+                param: new {groupId}, commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
+            .ToList();
+            return users;
         }
     }
 }

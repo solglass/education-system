@@ -17,20 +17,27 @@ namespace EducationSystem.API
     public class AutomapperConfig : Profile
     {
         private const string _dateFormat = "dd.MM.yyyy";
+        private const string _dateFormatWithTime = "dd.MM.yyyy H:mm:ss";
         public AutomapperConfig()
         {
             CreateMap<UserInputModel, UserDto>()
                .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None)))
                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.RoleIds.ConvertAll<Enum>(c=>(Role)c)));
+            CreateMap<UpdateUserInputModel, UserDto>()
+               .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None)));             
             CreateMap<UserDto, AuthorOutputModel>();
             CreateMap<UserDto, UserOutputModel>()
-                .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
+                .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.Roles.ConvertAll<string>(r => FriendlyNames.GetFriendlyRoleName(r))));
             CreateMap<UserDto, UserOutputExtendedModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
 
-            CreateMap<PaymentInputModel, PaymentDto>();
+            CreateMap<PaymentInputModel, PaymentDto>()
+                .ForMember(dest => dest.Period, opts => opts.MapFrom(src => Converters.StrToDateTimePeriod(src.Period)))
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => Converters.StrToDateTime(src.Date)));
             CreateMap<PaymentDto, PaymentOutputModel>()
-                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)));
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)))
+                .ForMember(dest => dest.Period, opts => opts.MapFrom(src => Converters.StrToStrOutputPeriod(src.Period)));
 
             CreateMap<AttendanceInputModel, AttendanceDto>()
                 .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto() { Id = src.UserId }));
@@ -98,18 +105,22 @@ namespace EducationSystem.API
                 .ForMember(dest=>dest.Materials, opts=>opts.MapFrom(src=>src.MaterialIds.ConvertAll<MaterialDto>(t=>new MaterialDto { Id = t })));
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
 
-      CreateMap<GroupReportDto, GroupReportOutputModel>()
-          .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
-          .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
+            CreateMap<GroupReportDto, GroupReportOutputModel>()
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
 
-      CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
+            CreateMap<NumberOfLessonsForGroupToCompleteTheThemeDto, NumberOfLessonsForGroupToCompleteTheThemeOutputModel>()
+                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)));
+
+            CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
 
             CreateMap<HomeworkInputModel, HomeworkDto>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
                 .ForMember(dest => dest.DeadlineDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.DeadlineDate)))
                 .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupDto() { Id = src.GroupId }))
-               .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })))
-               .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.TagIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
+                .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemeIds.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })))
+                .ForMember(dest => dest.Tags, opts => opts.MapFrom(src => src.TagIds.ConvertAll<TagDto>(r => new TagDto() { Id = r })));
 
             CreateMap<HomeworkUpdateInputModel, HomeworkDto>()
                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => Converters.StrToDateTime(src.StartDate)))
@@ -139,6 +150,11 @@ namespace EducationSystem.API
 
             CreateMap<MaterialInputModel, MaterialDto>();
             CreateMap<MaterialDto, MaterialOutputModel>();
+
+            CreateMap<NotificationInputModel, NotificationDto>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => (src.Date == null) ? DateTime.Now : Converters.StrToDateTimeWithTime(src.Date)));
+            CreateMap<NotificationDto, NotificationOutputModel>()
+                .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormatWithTime)));
         }
     }
 }

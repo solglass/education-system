@@ -16,7 +16,6 @@ namespace EducationSystem.Business
         int DeleteCommentAttachment(int attachmentId, int commentId);
 
         AttachmentDto GetAttachmentById(int id);
-        int ModifyAttachment(AttachmentDto attachmentDto, int id);
-        
+        int UpdateAttachment(AttachmentDto attachmentDto);
     }
 }
