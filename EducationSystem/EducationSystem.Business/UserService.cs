@@ -96,6 +96,16 @@ namespace EducationSystem.Business
         {
             return _paymentRepository.GetListOfStudentsByPeriodWhoHaveNotPaid(period);
         }
+
+        public int AddRoleToUser(int userId, int roleId)
+        {
+            return _userRepository.AddRoleToUser(userId, roleId);
+        }
+
+        public int DeleteRoleFromUser(int userId, int roleId)
+        {
+            return _userRepository.DeleteRoleFromUser(userId, roleId);
+        }
     }
     
 }

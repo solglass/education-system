@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using EducationSystem.Core.CustomExceptions;
 using EducationSystem.API.Controllers;
 using System.Linq;
+using EducationSystem.Core.Enums;
 
 namespace EducationSystem.Controllers
 {
@@ -462,6 +463,42 @@ namespace EducationSystem.Controllers
 
             var outputModel = _mapper.Map<List<AttendanceOutputModel>>(attendanceDto);
             return Ok(outputModel);
+        }
+        // https://localhost:50221/user/42/attendances
+        /// <summary>Add role to user</summary>
+        /// <param name="userId">Id of user</param>
+        /// /// <param name="roleId">Id of role</param>
+        /// <returns>Id of added user role</returns>
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [Authorize(Roles = "Администратор")]
+        [HttpPost("{userId}/role/{roleId}")]
+        public ActionResult AddRoleToUser(int userId, int roleId)
+        {
+            if (_userService.GetUserById(userId) is null)
+                return NotFound($"User wit {userId} not found");
+            if (_userService.GetUserById(userId).Roles.Contains((Role)roleId))
+            {
+                return Conflict(StatusCodes.Status409Conflict);
+            }
+            var addedUserRoleID = _userService.AddRoleToUser(userId, roleId);
+            return Ok(addedUserRoleID);
+        }
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [Authorize(Roles = "Администратор")]
+        [HttpDelete("{userId}/role/{roleId}")]
+        public ActionResult DeleteRoleFromUser(int userId, int roleId)
+        {
+            if (_userService.GetUserById(userId) is null)
+                return NotFound($"User wit {userId} not found");
+            if (!_userService.GetUserById(userId).Roles.Contains((Role)roleId))
+            {
+                return Conflict(StatusCodes.Status409Conflict);
+            }
+            _userService.DeleteRoleFromUser(userId, roleId);
+            return Ok("Role deleted from user");
         }
     }
 }
