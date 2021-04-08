@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Http;
 using EducationSystem.Core.CustomExceptions;
 using EducationSystem.API.Controllers;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace EducationSystem.Controllers
 {
@@ -27,13 +29,15 @@ namespace EducationSystem.Controllers
         private IUserService _userService;
         private ILessonService _lessonService;
         private IGroupService _groupService;
+        private IFileService _fileService;
         
-        public UserController(IMapper mapper, IUserService userService, ILessonService lessonService, IGroupService groupService)
+        public UserController(IMapper mapper, IUserService userService, ILessonService lessonService, IGroupService groupService, IFileService fileService)
         {
             _mapper = mapper;
             _userService = userService;
             _lessonService = lessonService;
             _groupService = groupService;
+            _fileService = fileService;
         }
 
         // https://localhost:44365/api/user/register
@@ -462,6 +466,36 @@ namespace EducationSystem.Controllers
 
             var outputModel = _mapper.Map<List<AttendanceOutputModel>>(attendanceDto);
             return Ok(outputModel);
+        }
+
+        [HttpPost("upload")]
+        [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<UserOutputModel>> UploadUserPic(IFormFile file, int userId)
+        {
+
+            var filePath = await _fileService.WriteFile(file);
+            var fileExtension = filePath.Substring(filePath.LastIndexOf(".") + 1);
+
+            var formatUserPic = new [] { "png", "jpg", "jpeg" };
+            if (!formatUserPic.Contains(fileExtension))
+            {
+                return BadRequest($"UserPic with Extension: {fileExtension} is not correct");
+            };
+            
+            var result = _mapper.Map<UserOutputModel>(_userService.UpdateUserPic(filePath, userId));
+            return result;
+        }
+        [HttpPost("download")]
+        [ProducesResponseType(typeof(AttachmentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public ActionResult DownloadUserPic([FromBody] FileInputModel fileInputModel)
+        {
+            if (!_fileService.CheckFile(fileInputModel.Path))
+                return NotFound(StatusCodes.Status404NotFound);
+            var fileStream = _fileService.GetFile(fileInputModel.Path);
+            new FileExtensionContentTypeProvider().TryGetContentType(fileInputModel.Path, out var contentType);
+            return File(fileStream, contentType);
         }
     }
 }
