@@ -9,5 +9,6 @@ namespace EducationSystem.API.Models.OutputModels
         public string StartDate { get; set; }
         public CourseOutputModel Course { get; set; }                     
         public string GroupStatus { get; set; } 
+        public int GroupStatusId { get; set; }
     }
 }

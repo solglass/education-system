@@ -103,6 +103,16 @@ namespace EducationSystem.Business
             UpdateUser(userId, userDto);
             return GetUserById(userId);
         }
+
+        public int AddRoleToUser(int userId, int roleId)
+        {
+            return _userRepository.AddRoleToUser(userId, roleId);
+        }
+
+        public int DeleteRoleFromUser(int userId, int roleId)
+        {
+            return _userRepository.DeleteRoleFromUser(userId, roleId);
+        }
     }
     
 }
