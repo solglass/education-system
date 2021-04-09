@@ -164,8 +164,7 @@ namespace EducationSystem.Controllers
         public ActionResult<GroupOutputModel> AddNewGroup([FromBody] GroupInputModel group)
         {
             if (!ModelState.IsValid)
-                throw new ValidationException(ModelState);
-
+                throw new ValidationException(ModelState);          
             var addedGroupId = _service.AddGroup(_mapper.Map<GroupDto>(group));
             var result = _mapper.Map<GroupOutputModel>(_service.GetGroupById(addedGroupId));
             return Ok(result);
