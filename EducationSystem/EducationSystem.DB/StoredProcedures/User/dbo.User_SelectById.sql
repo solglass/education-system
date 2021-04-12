@@ -14,7 +14,7 @@ as
       ,u.[UserPic]
       ,u.[Email],
       u.IsDeleted,
-      (select		
+      (select distinct
 		g.ContractNumber		
 	  from dbo.Student_Group as g
 	  where u.Id = g.UserId) as ContractNumber,
