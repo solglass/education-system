@@ -37,10 +37,10 @@ namespace EducationSystem.Business
         public int AddUser(UserDto userDto)
         {
             userDto.Password = new SecurityService().GetHash(userDto.Password);
-            var result= _userRepository.AddUser(userDto);
-            if(userDto.Roles!=null && userDto.Roles.Count>0)
+            var result = _userRepository.AddUser(userDto);
+            if (userDto.Roles != null && userDto.Roles.Count > 0)
             {
-                foreach(var role in userDto.Roles)
+                foreach (var role in userDto.Roles)
                 {
                     _userRepository.AddRoleToUser(result, (int)role);
                 }
@@ -95,6 +95,13 @@ namespace EducationSystem.Business
         public List<UserDto> GetListOfStudentsByPeriodWhoHaveNotPaid(string period)
         {
             return _paymentRepository.GetListOfStudentsByPeriodWhoHaveNotPaid(period);
+        }
+        public UserDto UpdateUserPic(string filePath, int userId)
+        {
+            var userDto = GetUserById(userId);
+            userDto.UserPic = filePath;
+            UpdateUser(userId, userDto);
+            return GetUserById(userId);
         }
 
         public int AddRoleToUser(int userId, int roleId)

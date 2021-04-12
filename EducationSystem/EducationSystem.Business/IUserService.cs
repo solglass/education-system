@@ -15,6 +15,7 @@ namespace EducationSystem.Business
         int UpdatePayment(int id, PaymentDto paymentDto);
         int AddRoleToUser(int userId, int roleId);
         int DeleteRoleFromUser(int userId, int roleId);
+        UserDto UpdateUserPic(string filePath, int userId);
         UserDto GetUserById(int id);
         PaymentDto GetPaymentById(int id);
         List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId);
