@@ -83,8 +83,7 @@ namespace EducationSystem.Data
                         userEntry = user;
                         userEntry.Roles = new List<Role>();
                         UserDictionary.Add(userEntry.Id, userEntry);
-                    }
-
+                    }                 
                     userEntry.Roles.Add((Role)role);
                     return userEntry;
                 },
