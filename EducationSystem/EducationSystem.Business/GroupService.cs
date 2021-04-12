@@ -9,12 +9,10 @@ namespace EducationSystem.Business
     public class GroupService : IGroupService
     {
         private IGroupRepository _groupRepository;
-        private IUserRepository _userRepository;
 
-        public GroupService(IGroupRepository groupRepository, IUserRepository userRepository)
+        public GroupService(IGroupRepository groupRepository)
         {
             _groupRepository = groupRepository;
-            _userRepository = userRepository;
         }
 
         public List<GroupDto> GetGroups()
@@ -90,8 +88,8 @@ namespace EducationSystem.Business
         }
         public int AddStudentGroup(int groupId, int userId, StudentGroupDto studentGroupDto)
         {
-            studentGroupDto.Group = GetGroupById(groupId);
-            studentGroupDto.User = _userRepository.GetUserById(userId);
+            studentGroupDto.Group = new GroupDto { Id = groupId };
+            studentGroupDto.User = new UserDto { Id = userId };
             return _groupRepository.AddStudentGroup(studentGroupDto);
         }
         public StudentGroupDto GetStudentGroupById(int userGroupId)
