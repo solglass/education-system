@@ -14,6 +14,10 @@ as
       ,u.[UserPic]
       ,u.[Email],
       u.IsDeleted,
+      (select		
+		g.ContractNumber		
+	  from dbo.Student_Group as g
+	  where u.Id = g.UserId) as ContractNumber,
       r.Id,
 	  r.Name as [Role]
   FROM [dbo].[User] as u
