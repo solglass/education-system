@@ -1,4 +1,5 @@
-﻿using EducationSystem.Core.Authentication;
+﻿using EducationSystem.Business.Model;
+using EducationSystem.Core.Authentication;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data;
 using EducationSystem.Data.Models;
@@ -7,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace EducationSystem.Business
 {
@@ -22,7 +22,7 @@ namespace EducationSystem.Business
         {
             return _repo.CheckUser(login);
         }
-        public string GenerateToken(UserDto user)
+        public AuthResponse GenerateToken(UserDto user)
         {
             var identity = GetIdentity(user);
             var now = DateTime.UtcNow;
@@ -35,13 +35,12 @@ namespace EducationSystem.Business
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            var response = new
+            return new AuthResponse
             {
-                access_token = encodedJwt,
-                username = identity.Name,
-                id = identity.FindFirst("id").Value
+                Token = encodedJwt,
+                UserName = identity.Name,
+                Roles = user.Roles
             };
-            return response.ToString();
         }
         private ClaimsIdentity GetIdentity(UserDto user)
         {

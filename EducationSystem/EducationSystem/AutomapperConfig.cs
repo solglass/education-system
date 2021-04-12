@@ -28,7 +28,7 @@ namespace EducationSystem.API
             CreateMap<UserDto, AuthorOutputModel>();
             CreateMap<UserDto, UserOutputModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)))
-                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.Roles.ConvertAll<string>(r => FriendlyNames.GetFriendlyRoleName(r))));
+                .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.Roles.Select(r => (int)r)));
             CreateMap<UserDto, UserOutputExtendedModel>()
                 .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => src.BirthDate.ToString(_dateFormat)));
 

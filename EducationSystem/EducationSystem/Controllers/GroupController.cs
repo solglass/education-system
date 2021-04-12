@@ -1,5 +1,4 @@
-﻿using EducationSystem.Data;
-using EducationSystem.Data.Models;
+﻿using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using EducationSystem.API.Models.OutputModels;
@@ -11,6 +10,7 @@ using AutoMapper;
 using EducationSystem.Core.CustomExceptions;
 using Microsoft.AspNetCore.Http;
 using EducationSystem.API.Controllers;
+using EducationSystem.Core.Enums;
 
 namespace EducationSystem.Controllers
 {
@@ -527,6 +527,17 @@ namespace EducationSystem.Controllers
             }
 
             return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
+        }
+
+        [HttpGet("statuses")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(List<DictionaryOutputModel>), StatusCodes.Status200OK)]
+        public ActionResult<List<DictionaryOutputModel>> GetGroupStatuses()
+        {
+            var result = new List<DictionaryOutputModel>();
+            foreach (int i in Enum.GetValues(typeof(GroupStatus)))
+                result.Add(new DictionaryOutputModel { Id = i, Name = FriendlyNames.GetFriendlyGroupStatusName(((GroupStatus)i)) });
+            return result;
         }
     }
     
