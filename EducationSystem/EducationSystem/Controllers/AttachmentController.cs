@@ -26,12 +26,10 @@ namespace EducationSystem.API.Controllers
         private IFileService _fileService;
         private IHomeworkService _homeworkService;
         private IMapper _mapper;
-        private IFileService _fileService;
 
         public AttachmentController(IAttachmentService attachmentService, IMapper mapper, IHomeworkService homeworkService, IFileService fileService)
         {
             _service = attachmentService;
-            _fileService = fileService;
             _mapper = mapper;
             _homeworkService = homeworkService;
             _fileService = fileService;

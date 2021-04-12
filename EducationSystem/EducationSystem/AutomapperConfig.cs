@@ -22,7 +22,7 @@ namespace EducationSystem.API
         {
             CreateMap<UserInputModel, UserDto>()
                .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None)))
-               .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.RoleIds.ConvertAll<Enum>(c=>(Role)c)));
+               .ForMember(dest => dest.Roles, opts => opts.MapFrom(src => src.Roles.ConvertAll<Enum>(c=>(Role)c)));
             CreateMap<UpdateUserInputModel, UserDto>()
                .ForMember(dest => dest.BirthDate, opts => opts.MapFrom(src => DateTime.ParseExact(src.BirthDate, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None)));             
             CreateMap<UserDto, AuthorOutputModel>();
