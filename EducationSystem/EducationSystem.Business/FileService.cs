@@ -10,13 +10,13 @@ namespace EducationSystem.Business
     public class FileService : IFileService
     {
         public FileStream GetFile(string path)
-        {           
-            FileStream fileStream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), path), FileMode.Open);          
-            return fileStream;            
+        {
+            FileStream fileStream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), path), FileMode.Open);
+            return fileStream;
         }
 
         public async Task<string> WriteFile(IFormFile file)
-        {                     
+        {
             var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
             string fileName = DateTime.Now.Ticks + extension; //Create a new Name for the file due to security reasons.
 
@@ -30,10 +30,10 @@ namespace EducationSystem.Business
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
-            }      
-            
+            }
+
             return path;
         }
-        public bool CheckFile(string path) => File.Exists(path);    
+        public bool CheckFile(string path) => File.Exists(path);
     }
 }
