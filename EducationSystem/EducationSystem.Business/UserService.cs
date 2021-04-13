@@ -76,7 +76,7 @@ namespace EducationSystem.Business
         }
         public int AddPayment(int id, PaymentDto paymentDto)
         {
-            paymentDto.Student.Id = id;
+            paymentDto.Student = new UserDto { Id = id };
             return _paymentRepository.AddPayment(paymentDto);
         }
         public PaymentDto GetPaymentById(int id)
