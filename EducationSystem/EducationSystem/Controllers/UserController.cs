@@ -293,8 +293,8 @@ namespace EducationSystem.Controllers
                 return NotFound($"User with id {userId} is not found");
             }
             var paymentDto = _mapper.Map<PaymentDto>(payment);
-            _userService.AddPayment(userId, paymentDto);
-            var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(userId));
+            var paymentId = _userService.AddPayment(userId, paymentDto);
+            var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(paymentId));
             return Ok(outputModel);
         }
 
