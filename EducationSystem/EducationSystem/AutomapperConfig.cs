@@ -37,7 +37,8 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => Converters.StrToDateTime(src.Date)));
             CreateMap<PaymentDto, PaymentOutputModel>()
                 .ForMember(dest => dest.Date, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)))
-                .ForMember(dest => dest.Period, opts => opts.MapFrom(src => Converters.StrToStrOutputPeriod(src.Period)));
+                .ForMember(dest => dest.Period, opts => opts.MapFrom(src => Converters.StrToStrOutputPeriod(src.Period)))
+                .ForMember(dest => dest.User, opts => opts.MapFrom(src => new AuthorOutputModel { Id = src.Student.Id, FirstName = src.Student.FirstName, LastName = src.Student.LastName, UserPic = src.Student.UserPic }));
 
             CreateMap<AttendanceInputModel, AttendanceDto>()
                 .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto() { Id = src.UserId }));
