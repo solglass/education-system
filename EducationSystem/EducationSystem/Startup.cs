@@ -61,8 +61,12 @@ namespace EducationSystem
             });
             app.UseCors(
                 builder => builder
-                    .WithOrigins("http://localhost:3000", "https://80.78.240.16:3000", "https://80.78.240.16")
-                    .WithMethods("GET", "POST", "PUT", "DELETE")
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+
+                    //.WithOrigins("http://localhost:3000", "https://80.78.240.16:3000", "https://80.78.240.16")
+                    //.WithMethods("GET", "POST", "PUT", "DELETE")
             );
             app.UseHttpsRedirection();
             app.UseAuthentication();

@@ -85,9 +85,13 @@ namespace EducationSystem.Business
             return _homeworkRepository.DeleteHomework_Theme(homeworkId, themeId);
         }
 
-        public List<CommentDto> GetComments()
+        public List<CommentDto> GetCommentsByHomeworkAttemptId(int homeworkAttamptId)
         {
-            return _homeworkRepository.GetComments();
+            return _homeworkRepository.SearchComments(homeworkAttamptId, null);
+        }
+        public List<CommentDto> GetCommentsByHomeworkId(int homeworkId)
+        {
+            return _homeworkRepository.SearchComments(null, homeworkId);
         }
 
         public CommentDto GetCommentById(int id)
@@ -113,7 +117,7 @@ namespace EducationSystem.Business
 
             foreach (var item in dtos)
             {
-                item.Comments = _homeworkRepository.GetCommentsByHomeworkAttemptId(item.Id);
+                item.Comments = _homeworkRepository.SearchComments(item.Id, null);
 
                 // check comments and then
                 foreach (var comment in item.Comments)

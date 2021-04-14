@@ -88,8 +88,8 @@ namespace EducationSystem.Business
         }
         public int AddStudentGroup(int groupId, int userId, StudentGroupDto studentGroupDto)
         {
-            studentGroupDto.Group.Id = groupId;
-            studentGroupDto.User.Id = userId;
+            studentGroupDto.Group = new GroupDto { Id = groupId };
+            studentGroupDto.User = new UserDto { Id = userId };
             return _groupRepository.AddStudentGroup(studentGroupDto);
         }
         public StudentGroupDto GetStudentGroupById(int userGroupId)

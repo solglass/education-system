@@ -2,11 +2,11 @@
 using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-
-namespace EducationSystem.Data.Tests
-{
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+namespace EducationSystem.Data.Tests
+{
     [ExcludeFromCodeCoverage]
     public class HomeworkTests : BaseTest
     {
@@ -655,7 +655,6 @@ namespace EducationSystem.Data.Tests
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
-
         }
 
         [TestCase(new int[] { 1, 2, 3 })]

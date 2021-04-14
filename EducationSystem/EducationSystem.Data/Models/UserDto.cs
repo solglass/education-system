@@ -17,6 +17,7 @@ namespace EducationSystem.Data.Models
         public string UserPic { get; set; }
         public string Email { get; set; }
         public bool IsDeleted { get; set; }
+        public int ContractNumber { get; set; }
         public List<Role> Roles { get; set; }
 
         public object Clone()

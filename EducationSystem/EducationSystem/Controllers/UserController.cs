@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Http;
 using EducationSystem.Core.CustomExceptions;
 using EducationSystem.API.Controllers;
 using System.Linq;
+using EducationSystem.Core.Enums;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace EducationSystem.Controllers
 {
@@ -27,13 +30,15 @@ namespace EducationSystem.Controllers
         private IUserService _userService;
         private ILessonService _lessonService;
         private IGroupService _groupService;
+        private IFileService _fileService;
         
-        public UserController(IMapper mapper, IUserService userService, ILessonService lessonService, IGroupService groupService)
+        public UserController(IMapper mapper, IUserService userService, ILessonService lessonService, IGroupService groupService, IFileService fileService)
         {
             _mapper = mapper;
             _userService = userService;
             _lessonService = lessonService;
             _groupService = groupService;
+            _fileService = fileService;
         }
 
         // https://localhost:44365/api/user/register
@@ -288,8 +293,8 @@ namespace EducationSystem.Controllers
                 return NotFound($"User with id {userId} is not found");
             }
             var paymentDto = _mapper.Map<PaymentDto>(payment);
-            _userService.AddPayment(userId, paymentDto);
-            var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(userId));
+            var paymentId = _userService.AddPayment(userId, paymentDto);
+            var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(paymentId));
             return Ok(outputModel);
         }
 
@@ -462,6 +467,72 @@ namespace EducationSystem.Controllers
 
             var outputModel = _mapper.Map<List<AttendanceOutputModel>>(attendanceDto);
             return Ok(outputModel);
+        }
+
+        [HttpPost("upload")]
+        [ProducesResponseType(typeof(UserOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<UserOutputModel>> UploadUserPic(IFormFile file, int userId)
+        {
+
+            var filePath = await _fileService.WriteFile(file);
+            var fileExtension = filePath.Substring(filePath.LastIndexOf(".") + 1);
+
+            var formatUserPic = new [] { "png", "jpg", "jpeg" };
+            if (!formatUserPic.Contains(fileExtension))
+            {
+                return BadRequest($"UserPic with Extension: {fileExtension} is not correct");
+            };
+            
+            var result = _mapper.Map<UserOutputModel>(_userService.UpdateUserPic(filePath, userId));
+            return result;
+        }
+        [HttpPost("download")]
+        [ProducesResponseType(typeof(AttachmentOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public ActionResult DownloadUserPic([FromBody] FileInputModel fileInputModel)
+        {
+            if (!_fileService.CheckFile(fileInputModel.Path))
+                return NotFound(StatusCodes.Status404NotFound);
+            var fileStream = _fileService.GetFile(fileInputModel.Path);
+            new FileExtensionContentTypeProvider().TryGetContentType(fileInputModel.Path, out var contentType);
+            return File(fileStream, contentType);
+        }
+        // https://localhost:50221/user/42/attendances
+        /// <summary>Add role to user</summary>
+        /// <param name="userId">Id of user</param>
+        /// /// <param name="roleId">Id of role</param>
+        /// <returns>Id of added user role</returns>
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [Authorize(Roles = "Администратор")]
+        [HttpPost("{userId}/role/{roleId}")]
+        public ActionResult AddRoleToUser(int userId, int roleId)
+        {
+            if (_userService.GetUserById(userId) is null)
+                return NotFound($"User wit {userId} not found");
+            if (_userService.GetUserById(userId).Roles.Contains((Role)roleId))
+            {
+                return Conflict(StatusCodes.Status409Conflict);
+            }
+            var addedUserRoleID = _userService.AddRoleToUser(userId, roleId);
+            return Ok(addedUserRoleID);
+        }
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [Authorize(Roles = "Администратор")]
+        [HttpDelete("{userId}/role/{roleId}")]
+        public ActionResult DeleteRoleFromUser(int userId, int roleId)
+        {
+            if (_userService.GetUserById(userId) is null)
+                return NotFound($"User wit {userId} not found");
+            if (!_userService.GetUserById(userId).Roles.Contains((Role)roleId))
+            {
+                return Conflict(StatusCodes.Status409Conflict);
+            }
+            _userService.DeleteRoleFromUser(userId, roleId);
+            return Ok("Role deleted from user");
         }
     }
 }

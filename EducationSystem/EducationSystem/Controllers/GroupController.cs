@@ -1,5 +1,4 @@
-﻿using EducationSystem.Data;
-using EducationSystem.Data.Models;
+﻿using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using EducationSystem.API.Models.OutputModels;
@@ -11,6 +10,7 @@ using AutoMapper;
 using EducationSystem.Core.CustomExceptions;
 using Microsoft.AspNetCore.Http;
 using EducationSystem.API.Controllers;
+using EducationSystem.Core.Enums;
 
 namespace EducationSystem.Controllers
 {
@@ -164,8 +164,7 @@ namespace EducationSystem.Controllers
         public ActionResult<GroupOutputModel> AddNewGroup([FromBody] GroupInputModel group)
         {
             if (!ModelState.IsValid)
-                throw new ValidationException(ModelState);
-
+                throw new ValidationException(ModelState);          
             var addedGroupId = _service.AddGroup(_mapper.Map<GroupDto>(group));
             var result = _mapper.Map<GroupOutputModel>(_service.GetGroupById(addedGroupId));
             return Ok(result);
@@ -528,6 +527,17 @@ namespace EducationSystem.Controllers
             }
 
             return Ok(_mapper.Map<List<AttendanceReportOutputModel>>(_lessonService.GetStudentByPercentOfSkip(percent, groupId)));
+        }
+
+        [HttpGet("statuses")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(List<DictionaryOutputModel>), StatusCodes.Status200OK)]
+        public ActionResult<List<DictionaryOutputModel>> GetGroupStatuses()
+        {
+            var result = new List<DictionaryOutputModel>();
+            foreach (int i in Enum.GetValues(typeof(GroupStatus)))
+                result.Add(new DictionaryOutputModel { Id = i, Name = FriendlyNames.GetFriendlyGroupStatusName(((GroupStatus)i)) });
+            return result;
         }
     }
     

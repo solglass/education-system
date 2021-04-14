@@ -1,4 +1,4 @@
-﻿using EducationSystem.Data.Models;
+using EducationSystem.Data.Models;
 using System.Collections.Generic;
 
 namespace EducationSystem.Business
@@ -12,7 +12,8 @@ namespace EducationSystem.Business
         int DeleteHomeworkAttempt(int id);
         int DeleteHomework_Theme(int homeworkId, int themeId);
         CommentDto GetCommentById(int id);
-        List<CommentDto> GetComments();
+        List<CommentDto> GetCommentsByHomeworkAttemptId(int homeworkAttamptId);
+        List<CommentDto> GetCommentsByHomeworkId(int homeworkId);
         List<HomeworkAttemptDto> GetHomeworkAttemptsByHomeworkId(int id);
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId);
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id);

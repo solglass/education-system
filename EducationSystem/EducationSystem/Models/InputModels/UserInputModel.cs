@@ -33,6 +33,6 @@ namespace EducationSystem.API.Models.InputModels
         [EmailAddress]
         [StringLength(60)]
         public string Email { get; set; }
-        public List<int> RoleIds { get; set; }
+        public List<int> Roles { get; set; }
     }
 }
