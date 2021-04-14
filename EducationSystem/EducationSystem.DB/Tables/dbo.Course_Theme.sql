@@ -2,6 +2,7 @@
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[CourseID] [int] NOT NULL,
 	[ThemeID] [int] NOT NULL,
+	[Order] [int] NOT NULL,
  CONSTRAINT [PK_COURSE_THEME] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -33,4 +34,8 @@ GO
 
 ALTER TABLE [dbo].[Course_Theme]
 ADD CONSTRAINT UC_CourseTheme_CourseId_ThemeId UNIQUE(CourseId, ThemeId)
+GO
+
+ALTER TABLE [dbo].[Course_Theme]
+ADD CONSTRAINT UC_CourseTheme_CourseId_Order UNIQUE(CourseId, [Order])
 GO
