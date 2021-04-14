@@ -12,6 +12,7 @@ namespace EducationSystem.API.Models.OutputModels
         public string Phone { get; set; }
         public string UserPic { get; set; }
         public string Email { get; set; }
+        public int ContractNumber { get; set; }
         public List<int> Roles {get; set; }
     }
 }
