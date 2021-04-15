@@ -279,100 +279,8 @@ namespace EducationSystem.Data.Tests
                 Assert.IsTrue(CustomCompare(expected[i], actual[i]));
             }
         }
-        [TearDown]
-        public void TearDownTest()
-        {
-            DeleteCommentAttachment();
-            DeleteAttachment();
-            DeleteComment();
-            DeleteHomeworkAttempt();
-            DeleteHomework();
-            DeleteUser();
-            DeleteGroup();
-            DeleteCourse();
-        }
-        private bool CustomCompare(CommentDto expected, CommentDto actual)
-        {
-            bool isEqual = true;
-            if(actual.Attachments != null)
-            {
-                for (int i = 0; i < actual.Attachments.Count; i++)
-                {
-                    if (!expected.Attachments[i].Equals(actual.Attachments[i])) isEqual = false;
-                }
-            }
-            return isEqual && expected.Id == actual.Id
-                && expected.Message == actual.Message
-                && expected.HomeworkAttempt.Id == actual.HomeworkAttempt.Id
-                && expected.HomeworkAttempt.Comment == actual.HomeworkAttempt.Comment
-                && expected.Author.Id == actual.Author.Id
-                && expected.Author.FirstName == actual.Author.FirstName
-                && expected.Author.LastName == actual.Author.LastName;
-        }
-        private void DeleteComment()
-        {
-            foreach (int commentId in _commentIdList)
-            {
-                _homeworkRepo.HardDeleteComment(commentId);
-            }
-        }
-        public void DeleteCourse()
-        {
-            foreach (int courseId in _courseIdList)
-            {
-                _courseRepo.HardDeleteCourse(courseId);
-            }
-        }
 
-        public void DeleteGroup()
-        {
-            foreach (int groupId in _groupIdList)
-            {
-                _groupRepo.DeleteGroup(groupId);
-            }
-        }
-
-        private void DeleteHomework()
-        {
-            foreach (var homeworkId in _homeworkIdList)
-            {
-                _homeworkRepo.HardDeleteHomework(homeworkId);
-            }
-        }
-
-        private void DeleteUser()
-        {
-            foreach (var user in _userIdList)
-            {
-                _userRepo.HardDeleteUser(user);
-            }
-        }
-
-        private void DeleteHomeworkAttempt()
-        {
-            foreach (var homeworkAttempt in _homeworkAttemptIdList)
-            {
-                _homeworkRepo.HardDeleteHomeworkAttempt(homeworkAttempt);
-            }
-        }
-        private void DeleteAttachment()
-        {
-            foreach (var attachment in _attachmentIdList)
-            {
-                _attachmentRepo.DeleteAttachmentById(attachment);
-            }
-        }
-        private void DeleteCommentAttachment()
-        {
-            foreach (var commentAttachmentPair in _commentAttachmentIdList)
-            {
-                _attachmentRepo.DeleteAttachmentFromComment(commentAttachmentPair.Item2, commentAttachmentPair.Item1);
-            }
-        }
-    }
-}
-
-        [TestCase(3)]
+        [TestCase(4)]
         public void CommentAdd_EmptyComment_NegativeTest(int mockId)
         {
             //Given
@@ -504,3 +412,96 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(0, deletedRows);
         }
+
+        [TearDown]
+        public void TearDownTest()
+        {
+            DeleteCommentAttachment();
+            DeleteAttachment();
+            DeleteComment();
+            DeleteHomeworkAttempt();
+            DeleteHomework();
+            DeleteUser();
+            DeleteGroup();
+            DeleteCourse();
+        }
+        private bool CustomCompare(CommentDto expected, CommentDto actual)
+        {
+            bool isEqual = true;
+            if(actual.Attachments != null)
+            {
+                for (int i = 0; i < actual.Attachments.Count; i++)
+                {
+                    if (!expected.Attachments[i].Equals(actual.Attachments[i])) isEqual = false;
+                }
+            }
+            return isEqual && expected.Id == actual.Id
+                && expected.Message == actual.Message
+                && expected.HomeworkAttempt.Id == actual.HomeworkAttempt.Id
+                && expected.HomeworkAttempt.Comment == actual.HomeworkAttempt.Comment
+                && expected.Author.Id == actual.Author.Id
+                && expected.Author.FirstName == actual.Author.FirstName
+                && expected.Author.LastName == actual.Author.LastName;
+        }
+        private void DeleteComment()
+        {
+            foreach (int commentId in _commentIdList)
+            {
+                _homeworkRepo.HardDeleteComment(commentId);
+            }
+        }
+        public void DeleteCourse()
+        {
+            foreach (int courseId in _courseIdList)
+            {
+                _courseRepo.HardDeleteCourse(courseId);
+            }
+        }
+
+        public void DeleteGroup()
+        {
+            foreach (int groupId in _groupIdList)
+            {
+                _groupRepo.DeleteGroup(groupId);
+            }
+        }
+
+        private void DeleteHomework()
+        {
+            foreach (var homeworkId in _homeworkIdList)
+            {
+                _homeworkRepo.HardDeleteHomework(homeworkId);
+            }
+        }
+
+        private void DeleteUser()
+        {
+            foreach (var user in _userIdList)
+            {
+                _userRepo.HardDeleteUser(user);
+            }
+        }
+
+        private void DeleteHomeworkAttempt()
+        {
+            foreach (var homeworkAttempt in _homeworkAttemptIdList)
+            {
+                _homeworkRepo.HardDeleteHomeworkAttempt(homeworkAttempt);
+            }
+        }
+        private void DeleteAttachment()
+        {
+            foreach (var attachment in _attachmentIdList)
+            {
+                _attachmentRepo.DeleteAttachmentById(attachment);
+            }
+        }
+        private void DeleteCommentAttachment()
+        {
+            foreach (var commentAttachmentPair in _commentAttachmentIdList)
+            {
+                _attachmentRepo.DeleteAttachmentFromComment(commentAttachmentPair.Item2, commentAttachmentPair.Item1);
+            }
+        }
+    }
+}
