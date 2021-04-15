@@ -279,6 +279,192 @@ namespace EducationSystem.Data.Tests
                 Assert.IsTrue(CustomCompare(expected[i], actual[i]));
             }
         }
+
+        [TestCase(new int[] { 1, 2 })]
+        public void AddCommentAttachmentPositiveTest(int[] mockIds)
+        {
+            //Given
+            var expected = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockIds[1]).Clone();
+
+            var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(mockIds[1]).Clone();
+            var addedUserId = _userRepo.AddUser(userDtoMock);
+            _userIdList.Add(addedUserId);
+            userDtoMock.Id = addedUserId;
+
+            var homeworkAttemptDtoMock = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[1]).Clone();
+            homeworkAttemptDtoMock.Author = userDtoMock;
+            homeworkAttemptDtoMock.Homework = _homeworkDtoMock;
+            var addedhomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(homeworkAttemptDtoMock);
+            _homeworkAttemptIdList.Add(addedhomeworkAttemptId);
+            homeworkAttemptDtoMock.Id = addedhomeworkAttemptId;
+
+            expected.Author = userDtoMock;
+            expected.HomeworkAttempt = homeworkAttemptDtoMock;
+            expected.Attachments = new List<AttachmentDto>();
+
+            var addedCommentId = _homeworkRepo.AddComment(expected);
+            _commentIdList.Add(addedCommentId);
+            expected.Id = addedCommentId;
+
+            for (int j = 0; j < mockIds.Length; j++)
+            {
+                var attachmentDto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockIds[j]).Clone();
+                var addedAttachmentId = _attachmentRepo.AddAttachment(attachmentDto);
+                _attachmentIdList.Add(addedAttachmentId);
+                attachmentDto.Id = addedAttachmentId;
+                expected.Attachments.Add(attachmentDto);
+
+                _attachmentRepo.AddAttachmentToComment(addedCommentId, addedAttachmentId);
+                _commentAttachmentIdList.Add((addedCommentId, addedAttachmentId));
+            }
+
+            //When
+            var actual = _attachmentRepo.GetAttachmentsByCommentId(addedCommentId);
+
+            //Then
+            CollectionAssert.AreEqual(expected.Attachments, actual);
+        }
+
+        [TestCase(1)]
+        public void AddCommentAttachmentNegativeTestCommentAttemptNotExists(int attachmentMockId)
+        {
+            //Given
+            var attachment = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(attachmentMockId).Clone();
+            attachment.Id = _attachmentRepo.AddAttachment(attachment);
+            Assert.Greater(attachment.Id, 0);
+            _attachmentIdList.Add(attachment.Id);
+            //When
+            try
+            {
+                var result = _attachmentRepo.AddAttachmentToComment(-1, attachment.Id);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        public void AddCommentAttachmentNegativeTestAttachmentNotExists(int mockId)
+        {
+            //Given
+            var comment = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            comment.Author = _userDtoMock;
+            comment.HomeworkAttempt = _homeworkAttemptDtoMock;
+            var addedCommentId = _homeworkRepo.AddComment(comment);
+            _commentIdList.Add(addedCommentId);
+            Assert.Greater(addedCommentId, 0);
+            //When
+            try
+            {
+                var result = _attachmentRepo.AddAttachmentToHomeworkAttempt(addedCommentId, -1);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        public void AddCommentAttachmentNegativeTestNotUniqueEntity(int mockId)
+        {
+            //Given
+            var comment = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            comment.Author = _userDtoMock;
+            comment.HomeworkAttempt = _homeworkAttemptDtoMock;
+            var addedCommentId = _homeworkRepo.AddComment(comment);
+            _commentIdList.Add(addedCommentId);
+            Assert.Greater(addedCommentId, 0);
+
+            var attachment = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockId).Clone();
+            attachment.Id = _attachmentRepo.AddAttachment(attachment);
+            Assert.Greater(attachment.Id, 0);
+            _attachmentIdList.Add(attachment.Id);
+
+            var result = _attachmentRepo.AddAttachmentToComment(addedCommentId, attachment.Id);
+            Assert.Greater(result, 0);
+            _commentAttachmentIdList.Add((addedCommentId, attachment.Id));
+
+            //When
+            try
+            {
+                result = _attachmentRepo.AddAttachmentToHomeworkAttempt(addedCommentId, attachment.Id);
+                _commentAttachmentIdList.Add((addedCommentId, attachment.Id));
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+
+        [TestCase(new int[] { 1, 2 })]
+        public void DeleteCommentAttachmentPositiveTest(int[] mockIds)
+        {
+            //Given
+            var expected = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockIds[0]).Clone();
+
+            var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(mockIds[0]).Clone();
+            var addedUserId = _userRepo.AddUser(userDtoMock);
+            _userIdList.Add(addedUserId);
+            userDtoMock.Id = addedUserId;
+
+            var homeworkAttemptDtoMock = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(mockIds[1]).Clone();
+            homeworkAttemptDtoMock.Author = userDtoMock;
+            homeworkAttemptDtoMock.Homework = _homeworkDtoMock;
+            var addedhomeworkAttemptId = _homeworkRepo.AddHomeworkAttempt(homeworkAttemptDtoMock);
+            _homeworkAttemptIdList.Add(addedhomeworkAttemptId);
+            homeworkAttemptDtoMock.Id = addedhomeworkAttemptId;
+
+            expected.Author = userDtoMock;
+            expected.HomeworkAttempt = homeworkAttemptDtoMock;
+            expected.Attachments = new List<AttachmentDto>();
+
+            var addedCommentId = _homeworkRepo.AddComment(expected);
+            _commentIdList.Add(addedCommentId);
+            expected.Id = addedCommentId;
+            for (int j = 0; j < mockIds.Length; j++)
+            {
+                var attachmentDto = (AttachmentDto)AttachmentMockGetter.GetAttachmentDtoMock(mockIds[j]).Clone();
+                var addedAttachmentId = _attachmentRepo.AddAttachment(attachmentDto);
+                _attachmentIdList.Add(addedAttachmentId);
+                attachmentDto.Id = addedAttachmentId;
+                expected.Attachments.Add(attachmentDto);
+
+                _attachmentRepo.AddAttachmentToComment(addedCommentId, addedAttachmentId);
+                _commentAttachmentIdList.Add((addedCommentId, addedAttachmentId));
+                if (j == mockIds.Length-1)
+                {
+                    _attachmentRepo.DeleteAttachmentFromComment(addedAttachmentId, addedCommentId);
+                    expected.Attachments.RemoveAt(mockIds.Length-1);
+                }
+            }
+            //When
+            var actual = _attachmentRepo.GetAttachmentsByCommentId(addedCommentId);
+
+            //Then
+            CollectionAssert.AreEqual(expected.Attachments, actual);
+
+        }
+
+        [Test]
+        public void DeleteCommentAttachmentNegativeTestRelationNotExists()
+        {
+            //Given
+
+            //When
+            var result = _attachmentRepo.DeleteAttachmentFromComment(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+
         [TearDown]
         public void TearDownTest()
         {
