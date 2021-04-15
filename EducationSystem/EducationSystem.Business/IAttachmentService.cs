@@ -1,4 +1,6 @@
 ﻿using EducationSystem.Data.Models;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace EducationSystem.Business
 {
@@ -14,6 +16,6 @@ namespace EducationSystem.Business
         int DeleteCommentAttachment(int attachmentId, int commentId);
 
         AttachmentDto GetAttachmentById(int id);
-        int ModifyAttachment(AttachmentDto attachmentDto, int id);
+        int UpdateAttachment(AttachmentDto attachmentDto);
     }
 }

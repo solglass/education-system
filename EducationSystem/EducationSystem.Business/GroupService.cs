@@ -24,14 +24,26 @@ namespace EducationSystem.Business
         {
             return _groupRepository.GetGroupById(id);
         }
+        public List<int> GetGroupsByStudentId(int id)
+        {
+            return _groupRepository.GetGroupsByStudentId(id);
+        }
+        public List<int> GetGroupsByTeacherId(int id)
+        {
+            return _groupRepository.GetGroupsByTeacherId(id);
+        }
+        public List<int> GetGroupsByTutorId(int id)
+        {
+            return _groupRepository.GetGroupsByTutorId(id);
+        }
 
         public List<GroupDto> GetGroupsWithoutTutors()
         {
             return _groupRepository.GetGroupsWithoutTutors();
         }
-        public List<GroupDto> GetGroupByThemeId(int id)
+        public List<NumberOfLessonsForGroupToCompleteTheThemeDto> GetGroupByThemeId(int themeId)
         {
-            return _groupRepository.GetGroupByThemeId(id);
+            return _groupRepository.GetGroupByThemeId(themeId);
         }
         public GroupDto GetGroupProgramsByGroupId(int id)
         {
@@ -76,8 +88,8 @@ namespace EducationSystem.Business
         }
         public int AddStudentGroup(int groupId, int userId, StudentGroupDto studentGroupDto)
         {
-            studentGroupDto.Group.Id = groupId;
-            studentGroupDto.User.Id = userId;
+            studentGroupDto.Group = new GroupDto { Id = groupId };
+            studentGroupDto.User = new UserDto { Id = userId };
             return _groupRepository.AddStudentGroup(studentGroupDto);
         }
         public StudentGroupDto GetStudentGroupById(int userGroupId)

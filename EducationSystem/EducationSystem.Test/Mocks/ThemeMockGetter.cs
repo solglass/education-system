@@ -1,10 +1,9 @@
 ﻿using EducationSystem.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests.Mocks
 {
+    [ExcludeFromCodeCoverage]
     public static class ThemeMockGetter
     {
         public static ThemeDto GetThemeDtoMock(int id)
@@ -27,14 +26,15 @@ namespace EducationSystem.Data.Tests.Mocks
                 {
                     Name = "Test theme 4"
                 },
+                5 => new ThemeDto
+                {
+                    Name = "Test theme 5"
+                },
                 6 => new ThemeDto
                 {
                     Name = "Test theme 6"
                 },
-                7 => new ThemeDto
-                {
-                    Name = "Test theme 7"
-                },
+                7=>new ThemeDto(),
                 _ => null,
             };
         }

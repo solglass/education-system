@@ -1,8 +1,16 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace EducationSystem.API.Models
 {
     public class AttachmentInputModel
-    { 
-        public string Path { get; set; }      
+    {
+        [Required]
+        [StringLength(1000)]
+        public string Description { get; set; }
+        [Required]
+        [StringLength(250)]
+        public string Path { get; set; }
+        [Required]
         public int AttachmentTypeId { get; set; }
     }
 }

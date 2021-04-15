@@ -23,6 +23,8 @@ namespace EducationSystem.API.Config
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAttachmentService, AttachmentService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IFileService, FileService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITagRepository, TagRepository>();           
@@ -33,6 +35,7 @@ namespace EducationSystem.API.Config
             services.AddScoped<IGroupRepository, GroupRepository>();           
             services.AddScoped<IAttachmentRepository, AttachmentRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             services.AddSingleton<EmailService>();
         }

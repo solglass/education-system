@@ -36,8 +36,8 @@ namespace EducationSystem.Data
                    lessonEntry.Themes.Add(theme);
                    return lessonEntry;
                },
-               new { id },
-                splitOn: "ID",
+               new { idGroup = id },
+                splitOn: "Id",
                 commandType: CommandType.StoredProcedure)
                 .Distinct()
                 .ToList();
@@ -99,7 +99,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new { lessonDto.Id, lessonDto.Description, lessonDto.Date, lessonDto.Themes },
+                new { lessonDto.Id, lessonDto.Description, lessonDto.Date },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -151,7 +151,7 @@ namespace EducationSystem.Data
                 new
                 {
                     UserId = feedbackDto.User.Id,
-                    feedbackDto.Message,
+                    Message = feedbackDto.Message,
                     LessonId = feedbackDto.Lesson.Id,
                     UnderstandingLevelId = (int)feedbackDto.UnderstandingLevel
                 },
@@ -162,7 +162,11 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Feedback_Update",
-                new { feedbackDto.Id, feedbackDto.Message, feedbackDto.UnderstandingLevel },
+                new {
+                    Id = feedbackDto.Id,
+                    Message = feedbackDto.Message, 
+                    UnderstandingLevelId = (int)feedbackDto.UnderstandingLevel
+                },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -281,16 +285,17 @@ namespace EducationSystem.Data
             return result;
         }
 
+        // ToDo: покрыть тестом
         public List<AttendanceReportDto> GetStudentByPercentOfSkip(int percent, int groupId)
         {
             var result = _connection
                 .Query<AttendanceReportDto>("dbo.Student_SelectByPercentOfSkip",
                 new
                 {
-                    percent = percent,
-                    groupId = groupId
+                    percent,
+                    groupId
                 },
-                commandType: System.Data.CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure)
                 .Distinct().ToList();
             return result;
         }

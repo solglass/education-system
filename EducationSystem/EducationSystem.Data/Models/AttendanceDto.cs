@@ -12,13 +12,23 @@ namespace EducationSystem.Data.Models
 
         public object Clone()
         {
-            return new AttendanceDto
+            var dto = new AttendanceDto
             {
-                Lesson = (LessonDto)Lesson.Clone(),
-                User = (UserDto)User.Clone(),
+                Lesson = Lesson != null ? (LessonDto)Lesson.Clone() : null,
+                User = User != null ? (UserDto)User.Clone() : null,
                 IsAbsent = IsAbsent,
                 ReasonOfAbsence = ReasonOfAbsence
             };
+            if (Lesson != null)
+            {
+                dto.Lesson = (LessonDto)Lesson.Clone();
+            }
+            if (User != null)
+            {
+                dto.User = (UserDto)User.Clone();
+            }
+            return dto;
+            
         }
 
         public override bool Equals(object obj)

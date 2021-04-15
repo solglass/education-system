@@ -25,3 +25,6 @@ GO
 ALTER TABLE [dbo].[Comment_Attachment] CHECK CONSTRAINT [Comment_Attachment_fk1]
 GO
 
+ALTER TABLE [dbo].[Comment_Attachment]
+ADD CONSTRAINT UC_CommentId_AttachmentId UNIQUE(CommentId, AttachmentId)
+GO

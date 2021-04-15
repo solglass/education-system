@@ -35,13 +35,13 @@ namespace EducationSystem.Data
             return result;
         }
        
-        public List<GroupDto> GetGroupByThemeId(int id)
+        public List<NumberOfLessonsForGroupToCompleteTheThemeDto> GetGroupByThemeId(int themeId)
         {
             List<ThemeDto> Themes = new List<ThemeDto>();
             ThemeDto themeEntry = new ThemeDto();
             CourseDto courseEntry = new CourseDto();
             var result = _connection
-               .Query<GroupDto,CourseDto, int, GroupDto>("dbo.Group_SelectByTheme",
+               .Query<NumberOfLessonsForGroupToCompleteTheThemeDto, CourseDto, int, NumberOfLessonsForGroupToCompleteTheThemeDto>("dbo.Group_SelectByTheme",
                    (group, course, groupStatus) =>
                    {
                        if (course == null)
@@ -55,7 +55,7 @@ namespace EducationSystem.Data
                        }
                        group.GroupStatus = (GroupStatus)groupStatus;
                        return group;
-                   },new { id },
+                   },new { themeId },
                    splitOn: "Id",
                    commandType: System.Data.CommandType.StoredProcedure)
                .Distinct()
@@ -167,17 +167,7 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        public int HardDeleteGroup(int id)
-        {
-            var result = _connection
-                .Execute("dbo.Group_HardDelete",
-                new
-                {
-                    id
-                },
-                commandType: System.Data.CommandType.StoredProcedure);
-            return result;
-        }
+
         public int AddGroup_Material(int groupId, int materialId)
         {
             var result = _connection
@@ -209,6 +199,31 @@ namespace EducationSystem.Data
                 new { courseId = id }, commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return groups;
+        }
+
+        public List<int> GetGroupsByStudentId(int id)
+        {
+            var result = _connection.
+                Query<int>("dbo.Group_SelectAllByStudentId",
+                new { studentId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+        public List<int> GetGroupsByTutorId(int id)
+        {
+            var result = _connection.
+                Query<int>("dbo.Group_SelectAllByTutorId",
+                new { tutorId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+        public List<int> GetGroupsByTeacherId(int id)
+        {
+            var result = _connection.
+                Query<int>("dbo.Group_SelectAllByTeacherId",
+                new { teacherId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
         }
         public int DeleteTutorGroup(int userId, int groupId)
         {

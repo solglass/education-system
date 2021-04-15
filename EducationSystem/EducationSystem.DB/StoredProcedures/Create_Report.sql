@@ -1,11 +1,4 @@
-﻿USE [DevEdu]
-GO
-/****** Object:  StoredProcedure [dbo].[Create_Report]    Script Date: 05.02.2021 20:50:10 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE proc [dbo].[Create_Report]
+﻿CREATE proc [dbo].[Create_Report]
 as
 begin
 with st as 

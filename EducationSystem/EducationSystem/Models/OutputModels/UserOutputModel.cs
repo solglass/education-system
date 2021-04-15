@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace EducationSystem.API.Models.OutputModels
 {
@@ -15,5 +12,7 @@ namespace EducationSystem.API.Models.OutputModels
         public string Phone { get; set; }
         public string UserPic { get; set; }
         public string Email { get; set; }
+        public int ContractNumber { get; set; }
+        public List<int> Roles {get; set; }
     }
 }

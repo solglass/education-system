@@ -37,7 +37,15 @@ namespace EducationSystem.Business
         public int AddUser(UserDto userDto)
         {
             userDto.Password = new SecurityService().GetHash(userDto.Password);
-            return _userRepository.AddUser(userDto);
+            var result = _userRepository.AddUser(userDto);
+            if (userDto.Roles != null && userDto.Roles.Count > 0)
+            {
+                foreach (var role in userDto.Roles)
+                {
+                    _userRepository.AddRoleToUser(result, (int)role);
+                }
+            }
+            return result;
         }
 
         public int DeleteUser(int id)
@@ -68,7 +76,7 @@ namespace EducationSystem.Business
         }
         public int AddPayment(int id, PaymentDto paymentDto)
         {
-            paymentDto.Student.Id = id;
+            paymentDto.Student = new UserDto { Id = id };
             return _paymentRepository.AddPayment(paymentDto);
         }
         public PaymentDto GetPaymentById(int id)
@@ -84,9 +92,26 @@ namespace EducationSystem.Business
         {
             return _paymentRepository.DeletePayment(id);
         }
-        public List<UserDto> GetStudentsNotPaidInMonth(string period)
+        public List<UserDto> GetListOfStudentsByPeriodWhoHaveNotPaid(string period)
         {
-            return _paymentRepository.GetStudentsNotPaidInMonth(period);
+            return _paymentRepository.GetListOfStudentsByPeriodWhoHaveNotPaid(period);
+        }
+        public UserDto UpdateUserPic(string filePath, int userId)
+        {
+            var userDto = GetUserById(userId);
+            userDto.UserPic = filePath;
+            UpdateUser(userId, userDto);
+            return GetUserById(userId);
+        }
+
+        public int AddRoleToUser(int userId, int roleId)
+        {
+            return _userRepository.AddRoleToUser(userId, roleId);
+        }
+
+        public int DeleteRoleFromUser(int userId, int roleId)
+        {
+            return _userRepository.DeleteRoleFromUser(userId, roleId);
         }
     }
     

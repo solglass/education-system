@@ -1,10 +1,11 @@
-﻿using EducationSystem.Data.Models;
+﻿using EducationSystem.Business.Model;
+using EducationSystem.Data.Models;
 
 namespace EducationSystem.Business
 {
     public interface IAuthenticationService
     {
-        string GenerateToken(UserDto user);
+        AuthResponse GenerateToken(UserDto user);
         UserDto GetAuthentificatedUser(string login);
     }
 }

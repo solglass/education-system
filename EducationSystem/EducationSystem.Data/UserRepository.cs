@@ -3,12 +3,10 @@ using EducationSystem.Core.Config;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 
 namespace EducationSystem.Data
 {
@@ -42,22 +40,19 @@ namespace EducationSystem.Data
                     return userEntry;
                 },
                 splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
             .ToList();
             return users;
-
         }
+
         public List<UserDto> GetPassedStudentsAttempt_SelectByGroupId(int groupId)
         {
             var UserDictionary = new Dictionary<int, UserDto>();
-
-
             var users = _connection.
                 Query<UserDto, int, UserDto>(
                 "dbo.PassedStudentsAttempt_SelectByGroupId",
                 (user, role) =>
                 {
-
-
                     if (!UserDictionary.TryGetValue(user.Id, out UserDto userEntry))
                     {
                         userEntry = user;
@@ -69,7 +64,8 @@ namespace EducationSystem.Data
                     return userEntry;
                 },
                 new { groupId },
-                splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+                splitOn: "Id", commandType: CommandType.StoredProcedure)
+                .Distinct()
             .ToList();
             return users;
 
@@ -87,8 +83,7 @@ namespace EducationSystem.Data
                         userEntry = user;
                         userEntry.Roles = new List<Role>();
                         UserDictionary.Add(userEntry.Id, userEntry);
-                    }
-
+                    }                 
                     userEntry.Roles.Add((Role)role);
                     return userEntry;
                 },
@@ -205,6 +200,17 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return result;
 
+        }
+
+        public List<UserDto> GetStudentsByGroupId(int groupId)
+        {
+            var users = _connection.
+                Query<UserDto>(
+                "dbo.User_SelectStudentsByGroupId",
+                param: new {groupId}, commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
+            .ToList();
+            return users;
         }
     }
 }

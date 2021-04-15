@@ -2,9 +2,11 @@
 using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class MaterialTest : BaseTest
     {
         private IMaterialRepository _materialRepository;
@@ -33,6 +35,23 @@ namespace EducationSystem.Data.Tests
             _addedCourseIds = new List<int>();
             _addedMaterialTagIds = new List<(int, int)>();
             _addedMaterialGroupIds = new List<(int, int)>();
+        }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(10)]
+        public void MaterialGetAllPositiveTest(int amountMaterials)
+        {
+            List<MaterialDto> expected = _materialRepository.GetMaterials();
+            for (int i =0; i < amountMaterials; i++)
+            {
+                expected.Add(AddMaterial(1));
+            }
+
+            List<MaterialDto> actual = _materialRepository.GetMaterials();
+
+            Assert.AreEqual(expected.Count, actual.Count);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestCase(1)]
@@ -76,9 +95,11 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1, 4)]
+        [TestCase(1, 0)]
         public void MaterialsGetByTagIdPositiveTest(int mockId, int amountRelations)
         {
             var dtoTag = AddTag(mockId);
+            var dtoOtherTag = AddTag(mockId+1);
 
             List<MaterialDto> expected = new List<MaterialDto>();
             for (int i = 0; i < amountRelations; i++)
@@ -88,6 +109,9 @@ namespace EducationSystem.Data.Tests
 
                 _tagRepository.MaterialTagAdd(dto.Id, dtoTag.Id);
                 _addedMaterialTagIds.Add((dto.Id, dtoTag.Id));
+
+                _tagRepository.MaterialTagAdd(dto.Id, dtoOtherTag.Id);
+                _addedMaterialTagIds.Add((dto.Id, dtoOtherTag.Id));
             }
 
             var actual = _materialRepository.GetMaterialsByTagId(dtoTag.Id);
@@ -97,9 +121,11 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1, 4)]
+        [TestCase(1, 0)]
         public void MaterialsGetByGroupIdPositiveTest(int mockId, int amountRelations)
         {
             var dtoGroup = AddGroup(mockId);
+            var dtoOtherGroup = AddGroup(mockId);
 
             List<MaterialDto> expected = new List<MaterialDto>();
             for (int i = 0; i < amountRelations; i ++)
@@ -109,6 +135,9 @@ namespace EducationSystem.Data.Tests
 
                 _groupRepository.AddGroup_Material(dtoGroup.Id, dto.Id);
                 _addedMaterialGroupIds.Add((dtoGroup.Id, dto.Id));
+
+                _groupRepository.AddGroup_Material(dtoOtherGroup.Id, dto.Id);
+                _addedMaterialGroupIds.Add((dtoOtherGroup.Id, dto.Id));
             }
 
             var actual = _materialRepository.GetMaterialsByGroupId(dtoGroup.Id);
@@ -159,7 +188,11 @@ namespace EducationSystem.Data.Tests
             var toDeleteIdList = new List<(int, int)>();
             for (int i = 0; i < mockIds.Length; i++)
             {
-                var tagDto = AddTag(mockIds[i]);
+                var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(mockIds[i]).Clone();
+                tagDto.Name += "toDelete";
+                var addedTagId = _tagRepository.TagAdd(tagDto);
+                _addedTagMockIds.Add(addedTagId);
+                tagDto.Id = addedTagId;
 
                 _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
                 toDeleteIdList.Add((materialDto.Id, tagDto.Id));
@@ -185,6 +218,7 @@ namespace EducationSystem.Data.Tests
             try
             {
                 _tagRepository.MaterialTagAdd(-1, tagDto.Id);
+                _addedMaterialTagIds.Add((-1, tagDto.Id));
             }
             //Then
             catch
@@ -203,6 +237,7 @@ namespace EducationSystem.Data.Tests
             try
             {
                 _tagRepository.MaterialTagAdd(materialDto.Id, -1);
+                _addedMaterialTagIds.Add((materialDto.Id, -1));
             }
             //Then
             catch
@@ -217,13 +252,58 @@ namespace EducationSystem.Data.Tests
         {
             try
             {
-                    var materialDto = AddMaterial(1);
-                    var tagDto = AddTag(1);
+                var materialDto = AddMaterial(1);
+                var tagDto = AddTag(1);
 
-                    _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
-                    _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
-                    _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
-                    _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+                _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+                _tagRepository.MaterialTagAdd(materialDto.Id, tagDto.Id);
+                _addedMaterialTagIds.Add((materialDto.Id, tagDto.Id));
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(-1)]
+        [TestCase(0)]
+        [TestCase(4)]
+        [TestCase(5)]
+        public void MaterialAddNullOrEmptyDataNegativeTest(int mockId)
+        {
+            try
+            {
+                AddMaterial(mockId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1, true)]
+        [TestCase(1, false)]
+        public void MaterialDeleteTotalNegativeTest(int mockId, bool isDeleted)
+        {
+            var dto = AddMaterial(mockId);
+            _materialRepository.DeleteOrRecoverMaterial(dto.Id, isDeleted);
+            var deletedDto = _materialRepository.GetMaterialById(dto.Id);
+            Assert.IsNotNull(deletedDto);
+        }
+
+        [TestCase(1, 4)]
+        [TestCase(1, 5)]
+        public void MaterialUpdateNegativeTest(int mockId, int updateMock)
+        {
+            var dto = AddMaterial(mockId);
+            var updateDto = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(updateMock).Clone();
+            updateDto.Id = dto.Id;
+            try
+            {
+                var affectedRows = _materialRepository.UpdateMaterial(updateDto);
             }
             catch
             {
@@ -234,7 +314,7 @@ namespace EducationSystem.Data.Tests
 
         public MaterialDto AddMaterial(int mockId)
         {
-            var dto = (MaterialDto)MaterialMock.GetMaterialMock(mockId).Clone();
+            var dto = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(mockId).Clone();
             dto.Id = _materialRepository.AddMaterial(dto);
             Assert.Greater(dto.Id, 0);
             _addedMaterialMockIds.Add(dto.Id);
@@ -269,9 +349,8 @@ namespace EducationSystem.Data.Tests
             _addedCourseIds.Add(dtoCourse.Id);
             return dtoCourse;
         }
-
-        [OneTimeTearDown]
-        public void MaterialOneTimeTearDown()
+        [TearDown]
+        public void MaterialTearDown()
         {
             DeleteMaterialGroups();
             DeleteMaterialTags();
@@ -299,7 +378,7 @@ namespace EducationSystem.Data.Tests
         {
             _addedGroupIds.ForEach(id =>
             {
-                _groupRepository.HardDeleteGroup(id);
+                _groupRepository.DeleteGroup(id);
             });
         }
         public void DeleteMaterialTags()

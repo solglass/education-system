@@ -5,7 +5,6 @@
 	[Date] [datetime2](7) NOT NULL,
 	[Period] [nvarchar](7) NOT NULL,
 	[IsPaid] [bit] NOT NULL,
-	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK_PAYMENT] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

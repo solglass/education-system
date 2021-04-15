@@ -45,7 +45,7 @@ namespace EducationSystem.API.Middleware
         {
             ModifyContextResponse(context, (int)HttpStatusCode.BadRequest);
 
-            return ConstructResponse(context, (int)HttpStatusCode.BadRequest, GlobalErrorMessage);
+            return ConstructResponse(context, (int)HttpStatusCode.BadRequest, exception.Message);
         }
 
         private void ModifyContextResponse(HttpContext context, int statusCode)

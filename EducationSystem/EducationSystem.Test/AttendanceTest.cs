@@ -2,9 +2,11 @@
 using EducationSystem.Data.Tests.Mocks;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
+    [ExcludeFromCodeCoverage]
     public class AttendanceTest : BaseTest
     {
         private ILessonRepository _lessonRepository;
@@ -266,7 +268,7 @@ namespace EducationSystem.Data.Tests
         {
             _addedGroupIds.ForEach(id =>
             {
-                _groupRepository.HardDeleteGroup(id);
+                _groupRepository.DeleteGroup(id);
             });
         }
         public void DeleteLessons()
