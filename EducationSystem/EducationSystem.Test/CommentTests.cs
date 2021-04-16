@@ -405,6 +405,11 @@ namespace EducationSystem.Data.Tests
         public void CommentDeleteOrRecover_NotExistComment_NegativeTest()
         {
             //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(1).Clone();
+            dto.Author = _userDtoMock;
+            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+            var addedCommentId = _homeworkRepo.AddComment(dto);
+            _commentIdList.Add(addedCommentId);
             //When
             var deletedRows = _homeworkRepo.DeleteOrRecoverComment(-1, true);
 
