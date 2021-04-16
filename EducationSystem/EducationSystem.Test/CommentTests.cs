@@ -300,7 +300,6 @@ namespace EducationSystem.Data.Tests
             }
             Assert.Fail();
         }
-
         [TestCase(1)]
         public void CommentAdd_WithoutUser_NegativeTest(int mockId)
         {
@@ -412,7 +411,22 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(0, deletedRows);
         }
-
+        [Test]
+        public void CommentSearch_Null_NegativeTest()
+        {
+            //Given
+            //When
+            try
+            {
+                _homeworkRepo.SearchComments(null, null);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
         [TearDown]
         public void TearDownTest()
         {
