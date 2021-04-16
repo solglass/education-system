@@ -201,8 +201,6 @@ namespace EducationSystem.Data.Tests
             _groupIdList.Add(addedGroupId);
             expected.Id = addedGroupId;
 
-            
-
             var groupMockIds = new int[] { 1, 2, 3 };
             for (int i = 0; i < groupMockIds.Length; i++) 
             {
@@ -217,8 +215,6 @@ namespace EducationSystem.Data.Tests
                 _courseRepo.AddCourse_Theme(_courseDtoMock.Id, themeDto.Id);
                 _courseThemeIdList.Add((_courseDtoMock.Id, themeDto.Id));
             }
-
-            
 
             //When
             var actual = _groupRepo.GetGroupProgramsByGroupId(expected.Id);
