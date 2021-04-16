@@ -1,5 +1,6 @@
 ﻿using EducationSystem.API.Models.InputModels;
 using EducationSystem.Business;
+using EducationSystem.Business.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,8 +21,11 @@ namespace EducationSystem.API.Controllers
             _service = authenticationService;
             _securityService = securityService;
         }
+
         [HttpPost]
-        public ActionResult Authentificate([FromBody] AuthenticationInputModel login)
+        [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        public ActionResult<AuthResponse> Authentificate([FromBody] AuthenticationInputModel login)
         {
             //throw new Exception("Тобi жопа");    
             var user = _service.GetAuthentificatedUser(login.Login);          
@@ -30,7 +34,7 @@ namespace EducationSystem.API.Controllers
                 var token = _service.GenerateToken(user);
                 return Ok(token);
             }
-            return Ok("");
+            return NotFound("wrong credentials");
         }
     }
 }
