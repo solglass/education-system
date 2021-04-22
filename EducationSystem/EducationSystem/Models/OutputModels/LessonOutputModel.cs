@@ -12,5 +12,6 @@ namespace EducationSystem.API.Models.OutputModels
         public string Comment { get; set; }
         public string LessonDate { get; set; }
         public List<ThemeOutputModel> Themes { get; set; }
+        public string? RecordLink { get; set; }
     }
 }

@@ -9,17 +9,15 @@ namespace EducationSystem.API.Models.InputModels
 {
     public class LessonInputModel
     {
-
         [Required]
         [Range(1,int.MaxValue)]
         public int GroupId { get; set; }  
-
         [Required]
         public string Comment { get; set; }
         [Required]
         [CustomDateTimeValidation]
         public string LessonDate { get; set; }
-
         public List<int> ThemesId { get; set; }
+        public string? RecordLink { get; set; }
     }
 }
