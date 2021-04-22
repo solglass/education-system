@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using EducationSystem.API.Mappers;
 using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
@@ -8,7 +7,6 @@ using EducationSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using EducationSystem.Core.CustomExceptions;
 
