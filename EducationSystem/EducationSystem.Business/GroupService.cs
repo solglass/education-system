@@ -9,6 +9,7 @@ namespace EducationSystem.Business
     public class GroupService : IGroupService
     {
         private IGroupRepository _groupRepository;
+        private int _daysInOneWeek = 7;
 
         public GroupService(IGroupRepository groupRepository)
         {
@@ -17,12 +18,19 @@ namespace EducationSystem.Business
 
         public List<GroupDto> GetGroups()
         {
-            return _groupRepository.GetGroups();
+            var dtoList = _groupRepository.GetGroups();
+            foreach (var dto in dtoList)
+            {
+                dto.EndDate = dto.StartDate.AddDays(dto.Course.Duration * _daysInOneWeek);
+            }
+            return dtoList;
         }
 
         public GroupDto GetGroupById(int id)
         {
-            return _groupRepository.GetGroupById(id);
+            var dto = _groupRepository.GetGroupById(id);
+            dto.EndDate = dto.StartDate.AddDays(dto.Course.Duration * _daysInOneWeek);
+            return dto;
         }
         public List<int> GetGroupsByStudentId(int id)
         {
@@ -39,11 +47,22 @@ namespace EducationSystem.Business
 
         public List<GroupDto> GetGroupsWithoutTutors()
         {
-            return _groupRepository.GetGroupsWithoutTutors();
+            var dtoList = _groupRepository.GetGroupsWithoutTutors();
+            foreach (var dto in dtoList)
+            {
+                dto.EndDate = dto.StartDate.AddDays(dto.Course.Duration * _daysInOneWeek);
+            }
+            return dtoList;
         }
+
         public List<NumberOfLessonsForGroupToCompleteTheThemeDto> GetGroupByThemeId(int themeId)
         {
-            return _groupRepository.GetGroupByThemeId(themeId);
+            var dtoList = _groupRepository.GetGroupByThemeId(themeId);
+            foreach (var dto in dtoList)
+            {
+                dto.EndDate = dto.StartDate.AddDays(dto.Course.Duration * _daysInOneWeek);
+            }
+            return dtoList;
         }
         public GroupDto GetGroupProgramsByGroupId(int id)
         {
@@ -104,7 +123,6 @@ namespace EducationSystem.Business
         {
             return _groupRepository.AddTutorToGroup(userId, groupId);
         }
-
         public List<GroupReportDto> GenerateReport()
         {
             return _groupRepository.GenerateReport();

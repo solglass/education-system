@@ -11,6 +11,7 @@ namespace EducationSystem.Data.Models
         public DateTime StartDate { get; set; }
         public CourseDto Course { get; set; }
         public GroupStatus GroupStatus { get; set; }
+        public DateTime EndDate { get; set; }
 
         public object Clone()
         {
@@ -18,7 +19,8 @@ namespace EducationSystem.Data.Models
             {             
                 StartDate = StartDate,
                 Course = Course != null ? (CourseDto)Course.Clone(): null,
-                GroupStatus = GroupStatus
+                GroupStatus = GroupStatus,
+                EndDate = EndDate
             };
         }
 
@@ -33,7 +35,8 @@ namespace EducationSystem.Data.Models
 
             if (groupDto.Id != Id ||
                 !groupDto.StartDate.Equals(StartDate) ||
-                groupDto.GroupStatus != GroupStatus)
+                groupDto.GroupStatus != GroupStatus ||
+                !groupDto.EndDate.Equals(EndDate))
             {
                 return false;
             }
@@ -48,7 +51,7 @@ namespace EducationSystem.Data.Models
         {
             string s = "";
 
-            s += StartDate + " " + Course.ToString() + " " + GroupStatus.ToString() + "; ";
+            s += StartDate + " " + Course.ToString() + " " + GroupStatus.ToString() + " " + EndDate + "; ";
             return s;
         }
     }
