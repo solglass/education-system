@@ -20,7 +20,7 @@ namespace EducationSystem.Business
         List<AttendanceReportDto> GetStudentByPercentOfSkip(int percent, int groupId);
         int DeleteLesson(int id);
         int RecoverLesson(int id);
-        int UpdateLesson(LessonDto lesson);
+        int UpdateLesson(int lessonId, LessonDto lesson);
         int AddFeedback(int lessonId, FeedbackDto feedback);
         int UpdateFeedback(int lessonId, int feedbackId, FeedbackDto feedback);
         int AddAttendance(int lessonId, AttendanceDto attendance);
