@@ -75,8 +75,7 @@ namespace EducationSystem.Data
                 "dbo.Lesson_Add",
                 new { GroupId = lessonDto.Group.Id,
                     Description = lessonDto.Description,
-                    Date = lessonDto.Date,
-                    RecordLink = lessonDto.RecordLink},
+                    Date = lessonDto.Date},
                 commandType: CommandType.StoredProcedure);
         }
 
