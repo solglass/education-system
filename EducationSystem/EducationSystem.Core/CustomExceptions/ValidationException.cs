@@ -17,7 +17,7 @@ namespace EducationSystem.Core.CustomExceptions
             ErrorMessage = ""; // get errors from modelState and combine them into ErrorMessage
             foreach(var state in modelState)
             {
-                ErrorMessage += $"Invalid format {state.Key}{System.Environment.NewLine}";
+                ErrorMessage += $"Invalid format {state.Key}: {state.Value.Errors[0].ErrorMessage} ";
             }
         }
     }
