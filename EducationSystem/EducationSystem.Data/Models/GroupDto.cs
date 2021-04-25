@@ -11,6 +11,9 @@ namespace EducationSystem.Data.Models
         public DateTime StartDate { get; set; }
         public CourseDto Course { get; set; }
         public GroupStatus GroupStatus { get; set; }
+        public List<UserDto> Students { get; set; }
+        public List<UserDto> Teachers { get; set; }
+        public List<UserDto> Tutors { get; set; }
 
         public object Clone()
         {

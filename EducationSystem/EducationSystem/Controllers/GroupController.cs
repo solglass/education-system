@@ -69,7 +69,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("{id}")]
-        [Authorize]
+        [AllowAnonymous]
         public ActionResult<GroupOutputModel> GetGroupById(int id)
         {
             var group = _service.GetGroupById(id);
@@ -81,7 +81,7 @@ namespace EducationSystem.Controllers
             {
                 return Forbid($"Пользователь не связан с группой {group.Id}");
             }
-            GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
+            GroupWithUsersOutputModel result = _mapper.Map<GroupWithUsersOutputModel>(group);
             return Ok(result);
             
         }
