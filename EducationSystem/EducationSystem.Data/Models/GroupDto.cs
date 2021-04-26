@@ -36,14 +36,14 @@ namespace EducationSystem.Data.Models
 
             GroupDto groupDto = (GroupDto)obj;
 
-            if (groupDto.Id != Id ||
-                !groupDto.StartDate.Equals(StartDate) ||
-                groupDto.GroupStatus != GroupStatus ||
-                !groupDto.EndDate.Equals(EndDate))
+            if (groupDto.Id == Id &&
+                groupDto.StartDate.Equals(StartDate) &&
+                groupDto.GroupStatus == GroupStatus &&
+                groupDto.EndDate.Equals(EndDate))
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
 
         public override int GetHashCode()
@@ -52,10 +52,7 @@ namespace EducationSystem.Data.Models
         }
         public override string ToString()
         {
-            string s = "";
-
-            s += StartDate + " " + Course.ToString() + " " + GroupStatus.ToString() + " " + EndDate + "; ";
-            return s;
+            return $"{Id} {StartDate} {Course} {GroupStatus} {EndDate}";
         }
     }
 }
