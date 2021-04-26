@@ -60,7 +60,8 @@ namespace EducationSystem.API
             CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)))
-                .ForMember(dest => dest.GroupStatusId, opts => opts.MapFrom(src => (int)src.GroupStatus));
+                .ForMember(dest => dest.GroupStatusId, opts => opts.MapFrom(src => (int)src.GroupStatus))
+                .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
             CreateMap<GroupDto, GroupWithUsersOutputModel>()
                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
                .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)))

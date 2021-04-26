@@ -23,13 +23,8 @@ namespace EducationSystem.Data.Models
         {
             GroupReportDto groupDto = (GroupReportDto)obj;
 
-            if (groupDto.StartDate == StartDate && groupDto.EndDate == EndDate &&
-                groupDto.GroupId == GroupId && groupDto.Name == Name)
-            {
-                return true;
-            }
-
-            return false;
+            return (groupDto.StartDate == StartDate && groupDto.EndDate == EndDate &&
+                groupDto.GroupId == GroupId && groupDto.Name == Name);
         }
 
         public override string ToString()
