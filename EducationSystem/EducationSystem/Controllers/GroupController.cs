@@ -69,7 +69,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult<GroupOutputModel> GetGroupById(int id)
         {
             var group = _service.GetGroupById(id);

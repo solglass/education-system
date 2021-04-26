@@ -29,21 +29,15 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (!(obj is GroupDto))
+            if (obj == null || !(obj is GroupDto))
                 return false;
 
             GroupDto groupDto = (GroupDto)obj;
 
-            if (groupDto.Id == Id &&
+            return (groupDto.Id == Id &&
                 groupDto.StartDate.Equals(StartDate) &&
                 groupDto.GroupStatus == GroupStatus &&
-                groupDto.EndDate.Equals(EndDate))
-            {
-                return true;
-            }
-            return false;
+                groupDto.EndDate.Equals(EndDate));
         }
 
         public override int GetHashCode()
