@@ -5,6 +5,7 @@ select l.Id,
 	l.GroupID,
     l.Description,
     l.Date,
+	l.RecordLink,
     l.IsDeleted as IsDeleted,
 	t.Id,
 	t.Name

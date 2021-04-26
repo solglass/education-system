@@ -41,6 +41,15 @@ namespace EducationSystem.Controllers
             _fileService = fileService;
         }
 
+        [HttpGet("current")]
+        [Authorize]
+        public ActionResult<UserOutputModel> GetCurrentUser()
+        {
+            var userId = Convert.ToInt32(User.FindFirst("id").Value);
+            var user = _userService.GetUserById(userId);
+            return Ok(user);
+        }
+
         // https://localhost:44365/api/user/register
         /// <summary>user registration</summary>
         /// <param name="inputModel">information about registered user</param>
@@ -293,8 +302,8 @@ namespace EducationSystem.Controllers
                 return NotFound($"User with id {userId} is not found");
             }
             var paymentDto = _mapper.Map<PaymentDto>(payment);
-            _userService.AddPayment(userId, paymentDto);
-            var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(userId));
+            var paymentId = _userService.AddPayment(userId, paymentDto);
+            var outputModel = _mapper.Map<PaymentOutputModel>(_userService.GetPaymentById(paymentId));
             return Ok(outputModel);
         }
 

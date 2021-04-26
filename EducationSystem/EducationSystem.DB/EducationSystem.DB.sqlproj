@@ -263,7 +263,6 @@
     <Build Include="StoredProcedures\Create_Report.sql" />
     <Build Include="StoredProcedures\User\dbo.Check_User_Authentification.sql" />
     <Build Include="StoredProcedures\dbo.FillEnumTables.sql" />
-    <Build Include="StoredProcedures\dbo.CleanDatabase.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByStudentId.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByTutorId.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByTeacherId.sql" />
@@ -282,6 +281,7 @@
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Add.sql" />
     <Build Include="StoredProcedures\Lesson_Theme\dbo.Lesson_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Lesson\dbo.Lesson_SelectByThemeId.sql" />
+    <Build Include="StoredProcedures\User_Role\dbo.User_Role_DeleteAll.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
