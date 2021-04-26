@@ -75,7 +75,7 @@ namespace EducationSystem.Data
                 "dbo.Lesson_Add",
                 new { GroupId = lessonDto.Group.Id,
                     Description = lessonDto.Description,
-                    Date = lessonDto.Date },
+                    Date = lessonDto.Date},
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -99,7 +99,7 @@ namespace EducationSystem.Data
         {
             return _connection.Execute(
                 "dbo.Lesson_Update",
-                new { lessonDto.Id, lessonDto.Description, lessonDto.Date },
+                new { lessonDto.Id, lessonDto.Description, lessonDto.Date, lessonDto.RecordLink },
                 commandType: CommandType.StoredProcedure);
         }
 

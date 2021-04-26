@@ -183,7 +183,7 @@ namespace EducationSystem.Controllers
                 return Forbid($"User is not in group {lessonDto.Group.Id}");
             lessonDto = _mapper.Map<LessonDto>(inputModel);
             lessonDto.Id = lessonId;
-            _lessonService.UpdateLesson(lessonDto);
+            _lessonService.UpdateLesson(lessonId, lessonDto);
             var result = _mapper.Map<LessonOutputModel>(_lessonService.GetLessonById(lessonId));
             return Ok(result);
         }
