@@ -18,14 +18,16 @@ namespace EducationSystem.Data.Tests.Mocks
                     Description = "Test Lesson 1",
                     IsDeleted = false,
                     Date = new DateTime(2020, 10, 10, 18, 30, 0).AddDays(-1),
-                    Themes = new List<ThemeDto>()
+                    Themes = new List<ThemeDto>(),
+                    RecordLink = "http://downloadme.org/lesson1.mp4"
                 },
                 2 => new LessonDto
                 {
                     Description = "Test Lesson 2",
                     IsDeleted = false,
                     Date = new DateTime(2020, 10, 10, 18, 30, 0).AddDays(-5),
-                    Themes = new List<ThemeDto>()
+                    Themes = new List<ThemeDto>(),
+                    RecordLink = "http://downloadme.org/lesson2.mp4"
                 },
                 3 => new LessonDto
                 {

@@ -5,6 +5,7 @@ begin
 		l.Id,
 		l.Date,
 		l.Description,
+		l.RecordLink,
 		l.GroupID
 	from dbo.Lesson_Theme lt
 		inner join dbo.Lesson l on lt.LessonID=l.Id

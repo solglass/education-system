@@ -32,21 +32,14 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (!(obj is HomeworkAttemptDto))
+            if (obj == null || !(obj is HomeworkAttemptDto))
                 return false;
 
             HomeworkAttemptDto homeworkAttemptObject = (HomeworkAttemptDto)obj;
-            if (Id != homeworkAttemptObject.Id ||
-                Comment != homeworkAttemptObject.Comment ||
-                HomeworkAttemptStatus != homeworkAttemptObject.HomeworkAttemptStatus ||
-                IsDeleted != homeworkAttemptObject.IsDeleted)
-            {
-                return false;
-            }
-
-            else return true;
+            return (Id == homeworkAttemptObject.Id &&
+                Comment == homeworkAttemptObject.Comment &&
+                HomeworkAttemptStatus == homeworkAttemptObject.HomeworkAttemptStatus &&
+                IsDeleted == homeworkAttemptObject.IsDeleted);
         }
 
         public override int GetHashCode()

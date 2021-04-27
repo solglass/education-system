@@ -33,19 +33,13 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (!(obj is AttendanceDto))
+            if (obj == null || !(obj is AttendanceDto))
                 return false;
 
             AttendanceDto attendanceObj = (AttendanceDto)obj;
-            if (Id != attendanceObj.Id 
-                || IsAbsent != attendanceObj.IsAbsent 
-                || ReasonOfAbsence != attendanceObj.ReasonOfAbsence)
-            {
-                return false;
-            }
-            return true;
+            return (Id == attendanceObj.Id
+                && IsAbsent == attendanceObj.IsAbsent
+                && ReasonOfAbsence == attendanceObj.ReasonOfAbsence);
         }
     }
 }

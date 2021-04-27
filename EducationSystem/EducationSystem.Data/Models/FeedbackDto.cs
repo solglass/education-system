@@ -26,22 +26,15 @@ namespace EducationSystem.Data.Models
         }
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (!(obj is FeedbackDto))
+            if (obj == null || !(obj is FeedbackDto))
                 return false;
 
             FeedbackDto feedbackObj = (FeedbackDto)obj;
-            if (Id != feedbackObj.Id ||
-                Message != feedbackObj.Message ||
-                !Lesson.Equals(feedbackObj.Lesson) ||
-                !User.Equals(feedbackObj.User) ||
-                UnderstandingLevel != feedbackObj.UnderstandingLevel)
-            {
-                return false;
-            }
-
-            return true;
+            return (Id == feedbackObj.Id &&
+                Message == feedbackObj.Message &&
+                Lesson.Equals(feedbackObj.Lesson) &&
+                User.Equals(feedbackObj.User) &&
+                UnderstandingLevel == feedbackObj.UnderstandingLevel);
         }
     }
 }
