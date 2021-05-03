@@ -9,37 +9,48 @@ namespace EducationSystem.Business
         private IHomeworkRepository _homeworkRepository;
         private ITagRepository _tagRepository;
         private IGroupRepository _groupRepository;
+        private ICourseRepository _courseRepository;
         private IAttachmentRepository _attachmentRepository;
         public HomeworkService(IHomeworkRepository homeworkRepository,
             ITagRepository tagRepository,
+            ICourseRepository courseRepository,
             IGroupRepository groupRepository,
             IAttachmentRepository attachmentRepository)
         {
+            _courseRepository = courseRepository;
             _tagRepository = tagRepository;
             _homeworkRepository = homeworkRepository;
             _groupRepository = groupRepository;
             _attachmentRepository = attachmentRepository;
         }
 
+        public List<HomeworkDto> GetHomeworksByCourseId(int courseId)
+        {
+            return _homeworkRepository.SearchHomeworks(courseId, null, null, null);
+        }
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
         {
-            return _homeworkRepository.SearchHomeworks(groupId, null, null);
+            return _homeworkRepository.SearchHomeworks(null, groupId, null, null);
         }
 
         public List<HomeworkDto> GetHomeworksByTagId(int tagId)
         {
-            return _homeworkRepository.SearchHomeworks(null, null, tagId);
+            return _homeworkRepository.SearchHomeworks(null, null, null, tagId);
         }
 
         public List<HomeworkDto> GetHomeworksByThemeId(int themeId)
         {
-            return _homeworkRepository.SearchHomeworks(null, themeId, null);
+            return _homeworkRepository.SearchHomeworks(null, null, themeId, null);
+        }
+        public List<HomeworkDto> GetHomeworks()
+        {
+            return _homeworkRepository.GetHomeworks();
         }
 
         public HomeworkDto GetHomeworkById(int id)
         {
             var result = _homeworkRepository.GetHomeworkById(id);
-            result.Group = _groupRepository.GetGroupById(result.Group.Id);
+            result.Course = _courseRepository.GetCourseById(result.Course.Id);
             result.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(id);
             return result;
         }
@@ -192,6 +203,17 @@ namespace EducationSystem.Business
         {
             return _homeworkRepository.HomeworkTagAdd(homeworkId, tagId);
         }
-        public int DeleteHomeworkTag(int homeworkId, int tagId) { return _homeworkRepository.HomeworkTagDelete(homeworkId, tagId); }
+        public int DeleteHomeworkTag(int homeworkId, int tagId)
+        { 
+            return _homeworkRepository.HomeworkTagDelete(homeworkId, tagId);
+        }
+        public int AddHomeworkGroup(int homeworkId, int groupId)
+        {
+            return _homeworkRepository.AddHomework_Group(homeworkId, groupId);
+        }
+        public int DeleteHomeworkGroup(int homeworkId, int groupId)
+        {
+            return _homeworkRepository.DeleteHomework_Group(homeworkId, groupId);
+        }
     }
 }

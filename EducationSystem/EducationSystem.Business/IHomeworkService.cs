@@ -18,6 +18,8 @@ namespace EducationSystem.Business
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByStatusIdAndGroupId(int statusId, int groupId);
         List<HomeworkAttemptWithCountDto> GetHomeworkAttemptsByUserId(int id);
         HomeworkDto GetHomeworkById(int id);
+        List<HomeworkDto> GetHomeworks();
+        List<HomeworkDto> GetHomeworksByCourseId(int courseId);
         List<HomeworkDto> GetHomeworksByGroupId(int groupId);
         List<HomeworkDto> GetHomeworksByTagId(int tagId);
         List<HomeworkDto> GetHomeworksByThemeId(int themeId);
@@ -30,6 +32,8 @@ namespace EducationSystem.Business
         HomeworkAttemptDto GetHomeworkAttemptById(int id);
         int AddComment(int attemptId, CommentDto comment);
         int UpdateComment(int attemptId, int commentId, CommentDto comment);
+        int AddHomeworkGroup(int homeworkId, int groupId);
+        int DeleteHomeworkGroup(int homeworkId, int groupId);
         int AddHomeworkTag(int homeworkId,int tagId);
         int DeleteHomeworkTag(int homeworkId, int tagId);
     }
