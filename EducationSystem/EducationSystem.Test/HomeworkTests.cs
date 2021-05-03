@@ -20,10 +20,11 @@ namespace EducationSystem.Data.Tests
         private List<int> _courseIdList;
         private List<int> _themeIdList;
         private List<int> _tagIdList;
+        private List<(int, int)> _groupHomeworkList;
         private List<(int, int)> _themeHomeworkList;
         private List<(int, int)> _tagHomeworkList;
 
-        private GroupDto _groupDtoMock;
+        private CourseDto _courseDtoMock;
 
         [SetUp]
         public void OneTimeSetUpTest()
@@ -38,17 +39,14 @@ namespace EducationSystem.Data.Tests
             _themeIdList = new List<int>();
             _homeworkIdList = new List<int>();
             _tagIdList = new List<int>();
+            _groupHomeworkList = new List<(int, int)>();
             _themeHomeworkList = new List<(int, int)>();
             _tagHomeworkList = new List<(int, int)>(); 
 
-            _groupDtoMock = GroupMockGetter.GetGroupDtoMock(1);
-            _groupDtoMock.Course = CourseMockGetter.GetCourseDtoMock(1);
-            var addedCourseId = _courseRepo.AddCourse(_groupDtoMock.Course);
+            _courseDtoMock = CourseMockGetter.GetCourseDtoMock(1);
+            var addedCourseId = _courseRepo.AddCourse(_courseDtoMock);
+            _courseDtoMock.Id = addedCourseId;
             _courseIdList.Add(addedCourseId);
-            _groupDtoMock.Course.Id = addedCourseId;
-            var addedGroupId = _groupRepo.AddGroup(_groupDtoMock);
-            _groupIdList.Add(addedGroupId);
-            _groupDtoMock.Id = addedGroupId;
         }
 
         [TestCase(1)]
@@ -56,7 +54,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
-            dto.Group = _groupDtoMock;
+            dto.Course = _courseDtoMock;
 
             var addedHomeworkId = _homeworkRepo.AddHomework(dto);
             Assert.Greater(addedHomeworkId, 0);
@@ -76,7 +74,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
-            dto.Group = _groupDtoMock;
+            dto.Course = _courseDtoMock;
             //When, Then
             try
             {
@@ -91,7 +89,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1)]
-        public void HomeworkAdd_WithoutGroup_NegativeTest(int mockId)
+        public void HomeworkAdd_WithoutCourse_NegativeTest(int mockId)
         {
             //Given
             var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
@@ -132,7 +130,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
-            dto.Group = _groupDtoMock;
+            dto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(dto);
             _homeworkIdList.Add(addedHomeworkId);
 
@@ -143,12 +141,12 @@ namespace EducationSystem.Data.Tests
                 StartDate = dto.StartDate.AddDays(2),
                 DeadlineDate = dto.DeadlineDate.AddDays(2),
                 IsOptional = false,
-                Group = new GroupDto
+                Course = new CourseDto
                 {
-                    Id = _groupRepo.AddGroup(_groupDtoMock)
+                    Id = _courseRepo.AddCourse(_courseDtoMock)
                 }
             };
-            _groupIdList.Add(dto.Group.Id);
+            _courseIdList.Add(dto.Course.Id);
             _homeworkRepo.UpdateHomework(dto);
 
             //When
@@ -164,7 +162,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            dto.Group = _groupDtoMock;
+            dto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(dto);
             _homeworkIdList.Add(addedHomeworkId);
 
@@ -186,7 +184,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            dto.Group = _groupDtoMock;
+            dto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(dto);
             _homeworkIdList.Add(addedHomeworkId);
             //When, Then
@@ -207,7 +205,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockId).Clone();
-            dto.Group = _groupDtoMock;
+            dto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(dto);
             _homeworkIdList.Add(addedHomeworkId);
             dto.Id = addedHomeworkId;
@@ -241,7 +239,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
             homeworkDto.Id = addedHomeworkId;
@@ -264,6 +262,40 @@ namespace EducationSystem.Data.Tests
             //Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
+        public void AddHomeworkGroupPositiveTest(int[] mockIds)
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Course = _courseDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+            homeworkDto.Id = addedHomeworkId;
+
+            var expected = new List<GroupDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[i]).Clone();
+                groupDto.Course = _courseDtoMock;
+                var addedGroupId = _groupRepo.AddGroup(groupDto);
+                _groupIdList.Add(addedGroupId);
+                groupDto.Id = addedGroupId;
+                expected.Add(groupDto);
+                _homeworkRepo.AddHomework_Group(addedHomeworkId, addedGroupId);
+                _groupHomeworkList.Add((addedHomeworkId, addedGroupId));
+            }
+
+            //When
+            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId).Groups;
+
+            //Then
+            Assert.AreEqual(expected.Count, actual.Count);
+            for(int i = 0; i < expected.Count; ++i)
+            {
+                Assert.AreEqual(expected[i].Id, actual[i].Id);
+            }
+        }
 
         [Test]
         public void AddHomeworkTheme_NotExistHomework_NegativeTest()
@@ -284,13 +316,53 @@ namespace EducationSystem.Data.Tests
             }
             Assert.Fail();
         }
+       [Test]
+        public void AddHomeworkGroup_NotExistHomework_NegativeTest()
+        {
+            //Given
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = _courseDtoMock;
+            var addedGroupId = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(addedGroupId);
+
+            //When, Then
+            try
+            {
+                _homeworkRepo.AddHomework_Theme(-1, addedGroupId);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
 
         [Test]
         public void AddHomeworkTheme_NotExistTheme_NegativeTest()
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            //When, Then
+            try
+            {
+                _homeworkRepo.AddHomework_Theme(addedHomeworkId, -1);
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void AddHomeworkGroup_NotExistGroup_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
 
@@ -311,7 +383,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
             var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
@@ -325,7 +397,35 @@ namespace EducationSystem.Data.Tests
             {
                 _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
                 _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
-            }            
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void AddHomeworkGroup_Unique_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Course = _courseDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = _courseDtoMock;
+            var addedGroupId = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(addedGroupId);
+
+            _homeworkRepo.AddHomework_Group(addedHomeworkId, addedGroupId);
+            _groupHomeworkList.Add((addedHomeworkId, addedGroupId));
+            //When, Then
+            try
+            {
+                _homeworkRepo.AddHomework_Group(addedHomeworkId, addedGroupId);
+                _groupHomeworkList.Add((addedHomeworkId, addedGroupId));
+            }
             catch
             {
                 Assert.Pass();
@@ -339,7 +439,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
             homeworkDto.Id = addedHomeworkId;
@@ -379,13 +479,67 @@ namespace EducationSystem.Data.Tests
             //Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
+        public void DeleteHomeworkGroupPositiveTest(int[] mockIds)
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Course = _courseDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+            homeworkDto.Id = addedHomeworkId;
+
+            var expected = new List<GroupDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[i]).Clone();
+                groupDto.Course = _courseDtoMock;
+                var addedGroupId = _groupRepo.AddGroup(groupDto);
+                _groupIdList.Add(addedGroupId);
+                groupDto.Id = addedGroupId;
+                expected.Add(groupDto);
+                _homeworkRepo.AddHomework_Group(addedHomeworkId, addedGroupId);
+                _groupHomeworkList.Add((addedHomeworkId, addedGroupId));
+            }
+
+            var toDeleteList = new List<(int, int)>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[i]).Clone();
+                groupDto.Course = _courseDtoMock;
+                var addedGroupId = _groupRepo.AddGroup(groupDto);
+                _groupIdList.Add(addedGroupId);
+                groupDto.Id = addedGroupId;
+                _homeworkRepo.AddHomework_Group(addedHomeworkId, addedGroupId);
+                _groupHomeworkList.Add((addedHomeworkId, addedGroupId));
+
+                toDeleteList.Add((addedHomeworkId, addedGroupId));
+            }
+
+            //When
+            toDeleteList.ForEach((homeworkGroup) =>
+            {
+                _homeworkRepo.DeleteHomework_Group(homeworkGroup.Item1, homeworkGroup.Item2);
+            });
+
+            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId).Groups;
+
+            //Then
+            Assert.AreEqual(expected.Count, actual.Count);
+            for (int i = 0; i < expected.Count; ++i)
+            {
+                Assert.AreEqual(expected[i].Id, actual[i].Id);
+            }
+
+        }
 
         [Test]
         public void DeleteHomeworkTheme_NotExistTheme_NegativeTest()
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
 
@@ -401,13 +555,35 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(0, affectedRows);
         }
+        [Test]
+        public void DeleteHomeworkGroup_NotExistGroup_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Course = _courseDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = _courseDtoMock;
+            var addedGroupId = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(addedGroupId);
+
+            _homeworkRepo.AddHomework_Group(addedHomeworkId, addedGroupId);
+            _groupHomeworkList.Add((addedHomeworkId, addedGroupId));
+            //When
+            var affectedRows = _homeworkRepo.DeleteHomework_Group(addedHomeworkId, -1);
+
+            //Then
+            Assert.AreEqual(0, affectedRows);
+        }
 
         [Test]
         public void DeleteHomeworkTheme_NotExistHomework_NegativeTest()
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
 
@@ -423,6 +599,28 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(0, affectedRows);
         }
+        [Test]
+        public void DeleteHomeworkGroup_NotExistHomework_NegativeTest()
+        {
+            //Given
+            var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
+            homeworkDto.Course = _courseDtoMock;
+            var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
+            _homeworkIdList.Add(addedHomeworkId);
+
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = _courseDtoMock;
+            var addedGroupId = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(addedGroupId);
+
+            _homeworkRepo.AddHomework_Group(addedHomeworkId, addedGroupId);
+            _groupHomeworkList.Add((addedHomeworkId, addedGroupId));
+            //When
+            var affectedRows = _homeworkRepo.DeleteHomework_Group(-1, addedGroupId);
+
+            //Then
+            Assert.AreEqual(0, affectedRows);
+        }
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { })]
@@ -430,7 +628,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
             homeworkDto.Id = addedHomeworkId;
@@ -480,7 +678,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
 
@@ -504,7 +702,7 @@ namespace EducationSystem.Data.Tests
             var addedTagId = _tagRepo.TagAdd(tagDto);
             _tagIdList.Add(addedTagId);
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
 
@@ -530,7 +728,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
             homeworkDto.Id = addedHomeworkId;
@@ -576,7 +774,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
 
@@ -598,7 +796,7 @@ namespace EducationSystem.Data.Tests
         {
             //Given
             var homeworkDto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            homeworkDto.Group = _groupDtoMock;
+            homeworkDto.Course = _courseDtoMock;
             var addedHomeworkId = _homeworkRepo.AddHomework(homeworkDto);
             _homeworkIdList.Add(addedHomeworkId);
 
@@ -615,43 +813,44 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(0, affectedRows);
         }
 
-        [TestCase(new int[] { 1,2,3})]
+        [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { })]
-        public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
+        public void SearchHomeworksByCourseIdPositiveTest(int[] mockIds)
         {
             //Given
-            var groupDto = _groupDtoMock;
-            var addedGroupId = _groupRepo.AddGroup(groupDto);
-            _groupIdList.Add(addedGroupId);
-            groupDto.Id = addedGroupId;
+            var courseDto = _courseDtoMock;
+            var addedCourseId = _courseRepo.AddCourse(courseDto);
+            _courseIdList.Add(addedCourseId);
+            courseDto.Id = addedCourseId;
 
             var expected = new List<HomeworkDto>();
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
-                dto.Group = groupDto;
+                dto.Course = courseDto;
                 var addedHomeworkId = _homeworkRepo.AddHomework(dto);
                 _homeworkIdList.Add(addedHomeworkId);
                 dto.Id = addedHomeworkId;
                 expected.Add(dto);
             }
 
-            var secondGroupDto = _groupDtoMock;
-            var secondAddedGroupId = _groupRepo.AddGroup(secondGroupDto);
-            _groupIdList.Add(secondAddedGroupId);
-            secondGroupDto.Id = secondAddedGroupId;
+            var secondCourseDto = _courseDtoMock;
+            var secondAddedCourseId = _courseRepo.AddCourse(secondCourseDto);
+            _courseIdList.Add(secondAddedCourseId);
+            secondCourseDto.Id = secondAddedCourseId;
+
 
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
-                dto.Group = secondGroupDto;
+                dto.Course = secondCourseDto;
                 var addedHomeworkId = _homeworkRepo.AddHomework(dto);
                 _homeworkIdList.Add(addedHomeworkId);
                 dto.Id = addedHomeworkId;
             }
 
             //When
-            var actual = _homeworkRepo.SearchHomeworks(addedGroupId, null, null);
+            var actual = _homeworkRepo.SearchHomeworks(addedCourseId, null, null, null);
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
@@ -659,14 +858,64 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { })]
-        public void SearchHomeworksByThemeIdPositiveTest(int[] mockIds)
+        public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
         {
             //Given
-            var groupDto = (GroupDto)_groupDtoMock.Clone();
-            groupDto.Course = _groupDtoMock.Course;
+            var courseDto = (CourseDto)_courseDtoMock.Clone();
+            var addedCourseId = _courseRepo.AddCourse(courseDto);
+            _courseIdList.Add(addedCourseId);
+            courseDto.Id = addedCourseId;
+
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = courseDto;
             var addedGroupId = _groupRepo.AddGroup(groupDto);
             _groupIdList.Add(addedGroupId);
             groupDto.Id = addedGroupId;
+
+            var secondGroupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            secondGroupDto.Course = courseDto;
+            var secondAddedGroupId = _groupRepo.AddGroup(secondGroupDto);
+            _groupIdList.Add(secondAddedGroupId);
+            secondGroupDto.Id = secondAddedGroupId;
+
+            var expected = new List<HomeworkDto>();
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
+                dto.Course = courseDto;
+                var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+                _homeworkIdList.Add(addedHomeworkId);
+                dto.Id = addedHomeworkId;
+                expected.Add(dto);
+                _homeworkRepo.AddHomework_Group(addedHomeworkId, addedGroupId);
+                _groupHomeworkList.Add((addedHomeworkId, addedGroupId));
+            }
+
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+                var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
+                dto.Course = courseDto;
+                var addedHomeworkId = _homeworkRepo.AddHomework(dto);
+                _homeworkIdList.Add(addedHomeworkId);
+                dto.Id = addedHomeworkId;
+                _homeworkRepo.AddHomework_Group(addedHomeworkId, secondAddedGroupId);
+                _groupHomeworkList.Add((addedHomeworkId, secondAddedGroupId));
+            }
+            //When
+            var actual = _homeworkRepo.SearchHomeworks(null, addedGroupId, null, null);
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+           [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { })]
+        public void SearchHomeworksByThemeIdPositiveTest(int[] mockIds)
+        {
+            //Given
+            var courseDto = (CourseDto)_courseDtoMock.Clone();
+            var addedCourseId = _courseRepo.AddCourse(courseDto);
+            _courseIdList.Add(addedCourseId);
+            courseDto.Id = addedCourseId;
 
             var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
             var addedThemeId = _courseRepo.AddTheme(themeDto);
@@ -679,19 +928,19 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
-                dto.Group = groupDto;
+                dto.Course = courseDto;
                 var addedHomeworkId = _homeworkRepo.AddHomework(dto);
                 _homeworkIdList.Add(addedHomeworkId);
                 dto.Id = addedHomeworkId;
                 expected.Add(dto);
                 _homeworkRepo.AddHomework_Theme(addedHomeworkId, addedThemeId);
-                _themeHomeworkList.Add((addedHomeworkId,addedThemeId));
+                _themeHomeworkList.Add((addedHomeworkId, addedThemeId));
             }
 
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
-                dto.Group = groupDto;
+                dto.Course = courseDto;
                 var addedHomeworkId = _homeworkRepo.AddHomework(dto);
                 _homeworkIdList.Add(addedHomeworkId);
                 dto.Id = addedHomeworkId;
@@ -699,7 +948,7 @@ namespace EducationSystem.Data.Tests
                 _themeHomeworkList.Add((addedHomeworkId, secondAddedThemeId));
             }
             //When
-            var actual = _homeworkRepo.SearchHomeworks(null, addedThemeId, null);
+            var actual = _homeworkRepo.SearchHomeworks(null, null, addedThemeId, null);
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
@@ -710,9 +959,10 @@ namespace EducationSystem.Data.Tests
         public void SearchHomeworksByTagIdPositiveTest(int[] mockIds)
         {
             //Given
-            var groupDto = _groupDtoMock;
-            var addedGroupId = _groupRepo.AddGroup(groupDto);
-            _groupIdList.Add(addedGroupId);
+            var courseDto = (CourseDto)_courseDtoMock.Clone();
+            var addedCourseId = _courseRepo.AddCourse(courseDto);
+            _courseIdList.Add(addedCourseId);
+            courseDto.Id = addedCourseId;
 
             var tagDto = (TagDto)TagMockGetter.GetTagDtoMock(1).Clone();
             var addedTagId = _tagRepo.TagAdd(tagDto);
@@ -726,7 +976,7 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
-                dto.Group = groupDto;
+                dto.Course = courseDto;
                 var addedHomeworkId = _homeworkRepo.AddHomework(dto);
                 _homeworkIdList.Add(addedHomeworkId);
                 dto.Id = addedHomeworkId;
@@ -738,14 +988,14 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(mockIds[i]).Clone();
-                dto.Group = groupDto;
+                dto.Course = courseDto;
                 var addedHomeworkId = _homeworkRepo.AddHomework(dto);
                 _homeworkIdList.Add(addedHomeworkId);
                 _homeworkRepo.HomeworkTagAdd(addedHomeworkId, secondAddedTagId);
                 _tagHomeworkList.Add((addedHomeworkId, secondAddedTagId));
             }
             //When
-            var actual = _homeworkRepo.SearchHomeworks(null, null, addedTagId);
+            var actual = _homeworkRepo.SearchHomeworks(null, null, null, addedTagId);
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
@@ -756,11 +1006,10 @@ namespace EducationSystem.Data.Tests
         {
             //Given
 
-            var groupDto = (GroupDto)_groupDtoMock.Clone();
-            groupDto.Course = _groupDtoMock.Course;
-            var addedGroupId = _groupRepo.AddGroup(groupDto);
-            _groupIdList.Add(addedGroupId);
-            groupDto.Id = addedGroupId;
+            var courseDto = (CourseDto)_courseDtoMock.Clone();
+            var addedCourseId = _courseRepo.AddCourse(courseDto);
+            _courseIdList.Add(addedCourseId);
+            courseDto.Id = addedCourseId;
 
             var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(1).Clone();
             var addedThemeId = _courseRepo.AddTheme(themeDto);
@@ -771,7 +1020,7 @@ namespace EducationSystem.Data.Tests
             _tagIdList.Add(addedTagId);
 
             var dto = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            dto.Group = groupDto;
+            dto.Course = courseDto;
             var addedHomeworkId = _homeworkRepo.AddHomework(dto);
             _homeworkIdList.Add(addedHomeworkId);
             dto.Id = addedHomeworkId;
@@ -785,7 +1034,7 @@ namespace EducationSystem.Data.Tests
             //When, Then
             try
             {
-                _homeworkRepo.SearchHomeworks(null, null, null);
+                _homeworkRepo.SearchHomeworks(null, null, null, null);
             }
             catch (ArgumentNullException ex)
             {
@@ -797,6 +1046,7 @@ namespace EducationSystem.Data.Tests
         [TearDown]
         public void TearDowTest()
         {
+            DeteleGroupHomeworks();
             DeleteThemeHomeworks();
             DeteleTagHomeworks();
             DeleteHomeworks();
@@ -806,11 +1056,20 @@ namespace EducationSystem.Data.Tests
             DeleteTags();
         }
 
+
         private void DeleteTags()
         {
             foreach (int tagId in _tagIdList)
             {
                 _tagRepo.TagDelete(tagId);
+            }
+        }
+
+        private void DeteleGroupHomeworks()
+        {
+            foreach (var groupHomework in _groupHomeworkList)
+            {
+                _homeworkRepo.DeleteHomework_Group(groupHomework.Item1, groupHomework.Item2);
             }
         }
 
