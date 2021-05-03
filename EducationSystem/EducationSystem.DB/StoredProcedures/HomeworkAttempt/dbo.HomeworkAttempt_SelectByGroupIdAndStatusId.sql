@@ -23,6 +23,8 @@ begin
         join dbo.[User] u on ha.UserId = u.Id
 		join dbo.HomeworkAttemptStatus hwas on ha.StatusId = hwas.Id
 		join dbo.Homework hw on ha.HomeworkId = hw.Id
-        join dbo.[Group] g on hw.GroupID = g.Id 
+		
+		left join dbo.Homework_Group hg on hw.id = hg.HomeworkId
+		left join dbo.[Group] g on hg.GroupID = g.id
     where ha.IsDeleted = 0 and g.Id = @groupId and hwas.Id = @statusId
 end
