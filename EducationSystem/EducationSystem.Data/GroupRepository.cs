@@ -104,7 +104,7 @@ namespace EducationSystem.Data
             var tutorDictionary = new Dictionary<int, UserDto>();
             var groupDictionary = new Dictionary<int, GroupDto>();
             var result = _connection
-                .Query<GroupDto, CourseDto, int, UserDto, UserDto, UserDto, GroupDto>("dbo.Group_SelectByIdTest",
+                .Query<GroupDto, CourseDto, int, UserDto, UserDto, UserDto, GroupDto>("dbo.Group_SelectById",
                     (group, course, groupStatus, student, teacher, tutor) =>
                     {
                         
@@ -118,17 +118,17 @@ namespace EducationSystem.Data
                             groupEntry.Teachers = new List<UserDto>();
                             groupEntry.Tutors = new List<UserDto>();                           
                         }
-                        if (!studentDictionary.TryGetValue(student.Id, out UserDto studentEntry))
+                        if (student != null && !studentDictionary.TryGetValue(student.Id, out UserDto studentEntry))
                         {
                             studentDictionary.Add(student.Id, student);
                             groupEntry.Students.Add(student);
                         }
-                        if (!teacherDictionary.TryGetValue(teacher.Id, out UserDto teacherEntry))
+                        if (teacher != null && !teacherDictionary.TryGetValue(teacher.Id, out UserDto teacherEntry))
                         {
                             teacherDictionary.Add(teacher.Id, teacher);
                             groupEntry.Teachers.Add(teacher);
                         }
-                        if (!tutorDictionary.TryGetValue(tutor.Id, out UserDto tutorEntry))
+                        if (tutor != null && !tutorDictionary.TryGetValue(tutor.Id, out UserDto tutorEntry))
                         {
                             tutorDictionary.Add(tutor.Id, tutor);
                             groupEntry.Tutors.Add(tutor);
