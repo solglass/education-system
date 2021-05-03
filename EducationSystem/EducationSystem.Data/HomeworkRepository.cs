@@ -256,8 +256,6 @@ namespace EducationSystem.Data
 
         public int AddComment(CommentDto comment)
         {
-            if(comment.Message == null && comment.Attachments == null)
-                throw new ArgumentNullException();
             var result = _connection
                 .QuerySingle<int>("dbo.Comment_Add",
                 new
