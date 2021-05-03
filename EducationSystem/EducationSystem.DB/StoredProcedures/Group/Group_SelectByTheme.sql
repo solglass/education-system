@@ -8,6 +8,8 @@ select
 		t.GroupID,
 		c.Id,
 		c.Name,
+		c.Description,
+		c.Duration,
 		g.StatusId as Id
 from
 	(select 

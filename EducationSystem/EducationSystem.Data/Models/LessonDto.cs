@@ -12,6 +12,7 @@ namespace EducationSystem.Data.Models
         public DateTime Date { get; set; }
         public bool IsDeleted { get; set; }
         public List<ThemeDto> Themes { get; set; }
+        public string? RecordLink { get; set; }
         public object Clone()
         {
             return new LessonDto
@@ -20,7 +21,8 @@ namespace EducationSystem.Data.Models
                 Description = Description,
                 Date = Date,
                 IsDeleted = IsDeleted,
-                Themes = Themes
+                Themes = Themes,
+                RecordLink = RecordLink
             };
         }
         public override bool Equals(object obj)
@@ -28,7 +30,7 @@ namespace EducationSystem.Data.Models
             if (obj == null || !(obj is LessonDto))
                 return false;           
             LessonDto lessonDto = (LessonDto)obj;
-            return (Id == lessonDto.Id && Description == lessonDto.Description && IsDeleted == lessonDto.IsDeleted && Date == lessonDto.Date);                                     
+            return (Id == lessonDto.Id && Description == lessonDto.Description && IsDeleted == lessonDto.IsDeleted && Date == lessonDto.Date && RecordLink == RecordLink);                                     
         }
         public override int GetHashCode()
         {

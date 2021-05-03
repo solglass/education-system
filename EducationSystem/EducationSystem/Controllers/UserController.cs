@@ -351,7 +351,7 @@ namespace EducationSystem.Controllers
             {
                 return NoContent();
             }
-            var outputModel = _mapper.Map<List<PaymentOutputModel>>(payments);
+            var outputModel = _mapper.Map<List<PaymentOutputModel>>(payments);            
             return Ok(outputModel);
         }
 

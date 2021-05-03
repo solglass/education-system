@@ -42,7 +42,7 @@ namespace EducationSystem.Data
                     },
                     new { id },
                     splitOn: "Id",
-                    commandType: System.Data.CommandType.StoredProcedure)
+                    commandType: System.Data.CommandType.StoredProcedure)                
                 .ToList();
             return payments;
         }

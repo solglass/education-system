@@ -38,8 +38,9 @@ namespace EducationSystem.Business
             return _lessonRepository.AddLesson(lesson);
         }
 
-        public int UpdateLesson(LessonDto lesson)
+        public int UpdateLesson(int lessonId, LessonDto lesson)
         {
+            lesson.Id = lessonId;
             return _lessonRepository.UpdateLesson(lesson);
         }
 

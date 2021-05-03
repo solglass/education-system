@@ -19,23 +19,22 @@ namespace EducationSystem.Data.Models
                 Link = Link,
                 Description = Description,
                 IsDeleted = IsDeleted,
-                Tags=Tags
+                Tags = Tags
             };
         }
 
         public override bool Equals(object obj)
-        {   
-            if (obj == null)
-                return false;
-            if (!(obj is MaterialDto))
+        {
+            if (obj == null || !(obj is MaterialDto))
                 return false;
 
             MaterialDto materialDto = (MaterialDto)obj;
-            if (Id != materialDto.Id || Link != materialDto.Link || Description != materialDto.Description || IsDeleted !=materialDto.IsDeleted)
-            {
-                return false;
-            }
-            return true;
+            return (
+                Id == materialDto.Id && 
+                Link == materialDto.Link && 
+                Description == materialDto.Description && 
+                IsDeleted == materialDto.IsDeleted
+            );
         }
         public override int GetHashCode()
         {

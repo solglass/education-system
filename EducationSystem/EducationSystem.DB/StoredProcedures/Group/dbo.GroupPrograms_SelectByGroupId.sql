@@ -7,6 +7,8 @@ begin
 		g.StartDate,
 		c.Id,
 		c.Name,
+		c.Description,
+		c.Duration,
 		t.Id,
 		t.Name
 from dbo.[Group] g inner join dbo.Course c on g.CourseID = c.Id

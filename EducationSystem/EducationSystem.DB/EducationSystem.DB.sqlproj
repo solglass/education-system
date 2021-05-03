@@ -263,7 +263,6 @@
     <Build Include="StoredProcedures\Create_Report.sql" />
     <Build Include="StoredProcedures\User\dbo.Check_User_Authentification.sql" />
     <Build Include="StoredProcedures\dbo.FillEnumTables.sql" />
-    <Build Include="StoredProcedures\dbo.CleanDatabase.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByStudentId.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByTutorId.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByTeacherId.sql" />

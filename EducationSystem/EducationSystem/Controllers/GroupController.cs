@@ -81,7 +81,7 @@ namespace EducationSystem.Controllers
             {
                 return Forbid($"Пользователь не связан с группой {group.Id}");
             }
-            GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
+            GroupWithUsersOutputModel result = _mapper.Map<GroupWithUsersOutputModel>(group);
             return Ok(result);
             
         }
