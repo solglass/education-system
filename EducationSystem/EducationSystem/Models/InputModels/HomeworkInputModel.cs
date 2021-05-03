@@ -16,7 +16,8 @@ namespace EducationSystem.API.Models.InputModels
         public string DeadlineDate { get; set; }
         [Required]
         [Range(1,int.MaxValue)]
-        public int GroupId { get; set; }
+        public int CourseId { get; set; }
+        public List<int> GroupIds { get; set; }
         public List<int> TagIds { get; set; }
         public List<int> ThemeIds { get; set; }
         [Required]

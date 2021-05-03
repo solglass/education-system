@@ -11,7 +11,9 @@ namespace EducationSystem.Data.Models
         public DateTime DeadlineDate { get; set; }
         public bool IsOptional { get; set; }
         public bool IsDeleted { get; set; }
-        public GroupDto Group { get; set; }
+
+        public CourseDto Course {get; set; }
+        public List<GroupDto> Groups { get; set; }
         public List<TagDto> Tags { get; set; }
         public List<HomeworkAttemptDto> HomeworkAttempts{ get; set; }
         public List<ThemeDto> Themes { get; set; }

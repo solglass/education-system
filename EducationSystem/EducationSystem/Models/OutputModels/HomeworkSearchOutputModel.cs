@@ -12,7 +12,8 @@ namespace EducationSystem.API.Models.OutputModels
         public string StartDate { get; set; }
         public string DeadlineDate { get; set; }
         public bool IsOptional { get; set; }
-        public int GroupId { get; set; }
+        public int CourseId { get; set; }
+        public List<GroupOutputModel> Groups { get; set; }
         public List<ThemeOutputModel> Themes { get; set; }
         public List<TagOutputModel> Tags { get; set; }
     }
