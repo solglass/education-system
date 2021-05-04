@@ -15,21 +15,30 @@ namespace EducationSystem.Data.Tests.Mocks
                 1 => new GroupDto
                 {
                     GroupStatus = GroupStatus.InProgress,
-                    StartDate = DateTime.Now
+                    StartDate = new DateTime(2000, 5, 6),
                 },
                 2 => new GroupDto
                 {
-                    GroupStatus = GroupStatus.InProgress,
-                    StartDate = DateTime.Now.AddDays(+6)
+                    GroupStatus = GroupStatus.Finished,
+                    StartDate = new DateTime(2000, 7, 6),
                 },
                 3 => new GroupDto
                 {
+                    GroupStatus = GroupStatus.ReadyToStart,
+                    StartDate = new DateTime(2000, 8, 6),
+                },
+                4 => new GroupDto
+                {
                     GroupStatus = GroupStatus.InProgress,
-                    StartDate = DateTime.Now.AddDays(-6)
+                    StartDate = new DateTime(2000, 9, 6),
+                },
+                5 => new GroupDto
+                {
+                    GroupStatus = GroupStatus.InProgress,
+                    StartDate = new DateTime(2000, 10, 6),
                 },
                 _ => null,
             };
         }
     }
 }
-

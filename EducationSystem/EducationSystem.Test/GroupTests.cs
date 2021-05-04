@@ -1,108 +1,224 @@
 ﻿using NUnit.Framework;
-using System;
 using EducationSystem.Data.Models;
 using System.Collections.Generic;
 using EducationSystem.Core.Enums;
-using System.Globalization;
+using EducationSystem.Data.Tests.Mocks;
 using System.Diagnostics.CodeAnalysis;
 
 namespace EducationSystem.Data.Tests
 {
     [ExcludeFromCodeCoverage]
-    public class GroupTests
+    public class GroupTests : BaseTest
     {
-        private List<int> _groupsId;
-        private GroupRepository gRepo;
+        private IGroupRepository _groupRepo;
+        private ICourseRepository _courseRepo;
+        private IMaterialRepository _materialRepo;
+
+
+        private List<int> _groupIdList;
+        private List<int> _courseIdList;
+        private List<int> _materialIdList;
+        private List<(int, int)> _groupMaterialIdList;
+        private CourseDto _courseDtoMock;
+
+
         [SetUp]
-        public void GroupsTestsSetup()
+        public void OneTimeSetUp()
         {
-            _groupsId = new List<int>();
-            GroupDto expected = GetMockGroup_Add(1);
+            _groupRepo = new GroupRepository(_options);
+            _courseRepo = new CourseRepository(_options);
+            _materialRepo = new MaterialRepository(_options);
 
+            _groupIdList = new List<int>();
+            _courseIdList = new List<int>();
+            _materialIdList = new List<int>();
+            _groupMaterialIdList = new List<(int,int)>();
 
+            _courseDtoMock = (CourseDto)CourseMockGetter.GetCourseDtoMock(1).Clone();
+            _courseDtoMock.Id = _courseRepo.AddCourse(_courseDtoMock);
+            _courseIdList.Add(_courseDtoMock.Id);
         }
 
-        [TestCase(1)]
-        public void Attachment_Add(int dtoMockNumber)
+        [TestCase(new int[] { 1, 2 })]
+        public void AddGroupMaterialPositiveTest(int[] mockIds)
         {
-            GroupDto expected = GetMockGroup_Add(dtoMockNumber);
-            _groupsId.Add(gRepo.AddGroup(expected));
-            expected.Id = _groupsId[_groupsId.Count - 1];
-            if (_groupsId.Count == 0) { Assert.Fail("Group addition failed"); }
-            else
+            //Given
+            var expected = new List<MaterialDto>();
+
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[1]).Clone();
+            groupDto.Course = _courseDtoMock;
+            groupDto.Id = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(groupDto.Id);
+
+            for (int i = 0; i < mockIds.Length; i++)
             {
-                GroupDto actual = gRepo.GetGroupById(expected.Id);
-                Assert.AreEqual(expected, actual);
+
+                var materialDto = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(mockIds[i]).Clone();
+                materialDto.Id = _materialRepo.AddMaterial(materialDto);
+                _materialIdList.Add(materialDto.Id);
+                expected.Add(materialDto);
+
+                _groupRepo.AddGroup_Material(groupDto.Id, materialDto.Id);
+                _groupMaterialIdList.Add((groupDto.Id, materialDto.Id));
             }
 
+
+            //When
+            var actual = _materialRepo.GetMaterialsByGroupId(groupDto.Id);
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
         }
 
-
-        [TestCase(1)]
-        public void Group_Delete(int dtoMockNumber)
+        [Test]
+        public void AddGroupMaterialNegativeTestMaterialNotExists()
         {
-            GroupDto expected = GetMockGroup_Add(dtoMockNumber);
-            _groupsId.Add(gRepo.AddGroup(expected));
-            if (_groupsId.Count == 0) { Assert.Fail("Group addition failed"); }
-            else
+            //Given
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = _courseDtoMock;
+            groupDto.Id = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(groupDto.Id);
+
+            //When
+            try
             {
-                int newId = _groupsId[_groupsId.Count - 1];
-                gRepo.DeleteGroup(newId);
-                GroupDto actual = gRepo.GetGroupById(newId);
-                if (actual == null) { Assert.Pass(); }
-                else Assert.Fail("Deletion went wrong");
+                _groupRepo.AddGroup_Material(groupDto.Id, -1);
             }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
-        [TestCase(1)]
-        public void Group_Update(int dtoMockNumber)
+        [Test]
+        public void AddGroupMaterialNegativeTestNotUniqueEntity()
         {
-            GroupDto expected = GetMockGroup_Add(dtoMockNumber);
-            _groupsId.Add(gRepo.AddGroup(expected));
-            if (_groupsId.Count == 0) { Assert.Fail("Group addition failed"); }
+            //Given
+            var expected = new List<MaterialDto>();
 
-            int newId = _groupsId[_groupsId.Count - 1];
-            GroupStatus groupStatusUpdate = GroupStatus.Finished;
-            expected.GroupStatus = groupStatusUpdate;
-            expected.Id = newId;
-            gRepo.UpdateGroup(expected);
-            GroupDto actual = gRepo.GetGroupById(newId);
-            Assert.AreEqual(expected, actual);
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = _courseDtoMock;
+            groupDto.Id = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(groupDto.Id);
+            for (int i = 1; i < 3; i++)
+            {
 
+                var materialDto = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(i).Clone();
+                materialDto.Id = _materialRepo.AddMaterial(materialDto);
+                _materialIdList.Add(materialDto.Id);
+                expected.Add(materialDto);
+
+                _groupRepo.AddGroup_Material(groupDto.Id, materialDto.Id);
+                _groupMaterialIdList.Add((groupDto.Id, materialDto.Id));
+            }
+
+            //When
+            try
+            {
+                _groupRepo.AddGroup_Material(groupDto.Id, _materialIdList[1]);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
         }
 
 
+        [TestCase(new int[] { 1, 2 })]
+        public void DeleteGroupMaterialPositiveTest(int[] mockIds)
+        {
+            //Given
+            var expected = new List<MaterialDto>();
+
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[1]).Clone();
+            groupDto.Course = _courseDtoMock;
+            groupDto.Id = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(groupDto.Id);
+
+            for (int i = 0; i < mockIds.Length; i++)
+            {
+
+                var materialDto = (MaterialDto)MaterialMockGetter.GetMaterialDtoMock(mockIds[i]).Clone();
+                materialDto.Id = _materialRepo.AddMaterial(materialDto);
+                _materialIdList.Add(materialDto.Id);
+                expected.Add(materialDto);
+                _groupRepo.AddGroup_Material(groupDto.Id, materialDto.Id);
+                _groupMaterialIdList.Add((groupDto.Id, materialDto.Id));
+                if (i == mockIds.Length - 1)
+                {
+                    _groupRepo.DeleteGroup_Material(groupDto.Id, materialDto.Id);
+                    expected.RemoveAt(mockIds.Length - 1);
+                }
+            }
+
+            //When
+            var actual = _materialRepo.GetMaterialsByGroupId(groupDto.Id);
+
+            //Then
+            CollectionAssert.AreEqual(expected, actual);
+        }
+        [Test]
+        public void DeleteGroupMaterialNegativeTestMaterialNotExists()
+        {
+            //Given
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = _courseDtoMock;
+            groupDto.Id = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(groupDto.Id);
+            //When
+            var result = _groupRepo.DeleteGroup_Material(groupDto.Id, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+        [Test]
+        public void DeleteCommentAttachmentNegativeTestRelationNotExists()
+        {
+            //Given
+            //When
+            var result = _groupRepo.DeleteGroup_Material(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
 
         [TearDown]
-        public void AttachmentsTestsTearDown()
+        public void TearDown()
         {
-
-            foreach (int elem in _groupsId)
-            {
-                gRepo.DeleteGroup(elem);
-            }
-
+            DeleteGroupMaterials();
+            DeleteMaterials();
+            DeleteGroups();
+            DeleteCourse();
         }
 
-        public GroupDto GetMockGroup_Add(int n)
+        private void DeleteGroupMaterials()
         {
-            switch (n)
+            foreach (var groupMaterialPair in _groupMaterialIdList)
             {
-                case 1:
-                    GroupDto groupDto = new GroupDto();
-                    GroupStatus groupStatus = GroupStatus.InProgress;
-                    groupDto.GroupStatus = groupStatus;
-                    CourseDto courseDto = new CourseDto()
-                    {
-                        Id = 999,
-                        IsDeleted = false,
-                        Name = "Test",
-                    };
-                    groupDto.Course = courseDto;
-                    groupDto.StartDate = DateTime.ParseExact("05.05.2000", "dd.MM.yyyy", CultureInfo.InvariantCulture);
-                    return groupDto;
-                default:
-                    throw new Exception();
+                _groupRepo.DeleteGroup_Material(groupMaterialPair.Item1, groupMaterialPair.Item2);
+            }
+        }
+        private void DeleteMaterials()
+        {
+            foreach (var materialId in _materialIdList)
+            {
+                _materialRepo.HardDeleteMaterial(materialId);
+            }
+        }
+        public void DeleteGroups()
+        {
+            foreach (var groupId in _groupIdList)
+            {
+                _groupRepo.DeleteGroup(groupId);
+            }
+        }
+        public void DeleteCourse()
+        {
+            foreach (var courseId in _courseIdList)
+            {
+                _courseRepo.HardDeleteCourse(courseId);
             }
         }
 
