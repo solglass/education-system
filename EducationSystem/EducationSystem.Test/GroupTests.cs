@@ -241,15 +241,15 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(expected, actual);
         }
-        [TestCase(new int[] { 1, 2, 3 },4)]
+        [TestCase(new int[] { 1, 2, 3 },4,4)]
 
-        public void GetGroupsWithoutTutorsPositiveTest(int[] mockIds,int tutorMockId)
+        public void GetGroupsWithoutTutorsPositiveTest(int[] mockIds,int tutorMockId, int userMockId)
         {
             //Given
             var expected = new List<GroupDto>();
 
 
-            var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
+            var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(userMockId).Clone();
 
             userDtoMock.Id = _userRepo.AddUser(userDtoMock);
             _userRepo.AddRoleToUser(userDtoMock.Id, tutorMockId);
