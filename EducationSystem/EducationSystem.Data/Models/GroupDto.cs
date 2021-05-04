@@ -11,6 +11,10 @@ namespace EducationSystem.Data.Models
         public DateTime StartDate { get; set; }
         public CourseDto Course { get; set; }
         public GroupStatus GroupStatus { get; set; }
+        public DateTime EndDate { get; set; }
+        public List<UserDto> Students { get; set; }
+        public List<UserDto> Teachers { get; set; }
+        public List<UserDto> Tutors { get; set; }
 
         public object Clone()
         {
@@ -18,26 +22,22 @@ namespace EducationSystem.Data.Models
             {             
                 StartDate = StartDate,
                 Course = Course != null ? (CourseDto)Course.Clone(): null,
-                GroupStatus = GroupStatus
+                GroupStatus = GroupStatus,
+                EndDate = EndDate
             };
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (!(obj is GroupDto))
+            if (obj == null || !(obj is GroupDto))
                 return false;
 
             GroupDto groupDto = (GroupDto)obj;
 
-            if (groupDto.Id != Id ||
-                !groupDto.StartDate.Equals(StartDate) ||
-                groupDto.GroupStatus != GroupStatus)
-            {
-                return false;
-            }
-            return true;
+            return (groupDto.Id == Id &&
+                groupDto.StartDate.Equals(StartDate) &&
+                groupDto.GroupStatus == GroupStatus &&
+                groupDto.EndDate.Equals(EndDate));
         }
 
         public override int GetHashCode()
@@ -46,10 +46,7 @@ namespace EducationSystem.Data.Models
         }
         public override string ToString()
         {
-            string s = "";
-
-            s += StartDate + " " + Course.ToString() + " " + GroupStatus.ToString() + "; ";
-            return s;
+            return $"{Id} {StartDate} {Course} {GroupStatus} {EndDate}";
         }
     }
 }
