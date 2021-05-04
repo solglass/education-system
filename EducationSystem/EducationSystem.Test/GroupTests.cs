@@ -185,12 +185,12 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [TestCase(2,1)]
-        public void GetGroupProgramsByGroupIdPositiveTest(int groupMockId, int themeMockId)
+        [Test]
+        public void GetGroupProgramsByGroupIdPositiveTest()
         {
             //Given;
             var themes = new List<ThemeDto>();
-            var expected = (GroupDto)GroupMockGetter.GetGroupDtoMock(groupMockId).Clone();
+            var expected = (GroupDto)GroupMockGetter.GetGroupDtoMock(2).Clone();
             expected.Course = _courseDtoMock;
 
             expected.Course.Themes = themes;
