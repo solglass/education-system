@@ -325,5 +325,42 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
+
+
+
+        public int DeleteCourse_Program(int courseId)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Program_Delete",
+                new
+                {
+                    courseId
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+
+        public int GetCourse_Program(int courseId)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Program_SelectByCourseId",
+                new
+                {
+                    courseId
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
+        public int Course_Program_Update(int courseId)
+        {
+            var result = _connection
+                .Execute("dbo.Course_Program_Update",
+                new
+                {
+                    courseId
+                },
+                commandType: System.Data.CommandType.StoredProcedure);
+            return result;
+        }
     }
 }
