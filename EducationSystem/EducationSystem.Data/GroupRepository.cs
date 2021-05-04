@@ -110,36 +110,33 @@ namespace EducationSystem.Data
                 .Query<GroupDto, CourseDto, int, UserDto, UserDto, UserDto, GroupDto>("dbo.Group_SelectById",
                     (group, course, groupStatus, student, teacher, tutor) =>
                     {
-                        if (group != null)
+                        if (!groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
                         {
-                            if (!groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
-                            {
-                                groupDictionary.Add(group.Id, group);
-                                groupEntry = group;
-                                groupEntry.Course = course;
-                                groupEntry.GroupStatus = (GroupStatus)groupStatus;
-                                groupEntry.Students = new List<UserDto>();
-                                groupEntry.Teachers = new List<UserDto>();
-                                groupEntry.Tutors = new List<UserDto>();
-                            }
-                            if (student != null && !studentDictionary.TryGetValue(student.Id, out UserDto studentEntry))
-                            {
-                                studentDictionary.Add(student.Id, student);
-                                groupEntry.Students.Add(student);
-                            }
-                            if (teacher != null && !teacherDictionary.TryGetValue(teacher.Id, out UserDto teacherEntry))
-                            {
-                                teacherDictionary.Add(teacher.Id, teacher);
-                                groupEntry.Teachers.Add(teacher);
-                            }
-                            if (tutor != null && !tutorDictionary.TryGetValue(tutor.Id, out UserDto tutorEntry))
-                            {
-                                tutorDictionary.Add(tutor.Id, tutor);
-                                groupEntry.Tutors.Add(tutor);
-                            }
-                            return groupEntry;
+                            groupDictionary.Add(group.Id, group);
+                            groupEntry = group;
+                            groupEntry.Course = course;
+                            groupEntry.GroupStatus = (GroupStatus)groupStatus;
+                            groupEntry.Students = new List<UserDto>();
+                            groupEntry.Teachers = new List<UserDto>();
+                            groupEntry.Tutors = new List<UserDto>();
                         }
-                        return null;
+                        if (student != null && !studentDictionary.TryGetValue(student.Id, out UserDto studentEntry))
+                        {
+                            studentDictionary.Add(student.Id, student);
+                            groupEntry.Students.Add(student);
+                        }
+                        if (teacher != null && !teacherDictionary.TryGetValue(teacher.Id, out UserDto teacherEntry))
+                        {
+                            teacherDictionary.Add(teacher.Id, teacher);
+                            groupEntry.Teachers.Add(teacher);
+                        }
+                        if (tutor != null && !tutorDictionary.TryGetValue(tutor.Id, out UserDto tutorEntry))
+                        {
+                            tutorDictionary.Add(tutor.Id, tutor);
+                            groupEntry.Tutors.Add(tutor);
+                        }
+                        return groupEntry;
+
                     },
                     new { id },
                     splitOn: "Id",
