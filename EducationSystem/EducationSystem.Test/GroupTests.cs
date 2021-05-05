@@ -405,27 +405,6 @@ namespace EducationSystem.Data.Tests
             //Then
             CollectionAssert.AreEqual(expected, actual);
         }
-        private void DeleteMaterials()
-        {
-            foreach (var materialId in _materialIdList)
-            {
-                _materialRepo.HardDeleteMaterial(materialId);
-            }
-        }
-        public void DeleteGroups()
-        {
-            foreach (var groupId in _groupIdList)
-            {
-                _groupRepo.DeleteGroup(groupId);
-            }
-        }
-        public void DeleteCourse()
-        {
-            foreach (var courseId in _courseIdList)
-            {
-                _courseRepo.HardDeleteCourse(courseId);
-            }
-        }
 
         [TestCase(new int[] { 1, 2 }, 4)]
         public void GetGroupsByTutorIdPositiveTest(int[] mockIds, int tutorMockId)
