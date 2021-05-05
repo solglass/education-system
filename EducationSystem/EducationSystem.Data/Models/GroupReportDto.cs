@@ -19,6 +19,14 @@ namespace EducationSystem.Data.Models
 
         public int TeacherCount { get; set; }
 
+        public object Clone()
+        {
+            return new GroupReportDto
+            {
+                StartDate = StartDate,
+                EndDate = EndDate,
+            };
+        }
         public override bool Equals(object obj)
         {
             GroupReportDto groupDto = (GroupReportDto)obj;
