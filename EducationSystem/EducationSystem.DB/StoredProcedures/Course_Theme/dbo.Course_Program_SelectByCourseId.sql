@@ -10,9 +10,9 @@ begin
 		c.[Name],
 		t.Id,
 		t.[Name]
-	from dbo.Course c 
-		left join dbo.Course_Theme ct on c.Id = ct.CourseID
-		left join dbo.Theme t on t.Id = ct.ThemeID	
-	where c.Id = @id and (t.Id IS NULL or t.IsDeleted=0)
+	from  dbo.Course_Theme ct
+		join  dbo.Course c on c.Id = ct.CourseID
+		join dbo.Theme t on t.Id = ct.ThemeID	
+	where c.Id = @id and t.IsDeleted=0
 	order by ct.[Order] 
 end
