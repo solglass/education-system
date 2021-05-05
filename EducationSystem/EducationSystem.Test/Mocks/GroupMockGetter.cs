@@ -43,4 +43,3 @@ namespace EducationSystem.Data.Tests.Mocks
         }
     }
 }
-

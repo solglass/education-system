@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
 using EducationSystem.Data.Models;
 using System.Collections.Generic;
 using EducationSystem.Core.Enums;
@@ -342,6 +341,28 @@ namespace EducationSystem.Data.Tests
             //Then
             CollectionAssert.AreEqual(expected, actual);
         }
+        [Test]
+        public void DeleteGroupMaterialNegativeTestMaterialNotExists()
+        {
+            //Given
+            var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
+            groupDto.Course = _courseDtoMock;
+            groupDto.Id = _groupRepo.AddGroup(groupDto);
+            _groupIdList.Add(groupDto.Id);
+            //When
+            var result = _groupRepo.DeleteGroup_Material(groupDto.Id, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
+        [Test]
+        public void DeleteCommentAttachmentNegativeTestRelationNotExists()
+        {
+            //Given
+            //When
+            var result = _groupRepo.DeleteGroup_Material(-1, -1);
+            //Then
+            Assert.AreEqual(0, result);
+        }
 
         [TestCase(new int[] { 1, 2 }, 2)]
         
@@ -383,6 +404,27 @@ namespace EducationSystem.Data.Tests
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
+        }
+        private void DeleteMaterials()
+        {
+            foreach (var materialId in _materialIdList)
+            {
+                _materialRepo.HardDeleteMaterial(materialId);
+            }
+        }
+        public void DeleteGroups()
+        {
+            foreach (var groupId in _groupIdList)
+            {
+                _groupRepo.DeleteGroup(groupId);
+            }
+        }
+        public void DeleteCourse()
+        {
+            foreach (var courseId in _courseIdList)
+            {
+                _courseRepo.HardDeleteCourse(courseId);
+            }
         }
 
         [TestCase(new int[] { 1, 2 }, 4)]
