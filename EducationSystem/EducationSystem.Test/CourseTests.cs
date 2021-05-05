@@ -605,6 +605,94 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(0, result);
         }
+        [TestCase(1, new int[] { 1, 2, 3 })]
+        [TestCase(1, new int[] { 3 })]
+        [TestCase(1, new int[] { })]
+        public void AddCourseProgramPositiveTest(int courseMockId, int[] themeMockIds)
+        {
+            //Given 
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseMockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            _courseIds.Add(course.Id);
+            var themes = new List<ThemeDto>();
+            var courseThemes = new List<CourseThemeDto>();
+
+            for(var i=0;i< themeMockIds.Length;i++)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                themes.Add(theme);
+                _themeIds.Add(theme.Id);
+                courseThemes.Add(new CourseThemeDto
+                {
+                    Course = course,
+                    Theme = theme,
+                    Order = i+1
+                });
+                _courseThemes.Add((course.Id, theme.Id));
+            }
+            //When
+           var result= _courseRepo.AddCourse_Program(courseThemes);
+            //Then
+            Assert.AreEqual(courseThemes.Count, result);
+            var actual = _courseRepo.GetCourse_Program(course.Id);
+            Assert.AreEqual(courseThemes, actual);
+        }
+
+        [TestCase(1,2, new int[] { 1, 2, 3,4 })]
+        [TestCase(1,2, new int[] {1, 3 })]
+        [TestCase(1,2, new int[] { })]
+        public void GetCourseProgramPositiveTest(int firstCourseMockId, int secondCourseMockId, int[] themeMockIds)
+        {
+            //Given 
+            var firstCourse = (CourseDto)CourseMockGetter.GetCourseDtoMock(firstCourseMockId).Clone();
+            firstCourse.Id = _courseRepo.AddCourse(firstCourse);
+            _courseIds.Add(firstCourse.Id);
+
+            var secondCourse = (CourseDto)CourseMockGetter.GetCourseDtoMock(secondCourseMockId).Clone();
+            secondCourse.Id = _courseRepo.AddCourse(secondCourse);
+            _courseIds.Add(secondCourse.Id);
+
+            var themes = new List<ThemeDto>();
+            var expected = new List<CourseThemeDto>();
+            var courseThemesToAvoid = new List<CourseThemeDto>();
+            for (var i = 0; i < themeMockIds.Length; i++)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                themes.Add(theme);
+                _themeIds.Add(theme.Id);
+                if(i%2==0)
+                {
+                    expected.Add(new CourseThemeDto
+                    {
+                        Course = firstCourse,
+                        Theme = theme,
+                        Order = i + 1
+                    });
+                    _courseThemes.Add((firstCourse.Id, theme.Id));
+                }
+                else
+                {
+                    courseThemesToAvoid.Add(new CourseThemeDto
+                    {
+                        Course = secondCourse,
+                        Theme = theme,
+                        Order = i + 1
+                    });
+                    _courseThemes.Add((secondCourse.Id, theme.Id));
+                }
+            }
+            //When
+            var result = _courseRepo.AddCourse_Program(expected);
+            Assert.AreEqual(expected.Count, result);
+            result = _courseRepo.AddCourse_Program(courseThemesToAvoid);
+            Assert.AreEqual(courseThemesToAvoid.Count, result);
+
+            //Then
+            var actual = _courseRepo.GetCourse_Program(firstCourse.Id);
+            Assert.AreEqual(expected, actual);
+        }
 
         [TearDown]
         public void TearDown()

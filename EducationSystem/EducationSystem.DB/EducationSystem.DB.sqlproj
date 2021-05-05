@@ -284,6 +284,7 @@
     <Build Include="StoredProcedures\User_Role\dbo.User_Role_DeleteAll.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Program_Update.sql" />
     <Build Include="StoredProcedures\Course_Theme\dbo.Course_Program_Delete.sql" />
+    <Build Include="StoredProcedures\Course_Theme\dbo.Course_Program_SelectByCourseId.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />

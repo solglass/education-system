@@ -23,5 +23,11 @@ namespace EducationSystem.Data
         int UpdateCourse(CourseDto course);
         int UpdateTheme(ThemeDto theme);
         int HardDeleteTheme(int themeId);
+
+
+
+        int DeleteCourse_Program(int courseId);
+        List<CourseThemeDto> GetCourse_Program(int courseId);
+        int AddCourse_Program(List<CourseThemeDto> courseThemes);
     }
 }

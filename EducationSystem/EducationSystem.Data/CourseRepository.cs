@@ -340,25 +340,35 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public int GetCourse_Program(int courseId)
+        public List<CourseThemeDto> GetCourse_Program(int courseId)
         {
             var result = _connection
-                .Execute("dbo.Course_Program_SelectByCourseId",
+                .Query<CourseThemeDto, CourseDto, ThemeDto, CourseThemeDto>("dbo.Course_Program_SelectByCourseId",
+                (courseTheme, course, theme)=>
+                {
+                    courseTheme.Course = course;
+                    courseTheme.Theme = theme;
+                    return courseTheme;
+                },
                 new
                 {
-                    courseId
+                    id=courseId
                 },
-                commandType: System.Data.CommandType.StoredProcedure);
+                splitOn:  "Id",
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
             return result;
         }
-        public int Course_Program_Update(int courseId)
+        public int AddCourse_Program(List<CourseThemeDto> courseThemes)
         {
             var result = _connection
                 .Execute("dbo.Course_Program_Update",
-                new
+                courseThemes.Select(obj=> new
                 {
-                    courseId
-                },
+                    courseId=obj.Course.Id,
+                    themeId=obj.Theme.Id,
+                    order=obj.Order
+                }).ToArray(),
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
