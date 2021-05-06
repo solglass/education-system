@@ -1,7 +1,9 @@
 ﻿create proc [dbo].[Teacher_Group_Delete]
-	@id int
-as
+	(
+	@userId int,
+    @groupId int 
+)as
 begin
 	delete from dbo.Teacher_Group
-	where Id = @id
+	 where UserID =  @userId and GroupID = @groupId
 end
