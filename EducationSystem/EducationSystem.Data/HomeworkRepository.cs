@@ -23,15 +23,14 @@ namespace EducationSystem.Data
             var homeworkDictionary = new Dictionary<int, HomeworkDto>();
             var courseDictionary = new Dictionary<int, CourseDto>();
             
-            var groupDictionary = new Dictionary<int, GroupDto>();
             var tagDictionary = new Dictionary<int, TagDto>();
             var HomeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
             var themeDictionary = new Dictionary<int, ThemeDto>();
 
             var homeworks = _connection
-                .Query<HomeworkDto, CourseDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
+                .Query<HomeworkDto, CourseDto, TagDto, ThemeDto, HomeworkDto>(
                     "dbo.Homework_SelectById",
-                    (homework, course, group, tag, theme) =>
+                    (homework, course, tag, theme) =>
                     {
                         if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
                         {
@@ -49,14 +48,6 @@ namespace EducationSystem.Data
                             tagEntry = tag;
                             homeworkEntry.Tags.Add(tagEntry);
                             tagDictionary.Add(tagEntry.Id, tagEntry);
-                        }
-
-                        if (group != null && !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
-                        {
-                            groupEntry = group;
-                            groupEntry.GroupStatus = (GroupStatus)groupEntry.GroupStatus;
-                            homeworkEntry.Groups.Add(groupEntry);
-                            groupDictionary.Add(groupEntry.Id, groupEntry);
                         }
 
                         if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
@@ -81,15 +72,15 @@ namespace EducationSystem.Data
             var homeworkDictionary = new Dictionary<int, HomeworkDto>();
             var courseDictionary = new Dictionary<int, CourseDto>();
 
-            var groupDictionary = new Dictionary<int, GroupDto>();
+
             var tagDictionary = new Dictionary<int, TagDto>();
             var HomeworkAttemptDictionary = new Dictionary<int, HomeworkAttemptDto>();
             var themeDictionary = new Dictionary<int, ThemeDto>();
 
             var homeworks = _connection
-                .Query<HomeworkDto, CourseDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
+                .Query<HomeworkDto, CourseDto, TagDto, ThemeDto, HomeworkDto>(
                     "dbo.Homework_SelectAll",
-                    (homework, course, group, tag, theme) =>
+                    (homework, course, tag, theme) =>
                     {
                         if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
                         {
@@ -109,14 +100,6 @@ namespace EducationSystem.Data
                             tagDictionary.Add(tagEntry.Id, tagEntry);
                         }
 
-                        if (group != null && !groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
-                        {
-                            groupEntry = group;
-                            groupEntry.GroupStatus = (GroupStatus)groupEntry.GroupStatus;
-                            homeworkEntry.Groups.Add(groupEntry);
-                            groupDictionary.Add(groupEntry.Id, groupEntry);
-                        }
-
                         if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
                         {
                             themeEntry = theme;
@@ -130,19 +113,18 @@ namespace EducationSystem.Data
                 .ToList();
             return homeworks;
         }
-        public List<HomeworkDto> SearchHomeworks(int? courseId = null, int? groupId = null, int? themeId = null, int? tagId = null)
+        public List<HomeworkDto> SearchHomeworks(int? courseId = null, int? themeId = null, int? tagId = null)
         {
-            if(courseId == null && groupId == null && themeId == null && tagId == null)
+            if(courseId == null && themeId == null && tagId == null)
                 throw new ArgumentNullException();
 
-            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
-            var groupDictionary = new Dictionary<int, GroupDto>();
+            var homeworkDictionary = new Dictionary<int, HomeworkDto>();  
             var tagDictionary = new Dictionary<int, TagDto>();
             var themeDictionary = new Dictionary<int, ThemeDto>();
 
-            var homeworks = _connection.Query<HomeworkDto, CourseDto, GroupDto, TagDto, ThemeDto, HomeworkDto>(
+            var homeworks = _connection.Query<HomeworkDto, CourseDto, TagDto, ThemeDto, HomeworkDto>(
                     "dbo.Homework_Search",
-                    (homework, course, group, tag, theme) =>
+                    (homework, course, tag, theme) =>
                     {
                         if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
                         {
@@ -155,19 +137,8 @@ namespace EducationSystem.Data
                             homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
                             tagDictionary.Clear();
                             themeDictionary.Clear();
-                            groupDictionary.Clear();
                         }
 
-                        if (group != null)
-                        {
-                            if (!groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
-                            {
-                                groupEntry = group;
-                                groupEntry.GroupStatus = groupEntry.GroupStatus;
-                                homeworkEntry.Groups.Add(groupEntry);
-                                groupDictionary.Add(group.Id, group);
-                            }
-                        }
                         if (theme != null)
                         {
                             if (!themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
@@ -191,9 +162,54 @@ namespace EducationSystem.Data
                     new
                     {
                         courseId,
-                        groupId,
                         themeId,
                         tagId
+                    },
+                    splitOn: "Id",
+                    commandType: System.Data.CommandType.StoredProcedure)
+                .Distinct()
+                .ToList();
+            return homeworks;
+        }
+
+
+        public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
+        {
+            var homeworkDictionary = new Dictionary<int, HomeworkDto>();
+            var groupDictionary = new Dictionary<int, GroupDto>();
+
+            var homeworks = _connection.Query<HomeworkDto, CourseDto, GroupDto, int, HomeworkDto>(
+                    "dbo.Homework_SelectByGroupId",
+                    (homework, course, group, groupStatus) =>
+                    {
+                        if (!homeworkDictionary.TryGetValue(homework.Id, out HomeworkDto homeworkEntry))
+                        {
+                            homeworkEntry = homework;
+                            homeworkEntry.Course = course;
+                            homeworkEntry.Groups = new List<GroupDto>();
+                            homeworkEntry.Tags = new List<TagDto>();
+                            homeworkEntry.Themes = new List<ThemeDto>();
+                            homeworkEntry.HomeworkAttempts = new List<HomeworkAttemptDto>();
+                            homeworkDictionary.Add(homeworkEntry.Id, homeworkEntry);
+                            groupDictionary.Clear();
+                        }
+
+                        if (group != null)
+                        {
+                            if (!groupDictionary.TryGetValue(group.Id, out GroupDto groupEntry))
+                            {
+                                groupEntry = group;
+                                groupEntry.GroupStatus = (GroupStatus)groupStatus;
+                                homeworkEntry.Groups.Add(groupEntry);
+                                groupDictionary.Add(groupEntry.Id, groupEntry);
+                            }
+                        }
+                      
+                        return homeworkEntry;
+                    },
+                    new
+                    {
+                        groupId
                     },
                     splitOn: "Id",
                     commandType: System.Data.CommandType.StoredProcedure)

@@ -230,7 +230,7 @@ namespace EducationSystem.Data
         {
             var groups = _connection.
                 Query<GroupDto>("dbo.Group_SelectAllByHomeworkId",
-                new { courseId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                new { homeworkId = id }, commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return groups;
         }

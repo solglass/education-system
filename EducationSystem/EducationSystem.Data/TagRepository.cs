@@ -37,7 +37,19 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-        
+        public List<TagDto> GetTagsByHomeworkId(int id)
+        {
+            var result = _connection
+                .Query<TagDto>("dbo.Tag_SelectallByHomeworkId",
+                new
+                {
+                    homeworkId = id
+                },
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+
         public int TagDelete(int id)
         {
             var result = _connection
