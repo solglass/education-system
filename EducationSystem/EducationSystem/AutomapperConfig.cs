@@ -61,8 +61,8 @@ namespace EducationSystem.API
 
             CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
+                .ForMember(dest => dest.CourseId, opts => opts.MapFrom(src => src.Course.Id))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)))
-                .ForMember(dest => dest.GroupStatusId, opts => opts.MapFrom(src => (int)src.GroupStatus))
                 .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
             CreateMap<GroupDto, GroupWithUsersOutputModel>()
                .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
@@ -89,8 +89,14 @@ namespace EducationSystem.API
                 .ForMember(dest => dest.Themes, opts => opts.MapFrom(src => src.ThemesId.ConvertAll<ThemeDto>(r => new ThemeDto() { Id = r })));
             CreateMap<LessonDto, LessonOutputModel>()
                 .ForMember(dest => dest.LessonDate, opts => opts.MapFrom(src => src.Date.ToString(_dateFormat)))
-                .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupDto() { Id = src.Group.Id}));
-
+                .ForMember(dest => dest.Group, opts => opts.MapFrom(src => new GroupOutputModel()
+                {
+                    Id = src.Group.Id,
+                    GroupStatus = FriendlyNames.GetFriendlyGroupStatusName( src.Group.GroupStatus),
+                    CourseId = src.Group.Course.Id, 
+                    StartDate = src.Group.StartDate.ToString(_dateFormat),
+                    EndDate = src.Group.EndDate.ToString(_dateFormat),
+                }));
             CreateMap<FeedbackInputModel, FeedbackDto>()
                 .ForMember(dest => dest.User, opts => opts.MapFrom(src => new UserDto() { Id = src.UserId }))
                 .ForMember(dest => dest.UnderstandingLevel, opts => opts.MapFrom(src => (UnderstandingLevel)src.UnderstandingLevelId));

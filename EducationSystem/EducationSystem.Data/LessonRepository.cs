@@ -48,16 +48,17 @@ namespace EducationSystem.Data
         {
             var lessonEntry = new LessonDto();
             var lesson = _connection
-                .Query<LessonDto, ThemeDto, LessonDto>("dbo.Lesson_SelectById",
-               (lesson, theme) =>
+                .Query<LessonDto, ThemeDto, GroupDto, CourseDto,LessonDto>("dbo.Lesson_SelectById",
+               (lesson, theme, group, course) =>
                {
 
                    if (lessonEntry.Id == 0)
                    {
                        lessonEntry = lesson;
+                       lessonEntry.Group = group;
+                       lessonEntry.Group.Course = course;
                        lessonEntry.Themes = new List<ThemeDto>();
                    }
-
                    lessonEntry.Themes.Add(theme);
                    return lessonEntry;
                },
