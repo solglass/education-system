@@ -287,7 +287,8 @@ namespace EducationSystem.Data.Tests
             }
 
             //When
-            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId).Groups;
+            var actual = _groupRepo.GetGroupsByHomeworkId(addedHomeworkId);
+
 
             //Then
             Assert.AreEqual(expected.Count, actual.Count);
@@ -523,7 +524,7 @@ namespace EducationSystem.Data.Tests
                 _homeworkRepo.DeleteHomework_Group(homeworkGroup.Item1, homeworkGroup.Item2);
             });
 
-            var actual = _homeworkRepo.GetHomeworkById(addedHomeworkId).Groups;
+            var actual = _groupRepo.GetGroupsByHomeworkId(addedHomeworkId);
 
             //Then
             Assert.AreEqual(expected.Count, actual.Count);
@@ -850,7 +851,7 @@ namespace EducationSystem.Data.Tests
             }
 
             //When
-            var actual = _homeworkRepo.SearchHomeworks(addedCourseId, null, null, null);
+            var actual = _homeworkRepo.SearchHomeworks(courseId: addedCourseId);
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
@@ -858,7 +859,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { })]
-        public void SearchHomeworksByGroupIdPositiveTest(int[] mockIds)
+        public void GetHomeworksByGroupIdPositiveTest(int[] mockIds)
         {
             //Given
             var courseDto = (CourseDto)_courseDtoMock.Clone();
@@ -902,12 +903,15 @@ namespace EducationSystem.Data.Tests
                 _groupHomeworkList.Add((addedHomeworkId, secondAddedGroupId));
             }
             //When
-            var actual = _homeworkRepo.SearchHomeworks(null, addedGroupId, null, null);
+            var actual = _homeworkRepo.GetHomeworksByGroupId(addedGroupId);
+            actual.ForEach(h => h.Themes = _courseRepo.GetThemesByHomeworkId(h.Id));
+            actual.ForEach(h => h.Tags = _tagRepo.GetTagsByHomeworkId(h.Id));
+            actual.ForEach(h => h.Course = _courseRepo.GetCourseById(h.Course.Id));
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
         }
-           [TestCase(new int[] { 1, 2, 3 })]
+        [TestCase(new int[] { 1, 2, 3 })]
         [TestCase(new int[] { })]
         public void SearchHomeworksByThemeIdPositiveTest(int[] mockIds)
         {
@@ -948,7 +952,7 @@ namespace EducationSystem.Data.Tests
                 _themeHomeworkList.Add((addedHomeworkId, secondAddedThemeId));
             }
             //When
-            var actual = _homeworkRepo.SearchHomeworks(null, null, addedThemeId, null);
+            var actual = _homeworkRepo.SearchHomeworks(themeId : addedThemeId);
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
@@ -995,7 +999,7 @@ namespace EducationSystem.Data.Tests
                 _tagHomeworkList.Add((addedHomeworkId, secondAddedTagId));
             }
             //When
-            var actual = _homeworkRepo.SearchHomeworks(null, null, null, addedTagId);
+            var actual = _homeworkRepo.SearchHomeworks(tagId : addedTagId);
 
             //Then
             CollectionAssert.AreEqual(expected, actual);
@@ -1034,7 +1038,7 @@ namespace EducationSystem.Data.Tests
             //When, Then
             try
             {
-                _homeworkRepo.SearchHomeworks(null, null, null, null);
+                _homeworkRepo.SearchHomeworks();
             }
             catch (ArgumentNullException ex)
             {
