@@ -35,8 +35,9 @@ namespace EducationSystem.Business
         }
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
         {
-            var result = _homeworkRepository.SearchHomeworks(groupId: groupId);
-            result.ForEach(h => h.Groups = _groupRepository.GetGroupsByHomeworkId(h.Id));
+            var result = _homeworkRepository.GetHomeworksByGroupId(groupId);
+            result.ForEach(h => h.Themes = _courseRepository.GetThemesByHomeworkId(h.Id));
+            result.ForEach(h => h.Tags = _tagRepository.GetTagsByHomeworkId(h.Id));
             result.ForEach(h => h.Course = _courseRepository.GetCourseById(h.Course.Id));
             result.ForEach(h => h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id));
 
