@@ -52,7 +52,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
-        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист")]
         public ActionResult<HomeworkOutputModel> AddHomework([FromBody] HomeworkInputModel homework)
         {
             if (!ModelState.IsValid)
@@ -83,7 +83,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{homeworkId}")]
-        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<HomeworkOutputModel> GetHomeworkById(int homeworkId)
         {
             var dto = _homeworkService.GetHomeworkById(homeworkId);
@@ -106,12 +106,12 @@ namespace EducationSystem.API.Controllers
         /// <returns>Return all HomeworkOutputModels </returns>
         //todo: the model is not filled in.
         // https://localhost:44365/api/homework/42
-        [ProducesResponseType(typeof(HomeworkOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<HomeworkOutputModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet]
         [Authorize(Roles = "Администратор, Методист")]
-        public ActionResult<HomeworkOutputModel> GetHomeworks()
+        public ActionResult<List<HomeworkOutputModel>> GetHomeworks()
         {
             var dtos= _homeworkService.GetHomeworks();
             var result = _mapper.Map<List<HomeworkOutputModel>>(dtos);
@@ -781,7 +781,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("{homeworkId}/group/{groupId}")]
-        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult AddHomeworkGroup(int homeworkId, int groupId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -813,7 +813,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{homeworkId}/group/{groupId}")]
-        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
         public ActionResult DeleteHomeworkGroup(int homeworkId, int groupId)
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
@@ -882,24 +882,24 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound($"Homework with id {homeworkId} is not found");
+                    return NotFound($"Homework with id {homeworkId} is not found");
 
-            var tagDto = _tagService.GetTagById(tagId);
-            if (tagDto is null)
-                return NotFound($"Tag with id {tagId} is not found");
+                var tagDto = _tagService.GetTagById(tagId);
+                if (tagDto is null)
+                    return NotFound($"Tag with id {tagId} is not found");
 
-            var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
-            {
-                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
+                var userGroup = this.SupplyUserGroupsList(_groupService);
+                if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
+                {
+                    return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
+                }
+
+                _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
+
+                return NoContent();
             }
-
-            _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
-
-            return NoContent();
-        }
-        /// <summary> 
-        /// Get homeworkAttempt by user Id
+            /// <summary> 
+            /// Get homeworkAttempt by user Id
         /// </summary>
         /// <param name="userId">User Id</param>
         /// <returns>Return searchable homeworkAttempt</returns>
@@ -964,7 +964,16 @@ namespace EducationSystem.API.Controllers
 
             return Ok(result);
         }
-
+        [HttpGet("homework-attempts-statuses")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(List<DictionaryOutputModel>), StatusCodes.Status200OK)]
+        public ActionResult<List<DictionaryOutputModel>> GetHomeworkAttemptsStatuses()
+        {
+            var result = new List<DictionaryOutputModel>();
+            foreach (int i in Enum.GetValues(typeof(HomeworkAttemptStatus)))
+                result.Add(new DictionaryOutputModel { Id = i, Name = FriendlyNames.GetFriendlyGroupStatusName(((GroupStatus)i)) });
+            return result;
+        }
         private List<HomeworkDto> GetAvailableHomeworks(List<HomeworkDto> homeworkDtos)
         {
             var availableHomeworks = homeworkDtos;
