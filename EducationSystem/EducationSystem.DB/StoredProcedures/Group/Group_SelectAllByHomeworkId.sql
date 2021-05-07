@@ -5,8 +5,9 @@ begin
 		g.Id,
 		g.CourseID,
 		g.StartDate,
-		g.StatusId as Id
+		g.StatusId
 	from dbo.[Group] g 
 	inner join Homework_Group hg on g.Id = hg.GroupId
 	where hg.HomeworkId = @HomeworkId
 end
+
