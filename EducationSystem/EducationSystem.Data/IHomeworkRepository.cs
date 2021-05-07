@@ -19,7 +19,7 @@ namespace EducationSystem.Data
         int HardDeleteComment(int id);
         int HardDeleteHomework(int id);
         int HardDeleteHomeworkAttempt(int id);
-        List<HomeworkDto> SearchHomeworks(int? courseId, int? groupId, int? themeId, int? tagId);
+        List<HomeworkDto> SearchHomeworks(int? courseId = null, int? groupId = null, int? themeId = null, int? tagId = null);
         List<CommentDto> SearchComments(int? homeworkAttamptId, int? homeworkId);
         int UpdateComment(CommentDto commentDto);
         int UpdateHomework(HomeworkDto homework);

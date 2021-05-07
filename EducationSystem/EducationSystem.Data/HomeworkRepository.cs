@@ -130,7 +130,7 @@ namespace EducationSystem.Data
                 .ToList();
             return homeworks;
         }
-        public List<HomeworkDto> SearchHomeworks(int? courseId, int? groupId, int? themeId, int? tagId)
+        public List<HomeworkDto> SearchHomeworks(int? courseId = null, int? groupId = null, int? themeId = null, int? tagId = null)
         {
             if(courseId == null && groupId == null && themeId == null && tagId == null)
                 throw new ArgumentNullException();

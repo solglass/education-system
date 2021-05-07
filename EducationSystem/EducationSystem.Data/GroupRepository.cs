@@ -226,7 +226,14 @@ namespace EducationSystem.Data
                 .ToList();
             return groups;
         }
-
+        public List<GroupDto> GetGroupsByHomeworkId(int id)
+        {
+            var groups = _connection.
+                Query<GroupDto>("dbo.Group_SelectAllByHomeworkId",
+                new { courseId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return groups;
+        }
         public List<int> GetGroupsByStudentId(int id)
         {
             var result = _connection.

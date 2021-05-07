@@ -62,9 +62,9 @@ namespace EducationSystem.API.Controllers
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
 
-            if (!User.IsInRole("Администратор") && !homework.GroupIds.Any(h => userGroup.Contains(h)))
+            if (!User.IsInRole("Администратор") && !userGroup.Contains(homework.GroupId))
             {
-                return Forbid($"User is not in group {homework.GroupIds}");
+                return Forbid($"User is not in group {homework.GroupId}");
             }
 
             var addedHomeworkId = _homeworkService.AddHomework(_mapper.Map<HomeworkDto>(homework));

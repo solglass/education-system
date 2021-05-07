@@ -17,7 +17,7 @@ namespace EducationSystem.API.Models.InputModels
         [Required]
         [Range(1,int.MaxValue)]
         public int CourseId { get; set; }
-        public List<int> GroupIds { get; set; }
+        public int GroupId { get; set; }
         public List<int> TagIds { get; set; }
         public List<int> ThemeIds { get; set; }
         [Required]

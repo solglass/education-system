@@ -23,9 +23,6 @@ SELECT h.[Id]
   left join dbo.Homework_Tag htg on h.id = htg.HomeworkId
  left join dbo.Tag tg on htg.TagId = tg.id
 
-  left join dbo.Homework_Group hg on h.id = hg.HomeworkId
-  left join dbo.[Group] g on hg.GroupID = g.id
-
   inner join dbo.[Course] c on h.CourseID = c.id
   
   where h.IsDeleted = 0 and 
