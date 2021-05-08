@@ -129,26 +129,26 @@ namespace EducationSystem.Controllers
         /// <param name="groupId"> is used to find necessary groups by id</param>
         /// <returns>Returns the list of GroupOutputModels</returns>
         // https://localhost:44365/api/group/2/programs
-        [ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [HttpGet("{groupId}/program")]
-        [Authorize(Roles = "Администратор, Менеджер, Методист, Преподаватель")]
-        public ActionResult<GroupOutputModel> GetGroupProgramsByGroupId(int groupId)
-        {
-            var group = _service.GetGroupProgramsByGroupId(groupId);
-            if (group is null)
-                return NotFound($"Группы с id {groupId} не существует");
+        //[ProducesResponseType(typeof(GroupOutputModel), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[HttpGet("{groupId}/program")]
+        //[Authorize(Roles = "Администратор, Менеджер, Методист, Преподаватель")]
+        //public ActionResult<GroupOutputModel> GetGroupProgramsByGroupId(int groupId)
+        //{
+        //    var group = _service.GetGroupProgramsByGroupId(groupId);
+        //    if (group is null)
+        //        return NotFound($"Группы с id {groupId} не существует");
 
-            var userGroup = this.SupplyUserGroupsList(_service);
-            if (User.IsInRole("Преподаватель") && !userGroup.Contains(group.Id))
-            {
-                return Forbid($"Пользователь не связан с группой {group.Id}");
-            }
+        //    var userGroup = this.SupplyUserGroupsList(_service);
+        //    if (User.IsInRole("Преподаватель") && !userGroup.Contains(group.Id))
+        //    {
+        //        return Forbid($"Пользователь не связан с группой {group.Id}");
+        //    }
 
-            GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
-            return Ok(result);
-        }
+        //    GroupOutputModel result = _mapper.Map<GroupOutputModel>(group);
+        //    return Ok(result);
+        //}
 
         /// <summary>
         /// Creates Course

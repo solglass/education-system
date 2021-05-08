@@ -160,7 +160,7 @@ namespace EducationSystem.API.Controllers
                 return NotFound($"Theme with id:{themeId} not found");
             if (_courseService.GetCourseById(courseId) == null)
                 return NotFound($"Course with id:{courseId} not found");
-            _courseService.AddThemeToCourse(courseId, themeId);
+          //  _courseService.AddThemeToCourse(courseId, themeId);
             return StatusCode(StatusCodes.Status201Created);
         }
 
@@ -181,7 +181,7 @@ namespace EducationSystem.API.Controllers
                 return NotFound($"Theme with id:{themeId} not found");
             if (_courseService.GetCourseById(courseId) == null)
                 return NotFound($"Course with id:{courseId} not found");
-             _courseService.RemoveThemeFromCourse(courseId, themeId);
+             //_courseService.RemoveThemeFromCourse(courseId, themeId);
             return NoContent();
         }
 

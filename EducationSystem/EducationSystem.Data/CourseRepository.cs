@@ -246,31 +246,6 @@ namespace EducationSystem.Data
             return result;
         }
 
-        //public int AddCourse_Theme(int courseId, int themeId)
-        //{
-        //    var result = _connection
-        //        .QuerySingle<int>("dbo.Course_Theme_Add",
-        //        new
-        //        {
-        //            courseId,
-        //            themeId
-        //        },
-        //        commandType: System.Data.CommandType.StoredProcedure);
-        //    return result;
-        //}
-        //public int DeleteCourse_Theme(int courseId, int themeId)
-        //{
-        //    var result = _connection
-        //        .Execute("dbo.Course_Theme_Delete",
-        //        new
-        //        {
-        //            courseId,
-        //            themeId
-        //        },
-        //        commandType: System.Data.CommandType.StoredProcedure);
-        //    return result;
-        //}
-
         public int AddCourse_Material(int courseId, int materialId)
         {
             var result = _connection
@@ -296,21 +271,13 @@ namespace EducationSystem.Data
                 commandType: System.Data.CommandType.StoredProcedure);
             return result;
         }
-
-
         public List<ThemeDto> GetUncoveredThemesByGroupId(int id)
         {
             var themes = _connection.
-                Query<ThemeDto>("dbo.Theme_SelectAllUncoveredByGroupId",
-                new { groupId = id }, commandType: System.Data.CommandType.StoredProcedure)
-                .ToList();
-            return themes;
-        }
-        public List<ThemeDto> GetThemesByCourseId(int id)
-        {
-            var themes = _connection.
-                Query<ThemeDto>("dbo.Theme_SelectAllByCourseId",
-                new { courseId = id }, commandType: System.Data.CommandType.StoredProcedure)
+                Query<ThemeDto>(
+                "dbo.Theme_SelectAllUncoveredByGroupId",
+                new { groupId = id }, 
+                commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return themes;
         }
