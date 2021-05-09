@@ -1,4 +1,5 @@
-﻿using EducationSystem.Data.Models;
+﻿using EducationSystem.Business.Model;
+using EducationSystem.Data.Models;
 using System.Collections.Generic;
 
 namespace EducationSystem.Business
@@ -13,6 +14,7 @@ namespace EducationSystem.Business
         int DeleteTheme(int id);
         int RecoverTheme(int id);
         CourseDto GetCourseById(int id);
+        CourseWithProgram GetCourseWithProgramById(int id);
         List<CourseDto> GetCourses();
         ThemeDto GetThemeById(int id);
         List<ThemeDto> GetThemes();
@@ -22,6 +24,5 @@ namespace EducationSystem.Business
         int DeleteCourse(int id);
         int RecoverCourse(int id);
         int AddUpdateCourseProgram(int courseId, List<CourseThemeDto> program);
-        List<CourseThemeDto> GetCourseProgram(int courseId);
     }
 }

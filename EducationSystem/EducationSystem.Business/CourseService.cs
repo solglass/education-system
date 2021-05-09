@@ -1,7 +1,9 @@
-﻿using EducationSystem.Data;
+﻿using EducationSystem.Business.Model;
+using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace EducationSystem.Business
@@ -24,9 +26,21 @@ namespace EducationSystem.Business
             return _courseRepo.GetCourses();
         }
 
-        public CourseDto GetCourseById(int id)
+        public CourseDto GetCourseById(int id) => _courseRepo.GetCourseById(id);
+        public CourseWithProgram GetCourseWithProgramById(int id)
         {
-            return _courseRepo.GetCourseById(id);
+            var course =(CourseWithProgram) _courseRepo.GetCourseById(id);
+            if (course != null)
+            {
+                var program = _courseRepo.GetCourse_Program(id);
+                course.Themes = program.Select(obj=>
+                new OrderedTheme { 
+                    Id=obj.Theme.Id,
+                    Name=obj.Theme.Name,
+                    Order=obj.Order
+                }).ToList();
+            }
+            return course;
         }
 
         public int UpdateCourse(CourseDto course)
@@ -124,11 +138,6 @@ namespace EducationSystem.Business
             _courseRepo.DeleteCourse_Program(courseId);
             program.ForEach(item => item.Course = new CourseDto() { Id = courseId });
             return _courseRepo.AddCourse_Program(program);
-        }
-
-        public List<CourseThemeDto> GetCourseProgram(int courseId)
-        {
-           return _courseRepo.GetCourse_Program(courseId);
         }
         
     }

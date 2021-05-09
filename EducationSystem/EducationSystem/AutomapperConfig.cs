@@ -3,6 +3,7 @@ using EducationSystem.API.Models;
 using EducationSystem.API.Models.InputModels;
 using EducationSystem.API.Models.OutputModels;
 using EducationSystem.API.Utils;
+using EducationSystem.Business.Model;
 using EducationSystem.Core.Enums;
 using EducationSystem.Data.Models;
 using System;
@@ -74,7 +75,7 @@ namespace EducationSystem.API
             CreateMap<ThemeInputModel, ThemeDto>()
                 .ForMember(dest=>dest.Tags, opts=>opts.MapFrom(src=>src.TagIds.ConvertAll<TagDto>(t=> new TagDto { Id = t })));
             CreateMap<ThemeDto, ThemeOutputModel>();
-            CreateMap<ThemeDto, ThemeExtendedOutputModel>();
+            CreateMap<OrderedTheme, ThemeOrderedOutputModel>();
 
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
@@ -105,10 +106,10 @@ namespace EducationSystem.API
                     UserPic = src.User.UserPic
                 }));
 
-            CreateMap<CourseDto, CourseExtendedOutputModel>();
+            CreateMap<CourseWithProgram, CourseWithProgramOutputModel>();
+
             CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>()
-                //.ForMember(dest=>dest.Themes, opts=>opts.MapFrom(src=>src.ThemeIds.ConvertAll<ThemeDto>(t=>new ThemeDto { Id = t })))
                 .ForMember(dest=>dest.Materials, opts=>opts.MapFrom(src=>src.MaterialIds.ConvertAll<MaterialDto>(t=>new MaterialDto { Id = t })));
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
 

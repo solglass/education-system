@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace EducationSystem.API.Models.OutputModels
 {
-    public class ThemeExtendedOutputModel:ThemeOutputModel
+    public class CourseWithProgramOutputModel: CourseOutputModel
     {
-        public bool IsDeleted { get; set; }
+        public List<ThemeOrderedOutputModel> Themes { get; set; }
     }
 }

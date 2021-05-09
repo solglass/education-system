@@ -10,6 +10,7 @@ namespace EducationSystem.Data.Models
         public string Description { get; set; }
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
+        public List<OrderedThemeDto> Themes {get; set;}
         public List<MaterialDto> Materials { get; set; }
 
         public object Clone()
