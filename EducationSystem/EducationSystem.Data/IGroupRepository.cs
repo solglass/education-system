@@ -16,7 +16,6 @@ namespace EducationSystem.Data
         int DeleteTeacherGroup(int userId, int groupId);
         List<GroupReportDto> GenerateReport();
         GroupDto GetGroupById(int id);
-       // GroupDto GetGroupProgramsByGroupId(int id);
         List<GroupDto> GetGroups();
         List<GroupDto> GetGroupsByCourseId(int id);
         public List<int> GetGroupsByStudentId(int id);

@@ -3,9 +3,9 @@
 as
 begin
 select
-	 g.StartDate,
-	 t.CountLessons,
-		t.GroupID,
+		t.GroupID as Id,
+		g.StartDate,
+		t.CountLessons,
 		c.Id,
 		c.Name,
 		c.Description,
