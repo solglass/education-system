@@ -4,7 +4,7 @@
 	@duration int
 ) as
 begin
-	insert into dbo.Course (Name, Description, Duration, IsDeleted)
+	insert into dbo.Course ([Name], [Description], Duration, IsDeleted)
 	values (@name, @description, @duration, 0)
 	select SCOPE_IDENTITY()
 end

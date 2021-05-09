@@ -118,12 +118,17 @@ namespace EducationSystem.Business
         {
             return _courseRepo.GetUncoveredThemesByGroupId(id);
         }
-        
-        public int AddCourseProgram(int courseId, List<CourseThemeDto> program )
+
+        public int AddUpdateCourseProgram(int courseId, List<CourseThemeDto> program)
         {
-           
+            _courseRepo.DeleteCourse_Program(courseId);
             program.ForEach(item => item.Course = new CourseDto() { Id = courseId });
             return _courseRepo.AddCourse_Program(program);
+        }
+
+        public List<CourseThemeDto> GetCourseProgram(int courseId)
+        {
+           return _courseRepo.GetCourse_Program(courseId);
         }
         
     }

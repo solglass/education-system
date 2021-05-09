@@ -44,7 +44,7 @@ namespace EducationSystem.Data.Tests
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
-        public void ThemeAddPositiveTest(int mockId)
+        public void AddThemePositiveTest(int mockId)
         {
             // Given
             var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
@@ -62,7 +62,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1)]
-        public void ThemeAddNegativeTestNotUniqueEntity(int mockId)
+        public void AddThemeNegativeTestNotUniqueEntity(int mockId)
         {
             //Given
             var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
@@ -83,7 +83,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(7)]
-        public void ThemeAddNegativeTestEmptyEntity(int nockId)
+        public void AddThemeNegativeTestEmptyEntity(int nockId)
         {
             //Given
             var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(nockId).Clone();
@@ -103,7 +103,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [Test]
-        public void ThemeAddNegativeTestNullEntity()
+        public void AddThemeNegativeTestNullEntity()
         {
             //Given
 
@@ -124,7 +124,7 @@ namespace EducationSystem.Data.Tests
         [TestCase(1, 2)]
         [TestCase(2, 3)]
         [TestCase(3, 2)]
-        public void ThemeUpdatePositiveTest(int mockId, int updateMockId)
+        public void UpdateThemePositiveTest(int mockId, int updateMockId)
         {
             // Given
             var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
@@ -145,7 +145,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1)]
-        public void ThemeUpdateNegativeTestEntityNotExists(int mockId)
+        public void UpdateThemeNegativeTestEntityNotExists(int mockId)
         {
             //Given
             var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockId).Clone();
@@ -158,7 +158,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1,7)]
-        public void ThemeUpdateNegativeTestEmptyProperties(int mockToAddId, int mockToUpdateId)
+        public void UpdateThemeNegativeTestEmptyProperties(int mockToAddId, int mockToUpdateId)
         {
             //Given
             var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToAddId).Clone();
@@ -179,7 +179,7 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
         [TestCase(1, 2)]
-        public void ThemeUpdateNegativeTestNotUniqueEntity(int mockToCompareId, int mockToUpdateId)
+        public void UpdateThemeNegativeTestNotUniqueEntity(int mockToCompareId, int mockToUpdateId)
         {
             //Given
             var themeToCompare = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockToCompareId).Clone();
@@ -205,7 +205,7 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
         [Test]
-        public void ThemeUpdateNegativeTestNullEntity()
+        public void UpdateThemeNegativeTestNullEntity()
         {
             //Given
 
@@ -248,7 +248,7 @@ namespace EducationSystem.Data.Tests
         [TestCase(1, false)]
         [TestCase(2, true)]
         [TestCase(3, false)]
-        public void ThemeDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
+        public void DeleteOrRecoverThemePositiveTest(int mockId, bool isDeleted)
         {
 
             //Given
@@ -270,7 +270,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(-1, true)]
         [TestCase(-1, false)]
-        public void ThemeDeleteOrRecoverNegativeTestEntityNotExists(int id, bool isDeleted)
+        public void DeleteOrRecoverThemeNegativeTestEntityNotExists(int id, bool isDeleted)
         {
             //Given
 
@@ -382,6 +382,8 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.IsEmpty(actual);
         }
+
+
 
         [TestCase(new int[] { 1, 2, 3 }, new int[] { 4,5,6})]
         [TestCase(new int[] { 4, 5, 6 }, new int[] { 3, 2, 1 })]

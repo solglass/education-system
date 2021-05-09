@@ -112,8 +112,6 @@
     <Build Include="StoredProcedures\Course\dbo.Course_Add.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_SelectAll.sql" />
     <Build Include="StoredProcedures\Course\dbo.Course_Update.sql" />
-    <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Add.sql" />
-    <Build Include="StoredProcedures\Course_Theme\dbo.Course_Theme_Delete.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Add.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_Search.sql" />
     <Build Include="StoredProcedures\Homework\dbo.Homework_SelectById.sql" />

@@ -9,7 +9,6 @@ namespace EducationSystem.Business
         int AddTagToTheme(int themeId, int tagId);
         int RemoveTagFromTheme(int themeId, int tagId);
         int AddTheme(ThemeDto theme);
-       // int AddThemeToCourse(int courseId, int themeId);
         int AddMaterialToCourse(int courseId, int materialId);
         int DeleteTheme(int id);
         int RecoverTheme(int id);
@@ -18,10 +17,11 @@ namespace EducationSystem.Business
         ThemeDto GetThemeById(int id);
         List<ThemeDto> GetThemes();
         List<ThemeDto> GetUncoveredThemesByGroupId(int id);
-       // int RemoveThemeFromCourse(int courseId, int themeId);
         int DeleteMaterialFromCourse(int courseId, int materialId);
         int UpdateCourse(CourseDto course);
         int DeleteCourse(int id);
         int RecoverCourse(int id);
+        int AddUpdateCourseProgram(int courseId, List<CourseThemeDto> program);
+        List<CourseThemeDto> GetCourseProgram(int courseId);
     }
 }

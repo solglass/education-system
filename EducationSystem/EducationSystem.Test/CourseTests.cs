@@ -47,32 +47,11 @@ namespace EducationSystem.Data.Tests
                 _courseIds.Add(course.Id);
                 expected.Add(course);
             }
-
-            //foreach (var themeId in themeMockIds)
-            //{
-            //    var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeId).Clone();
-            //    theme.Id = _courseRepo.AddTheme(theme);
-            //    Assert.Greater(theme.Id, 0);
-            //    _themeIds.Add(theme.Id);
-            //    foreach (var courseId in _courseIds)
-            //    {
-            //        var result = _courseRepo.AddCourse_Theme(courseId, theme.Id);
-            //        Assert.Greater(result, 0);
-            //        _courseThemes.Add((courseId, theme.Id));
-            //        expected.Find(course => course.Id == courseId).Themes.Add(theme);
-            //    }
-            //}
-            //
             //When
             var actual = _courseRepo.GetCourses();
 
             //Them
             CollectionAssert.AreEqual(expected, actual);
-
-            //for (int i = 0; i < expected.Count; i++)
-            //{
-            //    CollectionAssert.AreEqual(expected[i].Themes, actual[i].Themes);
-            //}
         }
 
 
@@ -85,19 +64,6 @@ namespace EducationSystem.Data.Tests
             expected.Id = _courseRepo.AddCourse(expected);
             Assert.Greater(expected.Id, 0);
             _courseIds.Add(expected.Id);
-
-            //foreach(var item in themeIds)
-            //{
-            //    var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(item).Clone();
-            //    theme.Id = _courseRepo.AddTheme(theme);
-            //    Assert.Greater(expected.Id, 0);
-            //    _themeIds.Add(theme.Id);
-
-            //    var result = _courseRepo.AddCourse_Theme(expected.Id, theme.Id);
-            //    Assert.Greater(result, 0);
-            //    _courseThemes.Add((expected.Id, theme.Id));
-            //    expected.Themes.Add(theme);
-            //}
 
             foreach (var item in materialIds)
             {
@@ -117,7 +83,6 @@ namespace EducationSystem.Data.Tests
 
             //Then
             Assert.AreEqual(expected, actual);
-           // CollectionAssert.AreEqual(expected.Themes, actual.Themes);
             CollectionAssert.AreEqual(expected.Materials, actual.Materials);
         }
 
@@ -133,7 +98,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1)]
-        public void CourseAddPositiveTest(int mockId)
+        public void AddCoursePositiveTest(int mockId)
         {
             //Given
             var expected = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
@@ -149,7 +114,7 @@ namespace EducationSystem.Data.Tests
         }
        
         [TestCase(6)]
-        public void CourseAddNegativeTestEmptyProprties(int mockId)
+        public void AddCourseNegativeTestEmptyProprties(int mockId)
         {
             //Given
             var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
@@ -169,7 +134,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [Test]
-        public void CourseAddNegativeTestNullEntity()
+        public void AddCourseNegativeTestNullEntity()
         {
             //Given
            
@@ -188,7 +153,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(2)]
-        public void CourseUpdatePositiveTest(int mockId)
+        public void UpdateCoursePositiveTest(int mockId)
         {
             //Given
             var expected = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
@@ -211,7 +176,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1)]
-        public void CourseUpdateNegativeTestEntityNotExists(int mockId)
+        public void UpdateCourseNegativeTestEntityNotExists(int mockId)
         {
             //Given
             var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
@@ -224,7 +189,7 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(1,6)]
-        public void CourseUpdateNegativeTestEmptyProperties(int mockToAddId, int mockToUpdate)
+        public void UpdateCourseNegativeTestEmptyProperties(int mockToAddId, int mockToUpdate)
         {
             //Given
             var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockToAddId).Clone();
@@ -246,7 +211,7 @@ namespace EducationSystem.Data.Tests
             Assert.Fail();
         }
         [Test]
-        public void CourseUpdateNegativeTestNullEntity()
+        public void UpdateCourseNegativeTestNullEntity()
         {
             //Given
             
@@ -266,7 +231,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(3, true)]
         [TestCase(4, false)]
-        public void CourseDeleteOrRecoverPositiveTest(int mockId, bool isDeleted)
+        public void DeleteOrRecoverCoursePositiveTest(int mockId, bool isDeleted)
         {
             //Given
             var expected = (CourseDto)CourseMockGetter.GetCourseDtoMock(mockId).Clone();
@@ -286,7 +251,7 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(-1, true)]
         [TestCase(-1, false)]
-        public void CourseDeleteOrRecoverNegativeTestEntityNotExist(int id, bool isDeleted)
+        public void DeleteOrRecoverCourseNegativeTestEntityNotExist(int id, bool isDeleted)
         {
             //Given
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EducationSystem.Data.Models
 {
-   public class CourseThemeDto:ICloneable
+    public class CourseThemeDto : ICloneable
     {
         public int Id { get; set; }
         public CourseDto  Course{get;set;}
@@ -46,8 +46,6 @@ namespace EducationSystem.Data.Models
                (Theme.Id == courseThemeDto.Theme.Id) &&
                (Theme.Name == courseThemeDto.Theme.Name) &&
                (Order == courseThemeDto.Order));
-
-
         }
     }
 }

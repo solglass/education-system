@@ -19,29 +19,19 @@ namespace EducationSystem.Data
         public List<CourseDto> GetCourses()
         {
             var courseDictionary = new Dictionary<int, CourseDto>();
-          //  Dictionary<int, ThemeDto> themeDictionary = new Dictionary<int, ThemeDto>();
             Dictionary<int, MaterialDto> materialDictionary = new Dictionary<int, MaterialDto>();
             var courses = _connection
-                .Query<CourseDto, /*ThemeDto,*/ MaterialDto, CourseDto>(
+                .Query<CourseDto,  MaterialDto, CourseDto>(
                     "dbo.Course_SelectAll",
-                    (course, /*theme,*/ material) =>
+                    (course, material) =>
                     {
                         if (!courseDictionary.TryGetValue(course.Id, out CourseDto courseEntry))
                         {
                             courseEntry = course;
-                           // courseEntry.Themes = new List<ThemeDto>();
                             courseEntry.Materials = new List<MaterialDto>();
                             courseDictionary.Add(courseEntry.Id, courseEntry);
-                          //  themeDictionary = new Dictionary<int, ThemeDto>();
                             materialDictionary = new Dictionary<int, MaterialDto>();
                         }
-
-                        //if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                        //{
-                        //    themeEntry = theme;
-                        //    courseEntry.Themes.Add(themeEntry);
-                        //    themeDictionary.Add(themeEntry.Id, themeEntry);
-                        //}
                         if (material != null && !materialDictionary.TryGetValue(material.Id, out MaterialDto materialEntry))
                         {
                             materialEntry = material;
@@ -59,26 +49,18 @@ namespace EducationSystem.Data
 
         public CourseDto GetCourseById(int id)
         {
-           // var themeDictionary = new Dictionary<int, ThemeDto>();
             var materialDictionary = new Dictionary<int, MaterialDto>();
             var courseEntry = new CourseDto();
             var course = _connection
-                .Query<CourseDto, /*ThemeDto,*/ MaterialDto, CourseDto>(
+                .Query<CourseDto, MaterialDto, CourseDto>(
                     "dbo.Course_SelectById",
-                    (course, /*theme,*/ material) =>
+                    (course, material) =>
                     {
                         if (courseEntry.Id == 0)
                         {
                             courseEntry = course;
-                           // courseEntry.Themes = new List<ThemeDto>();
                             courseEntry.Materials = new List<MaterialDto>();
                         }
-                        //if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                        //{
-                        //    themeEntry = theme;
-                        //  //  courseEntry.Themes.Add(theme);
-                        //    themeDictionary.Add(themeEntry.Id, themeEntry);
-                        //}
                         if (material != null && !materialDictionary.TryGetValue(material.Id, out MaterialDto materialEntry))
                         {
                             materialEntry = material;
@@ -310,7 +292,8 @@ namespace EducationSystem.Data
         public List<CourseThemeDto> GetCourse_Program(int courseId)
         {
             var result = _connection
-                .Query<CourseThemeDto, CourseDto, ThemeDto, CourseThemeDto>("dbo.Course_Program_SelectByCourseId",
+                .Query<CourseThemeDto, CourseDto, ThemeDto, CourseThemeDto>(
+                "dbo.Course_Program_SelectByCourseId",
                 (courseTheme, course, theme)=>
                 {
                     courseTheme.Course = course;

@@ -64,7 +64,7 @@ namespace EducationSystem.Business
             }
             return dtoList;
         }
-        public GroupDto GetGroupProgramsByGroupId(int id)
+        public GroupDto GetGroupProgramByGroupId(int id)
         {
             return new GroupDto();
                 //_groupRepository.GetGroupProgramsByGroupId(id);
