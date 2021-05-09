@@ -166,27 +166,7 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// Deletes the connection between one theme and one course
-        /// </summary>
-        /// <param name="courseId"> is used to find the course user wants to break the connection with theme</param>
-        /// <param name="themeId"> is used to find the theme user wants to break the connection with course</param>
-        /// <returns>Returns NoContent result</returns>
-        // https://localhost:XXXXX/api/course/3/theme/8
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpDelete("{courseId}/theme/{themeId}")]
-        [Authorize(Roles = "Администратор, Менеджер, Методист")]
-        public ActionResult RemoveThemeFromCourse(int courseId, int themeId)
-        {
-            if (_courseService.GetThemeById(themeId) == null)
-                return NotFound($"Theme with id:{themeId} not found");
-            if (_courseService.GetCourseById(courseId) == null)
-                return NotFound($"Course with id:{courseId} not found");
-             //_courseService.RemoveThemeFromCourse(courseId, themeId);
-            return NoContent();
-        }
-
+        
         /// <summary>
         /// Creates the connection between one material and one course
         /// </summary>
