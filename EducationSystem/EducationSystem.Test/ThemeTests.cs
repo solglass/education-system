@@ -527,8 +527,103 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.IsEmpty(actual);
         }
+        [TestCase(1,2, new int[] { 1, 2, 3 })]
+        public void DeleteCourseProgramPositiveTest(int courseMockId, int courseToCheckMockId, int[] themeMockIds)
+        {
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseMockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            _courseIdList.Add(course.Id);
 
+            var courseToCheck = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseToCheckMockId).Clone();
+            courseToCheck.Id = _courseRepo.AddCourse(courseToCheck);
+            _courseIdList.Add(courseToCheck.Id);
 
+            var courseThemes = new List<CourseThemeDto>();
+
+            var courseThemesToCheck = new List<CourseThemeDto>();
+            for (var i = 0; i < themeMockIds.Length; i++)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+      
+                _themeIdList.Add(theme.Id);
+
+                courseThemes.Add(new CourseThemeDto
+                {
+                    Course = course,
+                    Theme = theme,
+                    Order = i + 1
+                });
+                _courseThemeList.Add((course.Id, theme.Id));
+
+                courseThemesToCheck.Add(new CourseThemeDto
+                {
+                    Course = courseToCheck,
+                    Theme = theme,
+                    Order = i + 1
+                });
+                _courseThemeList.Add((courseToCheck.Id, theme.Id));
+            }
+
+            _courseRepo.AddCourse_Program(courseThemes);
+            _courseRepo.AddCourse_Program(courseThemesToCheck);
+
+            Assert.AreEqual(courseThemes, _courseRepo.GetCourse_Program(course.Id));
+            Assert.AreEqual(courseThemesToCheck, _courseRepo.GetCourse_Program(courseToCheck.Id));
+
+            //When
+            _courseRepo.DeleteCourse_Program(courseToCheck.Id);
+            var actual = _courseRepo.GetCourse_Program(courseToCheck.Id);
+            var notEmptyProgramActual = _courseRepo.GetCourse_Program(course.Id);
+
+            //Then
+            Assert.IsEmpty(actual);
+            Assert.AreEqual(courseThemes, notEmptyProgramActual);
+        }
+
+        [TestCase(1, 2, new int[] { 1, 2, 3 })]
+        public void DeleteCourseProgramNegativeTestEntitiesNotExist(int courseMockId, int courseToCheckMockId, int[] themeMockIds)
+        {
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseMockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            _courseIdList.Add(course.Id);
+
+            var courseToCheck = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseToCheckMockId).Clone();
+            courseToCheck.Id = _courseRepo.AddCourse(courseToCheck);
+            _courseIdList.Add(courseToCheck.Id);
+
+            var courseThemes = new List<CourseThemeDto>();
+
+            for (var i = 0; i < themeMockIds.Length; i++)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+
+                _themeIdList.Add(theme.Id);
+
+                courseThemes.Add(new CourseThemeDto
+                {
+                    Course = course,
+                    Theme = theme,
+                    Order = i + 1
+                });
+                _courseThemeList.Add((course.Id, theme.Id));
+            }
+
+            _courseRepo.AddCourse_Program(courseThemes);
+
+            Assert.AreEqual(courseThemes, _courseRepo.GetCourse_Program(course.Id));
+
+            //When
+            var result= _courseRepo.DeleteCourse_Program(courseToCheck.Id);
+            var actual = _courseRepo.GetCourse_Program(courseToCheck.Id);
+            var notEmptyProgramActual = _courseRepo.GetCourse_Program(course.Id);
+
+            //Then
+            Assert.AreEqual(0, result);
+            Assert.IsEmpty(actual);
+            Assert.AreEqual(courseThemes, notEmptyProgramActual);
+        }
 
         [TestCase(new int[] { 1, 2, 3 }, new int[] { 4,5,6})]
         [TestCase(new int[] { 4, 5, 6 }, new int[] { 3, 2, 1 })]
