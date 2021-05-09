@@ -316,6 +316,8 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(courseThemes, actual);
         }
 
+
+
         [TestCase(1, 2, new int[] { 1, 2, 3, 4 })]
         [TestCase(1, 2, new int[] { 1, 3 })]
         [TestCase(1, 2, new int[] { })]
@@ -409,13 +411,13 @@ namespace EducationSystem.Data.Tests
             var addedLessonId = _lessonRepo.AddLesson(lessonDto);
             _lessonIdList.Add(addedLessonId);
 
-            var expected = AddThemeMocksToCourseAndLesson(uncoveredMockIds, addedCourseId, addedLessonId);
+            var expected = AddThemeMocksToCourseAndLesson(uncoveredMockIds, addedCourseId, addedLessonId, coveredMockIds.Length);
            
             lessonDto.Date = DateTime.Now.AddDays(-10);
             addedLessonId = _lessonRepo.AddLesson(lessonDto);
             _lessonIdList.Add(addedLessonId);
 
-            AddThemeMocksToCourseAndLesson(coveredMockIds, addedCourseId, addedLessonId);
+            AddThemeMocksToCourseAndLesson(coveredMockIds, addedCourseId, addedLessonId,0);
 
             // When
             var actual = _courseRepo.GetUncoveredThemesByGroupId(addedGroupId);
@@ -667,7 +669,7 @@ namespace EducationSystem.Data.Tests
             }
         }
 
-        private List<ThemeDto> AddThemeMocksToCourseAndLesson(int[] mockIds, int courseId, int lessonId)
+        private List<ThemeDto> AddThemeMocksToCourseAndLesson(int[] mockIds, int courseId, int lessonId, int order)
         {
 
             var dtos = new List<ThemeDto>();
@@ -684,9 +686,8 @@ namespace EducationSystem.Data.Tests
                 {
                     Course=new CourseDto { Id=courseId},
                     Theme=dto,
-                    Order=i+1
+                    Order=i+order
                 });
-              //  _courseRepo.AddCourse_Theme(courseId, addedThemeId);
                 _courseThemeList.Add((courseId, addedThemeId));
 
                 _lessonRepo.AddLessonTheme(lessonId, addedThemeId);
