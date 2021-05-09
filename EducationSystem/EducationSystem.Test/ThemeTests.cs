@@ -316,7 +316,150 @@ namespace EducationSystem.Data.Tests
             Assert.AreEqual(courseThemes, actual);
         }
 
+        [TestCase(new int[] { 1,2,3})]
+        public void AddCourseProgramNegativeTestCourseNotExists(int[] mockIds)
+        {
+            //Given
+            var program = new List<CourseThemeDto>();
+            for(int i=0;i<mockIds.Length;i++)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                _themeIdList.Add(theme.Id);
+                program.Add(new CourseThemeDto
+                {
+                    Course = new CourseDto { Id = -1 },
+                    Theme = theme,
+                    Order = i+1
+                });
+                _courseThemeList.Add((-1, theme.Id));
+            }
+            //When
+            try
+            {
+                var result = _courseRepo.AddCourse_Program(program);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
 
+        [TestCase(1, new int[] { -1, -2, -3 })]
+        public void AddCourseProgramNegativeTestThemesNotExist(int courseMockId, int[] themeMockIds)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseMockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            _courseIdList.Add(course.Id);
+
+            var program = new List<CourseThemeDto>();
+            for (int i = 0; i < themeMockIds.Length; i++)
+            {
+                
+                program.Add(new CourseThemeDto
+                {
+                    Course = course,
+                    Theme = new ThemeDto { Id=themeMockIds[i]},
+                    Order = i+1
+                });
+                _courseThemeList.Add((course.Id, themeMockIds[i]));
+            }
+            //When
+            try
+            {
+                var result = _courseRepo.AddCourse_Program(program);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1, new int[] { 1, 2, 3 })]
+        public void AddCourseProgramNegativeTestNotUniqueOrder(int courseMockId, int[] themeMockIds)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseMockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            _courseIdList.Add(course.Id);
+
+            var program = new List<CourseThemeDto>();
+            for (int i = 0; i < themeMockIds.Length; i++)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                _themeIdList.Add(theme.Id);
+
+                program.Add(new CourseThemeDto
+                {
+                    Course = course,
+                    Theme = theme,
+                    Order = 1
+                });
+                _courseThemeList.Add((course.Id, theme.Id));
+            }
+            //When
+            try
+            {
+                var result = _courseRepo.AddCourse_Program(program);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+        [TestCase(1, new int[] { 1, 2, 3 })]
+        public void AddCourseProgramNegativeTestNotUniqueTheme(int courseMockId, int[] themeMockIds)
+        {
+            //Given
+            var course = (CourseDto)CourseMockGetter.GetCourseDtoMock(courseMockId).Clone();
+            course.Id = _courseRepo.AddCourse(course);
+            _courseIdList.Add(course.Id);
+
+            var program = new List<CourseThemeDto>();
+            for (int i = 0; i < themeMockIds.Length; i++)
+            {
+                var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
+                theme.Id = _courseRepo.AddTheme(theme);
+                _themeIdList.Add(theme.Id);
+
+                program.AddRange(new List<CourseThemeDto>
+                {
+                    new CourseThemeDto
+                {
+                    Course = course,
+                    Theme = theme,
+                    Order = i + 1
+                },
+                new CourseThemeDto
+                {
+                    Course = course,
+                    Theme = theme,
+                    Order = i + 1 + themeMockIds.Length
+                },
+                });
+                _courseThemeList.Add((course.Id, theme.Id));
+            }
+            //When
+            try
+            {
+                var result = _courseRepo.AddCourse_Program(program);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
 
         [TestCase(1, 2, new int[] { 1, 2, 3, 4 })]
         [TestCase(1, 2, new int[] { 1, 3 })]
