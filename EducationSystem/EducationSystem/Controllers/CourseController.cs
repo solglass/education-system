@@ -15,7 +15,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:50221/api/course/
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class CourseController : ControllerBase
     {
         private ICourseService _courseService;
@@ -71,7 +71,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(CourseOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(CourseOutputModel), StatusCodes.Status409Conflict)]
         [HttpPost]
-         [Authorize(Roles = "Администратор, Менеджер, Методист")]
+       //  [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseOutputModel> CreateCourse([FromBody] CourseInputModel course)    
         {
             if (!ModelState.IsValid)
@@ -147,22 +147,21 @@ namespace EducationSystem.API.Controllers
         /// Recreates the course program that consists of list of ordered themes
         /// </summary>
         /// <param name="courseId"> is used to find the course user wants to connect with theme</param>
-        /// <param name="themeId"> is used to find the theme user wants to connect with course</param>
-        /// <returns>Returns Created result</returns>
+        /// <param name="program"> is used to specify the order of themes in course</param>
+        /// <returns>Returns CourseWithProgramOutputModel</returns>
         // https://localhost:XXXXX/api/course/3/theme/8
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(CourseWithProgramOutputModel),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string),StatusCodes.Status409Conflict)]
         [HttpPost("{courseId}/program")]
-        [Authorize(Roles = "Администратор, Менеджер, Методист")]
-        public ActionResult UpdateCourseProgram(int courseId, [FromBody])
+        //[Authorize(Roles = "Администратор, Менеджер, Методист")]
+        public ActionResult<CourseWithProgramOutputModel> UpdateCourseProgram(int courseId, [FromBody]List<OrderedThemeInputModel> program)
         {
-            if (_courseService.GetThemeById(themeId) == null)
-                return NotFound($"Theme with id:{themeId} not found");
             if (_courseService.GetCourseById(courseId) == null)
                 return NotFound($"Course with id:{courseId} not found");
-            //  _courseService.AddThemeToCourse(courseId, themeId);
+              _courseService.AddUpdateCourseProgram(courseId, _mapper.Map<List<CourseThemeDto>>(program));
 
-            var result = _courseService.GetCourseWithProgramById(courseId);
+            var result =_mapper.Map<CourseWithProgramOutputModel>( _courseService.GetCourseWithProgramById(courseId));
             return Ok(result);
         }
 
@@ -241,7 +240,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(ThemeOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ThemeOutputModel), StatusCodes.Status409Conflict)]
         [HttpPost("theme")]
-        [Authorize(Roles = "Администратор, Методист, Преподаватель")]
+        //[Authorize(Roles = "Администратор, Методист, Преподаватель")]
         public ActionResult<ThemeOutputModel> CreateTheme([FromBody] ThemeInputModel theme)
         {
             if (!ModelState.IsValid)

@@ -75,7 +75,7 @@ namespace EducationSystem.API
             CreateMap<ThemeInputModel, ThemeDto>()
                 .ForMember(dest=>dest.Tags, opts=>opts.MapFrom(src=>src.TagIds.ConvertAll<TagDto>(t=> new TagDto { Id = t })));
             CreateMap<ThemeDto, ThemeOutputModel>();
-            CreateMap<OrderedTheme, ThemeOrderedOutputModel>();
+            CreateMap<OrderedThemeDto, ThemeOrderedOutputModel>();
 
             CreateMap<HomeworkAttemptDto, HomeworkAttemptOutputModel>()
                 .ForMember(dest => dest.HomeworkAttemptStatus, opts => opts.MapFrom(src => FriendlyNames.GetFriendlyHomeworkAttemptStatusName(src.HomeworkAttemptStatus)));
@@ -106,7 +106,11 @@ namespace EducationSystem.API
                     UserPic = src.User.UserPic
                 }));
 
-            CreateMap<CourseWithProgram, CourseWithProgramOutputModel>();
+            CreateMap<OrderedThemeInputModel, CourseThemeDto>()
+                .ForMember(dest => dest.Theme, opts => opts.MapFrom(src => new ThemeDto { Id = src.Id }))
+                .ForMember(dest => dest.Order, opts => opts.MapFrom(src => src.Order));
+
+            CreateMap<CourseDto, CourseWithProgramOutputModel>();
 
             CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>()

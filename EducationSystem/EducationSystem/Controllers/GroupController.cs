@@ -151,7 +151,7 @@ namespace EducationSystem.Controllers
         }
 
         /// <summary>
-        /// Creates Course
+        /// Creates Group
         /// </summary>
         /// <param name="group"> is used to get all the information about new group that is necessary to create it</param>
         /// <returns>Returns the GroupOutputModel</returns>
