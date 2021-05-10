@@ -71,14 +71,10 @@ namespace EducationSystem.Business
         public GroupDto GetGroupProgramByGroupId(int id)
         {
             var group = _groupRepository.GetGroupById(id);
-            var program = _courseRepository.GetCourse_Program(id);
-            group.Course.Themes = program.Select(obj =>
-            new OrderedThemeDto
+            if (group != null)
             {
-                Id = obj.Theme.Id,
-                Name = obj.Theme.Name,
-                Order = obj.Order
-            }).ToList();
+                group.Course.Themes = _courseRepository.GetCourse_Program(group.Course.Id);
+            }
             return group;
         }
 

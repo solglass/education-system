@@ -289,22 +289,14 @@ namespace EducationSystem.Data
             return result;
         }
 
-        public List<CourseThemeDto> GetCourse_Program(int courseId)
+        public List<OrderedThemeDto> GetCourse_Program(int courseId)
         {
-            var result = _connection
-                .Query<CourseThemeDto, CourseDto, ThemeDto, CourseThemeDto>(
+            var result = _connection.Query<OrderedThemeDto>(
                 "dbo.Course_Program_SelectByCourseId",
-                (courseTheme, course, theme)=>
-                {
-                    courseTheme.Course = course;
-                    courseTheme.Theme = theme;
-                    return courseTheme;
-                },
                 new
                 {
                     id=courseId
                 },
-                splitOn:  "Id",
                 commandType: System.Data.CommandType.StoredProcedure)
                 .ToList();
             return result;

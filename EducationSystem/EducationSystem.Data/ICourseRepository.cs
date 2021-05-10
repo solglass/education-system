@@ -22,7 +22,7 @@ namespace EducationSystem.Data
         int HardDeleteTheme(int themeId);
 
         int DeleteCourse_Program(int courseId);
-        List<CourseThemeDto> GetCourse_Program(int courseId);
+        List<OrderedThemeDto> GetCourse_Program(int courseId);
         int AddCourse_Program(List<CourseThemeDto> courseThemes);
     }
 }

@@ -14,7 +14,7 @@ namespace EducationSystem.Business
         int DeleteTheme(int id);
         int RecoverTheme(int id);
         CourseDto GetCourseById(int id);
-        CourseWithProgram GetCourseWithProgramById(int id);
+        CourseDto GetCourseWithProgramById(int id);
         List<CourseDto> GetCourses();
         ThemeDto GetThemeById(int id);
         List<ThemeDto> GetThemes();

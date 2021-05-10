@@ -27,18 +27,12 @@ namespace EducationSystem.Business
         }
 
         public CourseDto GetCourseById(int id) => _courseRepo.GetCourseById(id);
-        public CourseWithProgram GetCourseWithProgramById(int id)
+        public CourseDto GetCourseWithProgramById(int id)
         {
-            var course =(CourseWithProgram) _courseRepo.GetCourseById(id);
+            var course = _courseRepo.GetCourseById(id);
             if (course != null)
             {
-                var program = _courseRepo.GetCourse_Program(id);
-                course.Themes = program.Select(obj=>
-                new OrderedTheme { 
-                    Id=obj.Theme.Id,
-                    Name=obj.Theme.Name,
-                    Order=obj.Order
-                }).ToList();
+                course.Themes = _courseRepo.GetCourse_Program(id);
             }
             return course;
         }

@@ -4,12 +4,9 @@
 as
 begin 
 	select
-		ct.Id,
-		ct.[Order],
-		c.Id,
-		c.[Name],
 		t.Id,
-		t.[Name]
+		t.[Name],
+		ct.[Order]
 	from  dbo.Course_Theme ct
 		join  dbo.Course c on c.Id = ct.CourseID
 		join dbo.Theme t on t.Id = ct.ThemeID	

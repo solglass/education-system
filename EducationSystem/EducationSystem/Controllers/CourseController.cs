@@ -66,18 +66,18 @@ namespace EducationSystem.API.Controllers
         /// Creates Course
         /// </summary>
         /// <param name="course"> is used to get all the information about new course that is necessary to create it</param>
-        /// <returns>Returns the CourseWithProgramOutputModel which includes empty list of ordered themes of new course</returns>
+        /// <returns>Returns the CourseOutputModel </returns>
         // https://localhost:50221/api/course/
-        [ProducesResponseType(typeof(CourseWithProgramOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CourseWithProgramOutputModel), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(CourseOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CourseOutputModel), StatusCodes.Status409Conflict)]
         [HttpPost]
          [Authorize(Roles = "Администратор, Менеджер, Методист")]
-        public ActionResult<CourseWithProgramOutputModel> CreateCourse([FromBody] CourseInputModel course)    
+        public ActionResult<CourseOutputModel> CreateCourse([FromBody] CourseInputModel course)    
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
             var id = _courseService.AddCourse(_mapper.Map<CourseDto>(course));
-            var result = _mapper.Map<CourseWithProgramOutputModel>(_courseService.GetCourseWithProgramById(id));
+            var result = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
             return Ok(result);                        
         }
 
@@ -154,7 +154,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("{courseId}/program")]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
-        public ActionResult UpdateCourseProgram(int courseId, int themeId)
+        public ActionResult UpdateCourseProgram(int courseId, [FromBody])
         {
             if (_courseService.GetThemeById(themeId) == null)
                 return NotFound($"Theme with id:{themeId} not found");
