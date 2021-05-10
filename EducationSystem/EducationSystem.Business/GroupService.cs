@@ -74,6 +74,7 @@ namespace EducationSystem.Business
             if (group != null)
             {
                 group.Course.Themes = _courseRepository.GetCourse_Program(group.Course.Id);
+                group.EndDate = group.StartDate.AddDays(group.Course.Duration * _daysInOneWeek);
             }
             return group;
         }

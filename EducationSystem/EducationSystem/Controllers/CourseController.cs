@@ -15,7 +15,7 @@ namespace EducationSystem.API.Controllers
     // https://localhost:50221/api/course/
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class CourseController : ControllerBase
     {
         private ICourseService _courseService;
@@ -71,7 +71,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(CourseOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(CourseOutputModel), StatusCodes.Status409Conflict)]
         [HttpPost]
-       //  [Authorize(Roles = "Администратор, Менеджер, Методист")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseOutputModel> CreateCourse([FromBody] CourseInputModel course)    
         {
             if (!ModelState.IsValid)
@@ -81,6 +81,24 @@ namespace EducationSystem.API.Controllers
             return Ok(result);                        
         }
 
+        /// <summary>
+        /// Creates the copy of selected course and its program
+        /// </summary>
+        /// <param name="id"> is used to get all the information about  course that is necessary to copy</param>
+        /// <returns>Returns the CourseWithProgramOutputModel </returns>
+        // https://localhost:50221/api/course/
+        [ProducesResponseType(typeof(CourseWithProgramOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [HttpPost("{id}/copy")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
+        public ActionResult<CourseWithProgramOutputModel> CopyCourse(int id)
+        {
+            if (_courseService.GetCourseById(id) == null)
+                return NotFound($"The course with {id} is not found.");
+            var newId = _courseService.AddCourseCopy(id);
+            var result = _mapper.Map<CourseWithProgramOutputModel>(_courseService.GetCourseWithProgramById(newId));
+            return Ok(result);
+        }
 
         /// <summary>
         /// Updates Course
@@ -154,7 +172,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string),StatusCodes.Status409Conflict)]
         [HttpPost("{courseId}/program")]
-        //[Authorize(Roles = "Администратор, Менеджер, Методист")]
+        [Authorize(Roles = "Администратор, Менеджер, Методист")]
         public ActionResult<CourseWithProgramOutputModel> UpdateCourseProgram(int courseId, [FromBody]List<OrderedThemeInputModel> program)
         {
             if (_courseService.GetCourseById(courseId) == null)
@@ -240,7 +258,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(typeof(ThemeOutputModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ThemeOutputModel), StatusCodes.Status409Conflict)]
         [HttpPost("theme")]
-        //[Authorize(Roles = "Администратор, Методист, Преподаватель")]
+        [Authorize(Roles = "Администратор, Методист, Преподаватель")]
         public ActionResult<ThemeOutputModel> CreateTheme([FromBody] ThemeInputModel theme)
         {
             if (!ModelState.IsValid)

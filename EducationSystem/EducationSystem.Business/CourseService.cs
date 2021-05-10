@@ -37,6 +37,34 @@ namespace EducationSystem.Business
             return course;
         }
 
+        public int AddCourseCopy(int id)
+        {
+            var course = _courseRepo.GetCourseById(id);
+            int copyId = 0;
+            if (course!=null)
+            {
+                var program = _courseRepo.GetCourse_Program(id);
+                course.Name = $"{course.Name} - копия";
+                course.Id = 0;
+                copyId = _courseRepo.AddCourse(course);
+                if (copyId>0)
+                {
+                    _courseRepo.AddCourse_Program(program.Select(obj => new CourseThemeDto
+                    {
+                        Course= new CourseDto { Id=copyId},
+                        Theme= obj,
+                        Order=obj.Order
+                    }).ToList());
+
+                    foreach (var material in course.Materials)
+                    {
+                        _courseRepo.AddCourse_Material(copyId, material.Id);
+                    }
+                }
+            }
+            return copyId;
+        }
+
         public int UpdateCourse(CourseDto course)
         {
             int index = _courseRepo.UpdateCourse(course);
