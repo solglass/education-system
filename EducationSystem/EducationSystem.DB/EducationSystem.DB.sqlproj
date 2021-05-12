@@ -94,6 +94,7 @@
     <Folder Include="StoredProcedures\Student" />
     <Folder Include="StoredProcedures\Course_Material" />
     <Folder Include="StoredProcedures\Notification" />
+    <Folder Include="StoredProcedures\Tutor_Group" />
     <Folder Include="StoredProcedures\Lesson_Theme" />
     <Folder Include="StoredProcedures\Homework_Group" />
   </ItemGroup>
@@ -270,7 +271,8 @@
     <Build Include="Tables\dbo.Course_Material.sql" />
     <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Delete.sql" />
     <Build Include="StoredProcedures\Course_Material\dbo.Course_Material_Add_.sql" />
-    <Build Include="Tables\dbo.Notification.sql" />
+    <Build Include="StoredProcedures\Tutor_Group\Tutor_Group_Delete.sql" />
+    <Build Include="StoredProcedures\Tutor_Group\Tutor_Group_Add.sql" />
     <Build Include="StoredProcedures\Notification\dbo.Notification_Add.sql" />
     <Build Include="StoredProcedures\Notification\dbo.Notification_Update.sql" />
     <Build Include="StoredProcedures\Notification\dbo.Notification_Delete.sql" />
@@ -293,6 +295,7 @@
     <Build Include="StoredProcedures\Theme\Theme_SelectAllByHomeworkId.sql" />
     <Build Include="StoredProcedures\Tag\Tag_SelectAllByHomeworkId.sql" />
     <Build Include="StoredProcedures\Homework\Homework_SelectByGroupId.sql" />
+    <Build Include="Tables\dbo.Notification.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />

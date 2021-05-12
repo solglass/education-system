@@ -263,6 +263,159 @@ namespace EducationSystem.Data.Tests
             }
         }
 
+        [TestCase(4)]
+        public void CommentAdd_EmptyComment_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            dto.Author = _userDtoMock;
+            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+            //When
+            try
+            {
+                var addedCommentId = _homeworkRepo.AddComment(dto);
+                _commentIdList.Add(addedCommentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1)]
+        public void CommentAdd_WithoutUser_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+
+            //When
+            try
+            {
+                var addedCommentId = _homeworkRepo.AddComment(dto);
+                _commentIdList.Add(addedCommentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1)]
+        public void CommentAdd_WithoutHomeworkAttempt_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+            dto.Author = _userDtoMock;
+
+            //When
+            try
+            {
+                var addedCommentId = _homeworkRepo.AddComment(dto);
+                _commentIdList.Add(addedCommentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [TestCase(1)]
+        public void CommentAdd_WithoutUserAndHomeworkAttempt_NegativeTest(int mockId)
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(mockId).Clone();
+
+            //When
+            try
+            {
+                var addedCommentId = _homeworkRepo.AddComment(dto);
+                _commentIdList.Add(addedCommentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void CommentAdd_Null_NegativeTest()
+        {
+            //Given
+
+            //When
+            try
+            {
+                var addedCommentId = _homeworkRepo.AddComment(null);
+                _commentIdList.Add(addedCommentId);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+        [Test]
+        public void CommentUpdate_Null_NegativeTest()
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(1).Clone();
+            dto.Author = _userDtoMock;
+            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+
+            var addedCommentId = _homeworkRepo.AddComment(dto);
+            _commentIdList.Add(addedCommentId);
+            //When
+            try
+            {
+                _homeworkRepo.UpdateComment(null);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
+
+        [Test]
+        public void CommentDeleteOrRecover_NotExistComment_NegativeTest()
+        {
+            //Given
+            var dto = (CommentDto)CommentMockGetter.GetCommentDtoMock(1).Clone();
+            dto.Author = _userDtoMock;
+            dto.HomeworkAttempt = _homeworkAttemptDtoMock;
+            var addedCommentId = _homeworkRepo.AddComment(dto);
+            _commentIdList.Add(addedCommentId);
+            //When
+            var deletedRows = _homeworkRepo.DeleteOrRecoverComment(-1, true);
+
+            //Then
+            Assert.AreEqual(0, deletedRows);
+        }
+        [Test]
+        public void CommentSearch_Null_NegativeTest()
+        {
+            //Given
+            //When
+            try
+            {
+                _homeworkRepo.SearchComments(null, null);
+            }
+            //Then
+            catch
+            {
+                Assert.Pass();
+            }
+            Assert.Fail();
+        }
+
         [TestCase(new int[] { 1, 2 })]
         public void AddCommentAttachmentPositiveTest(int[] mockIds)
         {
