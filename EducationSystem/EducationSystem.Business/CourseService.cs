@@ -49,12 +49,7 @@ namespace EducationSystem.Business
                 copyId = _courseRepo.AddCourse(course);
                 if (copyId>0)
                 {
-                    _courseRepo.AddCourse_Program(program.Select(obj => new CourseThemeDto
-                    {
-                        Course= new CourseDto { Id=copyId},
-                        Theme= obj,
-                        Order=obj.Order
-                    }).ToList());
+                    _courseRepo.AddCourse_Program(copyId, program);
 
                     foreach (var material in course.Materials)
                     {
@@ -67,16 +62,21 @@ namespace EducationSystem.Business
 
         public int UpdateCourse(CourseDto course)
         {
-            int index = _courseRepo.UpdateCourse(course);
-            if (index <= 0)
-                return -1;
+            var result = _courseRepo.UpdateCourse(course);
+            if (result> 0 && course.Themes.Count > 0)
+            {
+                _courseRepo.DeleteCourse_Program(course.Id);
+                _courseRepo.AddCourse_Program(course.Id, course.Themes);
+            }
             return 0;
         }
         public int AddCourse(CourseDto course)
         {
             int index = _courseRepo.AddCourse(course);
-            if (index <= 0)
-                return -1;
+            if(index>0 && course.Themes.Count>0)
+            {
+                _courseRepo.AddCourse_Program(index, course.Themes);
+            }
             return index;
         }
 
@@ -155,11 +155,10 @@ namespace EducationSystem.Business
             return _courseRepo.GetUncoveredThemesByGroupId(id);
         }
 
-        public int AddUpdateCourseProgram(int courseId, List<CourseThemeDto> program)
+        public int AddUpdateCourseProgram(int courseId, List<OrderedThemeDto> program)
         {
             _courseRepo.DeleteCourse_Program(courseId);
-            program.ForEach(item => item.Course = new CourseDto() { Id = courseId });
-            return _courseRepo.AddCourse_Program(program);
+            return _courseRepo.AddCourse_Program(courseId, program);
         }
         
     }

@@ -106,14 +106,14 @@ namespace EducationSystem.API
                     UserPic = src.User.UserPic
                 }));
 
-            CreateMap<OrderedThemeInputModel, CourseThemeDto>()
-                .ForMember(dest => dest.Theme, opts => opts.MapFrom(src => new ThemeDto { Id = src.Id }))
-                .ForMember(dest => dest.Order, opts => opts.MapFrom(src => src.Order));
+            CreateMap<OrderedThemeInputModel, OrderedThemeDto>();
+                
 
             CreateMap<CourseDto, CourseWithProgramOutputModel>();
 
             CreateMap<CourseDto, CourseOutputModel>();
             CreateMap<CourseInputModel, CourseDto>()
+                .ForMember(dest=> dest.Themes, opts=> opts.MapFrom(src=> src.Themes))
                 .ForMember(dest=>dest.Materials, opts=>opts.MapFrom(src=>src.MaterialIds.ConvertAll<MaterialDto>(t=>new MaterialDto { Id = t })));
             CreateMap<AttendanceReportDto, AttendanceReportOutputModel>();
 

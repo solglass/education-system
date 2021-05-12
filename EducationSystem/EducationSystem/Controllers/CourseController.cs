@@ -66,18 +66,18 @@ namespace EducationSystem.API.Controllers
         /// Creates Course
         /// </summary>
         /// <param name="course"> is used to get all the information about new course that is necessary to create it</param>
-        /// <returns>Returns the CourseOutputModel </returns>
+        /// <returns>Returns the CourseWithProgramOutputModel </returns>
         // https://localhost:50221/api/course/
-        [ProducesResponseType(typeof(CourseOutputModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CourseOutputModel), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(CourseWithProgramOutputModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
         [HttpPost]
         [Authorize(Roles = "Администратор, Менеджер, Методист")]
-        public ActionResult<CourseOutputModel> CreateCourse([FromBody] CourseInputModel course)    
+        public ActionResult<CourseWithProgramOutputModel> CreateCourse([FromBody] CourseInputModel course)    
         {
             if (!ModelState.IsValid)
                 throw new ValidationException(ModelState);
             var id = _courseService.AddCourse(_mapper.Map<CourseDto>(course));
-            var result = _mapper.Map<CourseOutputModel>(_courseService.GetCourseById(id));
+            var result = _mapper.Map<CourseWithProgramOutputModel>(_courseService.GetCourseWithProgramById(id));
             return Ok(result);                        
         }
 
@@ -177,7 +177,7 @@ namespace EducationSystem.API.Controllers
         {
             if (_courseService.GetCourseById(courseId) == null)
                 return NotFound($"Course with id:{courseId} not found");
-              _courseService.AddUpdateCourseProgram(courseId, _mapper.Map<List<CourseThemeDto>>(program));
+              _courseService.AddUpdateCourseProgram(courseId, _mapper.Map<List<OrderedThemeDto>>(program));
 
             var result =_mapper.Map<CourseWithProgramOutputModel>( _courseService.GetCourseWithProgramById(courseId));
             return Ok(result);

@@ -293,7 +293,6 @@ namespace EducationSystem.Data.Tests
             course.Id = _courseRepo.AddCourse(course);
             _courseIdList.Add(course.Id);
             var expected = new List<OrderedThemeDto>();
-            var courseThemes = new List<CourseThemeDto>();
 
             for (var i = 0; i < themeMockIds.Length; i++)
             {
@@ -301,12 +300,7 @@ namespace EducationSystem.Data.Tests
                 theme.Id = _courseRepo.AddTheme(theme);
                 
                 _themeIdList.Add(theme.Id);
-                courseThemes.Add(new CourseThemeDto
-                {
-                    Course = course,
-                    Theme = theme,
-                    Order = i + 1
-                });
+
                 expected.Add(new OrderedThemeDto 
                 { 
                     Id=theme.Id,
@@ -317,7 +311,7 @@ namespace EducationSystem.Data.Tests
                 _courseThemeList.Add((course.Id, theme.Id));
             }
             //When
-            var result = _courseRepo.AddCourse_Program(courseThemes);
+            var result = _courseRepo.AddCourse_Program(course.Id, expected);
             //Then
             Assert.AreEqual(expected.Count, result);
             var actual = _courseRepo.GetCourse_Program(course.Id);
@@ -328,24 +322,26 @@ namespace EducationSystem.Data.Tests
         public void AddCourseProgramNegativeTestCourseNotExists(int[] mockIds)
         {
             //Given
-            var program = new List<CourseThemeDto>();
+            var program = new List<OrderedThemeDto>();
             for(int i=0;i<mockIds.Length;i++)
             {
                 var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
                 theme.Id = _courseRepo.AddTheme(theme);
                 _themeIdList.Add(theme.Id);
-                program.Add(new CourseThemeDto
-                {
-                    Course = new CourseDto { Id = -1 },
-                    Theme = theme,
-                    Order = i+1
-                });
+                program.Add(
+                    new OrderedThemeDto 
+                    {
+                        Id = theme.Id,
+                        IsDeleted = theme.IsDeleted,
+                        Name = theme.Name,
+                        Order = i + 1
+                    });
                 _courseThemeList.Add((-1, theme.Id));
             }
             //When
             try
             {
-                var result = _courseRepo.AddCourse_Program(program);
+                var result = _courseRepo.AddCourse_Program(-1, program);
             }
             //Then
             catch
@@ -363,22 +359,19 @@ namespace EducationSystem.Data.Tests
             course.Id = _courseRepo.AddCourse(course);
             _courseIdList.Add(course.Id);
 
-            var program = new List<CourseThemeDto>();
+            var program = new List<OrderedThemeDto>();
             for (int i = 0; i < themeMockIds.Length; i++)
             {
-                
-                program.Add(new CourseThemeDto
-                {
-                    Course = course,
-                    Theme = new ThemeDto { Id=themeMockIds[i]},
-                    Order = i+1
+                program.Add(new OrderedThemeDto {
+                    Id = themeMockIds[i],
+                    Order = i + 1
                 });
                 _courseThemeList.Add((course.Id, themeMockIds[i]));
             }
             //When
             try
             {
-                var result = _courseRepo.AddCourse_Program(program);
+                var result = _courseRepo.AddCourse_Program(course.Id, program);
             }
             //Then
             catch
@@ -396,25 +389,27 @@ namespace EducationSystem.Data.Tests
             course.Id = _courseRepo.AddCourse(course);
             _courseIdList.Add(course.Id);
 
-            var program = new List<CourseThemeDto>();
+            var program = new List<OrderedThemeDto>();
             for (int i = 0; i < themeMockIds.Length; i++)
             {
                 var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
                 theme.Id = _courseRepo.AddTheme(theme);
                 _themeIdList.Add(theme.Id);
 
-                program.Add(new CourseThemeDto
-                {
-                    Course = course,
-                    Theme = theme,
-                    Order = 1
-                });
+                program.Add(
+                    new OrderedThemeDto 
+                    { 
+                        Id = theme.Id,
+                        Name = theme.Name,
+                        IsDeleted = theme.IsDeleted, 
+                        Order = 1
+                    });
                 _courseThemeList.Add((course.Id, theme.Id));
             }
             //When
             try
             {
-                var result = _courseRepo.AddCourse_Program(program);
+                var result = _courseRepo.AddCourse_Program(course.Id, program);
             }
             //Then
             catch
@@ -432,34 +427,37 @@ namespace EducationSystem.Data.Tests
             course.Id = _courseRepo.AddCourse(course);
             _courseIdList.Add(course.Id);
 
-            var program = new List<CourseThemeDto>();
+            var program = new List<OrderedThemeDto>();
             for (int i = 0; i < themeMockIds.Length; i++)
             {
                 var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
                 theme.Id = _courseRepo.AddTheme(theme);
                 _themeIdList.Add(theme.Id);
 
-                program.AddRange(new List<CourseThemeDto>
+                program.AddRange(
+                    new List<OrderedThemeDto>
                 {
-                    new CourseThemeDto
+                new OrderedThemeDto
                 {
-                    Course = course,
-                    Theme = theme,
-                    Order = i + 1
+                    Id=theme.Id,
+                    Name=theme.Name,
+                    IsDeleted= theme.IsDeleted,
+                    Order= i + 1
                 },
-                new CourseThemeDto
+                new OrderedThemeDto
                 {
-                    Course = course,
-                    Theme = theme,
-                    Order = i + 1 + themeMockIds.Length
-                },
+                    Id=theme.Id,
+                    Name=theme.Name,
+                    IsDeleted= theme.IsDeleted,
+                    Order= i + 1+ themeMockIds.Length
+                }
                 });
                 _courseThemeList.Add((course.Id, theme.Id));
             }
             //When
             try
             {
-                var result = _courseRepo.AddCourse_Program(program);
+                var result = _courseRepo.AddCourse_Program(course.Id,program);
             }
             //Then
             catch
@@ -484,8 +482,7 @@ namespace EducationSystem.Data.Tests
             _courseIdList.Add(secondCourse.Id);
 
             var expected = new List<OrderedThemeDto>();
-            var courseThemesToCheck = new List<CourseThemeDto>();
-            var courseThemesToAvoid = new List<CourseThemeDto>();
+            var themesToAvoid = new List<OrderedThemeDto>();
             for (var i = 0; i < themeMockIds.Length; i++)
             {
                 var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
@@ -494,12 +491,6 @@ namespace EducationSystem.Data.Tests
                 _themeIdList.Add(theme.Id);
                 if (i % 2 == 0)
                 {
-                    courseThemesToCheck.Add(new CourseThemeDto
-                    {
-                        Course = firstCourse,
-                        Theme = theme,
-                        Order = i + 1
-                    });
                     _courseThemeList.Add((firstCourse.Id, theme.Id));
 
                     expected.Add(new OrderedThemeDto
@@ -512,20 +503,22 @@ namespace EducationSystem.Data.Tests
                 }
                 else
                 {
-                    courseThemesToAvoid.Add(new CourseThemeDto
-                    {
-                        Course = secondCourse,
-                        Theme = theme,
-                        Order = i + 1
-                    });
+                    themesToAvoid.Add(
+                        new OrderedThemeDto
+                        {
+                            Id = theme.Id,
+                            Name = theme.Name,
+                            IsDeleted = theme.IsDeleted,
+                            Order = i + 1
+                        });
                     _courseThemeList.Add((secondCourse.Id, theme.Id));
                 }
             }
             //When
-            var result = _courseRepo.AddCourse_Program(courseThemesToCheck);
-            Assert.AreEqual(courseThemesToCheck.Count, result);
-            result = _courseRepo.AddCourse_Program(courseThemesToAvoid);
-            Assert.AreEqual(courseThemesToAvoid.Count, result);
+            var result = _courseRepo.AddCourse_Program(firstCourse.Id, expected);
+            Assert.AreEqual(expected.Count, result);
+            result = _courseRepo.AddCourse_Program(secondCourse.Id, themesToAvoid);
+             Assert.AreEqual(themesToAvoid.Count, result);
 
             //Then
             var actual = _courseRepo.GetCourse_Program(firstCourse.Id);
@@ -555,22 +548,14 @@ namespace EducationSystem.Data.Tests
             courseToCheck.Id = _courseRepo.AddCourse(courseToCheck);
             _courseIdList.Add(courseToCheck.Id);
 
-            var programToStay = new List<CourseThemeDto>();
             var notEmptyExpected = new List<OrderedThemeDto>();
-            var programToDelete = new List<CourseThemeDto>();
+            var programToDelete = new List<OrderedThemeDto>();
             for (var i = 0; i < themeMockIds.Length; i++)
             {
                 var theme = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(themeMockIds[i]).Clone();
                 theme.Id = _courseRepo.AddTheme(theme);
       
                 _themeIdList.Add(theme.Id);
-
-                programToStay.Add(new CourseThemeDto
-                {
-                    Course = course,
-                    Theme = theme,
-                    Order = i + 1
-                });
 
                 notEmptyExpected.Add(
                     new OrderedThemeDto
@@ -582,17 +567,18 @@ namespace EducationSystem.Data.Tests
                     }) ;
                 _courseThemeList.Add((course.Id, theme.Id));
 
-                programToDelete.Add(new CourseThemeDto
+                programToDelete.Add(new OrderedThemeDto
                 {
-                    Course = courseToCheck,
-                    Theme = theme,
+                    Id = theme.Id,
+                    Name = theme.Name,
+                    IsDeleted = theme.IsDeleted,
                     Order = i + 1
                 });
                 _courseThemeList.Add((courseToCheck.Id, theme.Id));
             }
 
-            _courseRepo.AddCourse_Program(programToStay);
-            _courseRepo.AddCourse_Program(programToDelete);
+            _courseRepo.AddCourse_Program(course.Id, notEmptyExpected);
+            _courseRepo.AddCourse_Program(courseToCheck.Id, programToDelete);
 
             //When
             _courseRepo.DeleteCourse_Program(courseToCheck.Id);
@@ -615,7 +601,6 @@ namespace EducationSystem.Data.Tests
             courseToCheck.Id = _courseRepo.AddCourse(courseToCheck);
             _courseIdList.Add(courseToCheck.Id);
 
-            var courseThemes = new List<CourseThemeDto>();
             var notEmptyExpected = new List<OrderedThemeDto>();
             for (var i = 0; i < themeMockIds.Length; i++)
             {
@@ -624,12 +609,7 @@ namespace EducationSystem.Data.Tests
 
                 _themeIdList.Add(theme.Id);
 
-                courseThemes.Add(new CourseThemeDto
-                {
-                    Course = course,
-                    Theme = theme,
-                    Order = i + 1
-                });
+              
                 notEmptyExpected.Add(new OrderedThemeDto
                 {
                     Id=theme.Id,
@@ -640,7 +620,7 @@ namespace EducationSystem.Data.Tests
                 _courseThemeList.Add((course.Id, theme.Id));
             }
 
-            _courseRepo.AddCourse_Program(courseThemes);
+            _courseRepo.AddCourse_Program( course.Id, notEmptyExpected);
 
             //When
             var result= _courseRepo.DeleteCourse_Program(courseToCheck.Id);
@@ -935,27 +915,29 @@ namespace EducationSystem.Data.Tests
         {
 
             var dtos = new List<ThemeDto>();
-            var program = new List<CourseThemeDto>();
+            var program = new List<OrderedThemeDto>();
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var dto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(mockIds[i]).Clone();
                 var addedThemeId = _courseRepo.AddTheme(dto);
                 _themeIdList.Add(addedThemeId);
                 dto.Id = addedThemeId;
-                dtos.Add(dto);
+                 dtos.Add(dto);
 
-                program.Add(new CourseThemeDto
+                program.Add(new  OrderedThemeDto
                 {
-                    Course=new CourseDto { Id=courseId},
-                    Theme=dto,
-                    Order=i+order
+                    Id = dto.Id,
+                    Name = dto.Name,
+                    IsDeleted = dto.IsDeleted,
+                    Order = i + order
                 });
                 _courseThemeList.Add((courseId, addedThemeId));
 
                 _lessonRepo.AddLessonTheme(lessonId, addedThemeId);
                 _lessonThemeList.Add((lessonId, addedThemeId));
             }
-            _courseRepo.AddCourse_Program(program);
+            _courseRepo.AddCourse_Program(courseId, program);
+            
             return dtos;
         }
     }

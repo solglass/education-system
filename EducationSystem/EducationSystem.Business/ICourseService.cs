@@ -23,7 +23,7 @@ namespace EducationSystem.Business
         int UpdateCourse(CourseDto course);
         int DeleteCourse(int id);
         int RecoverCourse(int id);
-        int AddUpdateCourseProgram(int courseId, List<CourseThemeDto> program);
+        int AddUpdateCourseProgram(int courseId, List<OrderedThemeDto> program);
         int AddCourseCopy(int id);
     }
 }

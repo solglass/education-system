@@ -301,14 +301,14 @@ namespace EducationSystem.Data
                 .ToList();
             return result;
         }
-        public int AddCourse_Program(List<CourseThemeDto> courseThemes)
+        public int AddCourse_Program(int courseId,List<OrderedThemeDto> courseThemes)
         {
             var result = _connection
                 .Execute("dbo.Course_Program_Update",
                 courseThemes.Select(obj=> new
                 {
-                    courseId=obj.Course.Id,
-                    themeId=obj.Theme.Id,
+                    courseId=courseId,
+                    themeId=obj.Id,
                     order=obj.Order
                 }).ToArray(),
                 commandType: System.Data.CommandType.StoredProcedure);
