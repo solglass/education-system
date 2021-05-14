@@ -11,14 +11,12 @@ namespace EducationSystem.Data.Tests
     {
         private IHomeworkRepository _homeworkRepo;
         private IUserRepository _userRepo;
-        private IGroupRepository _groupRepo;
         private ICourseRepository _courseRepo;
         private IAttachmentRepository _attachmentRepo;
 
         private List<(int, int)> _commentAttachmentIdList;
         private List<int> _attachmentIdList;
         private List<int> _commentIdList;
-        private List<int> _groupIdList;
         private List<int> _courseIdList;
         private List<int> _userIdList;
         private List<int> _homeworkIdList;
@@ -26,7 +24,6 @@ namespace EducationSystem.Data.Tests
 
         private UserDto _userDtoMock;
         private CourseDto _courseDtoMock;
-        private GroupDto _groupDtoMock;
         private HomeworkDto _homeworkDtoMock;
         private HomeworkAttemptDto _homeworkAttemptDtoMock;
 
@@ -37,13 +34,11 @@ namespace EducationSystem.Data.Tests
             _homeworkRepo = new HomeworkRepository(_options);
             _userRepo = new UserRepository(_options);
             _courseRepo = new CourseRepository(_options);
-            _groupRepo = new GroupRepository(_options);
 
             _commentAttachmentIdList = new List<(int,int)>();
             _attachmentIdList = new List<int>();
             _commentIdList = new List<int>();
             _userIdList = new List<int>();
-            _groupIdList = new List<int>();
             _courseIdList = new List<int>();
             _homeworkIdList = new List<int>();
             _homeworkAttemptIdList = new List<int>();
@@ -52,18 +47,6 @@ namespace EducationSystem.Data.Tests
             var addedCourseId = _courseRepo.AddCourse(_courseDtoMock);
             _courseIdList.Add(addedCourseId);
             _courseDtoMock.Id = addedCourseId;
-
-            _groupDtoMock = (GroupDto)GroupMockGetter.GetGroupDtoMock(1).Clone();
-            _groupDtoMock.Course = _courseDtoMock;
-            var addedGroupId = _groupRepo.AddGroup(_groupDtoMock);
-            _groupIdList.Add(addedGroupId);
-            _groupDtoMock.Id = addedGroupId;
-
-            var groupDtoMock = (GroupDto)GroupMockGetter.GetGroupDtoMock(2).Clone();
-            groupDtoMock.Course = _courseDtoMock;
-            var addedGroupId1 = _groupRepo.AddGroup(groupDtoMock);
-            _groupIdList.Add(addedGroupId1);
-            groupDtoMock.Id = addedGroupId1;
 
             _userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(3).Clone();
             var addedUserId = _userRepo.AddUser(_userDtoMock);
@@ -76,13 +59,13 @@ namespace EducationSystem.Data.Tests
             userDtoMock.Id = addedUserId1;
 
             _homeworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            _homeworkDtoMock.Group = _groupDtoMock; 
+            _homeworkDtoMock.Course = _courseDtoMock;
             var addedhomeworkId = _homeworkRepo.AddHomework(_homeworkDtoMock);
             _homeworkIdList.Add(addedhomeworkId);
             _homeworkDtoMock.Id = addedhomeworkId;
 
             var homeworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(3).Clone();
-            homeworkDtoMock.Group = groupDtoMock;
+            homeworkDtoMock.Course = _courseDtoMock;
             var addedhomeworkId1 = _homeworkRepo.AddHomework(homeworkDtoMock);
             _homeworkIdList.Add(addedhomeworkId1);
             homeworkDtoMock.Id = addedhomeworkId1;
@@ -627,7 +610,6 @@ namespace EducationSystem.Data.Tests
             DeleteHomeworkAttempt();
             DeleteHomework();
             DeleteUser();
-            DeleteGroup();
             DeleteCourse();
         }
         private bool CustomCompare(CommentDto expected, CommentDto actual)
@@ -663,13 +645,6 @@ namespace EducationSystem.Data.Tests
             }
         }
 
-        public void DeleteGroup()
-        {
-            foreach (int groupId in _groupIdList)
-            {
-                _groupRepo.DeleteGroup(groupId);
-            }
-        }
 
         private void DeleteHomework()
         {

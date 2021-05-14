@@ -480,7 +480,7 @@ namespace EducationSystem.Data.Tests
 
             var homeworkAttemptDto = (HomeworkAttemptDto)HomeworkAttemptMockGetter.GetHomeworkAttemptDtoMock(1).Clone();
             var _homeworkDtoMock = (HomeworkDto)HomeworkMockGetter.GetHomeworkDtoMock(1).Clone();
-            _homeworkDtoMock.Group = groupDto;
+            _homeworkDtoMock.Course = groupDto.Course;
             var addedHomeworkId = _homeworkRepository.AddHomework(_homeworkDtoMock);
             _homeworkDtoMock.Id = addedHomeworkId;
             _homeworkIdList.Add(addedHomeworkId);

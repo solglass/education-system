@@ -192,6 +192,19 @@ namespace EducationSystem.Data
                 .FirstOrDefault();
             return theme;
         }
+        public List<ThemeDto> GetThemesByHomeworkId(int id)
+        {
+            var result = _connection
+                .Query<ThemeDto>("dbo.Theme_SelectAllByHomeworkId",
+                new
+                {
+                    homeworkId = id
+                },
+                commandType: System.Data.CommandType.StoredProcedure)
+                .ToList();
+            return result;
+        }
+
         public int AddTheme(ThemeDto theme)
         {
             int result = _connection
