@@ -12,6 +12,8 @@ begin
 		sg.GroupID,
 		sg.ContractNumber,
 		u.Id,
+		u.Phone,
+		u.Email,
 		u.FirstName,
 		u.LastName,	
 		u.UserPic		

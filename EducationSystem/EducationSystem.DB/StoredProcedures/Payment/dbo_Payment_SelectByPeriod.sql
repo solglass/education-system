@@ -12,6 +12,8 @@ begin
 		p.Period,
 		p.IsPaid,
 		u.Id,
+		u.Phone,
+		u.Email,
 		u.FirstName,
 		u.LastName,		
 		u.UserPic		

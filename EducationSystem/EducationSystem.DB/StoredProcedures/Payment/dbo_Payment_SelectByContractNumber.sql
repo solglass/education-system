@@ -10,6 +10,8 @@ begin
 		p.IsPaid,
 		p.ContractNumber,
 		u.Id,
+		u.Phone,
+		u.Email,
 		u.FirstName,
 		u.LastName,		
 		u.UserPic
