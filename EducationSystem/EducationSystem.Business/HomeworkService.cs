@@ -1,5 +1,6 @@
 ﻿using EducationSystem.Data;
 using EducationSystem.Data.Models;
+using System;
 using System.Collections.Generic;
 
 namespace EducationSystem.Business
@@ -27,19 +28,29 @@ namespace EducationSystem.Business
         public List<HomeworkDto> GetHomeworksByCourseId(int courseId)
         {
             var result = _homeworkRepository.SearchHomeworks(courseId: courseId);
-            result.ForEach(h => h.Groups = _groupRepository.GetGroupsByHomeworkId(h.Id));
-            result.ForEach(h => h.Course = _courseRepository.GetCourseById(h.Course.Id));
-            result.ForEach(h => h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id));
+            result.ForEach(h =>
+            new Action(delegate ()
+            {
+                h.Groups = _groupRepository.GetGroupsByHomeworkId(h.Id);
+                h.Course = _courseRepository.GetCourseById(h.Course.Id);
+                h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id);
+            }).Invoke());
 
             return result;
         }
         public List<HomeworkDto> GetHomeworksByGroupId(int groupId)
         {
             var result = _homeworkRepository.GetHomeworksByGroupId(groupId);
-            result.ForEach(h => h.Themes = _courseRepository.GetThemesByHomeworkId(h.Id));
-            result.ForEach(h => h.Tags = _tagRepository.GetTagsByHomeworkId(h.Id));
-            result.ForEach(h => h.Course = _courseRepository.GetCourseById(h.Course.Id));
-            result.ForEach(h => h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id));
+
+            result.ForEach(h =>
+            new Action(delegate () 
+            {
+                h.Themes = _courseRepository.GetThemesByHomeworkId(h.Id);
+                h.Tags = _tagRepository.GetTagsByHomeworkId(h.Id);
+                h.Course = _courseRepository.GetCourseById(h.Course.Id);
+                h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id);
+            }).Invoke());
+
 
             return result;
         }
@@ -47,9 +58,15 @@ namespace EducationSystem.Business
         public List<HomeworkDto> GetHomeworksByTagId(int tagId)
         {
             var result = _homeworkRepository.SearchHomeworks(tagId: tagId);
-            result.ForEach(h => h.Groups = _groupRepository.GetGroupsByHomeworkId(h.Id));
-            result.ForEach(h => h.Course = _courseRepository.GetCourseById(h.Course.Id));
-            result.ForEach(h => h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id));
+
+            result.ForEach(h =>
+            new Action(delegate ()
+            {
+                h.Groups = _groupRepository.GetGroupsByHomeworkId(h.Id);
+                h.Course = _courseRepository.GetCourseById(h.Course.Id);
+                h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id);
+            }).Invoke());
+
 
             return result;
         }
@@ -57,18 +74,28 @@ namespace EducationSystem.Business
         public List<HomeworkDto> GetHomeworksByThemeId(int themeId)
         {
             var result = _homeworkRepository.SearchHomeworks(themeId: themeId);
-            result.ForEach(h => h.Groups = _groupRepository.GetGroupsByHomeworkId(h.Id));
-            result.ForEach(h => h.Course = _courseRepository.GetCourseById(h.Course.Id));
-            result.ForEach(h => h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id));
+
+            result.ForEach(h =>
+            new Action(delegate ()
+            {
+                h.Groups = _groupRepository.GetGroupsByHomeworkId(h.Id);
+                h.Course = _courseRepository.GetCourseById(h.Course.Id);
+                h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id);
+            }).Invoke());
 
             return result;
         }
         public List<HomeworkDto> GetHomeworks()
         {
             var result = _homeworkRepository.GetHomeworks();
-            result.ForEach(h => h.Groups = _groupRepository.GetGroupsByHomeworkId(h.Id));
-            result.ForEach(h => h.Course = _courseRepository.GetCourseById(h.Course.Id));
-            result.ForEach(h => h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id));
+
+            result.ForEach(h =>
+            new Action(delegate ()
+            {
+                h.Groups = _groupRepository.GetGroupsByHomeworkId(h.Id);
+                h.Course = _courseRepository.GetCourseById(h.Course.Id);
+                h.HomeworkAttempts = _homeworkRepository.GetHomeworkAttemptsByHomeworkId(h.Id);
+            }).Invoke());
 
             return result;
         }
