@@ -52,7 +52,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost]
-        [Authorize(Roles = "Администратор, Преподаватель, Тьютор")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист")]
         public ActionResult<HomeworkOutputModel> AddHomework([FromBody] HomeworkInputModel homework)
         {
             if (!ModelState.IsValid)
@@ -61,6 +61,7 @@ namespace EducationSystem.API.Controllers
             }
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
+
             if (!User.IsInRole("Администратор") && !userGroup.Contains(homework.GroupId))
             {
                 return Forbid($"User is not in group {homework.GroupId}");
@@ -82,7 +83,7 @@ namespace EducationSystem.API.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{homeworkId}")]
-        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Студент")]
+        [Authorize(Roles = "Администратор, Преподаватель, Тьютор, Методист, Студент")]
         public ActionResult<HomeworkOutputModel> GetHomeworkById(int homeworkId)
         {
             var dto = _homeworkService.GetHomeworkById(homeworkId);
@@ -90,12 +91,30 @@ namespace EducationSystem.API.Controllers
                 return NotFound($"Homework with id {homeworkId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(dto.Group.Id))
+            if (!User.IsInRole("Администратор") && !dto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {dto.Group.Id}");
+                return Forbid($"User is not in group {dto.Groups.Select(h => h.Id).ToList()}");
             }
 
             var result = _mapper.Map<HomeworkOutputModel>(dto);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get all Homeworks
+        /// </summary>
+        /// <returns>Return all HomeworkOutputModels </returns>
+        //todo: the model is not filled in.
+        // https://localhost:44365/api/homework/42
+        [ProducesResponseType(typeof(List<HomeworkOutputModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet]
+        [Authorize(Roles = "Администратор, Методист")]
+        public ActionResult<List<HomeworkOutputModel>> GetHomeworks()
+        {
+            var dtos= _homeworkService.GetHomeworks();
+            var result = _mapper.Map<List<HomeworkOutputModel>>(dtos);
             return Ok(result);
         }
 
@@ -114,12 +133,12 @@ namespace EducationSystem.API.Controllers
         {
             var dto = _homeworkService.GetHomeworkById(homeworkId);
             if (dto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(dto.Group.Id))
+            if (!User.IsInRole("Администратор") && !dto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {dto.Group.Id}");
+                return Forbid($"User is not in group {dto.Groups.Select(h => h.Id).ToList()}");
             }
 
             var result = _mapper.Map<List<HomeworkAttemptOutputModel>>(_homeworkService.GetHomeworkAttemptsByHomeworkId(homeworkId));
@@ -140,12 +159,12 @@ namespace EducationSystem.API.Controllers
         {
             var groupDto = _groupService.GetGroupById(groupId);
             if (groupDto is null)
-                return NotFound( $"Group with id {groupId} is not found");
+                return NotFound($"Group with id {groupId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
             if (!User.IsInRole("Администратор") && !userGroup.Contains(groupId))
             {
-                return Forbid( $"User is not in group {groupId}");
+                return Forbid($"User is not in group {groupId}");
             }
 
             var result = _mapper.Map<List<HomeworkSearchOutputModel>>(_homeworkService.GetHomeworksByGroupId(groupId));
@@ -189,7 +208,7 @@ namespace EducationSystem.API.Controllers
         {
             var themeDto = _courseService.GetThemeById(themeId);
             if (themeDto is null)
-                return NotFound( $"Theme with id {themeId} is not found");
+                return NotFound($"Theme with id {themeId} is not found");
 
             var homeworkDtos = _homeworkService.GetHomeworksByThemeId(themeId);
             var availableHomeworks = GetAvailableHomeworks(homeworkDtos);
@@ -219,12 +238,12 @@ namespace EducationSystem.API.Controllers
 
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             var dto = _mapper.Map<HomeworkDto>(homework);
@@ -248,12 +267,12 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             var deletedRows = _homeworkService.DeleteHomework(homeworkId);
@@ -282,12 +301,12 @@ namespace EducationSystem.API.Controllers
             }
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             var attemptDto = _mapper.Map<HomeworkAttemptDto>(inputModel);
@@ -313,25 +332,26 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
             if (attemptDto is null)
-                return NotFound( $"Attempt with id {attemptId} is not found");
+                return NotFound($"Attempt with id {attemptId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             if (User.IsInRole("Студент") && attemptDto.Author.Id != Convert.ToInt32(User.FindFirst("id").Value))
-                return Forbid( $"User is not author attempt {attemptId}");
+                return Forbid($"User is not author attempt {attemptId}");
 
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
 
             return Ok(result);
         }
+
         /// <summary>
         /// Update HomeworkAttempt
         /// </summary>
@@ -354,14 +374,14 @@ namespace EducationSystem.API.Controllers
             }
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
             if (attemptDto is null)
-                return NotFound( $"Attempt with id {attemptId} is not found");
+                return NotFound($"Attempt with id {attemptId} is not found");
 
             if (User.IsInRole("Студент") && attemptDto.Author.Id != Convert.ToInt32(User.FindFirst("id").Value))
-                return Forbid( $"User is not author attempt {attemptId}");
+                return Forbid($"User is not author attempt {attemptId}");
 
             var dto = _mapper.Map<HomeworkAttemptDto>(inputModel);
             var changedRows = _homeworkService.UpdateHomeworkAttempt(attemptId, dto);
@@ -383,11 +403,11 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
             if (attemptDto is null)
-                return NotFound( $"Attempt with id {attemptId} is not found");
+                return NotFound($"Attempt with id {attemptId} is not found");
 
             var deletedRows = _homeworkService.DeleteHomeworkAttempt(attemptId);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
@@ -416,20 +436,20 @@ namespace EducationSystem.API.Controllers
             }
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
             if (attemptDto is null)
-                return NotFound( $"Attempt with id {attemptId} is not found");
+                return NotFound($"Attempt with id {attemptId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             if (User.IsInRole("Студент") && attemptDto.Author.Id != Convert.ToInt32(User.FindFirst("id").Value))
-                return Forbid( $"User is not author attempt {attemptId}");
+                return Forbid($"User is not author attempt {attemptId}");
 
             var dto = _mapper.Map<CommentDto>(comment);
             var addedCommentId = _homeworkService.AddComment(attemptId, dto);
@@ -460,24 +480,24 @@ namespace EducationSystem.API.Controllers
             }
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
             if (attemptDto is null)
-                return NotFound( $"Attempt with id {attemptId} is not found");
+                return NotFound($"Attempt with id {attemptId} is not found");
 
             var commentDto = _homeworkService.GetCommentById(commentId);
             if (commentDto is null)
-                return NotFound( $"Comment with id {commentId} is not found");
+                return NotFound($"Comment with id {commentId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {!homeworkDto.Groups.Any(h => userGroup.Contains(h.Id))}");
             }
 
             if (User.IsInRole("Студент") && attemptDto.Author.Id != Convert.ToInt32(User.FindFirst("id").Value))
-                return Forbid( $"User is not author attempt {attemptId}");
+                return Forbid($"User is not author attempt {attemptId}");
 
             var dto = _mapper.Map<CommentDto>(comment);
             var changedRows = _homeworkService.UpdateComment(attemptId, commentId, dto);
@@ -513,9 +533,9 @@ namespace EducationSystem.API.Controllers
                 return NotFound($"Comment with id {commentId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid($"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             var deletedRows = _homeworkService.DeleteComment(commentId);
@@ -550,9 +570,9 @@ namespace EducationSystem.API.Controllers
                 return NotFound($"Comment with id {commentId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid($"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             var recoveredRows = _homeworkService.RecoverComment(commentId);
@@ -584,9 +604,9 @@ namespace EducationSystem.API.Controllers
                 return NotFound($"Comment with id {commentId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid($"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             if (User.IsInRole("Студент") && attemptDto.Author.Id != Convert.ToInt32(User.FindFirst("id").Value))
@@ -619,9 +639,9 @@ namespace EducationSystem.API.Controllers
                 return NotFound($"Comment with id {commentId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !User.IsInRole("Студент") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid($"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             var result = _mapper.Map<CommentOutputModel>(_homeworkService.GetCommentById(commentId));
@@ -644,16 +664,16 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var themeDto = _courseService.GetThemeById(themeId);
             if (themeDto is null)
-                return NotFound( $"Theme with id {themeId} is not found");
+                return NotFound($"Theme with id {themeId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             _homeworkService.DeleteHomework_Theme(homeworkId, themeId);
@@ -675,12 +695,12 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             var recoveredRows = _homeworkService.RecoverHomework(homeworkId);
@@ -704,14 +724,14 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var attemptDto = _homeworkService.GetHomeworkAttemptById(attemptId);
             if (attemptDto is null)
-                return NotFound( $"Attempt with id {attemptId} is not found");
+                return NotFound($"Attempt with id {attemptId} is not found");
 
             if (User.IsInRole("Студент") && attemptDto.Author.Id != Convert.ToInt32(User.FindFirst("id").Value))
-                return Forbid( $"User is not author attempt {attemptId}");
+                return Forbid($"User is not author attempt {attemptId}");
 
             var recoveredRows = _homeworkService.RecoverHomeworkAttempt(attemptId);
             var result = _mapper.Map<HomeworkAttemptOutputModel>(_homeworkService.GetHomeworkAttemptById(attemptId));
@@ -734,21 +754,85 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var themeDto = _courseService.GetThemeById(themeId);
             if (themeDto is null)
-                return NotFound( $"Theme with id {themeId} is not found");
+                return NotFound($"Theme with id {themeId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             _homeworkService.AddHomework_Theme(homeworkId, themeId);
 
             return StatusCode(StatusCodes.Status201Created);
+        }
+        /// <summary>
+        /// Add homework group
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="groupId">Group Id</param>
+        /// <returns>Return status code 201</returns>
+        // https://localhost:44365/api/homework/3/tag/1
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPost("{homeworkId}/group/{groupId}")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
+        public ActionResult AddHomeworkGroup(int homeworkId, int groupId)
+        {
+            var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
+            if (homeworkDto is null)
+                return NotFound($"Homework with id {homeworkId} is not found");
+
+            var groupDto = _groupService.GetGroupById(groupId);
+            if (groupDto is null)
+                return NotFound($"Tag with id {groupId} is not found");
+
+            var userGroup = this.SupplyUserGroupsList(_groupService);
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
+            {
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
+            }
+
+            _homeworkService.AddHomeworkGroup(homeworkId, groupId);
+
+            return StatusCode(StatusCodes.Status201Created);
+        }
+        /// <summary>
+        /// Delete homework group
+        /// </summary>
+        /// <param name="homeworkId">Homework Id</param>
+        /// <param name="groupId">Group Id</param>
+        /// <returns>Return no content response</returns>
+        // https://localhost:44365/api/homework/3/tag/1
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete("{homeworkId}/group/{groupId}")]
+        [Authorize(Roles = "Администратор, Преподаватель")]
+        public ActionResult DeleteHomeworkGroup(int homeworkId, int groupId)
+        {
+            var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
+            if (homeworkDto is null)
+                return NotFound($"Homework with id {homeworkId} is not found");
+
+            var groupDto = _groupService.GetGroupById(groupId);
+            if (groupDto is null)
+                return NotFound($"Tag with id {groupId} is not found");
+
+            var userGroup = this.SupplyUserGroupsList(_groupService);
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
+            {
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
+            }
+
+            _homeworkService.DeleteHomeworkGroup(homeworkId, groupId);
+
+            return NoContent();
         }
         /// <summary>
         /// Add homework tag
@@ -766,16 +850,16 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                return NotFound($"Homework with id {homeworkId} is not found");
 
             var tagDto = _tagService.GetTagById(tagId);
             if (tagDto is null)
-                return NotFound( $"Tag with id {tagId} is not found");
+                return NotFound($"Tag with id {tagId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
+            if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
             {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
             }
 
             _homeworkService.AddHomeworkTag(homeworkId, tagId);
@@ -798,24 +882,24 @@ namespace EducationSystem.API.Controllers
         {
             var homeworkDto = _homeworkService.GetHomeworkById(homeworkId);
             if (homeworkDto is null)
-                return NotFound( $"Homework with id {homeworkId} is not found");
+                    return NotFound($"Homework with id {homeworkId} is not found");
 
-            var tagDto = _tagService.GetTagById(tagId);
-            if (tagDto is null)
-                return NotFound( $"Tag with id {tagId} is not found");
+                var tagDto = _tagService.GetTagById(tagId);
+                if (tagDto is null)
+                    return NotFound($"Tag with id {tagId} is not found");
 
-            var userGroup = this.SupplyUserGroupsList(_groupService);
-            if (!User.IsInRole("Администратор") && !userGroup.Contains(homeworkDto.Group.Id))
-            {
-                return Forbid( $"User is not in group {homeworkDto.Group.Id}");
+                var userGroup = this.SupplyUserGroupsList(_groupService);
+                if (!User.IsInRole("Администратор") && !homeworkDto.Groups.Any(h => userGroup.Contains(h.Id)))
+                {
+                    return Forbid($"User is not in group {homeworkDto.Groups.Select(h => h.Id).ToList()}");
+                }
+
+                _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
+
+                return NoContent();
             }
-
-            _homeworkService.DeleteHomeworkTag(homeworkId, tagId);
-
-            return NoContent();
-        }
-        /// <summary> 
-        /// Get homeworkAttempt by user Id
+            /// <summary> 
+            /// Get homeworkAttempt by user Id
         /// </summary>
         /// <param name="userId">User Id</param>
         /// <returns>Return searchable homeworkAttempt</returns>
@@ -844,7 +928,7 @@ namespace EducationSystem.API.Controllers
             return Ok(result);
         }
 
-        
+
 
         /// <summary>
         /// Get homeworkAttempt by status Id and group Id
@@ -863,24 +947,33 @@ namespace EducationSystem.API.Controllers
         {
             var groupDto = _groupService.GetGroupById(groupId);
             if (groupDto is null)
-                return NotFound( $"Group with id {groupId} is not found");
+                return NotFound($"Group with id {groupId} is not found");
 
             if (!Enum.IsDefined(typeof(HomeworkAttemptStatus), statusId))
-                return NotFound( $"Status with id {statusId} is not found");
+                return NotFound($"Status with id {statusId} is not found");
 
             var userGroup = this.SupplyUserGroupsList(_groupService);
             if (!User.IsInRole("Администратор") && !userGroup.Contains(groupId))
             {
-                return Forbid( $"User is not in group {groupId}");
+                return Forbid($"User is not in group {groupId}");
             }
 
             var homeworkAttempts = _homeworkService.GetHomeworkAttemptsByStatusIdAndGroupId(statusId, groupId);
-            var avaliableHomeworkAttempts = GetAvaliableHomeworkAttepts( homeworkAttempts);
+            var avaliableHomeworkAttempts = GetAvaliableHomeworkAttepts(homeworkAttempts);
             var result = _mapper.Map<List<HomeworkAttemptWithCountOutputModel>>(avaliableHomeworkAttempts);
 
             return Ok(result);
         }
-
+        [HttpGet("homework-attempts-statuses")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(List<DictionaryOutputModel>), StatusCodes.Status200OK)]
+        public ActionResult<List<DictionaryOutputModel>> GetHomeworkAttemptsStatuses()
+        {
+            var result = new List<DictionaryOutputModel>();
+            foreach (int i in Enum.GetValues(typeof(HomeworkAttemptStatus)))
+                result.Add(new DictionaryOutputModel { Id = i, Name = FriendlyNames.GetFriendlyGroupStatusName(((GroupStatus)i)) });
+            return result;
+        }
         private List<HomeworkDto> GetAvailableHomeworks(List<HomeworkDto> homeworkDtos)
         {
             var availableHomeworks = homeworkDtos;
@@ -890,7 +983,7 @@ namespace EducationSystem.API.Controllers
                 availableHomeworks = new List<HomeworkDto>();
                 homeworkDtos.ForEach(homework =>
                 {
-                    if (userGroup.Contains(homework.Group.Id))
+                    if (homework.Groups.Any(h => userGroup.Contains(h.Id)))
                     {
                         availableHomeworks.Add(homework);
                     }

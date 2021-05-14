@@ -9,9 +9,13 @@ namespace EducationSystem.Business
     public class LessonService : ILessonService
     {
         private ILessonRepository _lessonRepository;
-        public LessonService(ILessonRepository lessonRepository)
+        private IGroupRepository _groupRepository;
+        private ICourseRepository _courseRepository;
+        public LessonService(ILessonRepository lessonRepository, IGroupRepository groupRepository, ICourseRepository courseRepository)
         {
             _lessonRepository = lessonRepository;
+            _groupRepository = groupRepository;
+            _courseRepository = courseRepository;
         }
         public List<LessonDto> GetLessonsByGroupId(int id)
         {
@@ -19,7 +23,11 @@ namespace EducationSystem.Business
         }
         public LessonDto GetLessonById(int id)
         {
-            return _lessonRepository.GetLessonById(id);
+            var result = _lessonRepository.GetLessonById(id);
+            if(result!= null)
+                result.Group = _groupRepository.GetGroupById(result.Group.Id);
+
+            return result;
         }
 
         public int DeleteLesson(int id)
