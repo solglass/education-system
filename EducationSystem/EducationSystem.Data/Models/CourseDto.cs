@@ -10,7 +10,7 @@ namespace EducationSystem.Data.Models
         public string Description { get; set; }
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
-        public List<ThemeDto> Themes { get; set; }
+        public List<OrderedThemeDto> Themes {get; set;}
         public List<MaterialDto> Materials { get; set; }
 
         public object Clone()
@@ -21,7 +21,6 @@ namespace EducationSystem.Data.Models
                 Description = Description,
                 Duration = Duration,
                 IsDeleted = IsDeleted,
-                Themes = Themes,
                 Materials = Materials
             };
         }

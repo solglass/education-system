@@ -1,7 +1,9 @@
-﻿using EducationSystem.Data;
+﻿using EducationSystem.Business.Model;
+using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace EducationSystem.Business
@@ -9,11 +11,13 @@ namespace EducationSystem.Business
     public class GroupService : IGroupService
     {
         private IGroupRepository _groupRepository;
+        private ICourseRepository _courseRepository;
         private int _daysInOneWeek = 7;
 
-        public GroupService(IGroupRepository groupRepository)
+        public GroupService(IGroupRepository groupRepository, ICourseRepository courseRepository)
         {
             _groupRepository = groupRepository;
+            _courseRepository = courseRepository;
         }
 
         public List<GroupDto> GetGroups()
@@ -64,9 +68,15 @@ namespace EducationSystem.Business
             }
             return dtoList;
         }
-        public GroupDto GetGroupProgramsByGroupId(int id)
+        public GroupDto GetGroupProgramByGroupId(int id)
         {
-            return _groupRepository.GetGroupProgramsByGroupId(id);
+            var group = _groupRepository.GetGroupById(id);
+            if (group != null)
+            {
+                group.Course.Themes = _courseRepository.GetCourse_Program(group.Course.Id);
+                group.EndDate = group.StartDate.AddDays(group.Course.Duration * _daysInOneWeek);
+            }
+            return group;
         }
 
         public int AddGroup(GroupDto groupDto)

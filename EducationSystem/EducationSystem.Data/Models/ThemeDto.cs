@@ -37,5 +37,9 @@ namespace EducationSystem.Data.Models
                     themeObj.IsDeleted==IsDeleted);
             
         }
+        public override string ToString()
+        {
+            return $" {Id}  {Name} {IsDeleted} ";
+        }
     }
 }

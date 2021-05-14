@@ -7,7 +7,7 @@ namespace EducationSystem.API.Models.OutputModels
     {
         public int Id { get; set; }
         public string StartDate { get; set; }
-        public int CourseId { get; set; }                     
+        public CourseWithProgramOutputModel Course { get; set; }                     
         public string GroupStatus { get; set; } 
         public string EndDate { get; set; }
     }
