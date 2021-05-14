@@ -41,7 +41,7 @@ namespace EducationSystem.Data.Tests
 
 
         [SetUp]
-        public void OneTimeSetUp()
+        public void SetUp()
         {
             _groupRepo = new GroupRepository(_options);
             _homeworkRepo = new HomeworkRepository(_options);
@@ -184,42 +184,6 @@ namespace EducationSystem.Data.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void GetGroupProgramsByGroupIdPositiveTest()
-        {
-            //Given;
-            var themes = new List<ThemeDto>();
-            var expected = (GroupDto)GroupMockGetter.GetGroupDtoMock(2).Clone();
-            expected.Course = _courseDtoMock;
-
-            expected.Course.Themes = themes;
-
-            var addedGroupId = _groupRepo.AddGroup(expected);
-            Assert.Greater(addedGroupId, 0);
-
-            _groupIdList.Add(addedGroupId);
-            expected.Id = addedGroupId;
-
-            var groupMockIds = new int[] { 1, 2, 3 };
-            for (int i = 0; i < groupMockIds.Length; i++) 
-            {
-                var themeDto = (ThemeDto)ThemeMockGetter.GetThemeDtoMock(groupMockIds[i]).Clone();
-                var addedThemeId = _courseRepo.AddTheme(themeDto);
-                Assert.Greater(addedThemeId, 0);
-
-                _themeIdList.Add(addedThemeId);
-                themeDto.Id = addedThemeId;
-                themes.Add(themeDto);
-
-                _courseRepo.AddCourse_Theme(_courseDtoMock.Id, themeDto.Id);
-                _courseThemeIdList.Add((_courseDtoMock.Id, themeDto.Id));
-            }
-
-            //When
-            var actual = _groupRepo.GetGroupProgramsByGroupId(expected.Id);
-            //Then
-            Assert.AreEqual(expected, actual);
-        }
 
         [TestCase(1)]
         public void GetGroupByIdPositiveTest(int mockId)
@@ -240,9 +204,9 @@ namespace EducationSystem.Data.Tests
             //Then
             Assert.AreEqual(expected, actual);
         }
-        [TestCase(new int[] { 1, 2, 3 },4,4)]
+        [TestCase(new int[] { 1, 2, 3 }, 4, 4)]
 
-        public void GetGroupsWithoutTutorsPositiveTest(int[] mockIds,int tutorMockId, int userMockId)
+        public void GetGroupsWithoutTutorsPositiveTest(int[] mockIds, int tutorMockId, int userMockId)
         {
             //Given
             var expected = new List<GroupDto>();
@@ -320,12 +284,12 @@ namespace EducationSystem.Data.Tests
 
         [TestCase(new int[] { 1, 2 })]
 
-        public void GetGroupsByCourseIdPositiveTest(int [] mockIds)
+        public void GetGroupsByCourseIdPositiveTest(int[] mockIds)
         {
             //Given
             var expected = new List<GroupDto>();
 
-            for (int i = 0; i < mockIds.Length; i++) 
+            for (int i = 0; i < mockIds.Length; i++)
             {
                 var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[i]).Clone();
                 groupDto.Course = _courseDtoMock;
@@ -365,14 +329,14 @@ namespace EducationSystem.Data.Tests
         }
 
         [TestCase(new int[] { 1, 2 }, 2)]
-        
-        public void GetGroupsByStudentIdPositiveTest(int [] mockIds, int studentMockId)
+
+        public void GetGroupsByStudentIdPositiveTest(int[] mockIds, int studentMockId)
         {
             //Given
             var expected = new List<int>();
 
             var userDtoMock = (UserDto)UserMockGetter.GetUserDtoMock(4).Clone();
-            
+
 
             userDtoMock.Id = _userRepo.AddUser(userDtoMock);
             _userRepo.AddRoleToUser(userDtoMock.Id, studentMockId);
@@ -389,9 +353,9 @@ namespace EducationSystem.Data.Tests
                 _groupIdList.Add(groupDto.Id);
                 expected.Add(groupDto.Id);
 
-                
 
-                var studentGroupDtoMock = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(i+1).Clone();
+
+                var studentGroupDtoMock = (StudentGroupDto)StudentGroupMockGetter.GetStudentGroupDtoMock(i + 1).Clone();
                 studentGroupDtoMock.Group = groupDto;
                 studentGroupDtoMock.User = userDtoMock;
                 studentGroupDtoMock.Id = _groupRepo.AddStudentGroup(studentGroupDtoMock);
@@ -473,7 +437,7 @@ namespace EducationSystem.Data.Tests
             //Then
             CollectionAssert.AreEqual(expected, actual);
         }
-        [TestCase(new int[] { 1, 2 },3,4,2)]
+        [TestCase(new int[] { 1, 2 }, 3, 4, 2)]
         public void GenerateReportPositiveTest(int[] mockIds, int teacherMockId, int tutorMockId, int studentMockId)
         {
             //Given
@@ -509,7 +473,7 @@ namespace EducationSystem.Data.Tests
             for (int i = 0; i < mockIds.Length; i++)
             {
                 var groupDto = (GroupDto)GroupMockGetter.GetGroupDtoMock(mockIds[i]).Clone();
-                groupDto.Course = _courseDtoMock; 
+                groupDto.Course = _courseDtoMock;
                 groupDto.Id = _groupRepo.AddGroup(groupDto);
                 _groupIdList.Add(groupDto.Id);
                 groupsId.Add(groupDto.Id);
@@ -535,7 +499,7 @@ namespace EducationSystem.Data.Tests
 
                 _studentGroupIdList.Add((studentDtoMock.Id, groupDto.Id));
 
-                groupReportDto.StudentCount= groupReportDto.StudentCount+1;
+                groupReportDto.StudentCount = groupReportDto.StudentCount + 1;
                 groupReportDto.TutorCount++;
                 groupReportDto.TeacherCount++;
 
@@ -548,51 +512,51 @@ namespace EducationSystem.Data.Tests
         }
 
         [TearDown]
-    public void TearDown()
-    { 
-      DeleteThemeHomeworks();
-      DeleteLessonTheme();
-      DeleteUserRoles();
-      DeleteCourseThemes();
-      DeleteThemeHomeworks();
-      DeteleTagHomeworks();
-      DeleteTutorGroup();
-      DeleteStudentGroups();
-      DeleteGroupMaterials();
-      DeleteTeacherGroups();
-      DeleteMaterials();
-      DeleteThemes();
-      DeleteLesson();
-      DeleteHomeworks();
-      DeleteGroups();
-      DeleteCourse();
-      DeleteUsers();
-    }
-
-    private void DeteleTagHomeworks()
-    {
-      foreach (var tagHomework in _tagHomeworkList)
-      {
-        _homeworkRepo.HomeworkTagDelete(tagHomework.Item1, tagHomework.Item2);
-      }
-    }
-
-    private void DeleteThemeHomeworks()
-    {
-      foreach (var themeHomeworkPair in _themeHomeworkList)
-      {
-        _homeworkRepo.DeleteHomework_Theme(themeHomeworkPair.Item1, themeHomeworkPair.Item2);
-      }
-    }
-    private void DeleteGroupMaterials()
-    {
-        foreach (var groupMaterialPair in _groupMaterialIdList)
+        public void TearDown()
         {
-            _groupRepo.DeleteGroup_Material(groupMaterialPair.Item1, groupMaterialPair.Item2);
+            DeleteThemeHomeworks();
+            DeleteLessonTheme();
+            DeleteUserRoles();
+            DeleteCourseThemes();
+            DeleteThemeHomeworks();
+            DeteleTagHomeworks();
+            DeleteTutorGroup();
+            DeleteStudentGroups();
+            DeleteGroupMaterials();
+            DeleteTeacherGroups();
+            DeleteMaterials();
+            DeleteThemes();
+            DeleteLesson();
+            DeleteHomeworks();
+            DeleteGroups();
+            DeleteCourse();
+            DeleteUsers();
         }
-    }
-    private void DeleteUserRoles()
-    {
+
+        private void DeteleTagHomeworks()
+        {
+            foreach (var tagHomework in _tagHomeworkList)
+            {
+                _homeworkRepo.HomeworkTagDelete(tagHomework.Item1, tagHomework.Item2);
+            }
+        }
+
+        private void DeleteThemeHomeworks()
+        {
+            foreach (var themeHomeworkPair in _themeHomeworkList)
+            {
+                _homeworkRepo.DeleteHomework_Theme(themeHomeworkPair.Item1, themeHomeworkPair.Item2);
+            }
+        }
+        private void DeleteGroupMaterials()
+        {
+            foreach (var groupMaterialPair in _groupMaterialIdList)
+            {
+                _groupRepo.DeleteGroup_Material(groupMaterialPair.Item1, groupMaterialPair.Item2);
+            }
+        }
+        private void DeleteUserRoles()
+        {
 
             _addedUserRoleIdList.ForEach(record =>
             {
@@ -600,64 +564,64 @@ namespace EducationSystem.Data.Tests
             });
         }
         private void DeleteCourseThemes()
-    {
-        foreach (var courseThemePair in _courseThemeIdList)
         {
-            _courseRepo.DeleteCourse_Theme(courseThemePair.Item1, courseThemePair.Item2);
+            foreach (var courseId in _courseIdList)
+            {
+                _courseRepo.DeleteCourse_Program(courseId);
+            }
         }
-    }
-    private void DeleteStudentGroups()
-    {
-        foreach (var groupStudentPair in _studentGroupIdList)
+        private void DeleteStudentGroups()
         {
-            _groupRepo.DeleteStudentGroup(groupStudentPair.Item1, groupStudentPair.Item2);
+            foreach (var groupStudentPair in _studentGroupIdList)
+            {
+                _groupRepo.DeleteStudentGroup(groupStudentPair.Item1, groupStudentPair.Item2);
+            }
         }
-    }
-    private void DeleteTeacherGroups()
-    {
-        foreach (var groupTeacherPair in _addedTeacherToGroupIdList)
+        private void DeleteTeacherGroups()
         {
-            _groupRepo.DeleteTeacherGroup(groupTeacherPair.Item1, groupTeacherPair.Item2);
+            foreach (var groupTeacherPair in _addedTeacherToGroupIdList)
+            {
+                _groupRepo.DeleteTeacherGroup(groupTeacherPair.Item1, groupTeacherPair.Item2);
+            }
         }
-    }
-    private void DeleteMaterials()
-    {
-        foreach (var materialId in _materialIdList)
+        private void DeleteMaterials()
         {
-          _materialRepo.HardDeleteMaterial(materialId);
+            foreach (var materialId in _materialIdList)
+            {
+                _materialRepo.HardDeleteMaterial(materialId);
+            }
         }
-    }
-    private void DeleteUsers()
-    {
-        foreach (var userId in _addedUserIdList)
+        private void DeleteUsers()
         {
-            _userRepo.HardDeleteUser(userId);
+            foreach (var userId in _addedUserIdList)
+            {
+                _userRepo.HardDeleteUser(userId);
+            }
         }
-    }
 
         private void DeleteThemes()
-    {
-      foreach (var themeId in _themeIdList)
-      {
-        _courseRepo.HardDeleteTheme(themeId);
-      }
-    }
+        {
+            foreach (var themeId in _themeIdList)
+            {
+                _courseRepo.HardDeleteTheme(themeId);
+            }
+        }
 
-    private void DeleteHomeworks()
-    {
-      foreach (var homeworkId in _homeworkIdList)
-      {
-        _homeworkRepo.HardDeleteHomework(homeworkId);
-      }
-    }
+        private void DeleteHomeworks()
+        {
+            foreach (var homeworkId in _homeworkIdList)
+            {
+                _homeworkRepo.HardDeleteHomework(homeworkId);
+            }
+        }
 
-    public void DeleteGroups()
-    {
-      foreach (var groupId in _groupIdList)
-      {
-        _groupRepo.DeleteGroup(groupId);
-      }
-    }
+        public void DeleteGroups()
+        {
+            foreach (var groupId in _groupIdList)
+            {
+                _groupRepo.DeleteGroup(groupId);
+            }
+        }
         public void DeleteLesson()
         {
             foreach (var lessonId in _lessonIdList)
@@ -674,13 +638,13 @@ namespace EducationSystem.Data.Tests
             }
         }
         public void DeleteCourse()
-    {
-      foreach (var courseId in _courseIdList)
-      {
-        _courseRepo.HardDeleteCourse(courseId);
-      }
-    }
-        
+        {
+            foreach (var courseId in _courseIdList)
+            {
+                _courseRepo.HardDeleteCourse(courseId);
+            }
+        }
+
         public void DeleteLessonTheme()
         {
             foreach (var lessonThemePair in _lessonThemeIdList)

@@ -43,7 +43,8 @@ namespace EducationSystem.Data
             CourseDto courseEntry = new CourseDto();
 
             var result = _connection
-               .Query<NumberOfLessonsForGroupToCompleteTheThemeDto, CourseDto, int, NumberOfLessonsForGroupToCompleteTheThemeDto>("dbo.Group_SelectByTheme",
+               .Query<NumberOfLessonsForGroupToCompleteTheThemeDto, CourseDto, int, NumberOfLessonsForGroupToCompleteTheThemeDto>(
+                "dbo.Group_SelectByTheme",
                    (group, course, groupStatus) =>
                    {
                        if (course == null)
@@ -51,12 +52,10 @@ namespace EducationSystem.Data
                            course = courseEntry;
                        }
                        group.Course = course;
-                       if (group.Course.Themes == null)
-                       {
-                           group.Course.Themes = Themes;
-                       }
+                       
                        group.GroupStatus = (GroupStatus)groupStatus;
                        return group;
+
                    },new { themeId },
                    splitOn: "Id",
                    commandType: CommandType.StoredProcedure)
@@ -64,42 +63,7 @@ namespace EducationSystem.Data
                .ToList();
             return result;
         }
-        public GroupDto GetGroupProgramsByGroupId(int id)
-        {
-            var groupEntry = new GroupDto();
-            var courseEntry = new CourseDto();
-            var themeDictionary = new Dictionary<int, ThemeDto>();
-            var result = _connection
-                .Query<GroupDto, CourseDto, ThemeDto, int, GroupDto>(
-                    "dbo.Group_SelectByProgram",
-                    (group, course, theme, groupStatus) =>
-                    {
-                        if (groupEntry.Id == 0)
-                        {
-                            groupEntry = group;
-                            groupEntry.Course = new CourseDto();
-                        }
-                        if (courseEntry.Id == 0)
-                        {
-                            courseEntry = course;
-                            courseEntry.Themes = new List<ThemeDto>();
-                            groupEntry.Course = courseEntry;
-                        }
-                        if (theme != null && !themeDictionary.TryGetValue(theme.Id, out ThemeDto themeEntry))
-                        {
-                            themeEntry = theme;
-                            courseEntry.Themes.Add(theme);
-                            themeDictionary.Add(themeEntry.Id, themeEntry);
-                        }
-                        groupEntry.GroupStatus = (GroupStatus)groupStatus;
-                        return groupEntry;
-                    },
-                    new { id },
-                    splitOn: "Id",
-                    commandType: CommandType.StoredProcedure)
-                .FirstOrDefault();
-            return result;
-        }
+        
         public GroupDto GetGroupById(int id)
         {
             var studentDictionary = new Dictionary<int, UserDto>();

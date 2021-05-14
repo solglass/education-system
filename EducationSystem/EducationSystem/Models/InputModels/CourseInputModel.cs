@@ -13,7 +13,7 @@ namespace EducationSystem.API.Models
         public string Description { get; set; }
         [Required(ErrorMessage = "Duration is empty")]
         public int Duration { get; set; }
-        public List<int> ThemeIds { get; set; }
         public List<int> MaterialIds { get; set; }
+        public List<OrderedThemeInputModel> Themes { get; set; }
     }
 }

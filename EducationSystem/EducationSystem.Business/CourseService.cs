@@ -1,7 +1,9 @@
-﻿using EducationSystem.Data;
+﻿using EducationSystem.Business.Model;
+using EducationSystem.Data;
 using EducationSystem.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace EducationSystem.Business
@@ -10,18 +12,13 @@ namespace EducationSystem.Business
     {
         private ICourseRepository _courseRepo;
         private ITagRepository _tagRepo;
-        
 
-        public CourseService
-            (
-            ICourseRepository courseRepository, 
-            ITagRepository tagRepository
-           
-            )
+
+        public CourseService(ICourseRepository courseRepository,ITagRepository tagRepository)
         {
             _courseRepo = courseRepository;
-            _tagRepo =  tagRepository;
-           
+            _tagRepo = tagRepository;
+
         }
 
         public List<CourseDto> GetCourses()
@@ -29,33 +26,56 @@ namespace EducationSystem.Business
             return _courseRepo.GetCourses();
         }
 
-        public CourseDto GetCourseById(int id)
+        public CourseDto GetCourseById(int id) => _courseRepo.GetCourseById(id);
+        public CourseDto GetCourseWithProgramById(int id)
         {
-            return _courseRepo.GetCourseById(id);
+            var course = _courseRepo.GetCourseById(id);
+            if (course != null)
+            {
+                course.Themes = _courseRepo.GetCourse_Program(id);
+            }
+            return course;
+        }
+
+        public int AddCourseCopy(int id)
+        {
+            var course = _courseRepo.GetCourseById(id);
+            int copyId = 0;
+            if (course!=null)
+            {
+                var program = _courseRepo.GetCourse_Program(id);
+                course.Name = $"{course.Name} - копия";
+                course.Id = 0;
+                copyId = _courseRepo.AddCourse(course);
+                if (copyId>0)
+                {
+                    _courseRepo.AddCourse_Program(copyId, program);
+
+                    foreach (var material in course.Materials)
+                    {
+                        _courseRepo.AddCourse_Material(copyId, material.Id);
+                    }
+                }
+            }
+            return copyId;
         }
 
         public int UpdateCourse(CourseDto course)
         {
-            int index = _courseRepo.UpdateCourse(course);
-            if (index <= 0)
-                return -1;
+            var result = _courseRepo.UpdateCourse(course);
+            if (result> 0 && course.Themes.Count > 0)
+            {
+                _courseRepo.DeleteCourse_Program(course.Id);
+                _courseRepo.AddCourse_Program(course.Id, course.Themes);
+            }
             return 0;
         }
         public int AddCourse(CourseDto course)
         {
             int index = _courseRepo.AddCourse(course);
-            if (index <= 0)
-                return -1;
-            if (course.Themes != null && course.Themes.Count > 0)
+            if(index>0 && course.Themes.Count>0)
             {
-                foreach (var theme in course.Themes)
-                {
-                    if (_courseRepo.AddCourse_Theme(index, theme.Id) <= 0)
-                    {
-                        RemoveAllCourseThemesbyCourseId(index, course.Themes);
-                        return -2 - index;
-                    }
-                }
+                _courseRepo.AddCourse_Program(index, course.Themes);
             }
             return index;
         }
@@ -70,16 +90,6 @@ namespace EducationSystem.Business
         {
             bool isDeleted = false;
             return _courseRepo.DeleteOrRecoverCourse(id, isDeleted);
-        }
-
-        public int AddThemeToCourse(int courseId, int themeId)
-        {
-            return _courseRepo.AddCourse_Theme(courseId, themeId);
-        }
-
-        public int RemoveThemeFromCourse(int courseId, int themeId)
-        {
-            return _courseRepo.DeleteCourse_Theme(courseId, themeId);
         }
 
         public int AddMaterialToCourse(int courseId, int materialId)
@@ -113,7 +123,6 @@ namespace EducationSystem.Business
                 {
                     if (_tagRepo.ThemeTagAdd( index,  tag.Id ) <= 0)
                     {
-
                         return -2 - index;
                     }
                 }
@@ -145,13 +154,12 @@ namespace EducationSystem.Business
         {
             return _courseRepo.GetUncoveredThemesByGroupId(id);
         }
-        private void RemoveAllCourseThemesbyCourseId(int courseId, List<ThemeDto> themes)
-        {
-            foreach (var theme in themes)
-            {
-                _courseRepo.DeleteCourse_Theme(courseId, theme.Id);
-            }
-        }
 
+        public int AddUpdateCourseProgram(int courseId, List<OrderedThemeDto> program)
+        {
+            _courseRepo.DeleteCourse_Program(courseId);
+            return _courseRepo.AddCourse_Program(courseId, program);
+        }
+        
     }
 }
