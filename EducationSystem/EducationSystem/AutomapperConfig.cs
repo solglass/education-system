@@ -62,7 +62,7 @@ namespace EducationSystem.API
 
             CreateMap<GroupDto, GroupOutputModel>()
                 .ForMember(dest => dest.StartDate, opts => opts.MapFrom(src => src.StartDate.ToString(_dateFormat)))
-                .ForMember(dest => dest.CourseId, opts => opts.MapFrom(src => src.Course.Id))
+                .ForMember(dest => dest.Course, opts => opts.MapFrom(src => new CourseWithProgramOutputModel { Id = src.Course.Id }))
                 .ForMember(dest => dest.GroupStatus, opts => opts.MapFrom(src=>FriendlyNames.GetFriendlyGroupStatusName(src.GroupStatus)))
                 .ForMember(dest => dest.EndDate, opts => opts.MapFrom(src => src.EndDate.ToString(_dateFormat)));
             CreateMap<GroupDto, GroupWithUsersOutputModel>()
@@ -94,7 +94,7 @@ namespace EducationSystem.API
                 {
                     Id = src.Group.Id,
                     GroupStatus = FriendlyNames.GetFriendlyGroupStatusName( src.Group.GroupStatus),
-                    CourseId = src.Group.Course.Id, 
+                    Course =new CourseWithProgramOutputModel { Id = src.Group.Course.Id }, 
                     StartDate = src.Group.StartDate.ToString(_dateFormat),
                     EndDate = src.Group.EndDate.ToString(_dateFormat),
                 }));

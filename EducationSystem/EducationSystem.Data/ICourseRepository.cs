@@ -24,6 +24,6 @@ namespace EducationSystem.Data
 
         int DeleteCourse_Program(int courseId);
         List<OrderedThemeDto> GetCourse_Program(int courseId);
-        int AddCourse_Program(int courseId, List</*CourseThemeDto*/OrderedThemeDto> courseThemes);
+        int AddCourse_Program(int courseId, List<OrderedThemeDto> courseThemes);
     }
 }
