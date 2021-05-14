@@ -38,25 +38,16 @@ namespace EducationSystem.Data
        
         public List<NumberOfLessonsForGroupToCompleteTheThemeDto> GetGroupByThemeId(int themeId)
         {
-            List<ThemeDto> Themes = new List<ThemeDto>();
-            ThemeDto themeEntry = new ThemeDto();
-            CourseDto courseEntry = new CourseDto();
-
             var result = _connection
                .Query<NumberOfLessonsForGroupToCompleteTheThemeDto, CourseDto, int, NumberOfLessonsForGroupToCompleteTheThemeDto>(
                 "dbo.Group_SelectByTheme",
                    (group, course, groupStatus) =>
                    {
-                       if (course == null)
-                       {
-                           course = courseEntry;
-                       }
-                       group.Course = course;
-                       
+                       group.Course = course;                       
                        group.GroupStatus = (GroupStatus)groupStatus;
                        return group;
-
-                   },new { themeId },
+                   },
+                   new { themeId },
                    splitOn: "Id",
                    commandType: CommandType.StoredProcedure)
                .Distinct()

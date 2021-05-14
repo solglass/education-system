@@ -297,4 +297,7 @@
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="EducationSystem.DB.publish.xml" />
+  </ItemGroup>
 </Project>
