@@ -100,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Delete.sql" />
-    <Build Include="StoredProcedures\Homework_Theme\dbo.Homework_Theme_Search.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_Add.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_HardDelete.sql" />
     <Build Include="StoredProcedures\Theme\dbo.Theme_SelectAll.sql" />
@@ -289,9 +288,7 @@
     <Build Include="StoredProcedures\Homework_Group\Homework_Group_Add.sql" />
     <Build Include="StoredProcedures\Homework_Group\Homework_Group_Delete.sql" />
     <Build Include="StoredProcedures\Homework\Homework_SelectAll.sql" />
-    <Build Include="StoredProcedures\Homework_Group\Homework_Group_Search.sql" />
     <Build Include="StoredProcedures\Group\Group_SelectAllByHomeworkId.sql" />
-    <Build Include="StoredProcedures\Homework_Tag\Homework_Tag_Search.sql" />
     <Build Include="StoredProcedures\Theme\Theme_SelectAllByHomeworkId.sql" />
     <Build Include="StoredProcedures\Tag\Tag_SelectAllByHomeworkId.sql" />
     <Build Include="StoredProcedures\Homework\Homework_SelectByGroupId.sql" />
