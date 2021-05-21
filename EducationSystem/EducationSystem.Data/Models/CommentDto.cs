@@ -28,21 +28,15 @@ namespace EducationSystem.Data.Models
         }
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-
-            if (!(obj is CommentDto))
+            if (obj == null || !(obj is CommentDto))
                 return false;
 
             CommentDto commentObj = (CommentDto)obj;
-            if (Id != commentObj.Id ||
-                Message != commentObj.Message ||
-                IsDeleted != commentObj.IsDeleted)
-            {
-                return false;
-            }
-            return true;
+            return (Id == commentObj.Id &&
+                Message == commentObj.Message &&
+                IsDeleted == commentObj.IsDeleted);
         }
     }
     
 }
+

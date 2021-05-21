@@ -477,52 +477,32 @@ namespace EducationSystem.Data.Tests
 
         public bool CustomFeedbackEquals(FeedbackDto firstDto, FeedbackDto secondDto)
         {
-            if
+            return
                (
-                   firstDto.Id != secondDto.Id ||
-                   firstDto.Message != secondDto.Message ||
-                   firstDto.UnderstandingLevel != firstDto.UnderstandingLevel ||
-                   !CustomLessonEquals(firstDto.Lesson, secondDto.Lesson) ||
-                   !CustomUserEquals(firstDto.User, secondDto.User)
-               )
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+                   firstDto.Id == secondDto.Id &&
+                   firstDto.Message == secondDto.Message &&
+                   firstDto.UnderstandingLevel == firstDto.UnderstandingLevel &&
+                   CustomLessonEquals(firstDto.Lesson, secondDto.Lesson) &&
+                   CustomUserEquals(firstDto.User, secondDto.User)
+               );
         }
+
         public bool CustomLessonEquals(LessonDto firstDto, LessonDto secondDto)
         {
-            if (firstDto.Id != secondDto.Id || !firstDto.Date.Equals(secondDto.Date))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-
+            return (firstDto.Id == secondDto.Id && firstDto.Date.Equals(secondDto.Date));
         }
+
         public bool CustomUserEquals(UserDto firstDto, UserDto secondDto)
         {
-            if
+            return
                 (
-                    firstDto.Id != secondDto.Id ||
-                    firstDto.FirstName != secondDto.FirstName ||
-                    firstDto.LastName != secondDto.LastName ||
-                    firstDto.Phone != secondDto.Phone ||
-                    firstDto.Email != secondDto.Email ||
-                    firstDto.UserPic != secondDto.UserPic
-                )
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+                    firstDto.Id == secondDto.Id &&
+                    firstDto.FirstName == secondDto.FirstName &&
+                    firstDto.LastName == secondDto.LastName &&
+                    firstDto.Phone == secondDto.Phone &&
+                    firstDto.Email == secondDto.Email &&
+                    firstDto.UserPic == secondDto.UserPic
+                );
         }
     }
 }

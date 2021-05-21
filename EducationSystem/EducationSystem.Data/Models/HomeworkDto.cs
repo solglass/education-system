@@ -11,7 +11,9 @@ namespace EducationSystem.Data.Models
         public DateTime DeadlineDate { get; set; }
         public bool IsOptional { get; set; }
         public bool IsDeleted { get; set; }
-        public GroupDto Group { get; set; }
+
+        public CourseDto Course {get; set; }
+        public List<GroupDto> Groups { get; set; }
         public List<TagDto> Tags { get; set; }
         public List<HomeworkAttemptDto> HomeworkAttempts{ get; set; }
         public List<ThemeDto> Themes { get; set; }
@@ -30,23 +32,16 @@ namespace EducationSystem.Data.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (!(obj is HomeworkDto))
+            if (obj == null || !(obj is HomeworkDto))
                 return false;
 
             HomeworkDto homeworkObj = (HomeworkDto)obj;
-            if (Id != homeworkObj.Id ||
-                Description != homeworkObj.Description ||
-                !StartDate.Equals(homeworkObj.StartDate) ||
-                !DeadlineDate.Equals(homeworkObj.DeadlineDate)  ||
-                IsOptional != homeworkObj.IsOptional ||
-                IsDeleted != homeworkObj.IsDeleted)
-            {
-                return false;
-            }
-
-            return true;
+            return (Id == homeworkObj.Id &&
+                Description == homeworkObj.Description &&
+                StartDate.Equals(homeworkObj.StartDate) &&
+                DeadlineDate.Equals(homeworkObj.DeadlineDate) &&
+                IsOptional == homeworkObj.IsOptional &&
+                IsDeleted == homeworkObj.IsDeleted);
         }
     }
 }

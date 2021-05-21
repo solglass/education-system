@@ -39,7 +39,7 @@ namespace EducationSystem.Data
                     userEntry.Roles.Add((Role)role);
                     return userEntry;
                 },
-                splitOn: "Id", commandType: System.Data.CommandType.StoredProcedure)
+                splitOn: "Id", commandType: CommandType.StoredProcedure)
                 .Distinct()
             .ToList();
             return users;
@@ -89,7 +89,7 @@ namespace EducationSystem.Data
                 },
                new { id },
                 splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure)
             .FirstOrDefault();
             return users;
         }
@@ -104,7 +104,7 @@ namespace EducationSystem.Data
                    oldPassword,
                    newPassword
 
-               }, commandType: System.Data.CommandType.StoredProcedure);
+               }, commandType: CommandType.StoredProcedure);
 
         }
 
@@ -122,7 +122,7 @@ namespace EducationSystem.Data
                     user.UserPic,
                     user.Email,
                 },
-                commandType: System.Data.CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure);
         }
         public int UpdateUser(UserDto user)
         {
@@ -136,7 +136,7 @@ namespace EducationSystem.Data
                     user.Phone,
                     user.UserPic,
                     user.Email
-                }, commandType: System.Data.CommandType.StoredProcedure);
+                }, commandType: CommandType.StoredProcedure);
         }
         public int DeleteOrRecoverUser(int id, bool isDeleted)
         {
@@ -147,7 +147,7 @@ namespace EducationSystem.Data
                   id,
                   isDeleted
                 },
-                commandType: System.Data.CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure);
         }
 
         public int HardDeleteUser(int id)
@@ -155,7 +155,7 @@ namespace EducationSystem.Data
             return _connection
                 .Execute("dbo.User_HardDelete", 
                 new { id },
-                commandType: System.Data.CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure);
         }
 
         public int AddRoleToUser(int userId, int roleId)
@@ -167,7 +167,7 @@ namespace EducationSystem.Data
                    userId,
                    roleId 
                },
-               commandType: System.Data.CommandType.StoredProcedure);
+               commandType: CommandType.StoredProcedure);
         }
 
         public int DeleteRoleFromUser(int userId, int roleId)
@@ -175,7 +175,7 @@ namespace EducationSystem.Data
             return _connection
                 .Execute("dbo.User_Role_Delete", 
                 new { userId, roleId },
-                commandType: System.Data.CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure);
         }
 
         public UserDto CheckUser(string login)
@@ -196,7 +196,7 @@ namespace EducationSystem.Data
                 },
                 new { login },
                 splitOn: "Id",
-                commandType: System.Data.CommandType.StoredProcedure)
+                commandType: CommandType.StoredProcedure)
                 .FirstOrDefault();
             return result;
 
@@ -207,7 +207,7 @@ namespace EducationSystem.Data
             var users = _connection.
                 Query<UserDto>(
                 "dbo.User_SelectStudentsByGroupId",
-                param: new {groupId}, commandType: System.Data.CommandType.StoredProcedure)
+                param: new {groupId}, commandType: CommandType.StoredProcedure)
                 .Distinct()
             .ToList();
             return users;

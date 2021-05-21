@@ -69,7 +69,7 @@ namespace EducationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult<GroupOutputModel> GetGroupById(int id)
         {
             var group = _service.GetGroupById(id);
@@ -136,7 +136,7 @@ namespace EducationSystem.Controllers
         [Authorize(Roles = "Администратор, Менеджер, Методист, Преподаватель")]
         public ActionResult<GroupOutputModel> GetGroupProgramsByGroupId(int groupId)
         {
-            var group = _service.GetGroupProgramsByGroupId(groupId);
+            var group = _service.GetGroupProgramByGroupId(groupId);
             if (group is null)
                 return NotFound($"Группы с id {groupId} не существует");
 
@@ -151,7 +151,7 @@ namespace EducationSystem.Controllers
         }
 
         /// <summary>
-        /// Creates Course
+        /// Creates Group
         /// </summary>
         /// <param name="group"> is used to get all the information about new group that is necessary to create it</param>
         /// <returns>Returns the GroupOutputModel</returns>

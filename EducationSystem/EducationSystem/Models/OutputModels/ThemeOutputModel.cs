@@ -9,6 +9,7 @@ namespace EducationSystem.API.Models.OutputModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool? IsDeleted { get; set; }
         public List<TagOutputModel> Tags { get; set; }
     }
 }

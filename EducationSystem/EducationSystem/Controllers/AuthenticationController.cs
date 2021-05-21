@@ -3,10 +3,6 @@ using EducationSystem.Business;
 using EducationSystem.Business.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EducationSystem.API.Controllers
 {
@@ -34,7 +30,7 @@ namespace EducationSystem.API.Controllers
                 var token = _service.GenerateToken(user);
                 return Ok(token);
             }
-            return NotFound("wrong credentials");
+            return NotFound("Wrong credentials");
         }
     }
 }

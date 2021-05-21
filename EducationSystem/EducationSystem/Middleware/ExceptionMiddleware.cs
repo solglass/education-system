@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
@@ -28,6 +29,10 @@ namespace EducationSystem.API.Middleware
             {
                 await HandleValidationExceptionAsync(httpContext, ex);
             }
+            catch (SqlException ex)
+            {
+                await HandleSqlExceptionAsync(httpContext, ex);
+            }
             catch (Exception ex)
             {
                 await HandleExceptionAsync(httpContext, ex);
@@ -39,6 +44,25 @@ namespace EducationSystem.API.Middleware
             ModifyContextResponse(context, exception.StatusCode);
 
             return ConstructResponse(context, exception.StatusCode, exception.ErrorMessage);
+        }
+
+        private Task HandleSqlExceptionAsync(HttpContext context, SqlException exception)
+        {
+            var keys = new string[] { "UC_CourseTheme_CourseId_ThemeId", "UC_CourseTheme_CourseId_Order"};
+            var result = keys.FirstOrDefault<string>(s => exception.Message.Contains(s));
+            switch (result)
+            {
+                case "UC_CourseTheme_CourseId_ThemeId":
+                    ModifyContextResponse(context, (int)HttpStatusCode.Conflict);
+                    return ConstructResponse(context, 409, "The pair of course and theme is already exists.");
+
+                case "UC_CourseTheme_CourseId_Order":
+                    ModifyContextResponse(context, (int)HttpStatusCode.Conflict);
+                    return ConstructResponse(context, 409, "Order of every theme in the course have to be unique.");
+
+                default:
+                    return HandleExceptionAsync(context, exception);
+            }
         }
 
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
